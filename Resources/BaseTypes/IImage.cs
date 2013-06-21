@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hudl.Ffmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filter.BaseTypes
+namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
-    interface IFIlterable
+    interface IImage :
+        IResource
     {
     }
 }

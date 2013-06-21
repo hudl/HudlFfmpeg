@@ -39,10 +39,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseTypes\AppliesToResourceAttribute.cs" />
+    <Compile Include="BaseTypes\AppliesToCollection.cs" />
+    <Compile Include="BaseTypes\AppliesToInvalidException.cs" />
     <Compile Include="Class1.cs" />
-    <Compile Include="Filter\BaseTypes\IFilter.cs" />
-    <Compile Include="Input\BaseTypes\IResource.cs" />
+    <Compile Include="Common\RGBRatio.cs" />
+    <Compile Include="Common\Validate.cs" />
+    <Compile Include="Filters\AFade.cs" />
+    <Compile Include="Filters\AMix.cs" />
+    <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
+    <Compile Include="Filters\BaseTypes\Filterchain.cs" />
+    <Compile Include="Filters\BaseTypes\IFilter.cs" />
+    <Compile Include="Filters\BaseTypes\IFilterable.cs" />
+    <Compile Include="Filters\Blend.cs" />
+    <Compile Include="Filters\ColorBalance.cs" />
+    <Compile Include="Filters\Concat.cs" />
+    <Compile Include="Filters\Fade.cs" />
+    <Compile Include="Resources\Wav.cs" />
+    <Compile Include="Resources\BaseTypes\BaseAudio.cs" />
+    <Compile Include="Resources\BaseTypes\BaseVideo.cs" />
+    <Compile Include="Resources\BaseTypes\BaseImage.cs" />
+    <Compile Include="Resources\BaseTypes\IImage.cs" />
+    <Compile Include="Resources\BaseTypes\IAudio.cs" />
+    <Compile Include="Resources\BaseTypes\IResource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\BaseTypes\IVideo.cs" />
+    <Compile Include="Resources\BaseTypes\BaseResource.cs" />
+    <Compile Include="Resources\Mp3.cs" />
+    <Compile Include="Resources\M4a.cs" />
+    <Compile Include="Resources\Mp4.cs" />
+    <Compile Include="Settings\BaseTypes\ISettingable.cs" />
+    <Compile Include="Settings\BaseTypes\ISetting.cs" />
+    <Compile Include="Settings\BaseTypes\SettingsApplicationAttribute.cs" />
+    <Compile Include="Settings\BaseTypes\SettingsCollection.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
