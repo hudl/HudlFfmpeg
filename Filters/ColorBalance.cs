@@ -34,17 +34,17 @@ namespace Hudl.Ffmpeg.Filters
         /// <summary>
         /// property to the RGB shadow color balancing
         /// </summary>
-        public new RGBRatio Shadow { get; set; }
+        public new FfmpegScaleRgb Shadow { get; set; }
         
         /// <summary>
         /// property to the RGB midtone color balancing
         /// </summary>
-        public new RGBRatio Midtone { get; set; }
+        public new FfmpegScaleRgb Midtone { get; set; }
         
         /// <summary>
         /// property to the RGB highlight color balancing
         /// </summary>
-        public new RGBRatio Highlight { get; set; }
+        public new FfmpegScaleRgb Highlight { get; set; }
 
         public string Type { get { return "colorbalance"; } }
 

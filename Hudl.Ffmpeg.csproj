@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,7 +44,9 @@
     <Compile Include="BaseTypes\AppliesToCollection.cs" />
     <Compile Include="BaseTypes\AppliesToInvalidException.cs" />
     <Compile Include="Class1.cs" />
-    <Compile Include="Common\RGBRatio.cs" />
+    <Compile Include="Common\FfmpegRatio.cs" />
+    <Compile Include="Common\FfmpegScale.cs" />
+    <Compile Include="Common\FfmpegScaleRgb.cs" />
     <Compile Include="Common\Validate.cs" />
     <Compile Include="Filters\AFade.cs" />
     <Compile Include="Filters\AMix.cs" />
@@ -54,7 +57,14 @@
     <Compile Include="Filters\Blend.cs" />
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
+    <Compile Include="Filters\AMovie.cs" />
+    <Compile Include="Filters\Volume.cs" />
+    <Compile Include="Filters\SetSar.cs" />
+    <Compile Include="Filters\SetDar.cs" />
     <Compile Include="Filters\Fade.cs" />
+    <Compile Include="Filters\Movie.cs" />
+    <Compile Include="Filters\Overlay.cs" />
+    <Compile Include="Filters\Scale.cs" />
     <Compile Include="Resources\Wav.cs" />
     <Compile Include="Resources\BaseTypes\BaseAudio.cs" />
     <Compile Include="Resources\BaseTypes\BaseVideo.cs" />
