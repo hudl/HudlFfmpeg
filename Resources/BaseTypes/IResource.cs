@@ -8,7 +8,7 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
     /// <summary>
     /// defines a base implmentation for an input/output file for ffmpege
     /// </summary>
-    interface IResource
+    public interface IResource
     {
         /// <summary>
         /// an ffmpeg representation of the input stream, used in identifying the stream further
