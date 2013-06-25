@@ -17,6 +17,10 @@ namespace Hudl.Ffmpeg.Filters
             Mode = _mode;
             Option = _option;
         }
+        public Blend(string expression) : this()
+        {
+            Expression = expression;
+        }
 
         /// <summary>
         /// the video blend options, required value for blend command

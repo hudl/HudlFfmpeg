@@ -16,6 +16,18 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         private new List<Filterchain<IResource>> _filterchains;
         public readonly IReadOnlyList<Filterchain<IResource>> Filterchains { get { return _filterchains.AsReadOnly(); } }
 
+        public TypeA Assign<TypeA>(Filterchain<TypeA> filterchain, params IResource[] resources)
+            where TypeA : IResource
+        {
+            return filterchain.Output;
+        }
+
+        public TypeA AssignToAll<TypeA>(Filterchain<TypeA> filterchain)
+            where TypeA : IResource
+        {
+            return filterchain.Output; 
+        }
+
         /// <summary>
         /// adds the given Filterchain to the Filtergraph
         /// </summary>

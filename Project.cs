@@ -8,7 +8,7 @@ using Hudl.Ffmpeg.Resources;
 
 namespace Hudl.Ffmpeg.Templates
 {
-    public class CampaignProject : 
+    public class Project : 
         IProject
     {
         public IReadOnlyList<Resources.BaseTypes.IResource> Resources
@@ -16,12 +16,12 @@ namespace Hudl.Ffmpeg.Templates
             get { throw new NotImplementedException(); }
         }
 
-        public IProject Add<TypeA>(TypeA resource) where TypeA : Resources.BaseTypes.IResource
+        public TypeA Add<TypeA>(TypeA resource) where TypeA : Resources.BaseTypes.IResource
         {
             throw new NotImplementedException();
         }
 
-        public IProject Insert<TypeA>(TypeA resource, int index) where TypeA : Resources.BaseTypes.IResource
+        public TypeA Insert<TypeA>(TypeA resource, int index) where TypeA : Resources.BaseTypes.IResource
         {
             throw new NotImplementedException();
         }
@@ -54,22 +54,22 @@ namespace Hudl.Ffmpeg.Templates
         }
 
 
-        public TypeA Create<TypeA>()
+        public TypeA Add<TypeA>()
         {
             throw new NotImplementedException();
         }
 
-        public TypeA Create<TypeA>(string path)
+        public TypeA Add<TypeA>(string path)
         {
             throw new NotImplementedException();
         }
 
-        public TypeA Create<TypeA>(string path, TimeSpan length)
+        public TypeA Add<TypeA>(string path, TimeSpan length)
         {
             throw new NotImplementedException();
         }
 
-        public TypeA Create<TypeA>(string path, TimeSpan length, TimeSpan startAt, TimeSpan endAt)
+        public TypeA Add<TypeA>(string path, TimeSpan length, TimeSpan startAt, TimeSpan endAt)
         {
             throw new NotImplementedException();
         }

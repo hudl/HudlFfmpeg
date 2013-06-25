@@ -4,27 +4,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Command.BaseTypes; 
+using Hudl.Ffmpeg.Command.BaseTypes;
+using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes; 
 
 namespace Hudl.Ffmpeg.BaseTypes
 {
-    public interface IProject<TypeO> : IFilterable
-        where TypeO : IResource, new() 
+    public interface IProject : IFilterable
     {
         IReadOnlyList<IResource> Resources { get; }
 
-        IProject<TypeO> Add<TypeA>(TypeA resource)
+        TypeA Add<TypeA>()
             where TypeA : IResource;
 
-        IProject<TypeO> Insert<TypeA>(TypeA resource, int index)
+        TypeA Add<TypeA>(string path)
             where TypeA : IResource;
 
-        IProject<TypeO> RemoveAt(int index);
+        TypeA Add<TypeA>(string path, TimeSpan length)
+            where TypeA : IResource;
+
+        TypeA Add<TypeA>(string path, TimeSpan length, TimeSpan startAt, TimeSpan endAt)
+            where TypeA : IResource;
+
+        TypeA Add<TypeA>(TypeA resource)
+            where TypeA : IResource;
+
+        TypeA Insert<TypeA>(TypeA resource, int index)
+            where TypeA : IResource;
+
+        IProject RemoveAt(int index);
 
         TimeSpan GetLength(); 
 
-        TypeO Render<TypeP>()
+        ResourceList Render<TypeP>()
             where TypeP : ICommandProcessor, new();
     }
 }

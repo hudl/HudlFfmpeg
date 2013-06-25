@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
-    interface IFilterAudioPreProcessor
+    interface IFilterPreProcessor
     {
+        List<object>
+
+
     }
 }

@@ -16,19 +16,11 @@ namespace Hudl.Ffmpeg.Filters
         public ColorBalance()
         {
         }
-        public ColorBalance(double rs, double gs, double bs, 
-                            double rm, double gm, double bm, 
-                            double rh, double gh, double bh) : this()
+        public ColorBalance(FfmpegScaleRgb shadows, FfmpegScaleRgb midtones, FfmpegScaleRgb highlights)
         {
-            Shadow.Red = rs;
-            Shadow.Blue = bs;
-            Shadow.Green = gs;
-            Midtone.Red = rm;
-            Midtone.Blue = bm;
-            Midtone.Green = gm;
-            Highlight.Red = rh;
-            Highlight.Blue = bh;
-            Highlight.Green = gh;
+            Shadow = shadows;
+            Midtone = midtones;
+            Highlight = highlights; 
         }
 
         /// <summary>

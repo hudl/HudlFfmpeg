@@ -30,6 +30,16 @@ namespace Hudl.Ffmpeg.BaseTypes
             return this;
         }
 
+        public AppliesToCollecion<TypeA, TypeB> AddRange(params TypeA[] list)
+        {
+            foreach (TypeA item in list)
+            {
+                Add(item); 
+            }
+            
+            return this;
+        }
+
         public AppliesToCollecion<TypeA, TypeB> Remove(int index)
         {
             _filterList.RemoveAt(index);

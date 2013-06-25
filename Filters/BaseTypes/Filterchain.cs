@@ -14,9 +14,23 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         private new Output _output; 
         private new AppliesToCollecion<IFilter, Output> _filters;
 
+        public Filterchain()
+        {
+            _output = new Output(); 
+        }
+        public Filterchain(params IFilter[] filters) 
+            : this()
+        {
+            Filters.AddRange(filters); 
+        }
         public Filterchain(Output outputToUse) 
         {
             _output = outputToUse;
+        }
+        public Filterchain(Output outputToUse, params IFilter[] filters)
+            : this(outputToUse)
+        {
+            Filters.AddRange(filters); 
         }
 
         public readonly Output Output { get { return _output; } }

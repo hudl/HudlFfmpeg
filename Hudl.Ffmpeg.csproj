@@ -58,8 +58,7 @@
     <Compile Include="Filters\BaseTypes\Filterchain.cs" />
     <Compile Include="Filters\BaseTypes\IFilter.cs" />
     <Compile Include="Filters\BaseTypes\IFilterable.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterAudioPreProcessor.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterVideoPreProcessor.cs" />
+    <Compile Include="Filters\BaseTypes\IFilterPreProcessor.cs" />
     <Compile Include="Filters\Blend.cs" />
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
@@ -72,7 +71,8 @@
     <Compile Include="Filters\Movie.cs" />
     <Compile Include="Filters\Overlay.cs" />
     <Compile Include="Filters\Scale.cs" />
-    <Compile Include="Resources\OutputResource.cs" />
+    <Compile Include="Resources\Png.cs" />
+    <Compile Include="Resources\ResourceList.cs" />
     <Compile Include="Resources\Wav.cs" />
     <Compile Include="Resources\BaseTypes\BaseAudio.cs" />
     <Compile Include="Resources\BaseTypes\BaseVideo.cs" />
@@ -91,6 +91,7 @@
     <Compile Include="Settings\BaseTypes\SettingsApplicationAttribute.cs" />
     <Compile Include="Settings\BaseTypes\SettingsCollection.cs" />
     <Compile Include="Templates\CampaignProject.cs" />
+    <Compile Include="Project.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -12,6 +12,16 @@ namespace Hudl.Ffmpeg.Filters
     [AppliesToResource(Type=typeof(IVideo))]
     public class Fade : IFilter
     {
+        public Fade()
+        {
+        }
+        public Fade(FadeType transition, int startAt, int duration)
+        {
+            Transition = transition;
+            Duration = duration;
+            StartAt = startAt; 
+        }
+
         /// <summary>
         /// the video fade type that is to be applied
         /// </summary>
@@ -32,11 +42,11 @@ namespace Hudl.Ffmpeg.Filters
 
         public FadeUnits Unit { get; set; }
 
-        public FadeType Transition { get; set; } 
+        public FadeType Transition { get; set; }
 
-        public double StartAt { get; set; } 
+        public int StartAt { get; set; }
 
-        public double Duration { get; set; } 
+        public int Duration { get; set; } 
 
         public string Type { get { return "fade"; } }
 
