@@ -3,25 +3,86 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Hudl.Ffmpeg.BaseTypes; 
-using Hudl.Ffmpeg.Resources; 
+using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Resources;
+using Hudl.Ffmpeg.Resources.BaseTypes; 
 
 namespace Hudl.Ffmpeg.Templates
 {
-    public class Project : 
-        IProject
+    public class Project : IProject
     {
-        public IReadOnlyList<Resources.BaseTypes.IResource> Resources
+        private new List<IResource> _resources;
+        public IReadOnlyList<IResource> Resources { get { return _resources.AsReadOnly(); } }
+
+        public TypeA Add<TypeA>() where TypeA : IResource, new()
         {
-            get { throw new NotImplementedException(); }
+            return Add(new TypeA()); 
         }
 
-        public TypeA Add<TypeA>(TypeA resource) where TypeA : Resources.BaseTypes.IResource
+        public TypeA Add<TypeA>(string path) where TypeA : IResource, new()
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(path))
+                throw new ArgumentException("Resource path cannot be null or empty.", "path"); 
+
+            return Add(new TypeA()
+            {
+                Path = path
+            });
         }
 
-        public TypeA Insert<TypeA>(TypeA resource, int index) where TypeA : Resources.BaseTypes.IResource
+        public TypeA Add<TypeA>(string path, TimeSpan length) where TypeA : IResource, new()
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                throw new ArgumentException("Resource path cannot be null or empty.", "path");
+            if (length == null)
+                throw new ArgumentException("Resource length cannot be null or empty.", "length");
+
+            return Add(new TypeA()
+            {
+                Path = path, 
+                Length = length
+            });
+        }
+
+        public TypeA Add<TypeA>(string path, TimeSpan length, TimeSpan startAt, TimeSpan endAt) where TypeA : IResource, new()
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                throw new ArgumentException("Resource path cannot be null or empty.", "path");
+            if (length == null)
+                throw new ArgumentException("Resource length cannot be null or empty.", "length");
+            if (startAt == null)
+                throw new ArgumentException("Resource starting time cannot be null or empty.", "startAt");
+            if (endAt == null)
+                throw new ArgumentException("Resource ending time cannot be null or empty.", "endAt");
+
+            return Add(new TypeA()
+            {
+                Path = path,
+                Length = length, 
+                StartAt = startAt,
+                EndAt = endAt
+            });
+        }
+       
+        public TypeA Add<TypeA>(TypeA resource) where TypeA : IResource, new()
+        {
+            if (resource == null)
+                throw new ArgumentException("Provided resource file cannot be null.", "resource");
+            if (Contains(resource))
+                throw new ArgumentException("Provided resource file is already part of the project.", "resource");
+
+            _resources.Add(resource);
+            return resource;
+        }
+
+        public bool Contains<TypeA>(TypeA resource) where TypeA : IResource, new()
+        {
+            if (resource == null)
+                throw new ArgumentException("Provided resource file cannot be null.", "resource");
+            return _resources.Find(r => 
+        }
+
+        public IProject Remove<TypeA>(TypeA resource) where TypeA : IResource, new()
         {
             throw new NotImplementedException();
         }
@@ -51,27 +112,6 @@ namespace Hudl.Ffmpeg.Templates
             {
                 throw new NotImplementedException();
             }
-        }
-
-
-        public TypeA Add<TypeA>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TypeA Add<TypeA>(string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TypeA Add<TypeA>(string path, TimeSpan length)
-        {
-            throw new NotImplementedException();
-        }
-
-        public TypeA Add<TypeA>(string path, TimeSpan length, TimeSpan startAt, TimeSpan endAt)
-        {
-            throw new NotImplementedException();
         }
     }
 }

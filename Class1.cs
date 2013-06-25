@@ -109,11 +109,10 @@ namespace Hudl.Ffmpeg
                     new 
                 );
 
-            project.MarkAsOutput(outputFile1);
-            project.MarkAsOutput(outputFile2);
-            project.MarkAsOutput(outputFile3);
-            project.MarkAsOutput(outputFile4);
-
+            project.SetOutput(outputFile1);
+            project.SetOutput(outputFile2);
+            project.SetOutput(outputFile3);
+            project.SetOutput(outputFile4);
 
             ResourceList output = project.Render<BatchCommandProcessorReciever>(); 
         } 

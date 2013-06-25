@@ -15,22 +15,22 @@ namespace Hudl.Ffmpeg.BaseTypes
         IReadOnlyList<IResource> Resources { get; }
 
         TypeA Add<TypeA>()
-            where TypeA : IResource;
+            where TypeA : IResource, new();
 
         TypeA Add<TypeA>(string path)
-            where TypeA : IResource;
+            where TypeA : IResource, new();
 
         TypeA Add<TypeA>(string path, TimeSpan length)
-            where TypeA : IResource;
+            where TypeA : IResource, new();
 
         TypeA Add<TypeA>(string path, TimeSpan length, TimeSpan startAt, TimeSpan endAt)
-            where TypeA : IResource;
+            where TypeA : IResource, new();
 
         TypeA Add<TypeA>(TypeA resource)
-            where TypeA : IResource;
+            where TypeA : IResource, new();
 
-        TypeA Insert<TypeA>(TypeA resource, int index)
-            where TypeA : IResource;
+        IProject Remove<TypeA>(TypeA resource)
+            where TypeA : IResource, new(); 
 
         IProject RemoveAt(int index);
 
