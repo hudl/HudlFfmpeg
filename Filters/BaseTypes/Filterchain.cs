@@ -18,8 +18,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             _output = new Output(); 
         }
-        public Filterchain(params IFilter[] filters) 
-            : this()
+        public Filterchain(params IFilter[] filters) : this()
         {
             Filters.AddRange(filters); 
         }
@@ -27,21 +26,34 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             _output = outputToUse;
         }
-        public Filterchain(Output outputToUse, params IFilter[] filters)
-            : this(outputToUse)
+        public Filterchain(Output outputToUse, params IFilter[] filters) : this(outputToUse)
         {
             Filters.AddRange(filters); 
         }
 
-        public readonly Output Output { get { return _output; } }
+        public readonly Output Output 
+        { 
+            get 
+            { 
+                return _output; 
+            } 
+        }
 
-        public readonly AppliesToCollecion<IFilter, Output> Filters { get { return _filters; } }
+        public readonly AppliesToCollecion<IFilter, Output> Filters 
+        { 
+            get 
+            { 
+                return _filters; 
+            } 
+        }
 
         public override string ToString() 
         {
             //perform simple validation on the filter chain
             if (Filters.Count == 0)
+            {
                 throw new ArgumentException("Filterchain must contain at least one filter.");
+            }
 
             //process all the filters in the filter chain
             StringBuilder filterChain = new StringBuilder(100); 

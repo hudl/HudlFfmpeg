@@ -22,12 +22,20 @@ namespace Hudl.Ffmpeg.Common
             where TypeB : IResource
         {
             var typeAAttributes = new List<CustomAttributeData>(typeof(TypeA).CustomAttributes); 
-            var typeAAppliesToAttributes = typeAAttributes.FindAll(a => a.AttributeType == typeof(AppliesToResourceAttribute)); 
-            if (typeAAppliesToAttributes == null || typeAAppliesToAttributes.Count == 0) return false;
+            var typeAAppliesToAttributes = typeAAttributes.FindAll(a => a.AttributeType == typeof(AppliesToResourceAttribute));
+            if (typeAAppliesToAttributes == null || typeAAppliesToAttributes.Count == 0)
+            {
+                return false;
+            }
             var typeAAppliesToAttributeType = typeAAppliesToAttributes.Find(a =>
                 {
                     foreach (var namedArg in a.NamedArguments)
-                        if (namedArg.MemberName == "Type" && namedArg.TypedValue.Value is TypeB) return true;
+                    {
+                        if (namedArg.MemberName == "Type" && namedArg.TypedValue.Value is TypeB)
+                        {
+                            return true;
+                        }
+                    }
                     return false; 
                 }); 
             return (typeAAppliesToAttributes != null); 

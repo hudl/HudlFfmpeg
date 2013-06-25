@@ -17,9 +17,14 @@ namespace Hudl.Ffmpeg.Common
         public FfmpegRatio(int numerator, int denominator) 
         {
             if (numerator <= 0)
+            {
                 throw new ArgumentException("The FfmpegRatio numerator must be greater than zero.", "numerator");
+            }
             if (denominator <= 0)
+            {
                 throw new ArgumentException("The FfmpegRatio denominator must be greater than zero.", "denominator");
+            }
+
             _numerator = numerator;
             _denominator = denominator;
         }

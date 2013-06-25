@@ -33,7 +33,9 @@ namespace Hudl.Ffmpeg.Common
             set
             {
                 if (value > 1 || value < -1)
+                {
                     throw new InvalidOperationException(string.Format("Ratio must be a decimal value {0} and {1}", MinValue, MaxValue));
+                }
                 _value = value;
             }
         }

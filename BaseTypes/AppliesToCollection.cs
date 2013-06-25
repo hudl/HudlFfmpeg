@@ -13,17 +13,31 @@ namespace Hudl.Ffmpeg.BaseTypes
     /// <typeparam name="TypeA">the type of the collection</typeparam>
     /// <typeparam name="TypeB">the type the collection must apply to</typeparam>
     internal class AppliesToCollecion<TypeA, TypeB>
-        where TypeB : IResource 
+        where TypeB : IResource
     {
         private new List<TypeA> _filterList;
-        public readonly IReadOnlyList<TypeA> Items { get { return _filterList.AsReadOnly(); } }
+        public readonly IReadOnlyList<TypeA> Items
+        { 
+            get 
+            { 
+                return _filterList.AsReadOnly(); 
+            } 
+        }
 
-        public int Count { get { return Items.Count; } }
+        public int Count 
+        { 
+            get 
+            { 
+                return Items.Count; 
+            } 
+        }
 
-        public AppliesToCollecion<TypeA, TypeB> Add(TypeA item) 
+        public AppliesToCollecion<TypeA, TypeB> Add(TypeA item)
         {
             if (Validate.AppliesTo<TypeA, TypeB>())
+            {
                 throw new AppliesToInvalidException<TypeA, TypeB>();
+            }
 
             _filterList.Add(item);
 
@@ -34,16 +48,16 @@ namespace Hudl.Ffmpeg.BaseTypes
         {
             foreach (TypeA item in list)
             {
-                Add(item); 
+                Add(item);
             }
-            
+
             return this;
         }
 
         public AppliesToCollecion<TypeA, TypeB> Remove(int index)
         {
             _filterList.RemoveAt(index);
-            
+
             return this;
         }
 
