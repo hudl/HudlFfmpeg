@@ -113,5 +113,30 @@ namespace Hudl.Ffmpeg.Templates
                 throw new NotImplementedException();
             }
         }
+
+
+        public IReadOnlyList<Filters.BaseTypes.Filtergraph> Filtergraphs
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public TResource ApplyFilter<TResource, TFilter>()
+            where TResource : IResource, new()
+            where TFilter : Filters.BaseTypes.IFilter, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TResource ApplyFilter<TResource, TFilter>(TFilter filter, params IResource[] resources)
+            where TResource : IResource, new()
+            where TFilter : Filters.BaseTypes.IFilter, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TResource ApplyFilter<TResource>(Filters.BaseTypes.Filterchain<TResource> filterchain, params IResource[] resources) where TResource : IResource, new()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

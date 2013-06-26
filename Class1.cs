@@ -42,13 +42,12 @@ namespace Hudl.Ffmpeg
             //  - The variable names are non-descriptive for the usability test to ensure the calls are self explanitory. 
             //  - The commands below should be sufficient enough to describe the process without knowledge of each object
             //*******************************************
-            CampaignProject campaignProject = new Templates.CampaignProject();
+            var campaignProject = new Templates.CampaignProject();
             campaignProject.Add(new Mp4("c:/source/movie1.mp4"));
             campaignProject.Add(new Mp4("c:/source/movie2.mp4"));
             campaignProject.Add(new Mp4("c:/source/movie3.mp4"));
             campaignProject.Add(new Mp3("c:/source/audio1.mp3"));
-            ResourceList outputResources = campaignProject.Render<BatchCommandProcessorReciever>();
-
+            var outputResources = campaignProject.Render<BatchCommandProcessorReciever>();
 
 
 
@@ -60,38 +59,42 @@ namespace Hudl.Ffmpeg
             //  - The variable names are non-descriptive for the usability test to ensure the calls are self explanitory. 
             //  - The commands below should be sufficient enough to describe the process without knowledge of each object
             //*******************************************
-            Project project = new Project();
-            Mp4 videoIn1 = project.Add<Mp4>("c:/source/movie1.mp4");
-            Mp4 videoIn2 = project.Add<Mp4>("c:/source/movie2.mp4");
-            Mp4 videoIn3 = project.Add<Mp4>("c:/source/movie3.mp4");
-            Mp3 audioIn1 = project.Add<Mp3>("c:/source/audio1.mp3");
-            M4a backgroundAudio = project.Add<M4a>("background.m4a"); 
-            Png overlayImage = project.Add<Png>("vignette.png");
-            Mp4 overlayVideo = project.Add<Mp4>("filmgrain.mp4");
+            var project = new Project();
+            var videoIn1 = project.Add<Mp4>("c:/source/movie1.mp4");
+            var videoIn2 = project.Add<Mp4>("c:/source/movie2.mp4");
+            var videoIn3 = project.Add<Mp4>("c:/source/movie3.mp4");
+            var audioIn1 = project.Add<Mp3>("c:/source/audio1.mp3");
+            var backgroundAudio = project.Add<M4a>("background.m4a"); 
+            var overlayImage = project.Add<Png>("vignette.png");
+            var overlayVideo = project.Add<Mp4>("filmgrain.mp4");
 
-            Filterchain<Mp4> filterchainFormat = new Filterchain<Mp4>(
+            var filterchainFormat = new Filterchain<Mp4>(
                     new Scale("hd720"),
                     new SetDar(new FfmpegRatio(16, 9)),
                     new SetSar(new FfmpegRatio(1, 1))
                 );
-            Mp4 filterResult1 = project.Filtergraph.Assign(filterchainFormat, videoIn1);
-            Mp4 filterResult2 = project.Filtergraph.Assign(filterchainFormat, videoIn2);
-            Mp4 filterResult3 = project.Filtergraph.Assign(filterchainFormat, videoIn3);
+            var filterResult1 = project.ApplyFilter(filterchainFormat, videoIn1);
+            var filterResult2 = project.ApplyFilter(filterchainFormat, videoIn2);
+            var filterResult3 = project.ApplyFilter(filterchainFormat, videoIn3);
 
-            Filterchain<Mp4> filterchainCrossFade = new Filterchain<Mp4>(
+            var filterchainCrossFade = new Filterchain<Mp4>(
                     new Crossfade()
-                ); 
-            Mp4 filterResult1to2 = project.Filtergraph.Assign(filterchainCrossFade, filterResult1, filterResult2);
-            Mp4 filterResult2to3 = project.Filtergraph.Assign(filterchainCrossFade, filterResult2, filterResult3);
+                );
+            project.ApplyFilter(new Crossfade(), filterResult1, filterResult2); 
+
+            Mp4 filterResult1To2 = project.Filtergraph.Assign(filterchainCrossFade, filterResult1, filterResult2);
+            Mp4 filterResult2To3 = project.Filtergraph.Assign(filterchainCrossFade, filterResult2, filterResult3);
 
             Filterchain<Mp4> filterchainConcat = new Filterchain<Mp4>(
                     new Concat(5, 0, 1)
                 ); 
             Mp4 filterResult4 = project.Filtergraph.Assign(filterchainConcat, filterResult1, 
-                                                                              filterResult1to2, 
+                                                                              filterResult1To2, 
                                                                               filterResult2, 
-                                                                              filterResult2to3, 
+                                                                              filterResult2To3, 
                                                                               filterResult3);
+
+            var f = Filterchain.ToOutput<Mp3>(); 
 
             Filterchain<Mp4> filterchainVignette = new Filterchain<Mp4>(
                     new Overlay()

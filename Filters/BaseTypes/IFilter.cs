@@ -9,7 +9,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
     /// <summary>
     /// representation of a simple filt 
     /// </summary>
-    interface IFilter
+    public interface IFilter
     {
         /// <summary>
         /// the command name for the affect

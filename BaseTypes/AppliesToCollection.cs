@@ -12,7 +12,7 @@ namespace Hudl.Ffmpeg.BaseTypes
     /// </summary>
     /// <typeparam name="TypeA">the type of the collection</typeparam>
     /// <typeparam name="TypeB">the type the collection must apply to</typeparam>
-    internal class AppliesToCollecion<TypeA, TypeB>
+    public class AppliesToCollecion<TypeA, TypeB>
         where TypeB : IResource
     {
         private new List<TypeA> _filterList;

@@ -8,44 +8,29 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
-    class Filterchain<Output>
-        where Output : IResource, new()
+    public class Filterchain<TOutput>
+        where TOutput : IResource, new()
     {
-        private new Output _output; 
-        private new AppliesToCollecion<IFilter, Output> _filters;
-
         public Filterchain()
         {
-            _output = new Output(); 
+            Output = new TOutput(); 
         }
         public Filterchain(params IFilter[] filters) : this()
         {
             Filters.AddRange(filters); 
         }
-        public Filterchain(Output outputToUse) 
+        public Filterchain(TOutput outputToUse) 
         {
-            _output = outputToUse;
+            Output = outputToUse;
         }
-        public Filterchain(Output outputToUse, params IFilter[] filters) : this(outputToUse)
+        public Filterchain(TOutput outputToUse, params IFilter[] filters) : this(outputToUse)
         {
             Filters.AddRange(filters); 
         }
 
-        public readonly Output Output 
-        { 
-            get 
-            { 
-                return _output; 
-            } 
-        }
+        public TOutput Output { get; protected set; }
 
-        public readonly AppliesToCollecion<IFilter, Output> Filters 
-        { 
-            get 
-            { 
-                return _filters; 
-            } 
-        }
+        public AppliesToCollecion<IFilter, TOutput> Filters { get; protected set; }
 
         public override string ToString() 
         {
@@ -56,7 +41,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             }
 
             //process all the filters in the filter chain
-            StringBuilder filterChain = new StringBuilder(100); 
+            var filterChain = new StringBuilder(100); 
             foreach(var filter in Filters.Items) 
             {
                 if (filterChain.Length > 0) filterChain.Append(",");
@@ -67,5 +52,28 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             //return the filter chain command
             return filterChain.ToString();
         }
-    }
+
+        public static Filterchain<TAsOutput> ToOutput<TAsOutput>()
+            where TAsOutput : IResource, new()
+        {
+            return new Filterchain<TAsOutput>();
+        }
+
+        public static Filterchain<TAsOutput> ToOutput<TAsOutput>(params IFilter[] filters)
+            where TAsOutput : IResource, new()
+        {
+            return new Filterchain<TAsOutput>(filters);
+        }
+
+        public static Filterchain<TAsOutput> ToOutput<TAsOutput>(TAsOutput outputToUse)
+            where TAsOutput : IResource, new()
+        {
+            return new Filterchain<TAsOutput>(outputToUse);
+        }
+
+        public static Filterchain<TAsOutput> ToOutput<TAsOutput>(TAsOutput outputToUse, params IFilter[] filters)
+            where TAsOutput : IResource, new()
+        {
+            return new Filterchain<TAsOutput>(outputToUse, filters);
+        }
 }
