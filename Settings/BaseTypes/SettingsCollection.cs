@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hudl.Ffmpeg.Settings.BaseTypes
 {
@@ -11,18 +8,37 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
     /// </summary>
     public class SettingsCollection
     {
-        private new List<ISetting> _settings;
-        public readonly IReadOnlyList<ISetting> Items { get { return _settings.AsReadOnly(); } }
+        public SettingsCollection()
+        {
+            _settings = new List<ISetting>();
+        }
+        public SettingsCollection(params ISetting[] settings)
+        {
+            _settings = new List<ISetting>(settings);
+        }
+
+        private readonly List<ISetting> _settings;
+        public IReadOnlyList<ISetting> Items { get { return _settings.AsReadOnly(); } }
 
         /// <summary>
         /// adds the given Setting to the SettingsCollection
         /// </summary>
-        /// <typeparam name="TypeA">the generic type of the Setting</typeparam>
+        /// <typeparam name="TSetting">the generic type of the Setting</typeparam>
         /// <param name="setting">the Setting to be added to the SettingsCollection</param>
-        public SettingsCollection Add<TypeA>(TypeA setting)
-            where TypeA : ISetting
+        public SettingsCollection Add<TSetting>(TSetting setting)
+            where TSetting : ISetting
         {
             _settings.Add(setting);
+            return this;
+        }
+
+        /// <summary>
+        /// adds the given SettingsCollection range to the SettingsCollection
+        /// </summary>
+        /// <param name="settings">the SettingsCollection to be added  to be added to the SettingsCollection</param>
+        public SettingsCollection AddRange(SettingsCollection settings)
+        {
+            _settings.AddRange(settings.Items);
             return this;
         }
 

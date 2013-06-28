@@ -1,69 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters
 {
+    /// <summary>
+    /// Video filter that applies a fade in or out effect.
+    /// </summary>
     [AppliesToResource(Type=typeof(IVideo))]
-    public class Fade : IFilter
+    public class Fade : BaseFilter
     {
+        private const int FilterMaxInputs = 1;
+        private const string FilterType = "fade";
+
         public Fade()
+            : base(FilterType, FilterMaxInputs)
         {
+            Transition = FadeTransitionTypes.In;
+            Unit = FadeVideoUnitTypes.Seconds;
         }
-        public Fade(FadeType transition, int startAt, int duration)
+        public Fade(FadeTransitionTypes transition, int startAt, int duration)
+            : this() 
         {
             Transition = transition;
             Duration = duration;
             StartAt = startAt; 
         }
 
-        /// <summary>
-        /// the video fade type that is to be applied
-        /// </summary>
-        public enum FadeType 
-        {
-            @in,
-            @out
-        }
-
-        /// <summary>
-        /// the fade amount unit of measurement
-        /// </summary>
-        public enum FadeUnits 
-        {
-            seconds,
-            frames
-        }
-
-        public FadeUnits Unit { get; set; }
-
-        public FadeType Transition { get; set; }
-
         public int StartAt { get; set; }
 
         public int Duration { get; set; } 
 
-        public string Type { get { return "fade"; } }
+        public FadeVideoUnitTypes Unit { get; set; }
 
-        public int MaxInputs { get { return 1; } }
+        public FadeTransitionTypes Transition { get; set; }
 
         public override string ToString()
         {
-            if (StartAt == null)
-                throw new ArgumentNullException("Starting location of the Video Fade cannot be null.", "StartAt");
-            if (Duration == null)
-                throw new ArgumentNullException("Duration of the Video Fade cannot be null.", "Duration");
+            if (StartAt == 0)
+            {
+                throw new ArgumentException("Starting location of the Video Fade cannot be zero.");
+            }
+            if (Duration == 0)
+            {
+                throw new ArgumentException("Duration of the Video Fade cannot be zero.");
+            }
 
-            StringBuilder filter = new StringBuilder(100);
-            filter.AppendFormat("t={0}", Transition.ToString());
+            var filter = new StringBuilder(100);
+            filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit)
             {
-                case FadeUnits.frames:
+                case FadeVideoUnitTypes.Frames:
                     filter.AppendFormat(":s={0}:n={1}",
                         StartAt,
                         Duration);

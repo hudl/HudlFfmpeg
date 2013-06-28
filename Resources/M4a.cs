@@ -1,27 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Resources
 {
-    public class M4a : 
-        BaseAudio
+    public class M4A : BaseAudio
     {
         private const string FileFormat = ".m4a";
-        public M4a() :
-            base(FileFormat)
+        public M4A() 
+            : base(FileFormat)
         {
         }
-        public M4a(string path) :
-            base(FileFormat, path)
+        public M4A(string path) 
+            : base(FileFormat, path)
         {
         }
-        public M4a(string path, TimeSpan length) :
-            base(FileFormat, path, length)
+        public M4A(string path, TimeSpan length) 
+            : base(FileFormat, path, length)
         {
+        }
+
+        public override IResource Copy()
+        {
+            return Copy<M4A>();
         }
     }
 }

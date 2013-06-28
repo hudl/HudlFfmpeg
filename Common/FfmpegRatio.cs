@@ -11,8 +11,8 @@ namespace Hudl.Ffmpeg.Common
     /// </summary>
     public class FfmpegRatio
     {
-        private int _numerator;
-        private int _denominator;
+        private readonly int _numerator;
+        private readonly int _denominator;
 
         public FfmpegRatio(int numerator, int denominator) 
         {

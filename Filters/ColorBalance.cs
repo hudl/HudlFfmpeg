@@ -10,14 +10,38 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters
 {
+    /// <summary>
+    /// ColorBalance filter adjusts the color balance on the output video by intensifying the colors in each frame.
+    /// </summary>
     [AppliesToResource(Type=typeof(IVideo))]
-    public class ColorBalance : IFilter
+    public class ColorBalance : BaseFilter
     {
+        private const int FilterMaxInputs = 2;
+        private const string FilterType = "colorbalance";
+
         public ColorBalance()
+            : base(FilterType, FilterMaxInputs)
         {
+            Shadow = new FfmpegScaleRgb();
+            Midtone = new FfmpegScaleRgb();
+            Highlight = new FfmpegScaleRgb();
         }
         public ColorBalance(FfmpegScaleRgb shadows, FfmpegScaleRgb midtones, FfmpegScaleRgb highlights)
+            : base(FilterType, FilterMaxInputs)
         {
+            if (shadows == null)
+            {
+                throw new ArgumentNullException("shadows");
+            }
+            if (midtones == null)
+            {
+                throw new ArgumentNullException("midtones");
+            }
+            if (highlights == null)
+            {
+                throw new ArgumentNullException("highlights");
+            }
+
             Shadow = shadows;
             Midtone = midtones;
             Highlight = highlights; 
@@ -26,68 +50,82 @@ namespace Hudl.Ffmpeg.Filters
         /// <summary>
         /// property to the RGB shadow color balancing
         /// </summary>
-        public new FfmpegScaleRgb Shadow { get; set; }
+        public FfmpegScaleRgb Shadow { get; set; }
         
         /// <summary>
         /// property to the RGB midtone color balancing
         /// </summary>
-        public new FfmpegScaleRgb Midtone { get; set; }
+        public FfmpegScaleRgb Midtone { get; set; }
         
         /// <summary>
         /// property to the RGB highlight color balancing
         /// </summary>
-        public new FfmpegScaleRgb Highlight { get; set; }
-
-        public string Type { get { return "colorbalance"; } }
-
-        public int MaxInputs { get { return 2; } }
+        public FfmpegScaleRgb Highlight { get; set; }
 
         public override string ToString() 
         {
-            if (Shadow.Red == 0 &&
-                Shadow.Green == 0 &&
-                Shadow.Blue == 0 &&
-                Midtone.Red == 0 &&
-                Midtone.Green == 0 &&
-                Midtone.Blue == 0 &&
-                Highlight.Red == 0 &&
-                Highlight.Green == 0 &&
-                Highlight.Blue == 0)
-                throw new ArgumentException("At least one Color Balance ratio greater or less than 0 is required."); 
+            if (Shadow.Red.Value == 0 &&
+                Shadow.Green.Value == 0 &&
+                Shadow.Blue.Value == 0 &&
+                Midtone.Red.Value == 0 &&
+                Midtone.Green.Value == 0 &&
+                Midtone.Blue.Value == 0 &&
+                Highlight.Red.Value == 0 &&
+                Highlight.Green.Value == 0 &&
+                Highlight.Blue.Value == 0)
+            {
+                throw new ArgumentException("At least one Color Balance ratio greater or less than 0 is required.");
+            }
 
-            StringBuilder filter = new StringBuilder(100);
-            if (Shadow.Red != 0) 
+            var filter = new StringBuilder(100);
+            if (Shadow.Red.Value != 0)
+            {
                 filter.AppendFormat("{1}rs={0}", 
                     Shadow.Red, 
                     (filter.Length > 0) ?  ":" : string.Empty);
-            if (Shadow.Green != 0) 
+            }
+            if (Shadow.Green.Value != 0) 
+            {
                 filter.AppendFormat("{1}gs={0}", 
                     Shadow.Green, 
                     (filter.Length > 0) ?  ":" : string.Empty);
-            if (Shadow.Blue != 0) 
+            }
+            if (Shadow.Blue.Value != 0) 
+            {
                 filter.AppendFormat("{1}bs={0}", 
                     Shadow.Blue, 
                     (filter.Length > 0) ?  ":" : string.Empty);
-            if (Midtone.Red != 0) 
+            }
+            if (Midtone.Red.Value != 0) 
+            {
                 filter.AppendFormat("{1}gm={0}", 
                     Shadow.Green, 
                     (filter.Length > 0) ?  ":" : string.Empty);
-            if (Midtone.Blue != 0) 
+            }
+            if (Midtone.Blue.Value != 0) 
+            {
                 filter.AppendFormat("{1}bm={0}", 
                     Shadow.Blue, 
                     (filter.Length > 0) ?  ":" : string.Empty);
-            if (Highlight.Red != 0) 
+            }
+            if (Highlight.Red.Value != 0) 
+            {
                 filter.AppendFormat("{1}rh={0}", 
                     Shadow.Red, 
                     (filter.Length > 0) ?  ":" : string.Empty);
-            if (Highlight.Green != 0) 
+            }
+            if (Highlight.Green.Value != 0) 
+            {
                 filter.AppendFormat("{1}gh={0}", 
                     Shadow.Green, 
                     (filter.Length > 0) ?  ":" : string.Empty);
-            if (Highlight.Blue != 0) 
+            }
+            if (Highlight.Blue.Value != 0)
+            {
                 filter.AppendFormat("{1}bh={0}", 
                     Shadow.Blue, 
                     (filter.Length > 0) ?  ":" : string.Empty);
+            }
 
             return string.Concat(Type, "=", filter.ToString());
         }

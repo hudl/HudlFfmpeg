@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Resources;

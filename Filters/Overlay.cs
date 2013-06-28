@@ -1,80 +1,80 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters
 {
+    /// <summary>
+    /// Overlay Filter that will overlay a video or image on another video or image.
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
     [AppliesToResource(Type = typeof(IImage))]
-    public class Overlay : IFilter
+    public class Overlay : BaseFilter
     {
-        /// <summary>
-        /// the video blend options, required value for blend command
-        /// </summary>
-        public enum EvalTypes 
-        {
-            frame,
-            init
-        }
-        
-        /// <summary>
-        /// the blend all model to be used
-        /// </summary>
-        public enum FormatTypes 
-        {
-            yuv420,
-            yuv444,
-            rgb
-        }
+        private const int FilterMaxInputs = 2;
+        private const string FilterType = "overlay";
 
+        public Overlay()
+            : base(FilterType, FilterMaxInputs)
+        {
+            Format = OverlayVideoFormatTypes.Yuv420; 
+            Eval = OverlayVideoEvalTypes.Frame;
+        }
+       
         public string X { get; set; }
         
         public string Y { get; set; } 
         
         public bool Shortest { get; set; } 
         
-        public bool RepeatLast { get; set; } 
-        
-        public FormatTypes Format { get; set; } 
-        
-        public EvalTypes Eval { get; set; } 
+        public bool RepeatLast { get; set; }
 
-        public string Type { get { return "overlay"; } }
-
-        public int MaxInputs { get { return 1; } }
+        public OverlayVideoEvalTypes Eval { get; set; }
+        
+        public OverlayVideoFormatTypes Format { get; set; } 
 
         public override string ToString() 
         {
-            StringBuilder filter = new StringBuilder(100);
-            if (!string.IsNullOrWhiteSpace(X))  
+            var filter = new StringBuilder(100);
+            if (!string.IsNullOrWhiteSpace(X))
+            {
                 filter.AppendFormat("{1}x={0}", 
                     X, 
                     (filter.Length > 0) ? ":" : string.Empty);
-            if (!string.IsNullOrWhiteSpace(Y))  
+            }
+            if (!string.IsNullOrWhiteSpace(Y))
+            {
                 filter.AppendFormat("{1}y={0}", 
                     Y, 
                     (filter.Length > 0) ? ":" : string.Empty);
-            if (Eval != EvalTypes.frame)  
+            }
+            if (Eval != EvalTypes.Frame)  
+            {
                 filter.AppendFormat("{1}eval={0}", 
-                    Eval.ToString(), 
+                    Eval.ToString().ToLower(), 
                     (filter.Length > 0) ? ":" : string.Empty);
-            if (Format != FormatTypes.yuv420)  
+            }
+            if (Format != FormatTypes.Yuv420)  
+            {
                 filter.AppendFormat("{1}format={0}", 
-                    Format.ToString(), 
+                    Format.ToString().ToLower(), 
                     (filter.Length > 0) ? ":" : string.Empty);
+            }
             if (Shortest)  
+            {
                 filter.AppendFormat("{1}shortest={0}", 
                     Convert.ToInt32(Shortest),
                     (filter.Length > 0) ? ":" : string.Empty);
+            }
             if (RepeatLast)  
+            {
                 filter.AppendFormat("{1}repeatlast={0}", 
                     Convert.ToInt32(RepeatLast), 
                     (filter.Length > 0) ? ":" : string.Empty);
+            }
 
             return string.Concat(Type, "=", filter.ToString());
         }

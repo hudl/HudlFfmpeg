@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Hudl.Ffmpeg.Command.BaseTypes
+﻿namespace Hudl.Ffmpeg.Command.BaseTypes
 {
     /// <summary>
     /// Used in the aide of processing projects, allows the output to several formats

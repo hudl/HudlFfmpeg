@@ -47,13 +47,31 @@
     <Compile Include="Class1.cs" />
     <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
     <Compile Include="Command\BatchCommandProcessorReciever.cs" />
+    <Compile Include="Command\CommandFactory.cs" />
     <Compile Include="Command\CommandProcessorStatus.cs" />
+    <Compile Include="Command\Command.cs" />
+    <Compile Include="Command\CommandResource.cs" />
+    <Compile Include="Command\CommandResourceReceiptc.cs" />
+    <Compile Include="Common\AudioCodecTypes.cs" />
+    <Compile Include="Common\BlendVideoOptionTypes.cs" />
+    <Compile Include="Common\BlendVideoModeTypes.cs" />
+    <Compile Include="Common\OverlayVideoEvalTypes.cs" />
+    <Compile Include="Common\OverlayVideoFormatTypes.cs" />
+    <Compile Include="Common\DurationTypes.cs" />
+    <Compile Include="Common\FadeAudioUnitTypes.cs" />
+    <Compile Include="Common\FadeVideoUnitTypes.cs" />
+    <Compile Include="Common\FadeTransitionTypes.cs" />
+    <Compile Include="Common\ScalePresetTypes.cs" />
+    <Compile Include="Common\PixelFormatTypes.cs" />
     <Compile Include="Common\FfmpegRatio.cs" />
     <Compile Include="Common\FfmpegScale.cs" />
     <Compile Include="Common\FfmpegScaleRgb.cs" />
+    <Compile Include="Common\Formats.cs" />
     <Compile Include="Common\Validate.cs" />
+    <Compile Include="Common\VideoCodecTypes.cs" />
     <Compile Include="Filters\AFade.cs" />
     <Compile Include="Filters\AMix.cs" />
+    <Compile Include="Filters\BaseTypes\BaseFilter.cs" />
     <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
     <Compile Include="Filters\BaseTypes\Filterchain.cs" />
     <Compile Include="Filters\BaseTypes\IFilter.cs" />
@@ -72,7 +90,7 @@
     <Compile Include="Filters\Overlay.cs" />
     <Compile Include="Filters\Scale.cs" />
     <Compile Include="Resources\Png.cs" />
-    <Compile Include="Resources\ResourceList.cs" />
+    <Compile Include="Resources\ResourceColletion.cs" />
     <Compile Include="Resources\Wav.cs" />
     <Compile Include="Resources\BaseTypes\BaseAudio.cs" />
     <Compile Include="Resources\BaseTypes\BaseVideo.cs" />
@@ -84,16 +102,27 @@
     <Compile Include="Resources\BaseTypes\IVideo.cs" />
     <Compile Include="Resources\BaseTypes\BaseResource.cs" />
     <Compile Include="Resources\Mp3.cs" />
-    <Compile Include="Resources\M4a.cs" />
+    <Compile Include="Resources\M4A.cs" />
     <Compile Include="Resources\Mp4.cs" />
     <Compile Include="Settings\BaseTypes\ISettingable.cs" />
     <Compile Include="Settings\BaseTypes\ISetting.cs" />
     <Compile Include="Settings\BaseTypes\SettingsApplicationAttribute.cs" />
     <Compile Include="Settings\BaseTypes\SettingsCollection.cs" />
+    <Compile Include="Settings\BitRate.cs" />
+    <Compile Include="Settings\ACodec.cs" />
+    <Compile Include="Settings\TrimShortest.cs" />
+    <Compile Include="Settings\SeekTo.cs" />
+    <Compile Include="Settings\StartAt.cs" />
+    <Compile Include="Settings\RemoveAudio.cs" />
+    <Compile Include="Settings\PixelFormat.cs" />
+    <Compile Include="Settings\OverwriteOutput.cs" />
+    <Compile Include="Settings\Duration.cs" />
+    <Compile Include="Settings\VCodec.cs" />
+    <Compile Include="Settings\Dimensions.cs" />
+    <Compile Include="Settings\FrameRate.cs" />
     <Compile Include="Templates\CampaignProject.cs" />
     <Compile Include="Project.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

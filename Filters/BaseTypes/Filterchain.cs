@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Command;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -14,66 +14,102 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         public Filterchain()
         {
             Output = new TOutput(); 
+            _resources = new List<CommandResourceReceipt>();
         }
-        public Filterchain(params IFilter[] filters) : this()
+        public Filterchain(params IFilter[] filters)
+            : this()
         {
             Filters.AddRange(filters); 
         }
         public Filterchain(TOutput outputToUse) 
         {
             Output = outputToUse;
+            _resources = new List<CommandResourceReceipt>();
         }
-        public Filterchain(TOutput outputToUse, params IFilter[] filters) : this(outputToUse)
+        public Filterchain(TOutput outputToUse, params IFilter[] filters) 
+            : this(outputToUse)
         {
             Filters.AddRange(filters); 
         }
 
         public TOutput Output { get; protected set; }
 
+        private List<CommandResourceReceipt> _resources;
+        public IReadOnlyList<CommandResourceReceipt> Resources { get { return _resources.AsReadOnly(); } }
+
         public AppliesToCollecion<IFilter, TOutput> Filters { get; protected set; }
 
-        public override string ToString() 
+        public void SetResources(params CommandResourceReceipt[] resources)
         {
-            //perform simple validation on the filter chain
+            if (resources == null)
+            {
+                throw new ArgumentNullException("resources");
+            }
+            if (resources.Length == 0)
+            {
+                throw new ArgumentException("Filterchain must contain at least one resource.");
+            }
+
+            SetResources(new List<CommandResourceReceipt>(resources));
+        }
+
+        public void SetResources(List<CommandResourceReceipt> resources)
+        {
+            if (resources == null)
+            {
+                throw new ArgumentNullException("resources");
+            }
+            if (resources.Count == 0)
+            {
+                throw new ArgumentException("Filterchain must contain at least one resource.");
+            }
+
+            _resources = resources;
+        }
+
+        public Filterchain<TOutput> Copy()
+        {
+            return new Filterchain<TOutput>(Filters.List.ToArray());
+        }
+
+        public override string ToString()
+        {
             if (Filters.Count == 0)
             {
                 throw new ArgumentException("Filterchain must contain at least one filter.");
             }
-
-            //process all the filters in the filter chain
-            var filterChain = new StringBuilder(100); 
-            foreach(var filter in Filters.Items) 
+            if (Resources.Count == 0)
             {
-                if (filterChain.Length > 0) filterChain.Append(",");
-                filterChain.Append(filter.ToString())
-                           .Append(" "); 
+                throw new ArgumentException("Filterchain must contain at least one resource.");
             }
 
-            //return the filter chain command
+            var filterChain = new StringBuilder(100);
+            var firstFilter = true;
+
+            _resources.ForEach(resource =>
+            {
+                filterChain.Append(Formats.Map(resource.Map));
+                filterChain.Append(" ");
+            });
+
+            Filters.List.ForEach(filter =>
+            {
+                if (firstFilter)
+                {
+                    firstFilter = false;
+                }
+                else
+                {
+                    filterChain.Append(",");
+                }
+
+                filterChain.Append(filter.ToString());
+                filterChain.Append(" ");
+            });
+
+            filterChain.Append(Formats.Map(Output.Map));
+
             return filterChain.ToString();
         }
-
-        public static Filterchain<TAsOutput> ToOutput<TAsOutput>()
-            where TAsOutput : IResource, new()
-        {
-            return new Filterchain<TAsOutput>();
-        }
-
-        public static Filterchain<TAsOutput> ToOutput<TAsOutput>(params IFilter[] filters)
-            where TAsOutput : IResource, new()
-        {
-            return new Filterchain<TAsOutput>(filters);
-        }
-
-        public static Filterchain<TAsOutput> ToOutput<TAsOutput>(TAsOutput outputToUse)
-            where TAsOutput : IResource, new()
-        {
-            return new Filterchain<TAsOutput>(outputToUse);
-        }
-
-        public static Filterchain<TAsOutput> ToOutput<TAsOutput>(TAsOutput outputToUse, params IFilter[] filters)
-            where TAsOutput : IResource, new()
-        {
-            return new Filterchain<TAsOutput>(outputToUse, filters);
-        }
+    }
 }

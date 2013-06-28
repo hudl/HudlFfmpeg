@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -14,16 +11,16 @@ namespace Hudl.Ffmpeg.Common
     internal class Validate
     {
         /// <summary>
-        /// returns a boolean indicating if <paramref name="TypeA"/> is applicable to <paramref name="TypeB"/> 
+        /// returns a boolean indicating if <cref name="TObject"/> is applicable to <cref name="TRestrictedTo"/> 
         /// </summary>
-        /// <typeparam name="TypeA">the type in question to be applied to</typeparam>
-        /// <typeparam name="TypeB">the type in question that is required</typeparam>
-        public static bool AppliesTo<TypeA, TypeB>()
-            where TypeB : IResource
+        /// <typeparam name="TObject">the type in question to be applied to</typeparam>
+        /// <typeparam name="TRestrictedTo">the type in question that is required</typeparam>
+        public static bool AppliesTo<TObject, TRestrictedTo>()
+            where TRestrictedTo : IResource
         {
-            var typeAAttributes = new List<CustomAttributeData>(typeof(TypeA).CustomAttributes); 
+            var typeAAttributes = new List<CustomAttributeData>(typeof(TObject).CustomAttributes); 
             var typeAAppliesToAttributes = typeAAttributes.FindAll(a => a.AttributeType == typeof(AppliesToResourceAttribute));
-            if (typeAAppliesToAttributes == null || typeAAppliesToAttributes.Count == 0)
+            if (typeAAppliesToAttributes.Count == 0)
             {
                 return false;
             }
@@ -31,14 +28,14 @@ namespace Hudl.Ffmpeg.Common
                 {
                     foreach (var namedArg in a.NamedArguments)
                     {
-                        if (namedArg.MemberName == "Type" && namedArg.TypedValue.Value is TypeB)
+                        if (namedArg.MemberName == "Type" && namedArg.TypedValue.Value is TRestrictedTo)
                         {
                             return true;
                         }
                     }
                     return false; 
-                }); 
-            return (typeAAppliesToAttributes != null); 
+                });
+            return (typeAAppliesToAttributeType != null); 
         }
     }
 }

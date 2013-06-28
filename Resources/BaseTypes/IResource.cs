@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
@@ -11,7 +8,11 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
     public interface IResource
     {
         /// <summary>
-        /// an ffmpeg representation of the input stream, used in identifying the stream further
+        /// a .NET resource identifier used to define a unique Resource, multiple IResources may have the same ID
+        /// </summary>
+        string Id { get; set; }
+        /// <summary>
+        /// an ffmpeg representation of the input stream, truly unique, used in identifying the stream further
         /// </summary>
         string Map { get; set; }
         /// <summary>
@@ -25,14 +26,16 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// <summary>
         /// the duration of the input video, this is used in the processing of time
         /// </summary>
-        TimeSpan Length { get; set; } 
+        TimeSpan Length { get; set; }
         /// <summary>
-        /// the time at which the video should be processed from and trimmed to
+        /// the start time of the clip, by default this will always remain at 
         /// </summary>
         TimeSpan StartAt { get; set; }
+
+        TimeSpan Duration { get; set; }
         /// <summary>
-        /// the time at which the video should be processed to and trimmed from
+        /// method for copying a resource for its base types.
         /// </summary>
-        TimeSpan EndAt { get; set; }
+        IResource Copy();
     }
 }

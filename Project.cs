@@ -79,7 +79,7 @@ namespace Hudl.Ffmpeg.Templates
         {
             if (resource == null)
                 throw new ArgumentException("Provided resource file cannot be null.", "resource");
-            return _resources.Find(r => 
+            //return _resources.Find(r => 
         }
 
         public IProject Remove<TypeA>(TypeA resource) where TypeA : IResource, new()

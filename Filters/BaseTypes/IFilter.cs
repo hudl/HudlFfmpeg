@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Hudl.Ffmpeg.Command;
+using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
@@ -25,5 +22,11 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// builds the command necessary to complete the effect
         /// </summary>
         string ToString();
+
+        /// <summary>
+        /// sets up the filter based on the settings in the filterchain
+        /// </summary>
+        void Setup<TOutput>(Command<TOutput> command, Filterchain<TOutput> filterchain)
+            where TOutput : IResource;
     }
 }

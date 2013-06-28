@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.BaseTypes
 {
     /// <summary>
-    /// a collecton of <see cref="TypeA"/>, that will be validated to only include those that are applicable to <see cref="TypeB"/>
+    /// a collecton of <see cref="TCollection"/>, that will be validated to only include those that are applicable to <see cref="TRestrictedTo"/>
     /// </summary>
-    /// <typeparam name="TypeA">the type of the collection</typeparam>
-    /// <typeparam name="TypeB">the type the collection must apply to</typeparam>
-    public class AppliesToCollecion<TypeA, TypeB>
-        where TypeB : IResource
+    /// <typeparam name="TCollection">the type of the collection</typeparam>
+    /// <typeparam name="TRestrictedTo">the type the collection must apply to</typeparam>
+    public class AppliesToCollecion<TCollection, TRestrictedTo>
+        where TRestrictedTo : IResource
     {
-        private new List<TypeA> _filterList;
-        public readonly IReadOnlyList<TypeA> Items
+        private readonly List<TCollection> _filterList = new List<TCollection>();
+
+        internal List<TCollection> List { get { return _filterList; } } 
+
+        public IReadOnlyList<TCollection> Items
         { 
             get 
             { 
@@ -32,11 +33,11 @@ namespace Hudl.Ffmpeg.BaseTypes
             } 
         }
 
-        public AppliesToCollecion<TypeA, TypeB> Add(TypeA item)
+        public AppliesToCollecion<TCollection, TRestrictedTo> Add(TCollection item)
         {
-            if (Validate.AppliesTo<TypeA, TypeB>())
+            if (Validate.AppliesTo<TCollection, TRestrictedTo>())
             {
-                throw new AppliesToInvalidException<TypeA, TypeB>();
+                throw new AppliesToInvalidException<TCollection, TRestrictedTo>();
             }
 
             _filterList.Add(item);
@@ -44,9 +45,9 @@ namespace Hudl.Ffmpeg.BaseTypes
             return this;
         }
 
-        public AppliesToCollecion<TypeA, TypeB> AddRange(params TypeA[] list)
+        public AppliesToCollecion<TCollection, TRestrictedTo> AddRange(params TCollection[] list)
         {
-            foreach (TypeA item in list)
+            foreach (var item in list)
             {
                 Add(item);
             }
@@ -54,14 +55,14 @@ namespace Hudl.Ffmpeg.BaseTypes
             return this;
         }
 
-        public AppliesToCollecion<TypeA, TypeB> Remove(int index)
+        public AppliesToCollecion<TCollection, TRestrictedTo> Remove(int index)
         {
             _filterList.RemoveAt(index);
 
             return this;
         }
 
-        public AppliesToCollecion<TypeA, TypeB> RemoveAll(Predicate<TypeA> pred)
+        public AppliesToCollecion<TCollection, TRestrictedTo> RemoveAll(Predicate<TCollection> pred)
         {
             _filterList.RemoveAll(pred);
 

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -13,28 +10,29 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
     /// </summary>
     public class Filtergraph
     {
-        private new List<Filterchain<IResource>> _filterchains;
-        public readonly IReadOnlyList<Filterchain<IResource>> Filterchains { get { return _filterchains.AsReadOnly(); } }
 
-        public TypeA Assign<TypeA>(Filterchain<TypeA> filterchain, params IResource[] resources)
-            where TypeA : IResource
+        public Filtergraph()
         {
-            return filterchain.Output;
+            _filterchains = new List<Filterchain<IResource>>();
         }
 
-        public TypeA AssignToAll<TypeA>(Filterchain<TypeA> filterchain)
-            where TypeA : IResource
+        private readonly List<Filterchain<IResource>> _filterchains;
+        public IReadOnlyList<Filterchain<IResource>> Filterchains
         {
-            return filterchain.Output; 
+            get
+            {
+                return _filterchains.AsReadOnly();
+            }
         }
+
 
         /// <summary>
         /// adds the given Filterchain to the Filtergraph
         /// </summary>
-        /// <typeparam name="TypeA">the generic type of the filterchain</typeparam>
+        /// <typeparam name="TOutput">the generic type of the filterchain</typeparam>
         /// <param name="filterchain">the filterchain to be added to the filtergraph</param>
-        public Filtergraph Add<TypeA>(TypeA filterchain)
-            where TypeA : Filterchain<IResource>
+        public Filtergraph Add<TOutput>(TOutput filterchain)
+            where TOutput : Filterchain<IResource>
         {
             _filterchains.Add(filterchain);
             return this;
@@ -66,7 +64,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             if (_filterchains.Count == 0)
                 throw new ArgumentException("Filtergraph must contain at least one Filterchain.");
 
-            StringBuilder filtergraph = new StringBuilder(100);
+            var filtergraph = new StringBuilder(100);
             _filterchains.ForEach(filterchain =>
                 {
                     if (filtergraph.Length > 0) filtergraph.Append(";");

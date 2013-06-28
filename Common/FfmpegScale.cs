@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Hudl.Ffmpeg.Common
 {
@@ -11,9 +8,9 @@ namespace Hudl.Ffmpeg.Common
     /// </summary>
     public class FfmpegScale
     {
-        private static const decimal MinValue = -1;
-        private static const decimal MaxValue = 1;
-        private decimal _value = 0;
+        private const decimal MinValue = -1;
+        private const decimal MaxValue = 1;
+        private decimal _value;
 
         public FfmpegScale()
         {
@@ -42,7 +39,7 @@ namespace Hudl.Ffmpeg.Common
 
         public override string ToString()
         {
-            return Value.ToString();
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
 
         public static bool IsNullOrZero(FfmpegScale scale)

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hudl.Ffmpeg.BaseTypes; 
-using Hudl.Ffmpeg.Resources; 
+using Hudl.Ffmpeg.Resources.BaseTypes; 
 
 namespace Hudl.Ffmpeg.Templates
 {

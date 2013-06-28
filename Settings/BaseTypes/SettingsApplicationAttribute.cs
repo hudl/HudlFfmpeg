@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hudl.Ffmpeg.Settings.BaseTypes
 {
+    /// <summary>
+    /// attribute that decorates an ISettings class, it is responsible for 
+    /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
     public class SettingsApplicationAttribute : Attribute
     {
@@ -17,18 +16,19 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             /// <summary>
             /// indicates that the setting can be applied to input and output type
             /// </summary>
-            any = 0,
+            Any = 0,
             /// <summary>
             /// indicates that the setting can only be applied to an input stream
             /// </summary>
-            input = 1, 
+            Input = 1, 
             /// <summary>
             /// indicates that the settig can only be applied to the output stream
             /// </summary>
-            output = 2
+            Output = 2
         }
 
         public bool PreDeclaration { get; set; } 
+
         public SettingsResourceType ResourceType { get; set; } 
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
@@ -11,20 +7,22 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         BaseResource,
         IVideo
     {
-        public BaseVideo(string format) :
-            base(format)
+        protected BaseVideo(string format) 
+            : base(format)
         {
+            Settings = new SettingsCollection();
         }
-        public BaseVideo(string format, string path) :
-            base(format, path)
+        protected BaseVideo(string format, string path) 
+            : base(format, path)
         {
+            Settings = new SettingsCollection();
         }
-        public BaseVideo(string format, string path, TimeSpan length) :
-            base(format, path, length)
+        protected BaseVideo(string format, string path, TimeSpan length) 
+            : base(format, path, length)
         {
+            Settings = new SettingsCollection();
         }
 
-        private new SettingsCollection _settings;
-        public readonly SettingsCollection Settings { get { return _settings; } }
+        public SettingsCollection Settings { get; set; }
     }
 }

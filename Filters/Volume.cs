@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -11,33 +7,30 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.Filters
 {
     /// <summary>
-    /// set the Dynamic Aspect Ratio for the video resource
+    /// Volume Filter, overrides the volume of an audio resource by scaling it up and down.
     /// </summary>
     [AppliesToResource(Type=typeof(IAudio))]
-    public class Volume : IFilter
+    public class Volume : BaseFilter
     {
-        public Volume() 
-        { 
-        }
-        public Volume(FfmpegScale scale)
+        private const int FilterMaxInputs = 1;
+        private const string FilterType = "volume";
+
+        public Volume(decimal scale)
+            : base(FilterType, FilterMaxInputs)
         {
-            if (FfmpegScale.IsNullOrZero(scale))
-                throw new ArgumentException("Scale cannot be null.", "scale");
             Scale = scale;
         }
 
-        public FfmpegScale Scale { get; set; }
-
-        public string Type { get { return "volume"; } }
-
-        public int MaxInputs { get { return 1; } }
+        public decimal Scale { get; set; }
 
         public override string ToString() 
         {
-            if (FfmpegScale.IsNullOrZero(Scale))
-                throw new ArgumentException("Scale cannot be null.", "Scale");
+            if (Scale == 1)
+            {
+                throw new ArgumentException("Scale has no effect at 100% of the current volume.", "Scale");
+            }
 
-            return string.Concat(Type, "=sar=", Scale.ToString());
+            return string.Concat(Type, "=volume=", Scale.ToString());
         }
     }
 }
