@@ -11,7 +11,7 @@ namespace Hudl.Ffmpeg.Filters
     /// </summary>
     [AppliesToResource(Type=typeof(IAudio))]
     [AppliesToResource(Type=typeof(IVideo))]
-    public class Concat : BaseFilter, IFilterPreProcessor
+    public class Concat : BaseFilter, IFilterProcessor
     {
         private const int FilterMinInputs = 2;
         private const int FilterMaxInputs = 4;

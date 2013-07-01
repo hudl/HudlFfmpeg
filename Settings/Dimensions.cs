@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsApplicationAttribute.SettingsResourceType.Output)]
-    public class Dimensions : ISetting
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    public class Dimensions : BaseSetting
     {
+        private const string SettingType = "-s";
+
         public Dimensions(Point size)
+            : base(SettingType)
         {
             if (size == null)
             {
@@ -34,8 +38,6 @@ namespace Hudl.Ffmpeg.Settings
 
         public Point Size { get; set; }
 
-        public string Type { get { return "-s"; } }
-        
         public override string ToString()
         {
             if (Size == null)

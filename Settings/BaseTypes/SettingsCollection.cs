@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using Hudl.Ffmpeg.Common;
 
 namespace Hudl.Ffmpeg.Settings.BaseTypes
 {
@@ -8,17 +10,39 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
     /// </summary>
     public class SettingsCollection
     {
-        public SettingsCollection()
+        internal SettingsCollection()
+            : this(SettingsCollectionResourceTypes.Input)
         {
-            _settings = new List<ISetting>();
         }
-        public SettingsCollection(params ISetting[] settings)
+        internal SettingsCollection(params ISetting[] settings)
+            : this(SettingsCollectionResourceTypes.Input, settings)
         {
-            _settings = new List<ISetting>(settings);
+        }
+        internal SettingsCollection(SettingsCollectionResourceTypes type, params ISetting[] settings)
+        {
+            Type = type;
+            SettingsList = new List<ISetting>(settings);   
         }
 
-        private readonly List<ISetting> _settings;
-        public IReadOnlyList<ISetting> Items { get { return _settings.AsReadOnly(); } }
+        public IReadOnlyList<ISetting> Items { get { return SettingsList.AsReadOnly(); } }
+
+        public SettingsCollectionResourceTypes Type { get; protected set; } 
+
+        /// <summary>
+        /// returns a new settings collection instance for input collections
+        /// </summary>
+        public static SettingsCollection ForInput(params ISetting[] settings)
+        {
+            return SettingsCollection.ForInput(SettingsCollectionResourceTypes.Input, settings);
+        }
+
+        /// <summary>
+        /// returns a new settins collection instance for output collections
+        /// </summary>
+        public static SettingsCollection ForOutput(params ISetting[] settings)
+        {
+            return SettingsCollection.ForInput(SettingsCollectionResourceTypes.Output, settings);
+        }
 
         /// <summary>
         /// adds the given Setting to the SettingsCollection
@@ -28,7 +52,21 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         public SettingsCollection Add<TSetting>(TSetting setting)
             where TSetting : ISetting
         {
-            _settings.Add(setting);
+            if (setting == null)
+            {
+                throw new ArgumentNullException("setting");
+            }
+            if (Contains<TSetting>())
+            {
+                throw new ArgumentException(string.Format("The SettingsCollection already contains a type of {0}.", typeof(TSetting).Name));
+            }
+            if (Type != SettingsCollectionResourceTypes.Any &&
+                !Validate.SettingsFor<TSetting>(Type))
+            {
+                throw new ArgumentException(string.Format("The SettingsCollection is restricted only to {0} settings.", typeof(TSetting).Name));
+            }
+
+            SettingsList.Add(setting);
             return this;
         }
 
@@ -38,8 +76,64 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// <param name="settings">the SettingsCollection to be added  to be added to the SettingsCollection</param>
         public SettingsCollection AddRange(SettingsCollection settings)
         {
-            _settings.AddRange(settings.Items);
+            if (settings == null)
+            {
+                throw new ArgumentNullException("settings");
+            }
+
+            settings.SettingsList.ForEach(s => Add(s));
             return this;
+        }
+
+        /// <summary>
+        /// merges the current setting into the set based on the merge option type
+        /// </summary>
+        public SettingsCollection Merge<TSetting>(TSetting setting, FfmpegMergeOptionTypes option)
+            where TSetting : ISetting
+        {
+            if (setting == null)
+            {
+                throw new ArgumentNullException("setting");
+            }
+
+            var alreadyContainsSetting = Contains<TSetting>(); 
+            if (alreadyContainsSetting)
+            {
+                if (option == FfmpegMergeOptionTypes.NewWins)
+                {
+                    Remove<TSetting>();
+                    Add(setting);
+                }
+            }
+            else
+            {
+                Add(setting);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// merges the current SettingsCollection into the set based on the merge option type.
+        /// </summary>
+        public SettingsCollection Merge(SettingsCollection settings, FfmpegMergeOptionTypes option)
+        {
+            if (settings == null)
+            {
+                throw new ArgumentNullException("settings");
+            }
+
+            settings.SettingsList.ForEach(s => Merge(s, option));
+            return this;
+        }
+        
+        /// <summary>
+        /// determines if the settings collection already contains this setting type
+        /// </summary>
+        public bool Contains<TSetting>()
+            where TSetting : ISetting
+        {
+            return (SettingsList.Count(s => s is TSetting) > 0);
         }
 
         /// <summary>
@@ -48,7 +142,18 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// <param name="index">the index of the desired Setting to be removed from the SettingsCollection</param>
         public SettingsCollection Remove(int index)
         {
-            _settings.RemoveAt(index);
+            SettingsList.RemoveAt(index);
+            return this;
+        }
+
+        /// <summary>
+        /// removes the specified setting type from the SettingsCollection
+        /// </summary>
+        /// <typeparam name="TSetting">the settings type that is to be removed</typeparam>
+        public SettingsCollection Remove<TSetting>()
+            where TSetting : ISetting
+        {
+            SettingsList.RemoveAll(s => s is TSetting);
             return this;
         }
 
@@ -58,9 +163,12 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// <param name="pred">the predicate of required criteria</param>
         public SettingsCollection RemoveAll(Predicate<ISetting> pred)
         {
-            _settings.RemoveAll(pred);
+            SettingsList.RemoveAll(pred);
             return this;
         }
 
+        #region Internals
+        internal List<ISetting> SettingsList { get; set; }
+        #endregion 
     }
 }

@@ -1,16 +1,19 @@
 ﻿using System;
-using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsApplicationAttribute.SettingsResourceType.Output)]
-    public class FrameRate : ISetting
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    public class FrameRate : BaseSetting
     {
+        private const string SettingType = "-r";
+
         public FrameRate(double rate)
+            : base(SettingType)
         {
             if (rate <= 0)
             {
@@ -22,8 +25,6 @@ namespace Hudl.Ffmpeg.Settings
 
         public double Rate { get; set; }
 
-        public string Type { get { return "-r"; } }
-        
         public override string ToString()
         {
             if (Rate <= 0)

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Common
 {
@@ -24,18 +26,24 @@ namespace Hudl.Ffmpeg.Common
             {
                 return false;
             }
-            var typeAAppliesToAttributeType = typeAAppliesToAttributes.Find(a =>
-                {
-                    foreach (var namedArg in a.NamedArguments)
-                    {
-                        if (namedArg.MemberName == "Type" && namedArg.TypedValue.Value is TRestrictedTo)
-                        {
-                            return true;
-                        }
-                    }
-                    return false; 
-                });
+            var typeAAppliesToAttributeType = typeAAppliesToAttributes.Find(a => a.NamedArguments.Any(namedArg => namedArg.MemberName == "Type" && namedArg.TypedValue.Value is TRestrictedTo));
             return (typeAAppliesToAttributeType != null); 
+        }
+
+        public static bool SettingsFor<TSetting>(SettingsCollectionResourceTypes type)
+            where TSetting : ISetting
+        {
+            var typeAAttributes = new List<CustomAttributeData>(typeof (TSetting).CustomAttributes);
+            var typeASettingsAttributes = typeAAttributes.FirstOrDefault(a => a.AttributeType == typeof(SettingsApplicationAttribute));
+            if (typeASettingsAttributes == null || typeASettingsAttributes.NamedArguments == null)
+            {
+                return false;
+            }
+            var resourceTypeArgument = typeASettingsAttributes
+                                                        .NamedArguments
+                                                        .FirstOrDefault(a => a.MemberName == "ResourceType");
+            var resourceTypeValue = (SettingsCollectionResourceTypes)resourceTypeArgument.TypedValue.Value;
+            return (type == resourceTypeValue);
         }
     }
 }

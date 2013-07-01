@@ -10,17 +10,17 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         protected BaseAudio(string format) 
             : base(format)
         {
-            Settings = new SettingsCollection();
+            Settings = SettingsCollection.ForInput();
         }
         protected BaseAudio(string format, string path) 
             : base(format, path)
         {
-            Settings = new SettingsCollection();
+            Settings = SettingsCollection.ForInput();
         }
         protected BaseAudio(string format, string path, TimeSpan length) 
             : base(format, path, length)
         {
-            Settings = new SettingsCollection();
+            Settings = SettingsCollection.ForInput();
         }
 
         public SettingsCollection Settings { get; set; }

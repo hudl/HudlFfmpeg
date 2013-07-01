@@ -7,11 +7,13 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = false, ResourceType = SettingsApplicationAttribute.SettingsResourceType.Input)]
-    public class Duration : ISetting
+    [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceTypes.Input)]
+    public class Duration : BaseSetting
     {
-        
+        private const string SettingType = "-t";
+
         public Duration(TimeSpan length)
+            : base(SettingType)
         {
             if (length == null)
             {
@@ -27,8 +29,14 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public string Type { get { return "-t"; } }
-        
+        public override TimeSpan? LengthOverride
+        {
+            get
+            {
+                return Length; 
+            }
+        }
+
         public override string ToString()
         {
             if (Length == null)

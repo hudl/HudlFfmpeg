@@ -7,11 +7,13 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsApplicationAttribute.SettingsResourceType.Input)]
-    public class StartAt : ISetting
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Input)]
+    public class StartAt : BaseSetting
     {
+        private const string SettingType = "-ss";
         
         public StartAt(TimeSpan length)
+            : base(SettingType)
         {
             if (length == null)
             {
@@ -27,8 +29,14 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public string Type { get { return "-ss"; } }
-        
+        public override TimeSpan? LengthDifference
+        {
+            get
+            {
+                return TimeSpan.FromSeconds(Length.TotalSeconds * -1);
+            }
+        }
+
         public override string ToString()
         {
             if (Length == null)

@@ -10,21 +10,18 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
     /// </summary>
     public class Filtergraph
     {
-
         public Filtergraph()
         {
-            _filterchains = new List<Filterchain<IResource>>();
+            FilterchainList = new List<Filterchain<IResource>>();
         }
 
-        private readonly List<Filterchain<IResource>> _filterchains;
         public IReadOnlyList<Filterchain<IResource>> Filterchains
         {
             get
             {
-                return _filterchains.AsReadOnly();
+                return FilterchainList.AsReadOnly();
             }
         }
-
 
         /// <summary>
         /// adds the given Filterchain to the Filtergraph
@@ -34,7 +31,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         public Filtergraph Add<TOutput>(TOutput filterchain)
             where TOutput : Filterchain<IResource>
         {
-            _filterchains.Add(filterchain);
+            FilterchainList.Add(filterchain);
             return this;
         }
        
@@ -44,7 +41,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <param name="index">the index of the desired Filterchain to be removed from the Filtergraph</param>
         public Filtergraph Remove(int index)
         {
-            _filterchains.RemoveAt(index);
+            FilterchainList.RemoveAt(index);
             return this;
         }
          
@@ -54,18 +51,20 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <param name="pred">the predicate of required criteria</param>
         public Filtergraph RemoveAll(Predicate<Filterchain<IResource>> pred)
         {
-            _filterchains.RemoveAll(pred);
+            FilterchainList.RemoveAll(pred);
             return this; 
         }
 
         public override string ToString() 
         {
             //perform simple validation on filter graph
-            if (_filterchains.Count == 0)
+            if (FilterchainList.Count == 0)
+            {
                 throw new ArgumentException("Filtergraph must contain at least one Filterchain.");
+            }
 
             var filtergraph = new StringBuilder(100);
-            _filterchains.ForEach(filterchain =>
+            FilterchainList.ForEach(filterchain =>
                 {
                     if (filtergraph.Length > 0) filtergraph.Append(";");
                     filtergraph.Append(filterchain.ToString());
@@ -74,5 +73,9 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             //return the formatted filter command string 
             return filtergraph.ToString();
         }
+
+        #region Internals
+        internal List<Filterchain<IResource>> FilterchainList { get; set; }
+        #endregion
     }
 }

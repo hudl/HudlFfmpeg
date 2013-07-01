@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings;
@@ -58,34 +59,9 @@ namespace Hudl.Ffmpeg
             //  - The commands below should be sufficient enough to describe the process without knowledge of each object
             //*******************************************
             var factory = new CommandFactory();
-            
-           
-            
-            
-            
-            
-            var campaignVideo = factory.OutputAs<Mp4>();
             var campaignAudio = factory.OutputAs<M4A>();
             var campaignMobile = factory.OutputAs<Mp4>();
             var campaignImage = factory.OutputAs<Png>();
-
-            //*******************************************
-            // VIDEO PREPWORK
-            //*******************************************
-            var videoResources = new List<IResource>
-                {
-                    new Mp4("c:\source\campaigns\test\vid001.mp4", TimeSpan.FromSeconds(15)),
-                    new Mp4("c:\source\campaigns\test\vid002.mp4", TimeSpan.FromSeconds(9)),
-                    new Mp4("c:\source\campaigns\test\vid003.mp4", TimeSpan.FromSeconds(9)),
-                    new Mp4("c:\source\campaigns\test\vid004.mp4", TimeSpan.FromSeconds(11)),
-                    new Mp4("c:\source\campaigns\test\vid005.mp4", TimeSpan.FromSeconds(12))
-                };
-            for (var i = 0; i < videoResources.Count; i++)
-            {
-                
-            }
-            var prepatoryCommands = new List<Command<IResource>>();
-
             
             //*******************************************
             // VIDEO FILTERS\SETTINGS
@@ -110,7 +86,7 @@ namespace Hudl.Ffmpeg
                 new ColorBalance(_shadows, _midtones, _highlights),
                 new Fade(Fade.FadeType.Out, 15, 2)
             );
-            var videoSettings = new SettingsCollection(
+            var videoSettings = SettingsCollection.ForInput(
                 new OverwriteOutput(), 
                 new VCodec(VideoCodecTypes.Libx264), 
                 new FrameRate(29.97), 
@@ -137,7 +113,7 @@ namespace Hudl.Ffmpeg
                 new AMix() { Duration = AMix.DurationType.First }, 
                 new AFade(AFade.FadeType.Out, 15, 2)
             );
-            var audioSettings = new SettingsCollection(
+            var audioSettings = SettingsCollection.ForInput(
                 new OverwriteOutput(), 
                 new TrimShortest(), 
                 new ACodec(AudioCodecTypes.ExperimentalAac)
@@ -148,14 +124,9 @@ namespace Hudl.Ffmpeg
             // CAMPAIGN VIDEO GENERATION
             //*******************************************
             #region ...
-            var campaignReceipts = new List<CommandResourceReceipt>()
-                {
-                    campaignVideo.Add<Mp4>("c:/source/movie1.mp4"),
-                    campaignVideo.Add<Mp4>("c:/source/movie2.mp4"),
-                    campaignVideo.Add<Mp4>("c:/source/movie3.mp4"), 
-                    campaignVideo.Add<Png>("c:/source/assets/vignette.png"),
-                    campaignVideo.Add<Mp4>("c:/source/assets/filmgrain.mp4")
-                };
+            var campaignVideo = factory.OutputAs<Mp4>();
+            var campaignVideoInputs = factory.GetOutputList();
+            var campaignReceipts = campaignVideo.AddRange(campaignVideoInputs);
 
             campaignVideo.ApplyFilterToEach(filterVideoStep1); 
 

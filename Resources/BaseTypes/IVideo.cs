@@ -2,7 +2,7 @@
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
-    interface IVideo : IResource, ISettingable
+    public interface IVideo : IResource, ISettingable
     {
     }
 }

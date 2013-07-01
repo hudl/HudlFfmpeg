@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
-    interface IFilterPreProcessor
+    interface IFilterProcessor
     {
         /// <summary>
         /// Generates a list of Single Input, Single Output prepatory commands, this restraint is enforeced.

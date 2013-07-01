@@ -7,10 +7,13 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsApplicationAttribute.SettingsResourceType.Output)]
-    public class ACodec : ISetting
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    public class ACodec : BaseSetting
     {
+        private const string SettingType = "-acodec";
+
         public ACodec(string codec)
+            : base(SettingType)
         {
             Codec = codec;
         }
@@ -20,8 +23,6 @@ namespace Hudl.Ffmpeg.Settings
         }
 
         public string Codec { get; set; }
-
-        public string Type { get { return "-acodec"; } }
         
         public override string ToString()
         {

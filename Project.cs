@@ -97,11 +97,6 @@ namespace Hudl.Ffmpeg.Templates
             throw new NotImplementedException();
         }
 
-        public ResourceList Render<TypeP>() where TypeP : Command.BaseTypes.ICommandProcessor, new()
-        {
-            throw new NotImplementedException();
-        }
-
         public Filters.BaseTypes.Filtergraph Filtergraph
         {
             get

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -34,7 +37,14 @@ namespace Hudl.Ffmpeg.Filters
 
         public OverlayVideoEvalTypes Eval { get; set; }
         
-        public OverlayVideoFormatTypes Format { get; set; } 
+        public OverlayVideoFormatTypes Format { get; set; }
+
+        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        {
+            return Shortest ? 
+                resources.Max(r => r.Resource.Length) : 
+                resources.Min(r => r.Resource.Length);
+        }
 
         public override string ToString() 
         {

@@ -28,12 +28,6 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// </summary>
         TimeSpan Length { get; set; }
         /// <summary>
-        /// the start time of the clip, by default this will always remain at 
-        /// </summary>
-        TimeSpan StartAt { get; set; }
-
-        TimeSpan Duration { get; set; }
-        /// <summary>
         /// method for copying a resource for its base types.
         /// </summary>
         IResource Copy();

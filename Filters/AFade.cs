@@ -4,6 +4,7 @@ using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.Ffmpeg.Settings;
 
 namespace Hudl.Ffmpeg.Filters
 {
@@ -22,7 +23,7 @@ namespace Hudl.Ffmpeg.Filters
             Transition = FadeTransitionTypes.In;
             Unit = FadeAudioUnitTypes.Seconds;
         }
-        public AFade(FadeTransitionTypes transition, int startAt, int duration)
+        public AFade(FadeTransitionTypes transition, int duration)
             : this()
         {
             Transition = transition;
@@ -34,33 +35,32 @@ namespace Hudl.Ffmpeg.Filters
 
         public FadeAudioUnitTypes Unit { get; set; }
         
-        public double StartAt { get; set; }
-        
         public double Duration { get; set; }
 
         public override string ToString()
         {
-            if (StartAt == 0)
+            if (Duration <= 0)
             {
-                throw new ArgumentException("Starting location of the Audio Fade cannot be null.", "StartAt");
-            }
-            if (Duration == 0)
-            {
-                throw new ArgumentException("Duration of the Audio Fade cannot be null.", "Duration");
+                throw new InvalidOperationException("Duration of the Audio Fade must be greater than zero.");
             }
 
             var filter = new StringBuilder(100);
+            var startAtLocation = 0d;
+            if (Transition == FadeTransitionTypes.Out)
+            {
+                startAtLocation = Resources[0].Resource.Length.TotalSeconds - Duration; 
+            }
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit) 
             {
-                case FadeUnits.Sample:
-                    filter.AppendFormat(":ss={0}:ns={1}", 
-                        StartAt, 
+                case FadeAudioUnitTypes.Sample:
+                    filter.AppendFormat(":ss={0}:ns={1}",
+                        startAtLocation, 
                         Duration);
                     break;
                 default : //seconds 
-                    filter.AppendFormat(":st={0}:d={1}", 
-                        StartAt, 
+                    filter.AppendFormat(":st={0}:d={1}",
+                        startAtLocation, 
                         Duration);
                     break;
             }

@@ -1,4 +1,6 @@
-﻿using Hudl.Ffmpeg.Command;
+﻿using System;
+using System.Collections.Generic;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -17,6 +19,24 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// maximum number of inputs that the filter can support
         /// </summary>
         int MaxInputs { get; }
+
+        /// <summary>
+        /// the difference the fitler will make on the output video length
+        /// </summary>
+        /// <returns>Null indicates that the length difference does not apply</returns>
+        TimeSpan? LengthDifference { get; }
+
+        /// <summary>
+        /// the length override property is an override to the input video length
+        /// </summary>
+        /// <returns>Null indicates that the length difference does not apply</returns>
+        TimeSpan? LengthOverride { get; }
+
+        /// <summary>
+        /// the length override function, overrided when a fitler requires a length change of output calculated from the resources.
+        /// </summary>
+        /// <returns>Null indicates that the length difference does not apply</returns>
+        TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources);
 
         /// <summary>
         /// builds the command necessary to complete the effect

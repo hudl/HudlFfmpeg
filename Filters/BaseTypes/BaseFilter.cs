@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -53,6 +49,21 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             {
                 throw new InvalidOperationException("The filter has exceeded the maximum allowed number of inputs.");
             }
+        }
+
+        public virtual TimeSpan? LengthDifference
+        {
+            get { return null; }
+        }
+
+        public virtual TimeSpan? LengthOverride
+        {
+            get { return null; }
+        }
+
+        public virtual TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        {
+            return null;
         }
     }
 }

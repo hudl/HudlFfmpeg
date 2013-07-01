@@ -1,4 +1,6 @@
-﻿namespace Hudl.Ffmpeg.Command.BaseTypes
+﻿using System;
+
+namespace Hudl.Ffmpeg.Command.BaseTypes
 {
     /// <summary>
     /// Used in the aide of processing projects, allows the output to several formats
@@ -8,7 +10,11 @@
         /// <summary>
         /// contains the current state of the command processor.
         /// </summary>
-        CommandProcessorStatus Status { get; } 
+        CommandProcessorStatus Status { get; }
+        /// <summary>
+        /// contains the error message from a faulted state
+        /// </summary>
+        Exception Error { get; }
         /// <summary>
         /// opens a command builder session, should get the processor started and ready to recieve commands
         /// </summary>
