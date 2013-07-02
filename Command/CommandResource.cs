@@ -13,7 +13,7 @@ namespace Hudl.Ffmpeg.Command
         where TResource : IResource
     {
         internal CommandResource(Command<IResource> parent, TResource resource)
-            : this(parent, SettingsCollection.ForInput(SettingsCollectionResourceTypes.Input), resource)
+            : this(parent, SettingsCollection.ForInput(), resource)
         {
         }
         internal CommandResource(Command<IResource> parent, SettingsCollection settings, TResource resource)

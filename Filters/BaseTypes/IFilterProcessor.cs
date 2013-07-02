@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
+﻿using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -12,7 +11,8 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <typeparam name="TOutput">The command output type</typeparam>
         /// <param name="command">The Command parent that the filter is by association a part of</param>
         /// <param name="filterchain">The Filterchain parent that the filter is part of</param>
-        List<Command<IResource>> GetCommands<TOutput>(Command<TOutput> command, Filterchain<TOutput> filterchain)
-            where TOutput : IResource;
+        void PrepCommands<TOutput, TResource>(Command<TOutput> command, Filterchain<TResource> filterchain)
+            where TOutput : IResource
+            where TResource : IResource;
     }
 }

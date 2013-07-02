@@ -61,13 +61,13 @@ namespace Hudl.Ffmpeg.Filters
                     Y, 
                     (filter.Length > 0) ? ":" : string.Empty);
             }
-            if (Eval != EvalTypes.Frame)  
+            if (Eval != OverlayVideoEvalTypes.Frame)  
             {
                 filter.AppendFormat("{1}eval={0}", 
                     Eval.ToString().ToLower(), 
                     (filter.Length > 0) ? ":" : string.Empty);
             }
-            if (Format != FormatTypes.Yuv420)  
+            if (Format != OverlayVideoFormatTypes.Yuv420)  
             {
                 filter.AppendFormat("{1}format={0}", 
                     Format.ToString().ToLower(), 

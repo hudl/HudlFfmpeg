@@ -11,7 +11,7 @@ namespace Hudl.Ffmpeg.Filters
     /// </summary>
     [AppliesToResource(Type=typeof(IAudio))]
     [AppliesToResource(Type=typeof(IVideo))]
-    public class Concat : BaseFilter, IFilterProcessor
+    public class Concat : BaseFilter
     {
         private const int FilterMinInputs = 2;
         private const int FilterMaxInputs = 4;
@@ -41,11 +41,11 @@ namespace Hudl.Ffmpeg.Filters
             var numberOfResources = Resources.Count; 
             if (NumberOfVideoOut > numberOfResources)
             {
-                throw new ArgumentException("Number of Videos out cannot be greater than Resources in.", "NumberOfVideoOut");
+                throw new InvalidOperationException("Number of Videos out cannot be greater than Resources in.");
             }
             if (NumberOfAudioOut > numberOfResources) 
             {
-                throw new ArgumentException("Number of Audios out cannot be greater than Resources in.", "NumberOfAudioOut");
+                throw new InvalidOperationException("Number of Audios out cannot be greater than Resources in.");
             }
 
             var filter = new StringBuilder(100);

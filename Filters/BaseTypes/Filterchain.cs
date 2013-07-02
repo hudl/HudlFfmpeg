@@ -29,5 +29,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
 
             return new Filterchain<TResource>(output, filters);
         }
+
     }
 }

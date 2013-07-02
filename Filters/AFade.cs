@@ -28,7 +28,6 @@ namespace Hudl.Ffmpeg.Filters
         {
             Transition = transition;
             Duration = duration;
-            StartAt = startAt;
         }
 
         public FadeTransitionTypes Transition { get; set; } 

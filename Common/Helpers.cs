@@ -94,5 +94,19 @@ namespace Hudl.Ffmpeg.Common
                 });
             return commandResourceLength + commandFiltergraphLength; 
         }
+
+        /// <summary>
+        /// escapes the path of the provided resource.
+        /// </summary>
+        public static string EscapePath(IResource resource)
+        {
+            if (resource == null)
+            {
+                throw new ArgumentNullException("resource");
+            }
+
+            return string.Format("\"{0}\"",
+                                 resource.Path.Replace('\\', '/'));
+        }
     }
 }

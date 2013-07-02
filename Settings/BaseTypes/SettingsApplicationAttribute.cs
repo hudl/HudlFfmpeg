@@ -9,8 +9,23 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
     [AttributeUsage(AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
     public class SettingsApplicationAttribute : Attribute
     {
-        public bool PreDeclaration { get; set; } 
+        public SettingsApplicationAttribute()
+        {
+            Data = new SettingsApplicationData();
+        }
 
-        public SettingsCollectionResourceTypes ResourceType { get; set; } 
+        public bool PreDeclaration
+        {
+            get { return Data.PreDeclaration; } 
+            set { Data.PreDeclaration = value; }
+        } 
+
+        public SettingsCollectionResourceTypes ResourceType
+        {
+            get { return Data.ResourceType; }
+            set { Data.ResourceType = value; }
+        }
+
+        internal SettingsApplicationData Data { get; set; }
     }
 }

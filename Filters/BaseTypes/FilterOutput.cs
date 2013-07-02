@@ -1,4 +1,5 @@
 ﻿using System;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -24,19 +25,19 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
 
         public Filterchain<IResource> Parent { get; protected set; }
 
-        public TimeSpan Length
-        {
-            get
-            {
-                return TimeSpan.FromSeconds(Helpers.GetLength(Parent));
-            }
-        }
+        //public TimeSpan Length
+        //{
+        //    get
+        //    {
+        //        return TimeSpan.FromSeconds(Helpers.GetLength(Parent as Filterchain<IResource>));
+        //    }
+        //}
 
-        public TResource Output()
-        {
-            Resource.Length = Length;
-            return Resource;
-        }
+        //public TResource Output()
+        //{
+        //    Resource.Length = Length;
+        //    return Resource;
+        //}
 
         #region Internals
         internal TResource Resource { get; set; }

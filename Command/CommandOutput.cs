@@ -44,9 +44,11 @@ namespace Hudl.Ffmpeg.Command
         {
             get
             {
-                return TimeSpan.FromSeconds(Helpers.GetLength(Parent));
+                return TimeSpan.FromSeconds(Helpers.GetLength(Parent as Command<IResource>));
             }
         }
+
+        public bool ExportResource { get; protected set; }
 
         public TResource Output()
         {

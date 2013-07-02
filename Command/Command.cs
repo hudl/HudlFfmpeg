@@ -10,7 +10,7 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Command
 {
     public class Command<TOutput>
-        where TOutput : IResource, new()
+        where TOutput : IResource
     {
         internal Command(CommandFactory parent)
         {
@@ -21,9 +21,9 @@ namespace Hudl.Ffmpeg.Command
             ResourceList = new List<CommandResource<IResource>>();
         }
 
-        public CommandResource<TOutput> Output { get; protected set; }
+        public CommandOutput<TOutput> Output { get; protected set; }
 
-        public TimeSpan Length { get { Helpers.GetLength(this); } }
+        public TimeSpan Length { get { return TimeSpan.FromSeconds(Helpers.GetLength(this as Command<IResource>)); } }
 
         public IReadOnlyList<CommandResource<IResource>> Resources { get { return ResourceList.AsReadOnly();  } }
 
@@ -81,7 +81,7 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("resource");
             }
 
-            return Add(SettingsCollection.ForInput(SettingsCollectionResourceTypes.Input), resource);
+            return Add(SettingsCollection.ForInput(), resource);
         }
 
         public CommandResourceReceipt Add(SettingsCollection settings, IResource resource)
@@ -95,7 +95,7 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("resource");
             }
 
-            var commandResource = new CommandResource<IResource>(this, settings, resource);
+            var commandResource = new CommandResource<IResource>(this as Command<IResource>, settings, resource);
             ResourceList.Add(commandResource);
             return commandResource.GetReciept();
         }
@@ -120,12 +120,12 @@ namespace Hudl.Ffmpeg.Command
             return resourceDictionary.Select(r => Add(r.Key, r.Value)).ToList();
         }
 
-        public CommandResourceReceipt GetReceipt(Func<IResource, bool> predicate)
+        public CommandResourceReceipt GetReceipt(Func<CommandResource<IResource>, bool> predicate)
         {
             return GetReceipts(predicate).FirstOrDefault();
         }
 
-        public List<CommandResourceReceipt> GetReceipts(Func<IResource, bool> predicate)
+        public List<CommandResourceReceipt> GetReceipts(Func<CommandResource<IResource>, bool> predicate)
         {
             return ResourceList.Where(predicate)
                                .Select(r => r.GetReciept())
@@ -153,7 +153,7 @@ namespace Hudl.Ffmpeg.Command
             var resourceList = new List<CommandResourceReceipt>(resources);
             if (resourceList.Count == 0)
             {
-                resourceList = ResourceList.Select(r => new CommandResourceReceipt(r.Resource.Map)).ToList();
+                resourceList = ResourceList.Select(r => r.GetReciept()).ToList();
             }
 
             return ApplySettings(settings, resourceList);
@@ -190,7 +190,7 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("filter");
             }
 
-            return ApplyFilter(new Filterchain<TResource>(filter), resources);
+            return ApplyFilter(Filterchain.FilterTo<TResource>(filter), resources);
         }
 
         public CommandResourceReceipt ApplyFilter<TResource>(Filterchain<TResource> filterchain, params CommandResourceReceipt[] resources) 
@@ -204,7 +204,7 @@ namespace Hudl.Ffmpeg.Command
             var resourceList = new List<CommandResourceReceipt>(resources);
             if (resourceList.Count == 0)
             {
-                resourceList = ResourceList.Select(r => new CommandResourceReceipt(r.Resource.Map)).ToList();
+                resourceList = ResourceList.Select(r => r.GetReciept()).ToList();
             }
 
             return ApplyFilter(filterchain, resourceList);
@@ -252,7 +252,7 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("filter");
             }
 
-            return ApplyFilterToEach(new Filterchain<TResource>(filter), resources);
+            return ApplyFilterToEach(Filterchain.FilterTo<TResource>(filter), resources);
         }
 
         public List<CommandResourceReceipt> ApplyFilterToEach<TResource>(Filterchain<TResource> filterchain, params CommandResourceReceipt[] resources)
@@ -266,7 +266,7 @@ namespace Hudl.Ffmpeg.Command
             var resourceList = new List<CommandResourceReceipt>(resources);
             if (resourceList.Count == 0)
             {
-                resourceList = ResourceList.Select(r => new CommandResourceReceipt(r.Resource.Map)).ToList();
+                resourceList = ResourceList.Select(r => r.GetReciept()).ToList();
             }
 
             return ApplyFilterToEach(filterchain, resourceList);
@@ -283,15 +283,57 @@ namespace Hudl.Ffmpeg.Command
             return resources.Select(r => ApplyFilter(filterchain, r)).ToList(); 
         }
 
-        public TOutput Render()
+        /// <summary>
+        /// Renders the command stream with the defualt command processor
+        /// </summary>
+        public CommandOutput<TOutput> Render()
         {
             return RenderWith<BatchCommandProcessorReciever>();
         }
 
-        public TOutput RenderWith<TProcessor>()
+        /// <summary>
+        /// Renders the command stream with a new command processor
+        /// </summary>
+        public CommandOutput<TOutput> RenderWith<TProcessor>()
             where TProcessor : ICommandProcessor, new()
         {
+            var commandProcessor = new TProcessor();
+
+            if (!commandProcessor.Open())
+            {
+                throw commandProcessor.Error;
+            }
+
+            var returnType = RenderWith(commandProcessor);
+
+            if (!commandProcessor.Close())
+            {
+                throw commandProcessor.Error;
+            }
+
+            return returnType;
+        }
+
+        /// <summary>
+        /// Renders the command stream with an existing command processor
+        /// </summary>
+        public CommandOutput<TOutput> RenderWith<TProcessor>(TProcessor processor)
+            where TProcessor : ICommandProcessor
+        {
+            if (processor == null)
+            {
+                throw new ArgumentNullException("processor");
+            }
+
+            var commandBuilder = new CommandBuilder();
+            commandBuilder.WriteCommand(this as Command<IResource>);
             
+            if (!processor.Send(commandBuilder.ToString()))
+            {
+                throw processor.Error;
+            }
+
+            return Output;
         }
 
         #region Internals
@@ -337,7 +379,7 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("receipt");
             }
 
-            return CommandList.Where(c => receipt.CommandId == c.Id);
+            return CommandList.FirstOrDefault(c => receipt.CommandId == c.Id);
         }
         #endregion
 
@@ -356,7 +398,7 @@ namespace Hudl.Ffmpeg.Command
                     {
                         return true;
                     }
-                    return (f as IFilterValidator).Validate(this, filterchain);
+                    return (f as IFilterValidator).Validate(this as Command<IResource>, filterchain as Filterchain<IResource>);
                 });
         }
         private bool ValidateFiltersMax<TResource>(Filterchain<TResource> filterchain)
@@ -376,22 +418,20 @@ namespace Hudl.Ffmpeg.Command
             filterchain.Filters.List.ForEach(filter =>
                 {
                     if (!(filter is IFilterProcessor)) return;
-                    var prepatoryCommands = (filter as IFilterProcessor).GetCommands(this, filterchain);
-                    if (prepatoryCommands == null) return;
-                    CommandList.AddRange(prepatoryCommands);
+                    (filter as IFilterProcessor).PrepCommands(this, filterchain);
                 });
         }
-        private void ProcessFilterchain<TResource>(Filterchain<TResource> filterchain)
-        {
-            if (filterchain == null)
-            {
-                throw new ArgumentNullException("filterchain");
-            }
+        //private void ProcessFilterchain<TResource>(Filterchain<TResource> filterchain)
+        //{
+        //    if (filterchain == null)
+        //    {
+        //        throw new ArgumentNullException("filterchain");
+        //    }
 
-            var maximumAllowedMinimum = GetFiltersMax(filterchain);
+        //    var maximumAllowedMinimum = GetFiltersMax(filterchain);
             
             
-        }
+        //}
         #endregion
 
     }

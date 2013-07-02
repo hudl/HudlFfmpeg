@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
@@ -13,27 +14,46 @@ namespace Hudl.Ffmpeg.Settings
     {
         private const string SettingType = "-s";
 
-        public Dimensions(Point size)
+        private readonly Dictionary<ScalePresetTypes, Point> _scalingPresets = new Dictionary<ScalePresetTypes, Point>
+        {
+            { ScalePresetTypes.Svga, new Point(800, 600) }, 
+            { ScalePresetTypes.Xga, new Point(1024, 768) }, 
+            { ScalePresetTypes.Ega, new Point(640, 350) }, 
+            { ScalePresetTypes.Sd240, new Point(432, 240) }, 
+            { ScalePresetTypes.Sd360, new Point(640, 360) }, 
+            { ScalePresetTypes.Hd480, new Point(852, 480) }, 
+            { ScalePresetTypes.Hd720, new Point(1280, 720) },
+            { ScalePresetTypes.Hd1080, new Point(1920, 1080) }
+        };
+
+        public Dimensions()
             : base(SettingType)
         {
-            if (size == null)
+            Size = new Point(1, 1);
+        }
+        public Dimensions(ScalePresetTypes preset)
+            : this()
+        {
+            if (!_scalingPresets.ContainsKey(preset))
             {
-                throw new ArgumentNullException("size");
+                throw new ArgumentException("The preset does not currently exist.", "preset");
             }
 
-            Size = size;
+            Size = _scalingPresets[preset];
         }
-        public Dimensions(int width, int height)
-            : this(new Point(width, height))
+        public Dimensions(int x, int y)
+            : this()
         {
-            if (width <= 0)
+            if (x <= 0)
             {
-                throw new ArgumentException("Dimensions width must be greater than zero.");
+                throw new ArgumentException("Dimensions X must be greater than zero.");
             }
-            if (height <= 0)
+            if (y <= 0)
             {
-                throw new ArgumentException("Dimensions height must be greater than zero.");
+                throw new ArgumentException("Dimensions Y must be greater than zero.");
             }
+
+            Size = new Point(x, y);
         }
 
         public Point Size { get; set; }

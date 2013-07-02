@@ -11,8 +11,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
     public class Filterchain<TOutput>
         where TOutput : IResource
     {
-
-
         internal Filterchain(TOutput outputToUse) 
         {
             Output = outputToUse;
@@ -58,9 +56,9 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             ResourceList = resources;
         }
 
-        public Filterchain<TOutput> Copy()
+        public Filterchain<IResource> Copy()
         {
-            return new Filterchain<TOutput>(Filters.List.ToArray());
+            return Filterchain.FilterTo(Output.Copy(), Filters.List.ToArray());
         }
 
         public override string ToString()
@@ -77,7 +75,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             var filterChain = new StringBuilder(100);
             var firstFilter = true;
 
-            _resources.ForEach(resource =>
+            ResourceList.ForEach(resource =>
             {
                 filterChain.Append(Formats.Map(resource.Map));
                 filterChain.Append(" ");

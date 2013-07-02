@@ -53,16 +53,16 @@ namespace Hudl.Ffmpeg.Filters.Templates
             return (indexOfFirstArgsInCommand + 1) == indexOfSecondArgsInCommand;
         }
 
-        public List<Command<IResource>> GetCommands<TOutput>(Command<TOutput> command, Filterchain<TOutput> filterchain) 
+        public void PrepCommands<TOutput, TResource>(Command<TOutput> command, Filterchain<TResource> filterchain) 
             where TOutput : IResource
+            where TResource : IResource
         {
-            Command<TOutput> prepatoryCommandEnd = null;
-            var prepatoryCommandMiddle = new Command<TOutput>();
-            var prepatoryCommandBeggining = new Command<TOutput>();
+            var prepatoryCommandMiddle = new Command<IResource>(command.Parent);
+            var prepatoryCommandBeggining = new Command<IResource>(command.Parent);
             var receiptVideoTo = filterchain.Resources[1];
             var receiptVideoFrom = filterchain.Resources[0];
-            var begginingReceipt = receiptVideoFrom;
-            var middleReceipt = receiptVideoFrom;
+            //var begginingReceipt = receiptVideoFrom;
+            //var middleReceipt = receiptVideoFrom;
             var receiptVideoToIndex = command.ResourceList.FindIndex(c => c.Resource.Map == receiptVideoTo.Map);
             var receiptVideoFromIndex = command.ResourceList.FindIndex(c => c.Resource.Map == receiptVideoFrom.Map);
             var resourceTo = command.PrepResourcesFromReceipts(receiptVideoTo).FirstOrDefault();
@@ -94,20 +94,19 @@ namespace Hudl.Ffmpeg.Filters.Templates
                 throw new InvalidOperationException("From resource does not belong to the Command or Command Factory.");
             }
 
-            var currentToVideoLength = TimeSpan.FromSeconds(Helpers.GetLength(resourceTo));
             var currentFromVideoLength = TimeSpan.FromSeconds(Helpers.GetLength(resourceFrom));
             var videoDuration1 = currentFromVideoLength - Duration;
             var videoDuration2 = currentFromVideoLength - Duration - TimeSpan.FromSeconds(1);
             
             if (prepatoryCommandBeggining == null)
             {
-                prepatoryCommandBeggining = new Command<TOutput>(command.Parent);
-                begginingReceipt = prepatoryCommandBeggining.Add(resourceFrom);
+                prepatoryCommandBeggining = new Command<IResource>(command.Parent);
+                prepatoryCommandBeggining.Add(resourceFrom.Resource);
             }
             if (prepatoryCommandMiddle == null)
             {
-                prepatoryCommandMiddle = new Command<TOutput>(command.Parent);
-                middleReceipt = prepatoryCommandMiddle.Add(resourceTo);
+                prepatoryCommandMiddle = new Command<IResource>(command.Parent);
+                prepatoryCommandMiddle.Add(resourceTo.Resource);
             }
 
             var endSettingsCollection = SettingsCollection.ForInput(); 
@@ -151,11 +150,11 @@ namespace Hudl.Ffmpeg.Filters.Templates
                                      .Settings.Merge(begginingSettingsCollection, FfmpegMergeOptionTypes.NewWins);
             prepatoryCommandMiddle.Resources.First()
                                   .Settings.Merge(middleSettingsCollection, FfmpegMergeOptionTypes.NewWins);
-            
+
             if (endSettingsCollection.Items.Count > 0)
             {
-                prepatoryCommandEnd = new Command<TOutput>(command.Parent);
-                prepatoryCommandEnd.Add(endSettingsCollection, resourceFrom);
+                var prepatoryCommandEnd = new Command<IResource>(command.Parent);
+                prepatoryCommandEnd.Add(endSettingsCollection, resourceFrom.Resource);
                 command.CommandList.Add(prepatoryCommandEnd);
             }
         }

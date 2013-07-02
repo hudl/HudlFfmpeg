@@ -33,7 +33,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// </summary>
         public static SettingsCollection ForInput(params ISetting[] settings)
         {
-            return SettingsCollection.ForInput(SettingsCollectionResourceTypes.Input, settings);
+            return new SettingsCollection(SettingsCollectionResourceTypes.Input, settings);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// </summary>
         public static SettingsCollection ForOutput(params ISetting[] settings)
         {
-            return SettingsCollection.ForInput(SettingsCollectionResourceTypes.Output, settings);
+            return new SettingsCollection(SettingsCollectionResourceTypes.Output, settings);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
                 throw new ArgumentException(string.Format("The SettingsCollection already contains a type of {0}.", typeof(TSetting).Name));
             }
             if (Type != SettingsCollectionResourceTypes.Any &&
-                !Validate.SettingsFor<TSetting>(Type))
+                !Validate.IsSettingFor<TSetting>(Type))
             {
                 throw new ArgumentException(string.Format("The SettingsCollection is restricted only to {0} settings.", typeof(TSetting).Name));
             }

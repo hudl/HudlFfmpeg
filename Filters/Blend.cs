@@ -19,8 +19,8 @@ namespace Hudl.Ffmpeg.Filters
         public Blend() 
             : base(FilterType, FilterMaxInputs)
         {
-            Mode = BlendMode.and;
-            Option = BlendOptions.all_expr;
+            Mode = BlendVideoModeTypes.and;
+            Option = BlendVideoOptionTypes.all_expr;
         }
         public Blend(string expression) 
             : this()

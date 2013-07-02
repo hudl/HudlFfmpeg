@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using Hudl.Ffmpeg.BaseTypes;
@@ -30,7 +31,7 @@ namespace Hudl.Ffmpeg.Common
             return (typeAAppliesToAttributeType != null); 
         }
 
-        public static bool SettingsFor<TSetting>(SettingsCollectionResourceTypes type)
+        public static bool IsSettingFor<TSetting>(SettingsCollectionResourceTypes type)
             where TSetting : ISetting
         {
             var typeAAttributes = new List<CustomAttributeData>(typeof (TSetting).CustomAttributes);
@@ -39,11 +40,42 @@ namespace Hudl.Ffmpeg.Common
             {
                 return false;
             }
-            var resourceTypeArgument = typeASettingsAttributes
-                                                        .NamedArguments
-                                                        .FirstOrDefault(a => a.MemberName == "ResourceType");
+            var resourceTypeArgument = typeASettingsAttributes.NamedArguments
+                                                              .FirstOrDefault(a => a.MemberName == "ResourceType");
             var resourceTypeValue = (SettingsCollectionResourceTypes)resourceTypeArgument.TypedValue.Value;
             return (type == resourceTypeValue);
+        }
+
+        public static SettingsApplicationData GetSettingData<TSetting>()
+            where TSetting : ISetting
+        {
+            var typeAAttributes = new List<CustomAttributeData>(typeof (TSetting).CustomAttributes);
+            var typeASettingsAttributes = typeAAttributes.FirstOrDefault(a => a.AttributeType == typeof (SettingsApplicationAttribute));
+            if (typeASettingsAttributes == null || typeASettingsAttributes.NamedArguments == null)
+            {
+                return null;
+            }
+            var dataArgument = typeASettingsAttributes.NamedArguments
+                                                      .FirstOrDefault(a => a.MemberName == "Data");
+            return (SettingsApplicationData)dataArgument.TypedValue.Value;
+        }
+
+        public static SettingsApplicationData GetSettingData<TSetting>(TSetting setting)
+            where TSetting : ISetting
+        {
+            return GetSettingData<TSetting>();
+        }
+
+        public static Dictionary<Type, SettingsApplicationData> GetSettingCollectionData(SettingsCollection collection)
+        {
+            var settingsDictionary = new Dictionary<Type, SettingsApplicationData>();
+            collection.SettingsList.ForEach(setting =>
+                {
+                    var settingsType = setting.GetType();
+                    if (settingsDictionary.ContainsKey(settingsType)) return;
+                    settingsDictionary.Add(settingsType, GetSettingData(setting));
+                });
+            return settingsDictionary;
         }
     }
 }

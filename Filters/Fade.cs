@@ -22,15 +22,12 @@ namespace Hudl.Ffmpeg.Filters
             Transition = FadeTransitionTypes.In;
             Unit = FadeVideoUnitTypes.Seconds;
         }
-        public Fade(FadeTransitionTypes transition, int startAt, int duration)
+        public Fade(FadeTransitionTypes transition, int duration)
             : this() 
         {
             Transition = transition;
             Duration = duration;
-            StartAt = startAt; 
         }
-
-        public int StartAt { get; set; }
 
         public int Duration { get; set; } 
 
@@ -40,27 +37,28 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString()
         {
-            if (StartAt == 0)
-            {
-                throw new ArgumentException("Starting location of the Video Fade cannot be zero.");
-            }
             if (Duration == 0)
             {
                 throw new ArgumentException("Duration of the Video Fade cannot be zero.");
             }
 
             var filter = new StringBuilder(100);
+            var startAtLocation = 0d;
+            if (Transition == FadeTransitionTypes.Out)
+            {
+                startAtLocation = Resources[0].Resource.Length.TotalSeconds - Duration;
+            }
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit)
             {
                 case FadeVideoUnitTypes.Frames:
                     filter.AppendFormat(":s={0}:n={1}",
-                        StartAt,
+                        startAtLocation,
                         Duration);
                     break;
                 default: //seconds 
                     filter.AppendFormat(":st={0}:d={1}",
-                        StartAt,
+                        startAtLocation,
                         Duration);
                     break;
             }
