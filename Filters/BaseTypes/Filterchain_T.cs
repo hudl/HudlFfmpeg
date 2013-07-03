@@ -26,6 +26,16 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             }
         }
 
+        public static implicit operator Filterchain<IResource>(Filterchain<TOutput> filterchain)
+        {
+            var filterchainNew = new Filterchain<IResource>(filterchain.Output, filterchain.Filters.List.ToArray());
+            if (filterchain.ResourceList.Count > 0)
+            {
+                filterchainNew.SetResources(filterchain.ResourceList);
+            }
+            return filterchainNew;
+        }
+
         public TOutput Output { get; protected set; }
 
         public AppliesToCollection<IFilter, TOutput> Filters { get; protected set; }

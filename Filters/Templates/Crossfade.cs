@@ -54,11 +54,11 @@ namespace Hudl.Ffmpeg.Filters.Templates
         }
 
         public void PrepCommands<TOutput, TResource>(Command<TOutput> command, Filterchain<TResource> filterchain) 
-            where TOutput : IResource
+            where TOutput : IResource 
             where TResource : IResource
         {
-            var prepatoryCommandMiddle = new Command<IResource>(command.Parent);
-            var prepatoryCommandBeggining = new Command<IResource>(command.Parent);
+            var prepatoryCommandMiddle = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
+            var prepatoryCommandBeggining = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
             var receiptVideoTo = filterchain.Resources[1];
             var receiptVideoFrom = filterchain.Resources[0];
             //var begginingReceipt = receiptVideoFrom;
@@ -100,12 +100,12 @@ namespace Hudl.Ffmpeg.Filters.Templates
             
             if (prepatoryCommandBeggining == null)
             {
-                prepatoryCommandBeggining = new Command<IResource>(command.Parent);
+                prepatoryCommandBeggining = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
                 prepatoryCommandBeggining.Add(resourceFrom.Resource);
             }
             if (prepatoryCommandMiddle == null)
             {
-                prepatoryCommandMiddle = new Command<IResource>(command.Parent);
+                prepatoryCommandMiddle = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
                 prepatoryCommandMiddle.Add(resourceTo.Resource);
             }
 
@@ -153,7 +153,7 @@ namespace Hudl.Ffmpeg.Filters.Templates
 
             if (endSettingsCollection.Items.Count > 0)
             {
-                var prepatoryCommandEnd = new Command<IResource>(command.Parent);
+                var prepatoryCommandEnd = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
                 prepatoryCommandEnd.Add(endSettingsCollection, resourceFrom.Resource);
                 command.CommandList.Add(prepatoryCommandEnd);
             }

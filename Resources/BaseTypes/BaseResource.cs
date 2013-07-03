@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
@@ -6,9 +7,10 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
     {
         protected BaseResource(string format)
         {
+            Format = format;
             Id = Guid.NewGuid().ToString();
             Map = Guid.NewGuid().ToString();
-            Format = format;
+            Path = string.Concat(Guid.NewGuid(), format);
         }
         protected BaseResource(string format, string path) 
             : this(format)
@@ -34,8 +36,21 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// <summary>
         /// a readable path for ffmpeg to access 
         /// </summary>
-        public string Path { get; set; }
-        
+        public string Path 
+        { 
+            get { return _path; }
+            set
+            {
+                if (!ValidateFormat(value))
+                {
+                    throw new ArgumentException(string.Format(
+                        "Path must have an extension of '{0}' for this resource.", Format));
+                }
+                _path = value;
+            }
+        }
+        private string _path; 
+
         /// <summary>
         /// the extension of the file, 
         /// </summary>
@@ -64,6 +79,12 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
                     Length = Length,
                     Map = Guid.NewGuid().ToString()
                 };
+        }
+
+
+        private bool ValidateFormat(string path)
+        {
+            return !string.IsNullOrWhiteSpace(path) && path.Trim().ToUpper().EndsWith(Format.Trim().ToUpper());
         }
     }
 }

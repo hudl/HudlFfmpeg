@@ -2,7 +2,7 @@
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters.Filterchain.Templates
+namespace Hudl.Ffmpeg.Filters.Templates.Filterchain
 {
     public class Resolution360P<TResource> : Filterchain<TResource>
         where TResource : IVideo, new()

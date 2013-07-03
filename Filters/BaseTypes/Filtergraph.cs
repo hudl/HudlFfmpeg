@@ -57,7 +57,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         public Filtergraph Add<TOutput>(Filterchain<TOutput> filterchain)
             where TOutput : IResource
         {
-            FilterchainList.Add(filterchain as Filterchain<IResource>);
+            FilterchainList.Add(filterchain);
             return this;
         }
        

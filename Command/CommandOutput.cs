@@ -8,37 +8,44 @@ namespace Hudl.Ffmpeg.Command
     public class CommandOutput<TResource>
         where TResource : IResource
     {
-        internal CommandOutput(Command<TResource> parent, TResource resource)
-            : this(parent, SettingsCollection.ForOutput(), resource)
+        internal CommandOutput(Command<TResource> parent, TResource outputToUse)
+            : this(parent, outputToUse, SettingsCollection.ForOutput(), true)
         {
         }
-        internal CommandOutput(Command<TResource> parent, SettingsCollection settings, TResource resource)
+        internal CommandOutput(Command<TResource> parent, TResource outputToUse, SettingsCollection outputSettings)
+            : this(parent, outputToUse, outputSettings, true)
+        {
+        }
+        internal CommandOutput(Command<TResource> parent, TResource outputToUse, SettingsCollection outputSettings, bool export)
         {
             if (parent == null)
             {
                 throw new ArgumentNullException("parent");
             }
-            if (settings == null)
+            if (outputSettings == null)
             {
-                throw new ArgumentNullException("settings");
+                throw new ArgumentNullException("outputSettings");
             }
-            if (resource == null)
+            if (outputToUse == null)
             {
-                throw new ArgumentNullException("resource");
+                throw new ArgumentNullException("outputToUse");
             }
-            if (settings.Type != SettingsCollectionResourceTypes.Output)
+            if (outputSettings.Type != SettingsCollectionResourceTypes.Output)
             {
                 throw new ArgumentException("CommandOutput only accepts output settings collections");
             }
 
             Parent = parent;
-            Resource = resource;
-            Settings = settings; 
+            Resource = outputToUse;
+            Settings = outputSettings;
+            IsExported = export;
         }
 
         public Command<TResource> Parent { get; protected set; }
 
         public SettingsCollection Settings { get; set; }
+
+        public bool IsExported { get; set; }
 
         public TimeSpan Length
         {
@@ -47,8 +54,6 @@ namespace Hudl.Ffmpeg.Command
                 return TimeSpan.FromSeconds(Helpers.GetLength(Parent as Command<IResource>));
             }
         }
-
-        public bool ExportResource { get; protected set; }
 
         public TResource Output()
         {
