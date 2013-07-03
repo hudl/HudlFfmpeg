@@ -15,8 +15,12 @@ namespace Hudl.Ffmpeg.Filters
         private const int FilterMaxInputs = 1;
         private const string FilterType = "movie";
 
-        public Movie(IResource file)
+        public Movie()
             : base(FilterType, FilterMaxInputs)
+        {
+        }
+        public Movie(IResource file)
+            : this()
         {
             File = file;
         }
@@ -27,7 +31,7 @@ namespace Hudl.Ffmpeg.Filters
         {
             if (File == null)
             {
-                throw new ArgumentException("Movie input cannot be nothing", "File");
+                throw new InvalidOperationException("Movie input cannot be nothing");
             }
 
             return string.Concat(Type, "=", File.Path);

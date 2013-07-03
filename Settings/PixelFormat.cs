@@ -33,7 +33,7 @@ namespace Hudl.Ffmpeg.Settings
         {
             if (string.IsNullOrWhiteSpace(Library))
             {
-                throw new ArgumentException("Library cannot be empty for this setting.");
+                throw new InvalidOperationException("Library cannot be empty for this setting.");
             }
 
             return string.Concat(Type, " ", Library);

@@ -27,6 +27,8 @@ namespace Hudl.Ffmpeg.Command
 
         public IReadOnlyList<CommandResource<IResource>> Resources { get { return ResourceList.AsReadOnly();  } }
 
+        public IReadOnlyList<Filterchain<IResource>> Filterchains { get { return Filtergraph.FilterchainList.AsReadOnly(); } } 
+
         public CommandResourceReceipt Add<TResource>(string path) 
             where TResource : IResource, new()
         {
@@ -120,13 +122,18 @@ namespace Hudl.Ffmpeg.Command
             return resourceDictionary.Select(r => Add(r.Key, r.Value)).ToList();
         }
 
-        public CommandResourceReceipt GetReceipt(Func<CommandResource<IResource>, bool> predicate)
+        public CommandResourceReceipt GetReceipt(Func<CommandResource<IResource>, bool> predicate = null)
         {
             return GetReceipts(predicate).FirstOrDefault();
         }
 
-        public List<CommandResourceReceipt> GetReceipts(Func<CommandResource<IResource>, bool> predicate)
+        public List<CommandResourceReceipt> GetReceipts(Func<CommandResource<IResource>, bool> predicate = null)
         {
+            if (predicate == null)
+            {
+                return ResourceList.Select(r => r.GetReciept())
+                               .ToList();
+            }
             return ResourceList.Where(predicate)
                                .Select(r => r.GetReciept())
                                .ToList();

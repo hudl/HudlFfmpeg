@@ -24,7 +24,7 @@ namespace Hudl.Ffmpeg.Settings
         {
             if (Rate <= 0)
             {
-                throw new ArgumentException("Bit Rate must be greater than zero.");
+                throw new InvalidOperationException("Bit Rate must be greater than zero.");
             }
 
             return string.Concat(Type, " ", Rate, "k");

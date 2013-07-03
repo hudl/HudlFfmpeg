@@ -38,7 +38,7 @@ namespace Hudl.Ffmpeg.Filters
         {
             if (Option == BlendVideoOptionTypes.all_expr && string.IsNullOrWhiteSpace(Expression))
             {
-                throw new ArgumentException("Expression cannot be empty with Blend Option 'all_expr'", "Expression");
+                throw new InvalidOperationException("Expression cannot be empty with Blend Option 'all_expr'");
             }
 
             var filter = new StringBuilder(100);

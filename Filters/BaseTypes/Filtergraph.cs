@@ -23,15 +23,41 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             }
         }
 
+        public int Count { get { return FilterchainList.Count; } }
+
+        /// <summary>
+        /// Adds a new instance of a filterchain to the filtergraph
+        /// </summary>
+        /// <typeparam name="TResource">the Type of output for the new filterchain</typeparam>
+        public Filtergraph FilterTo<TResource>(params IFilter[] filters)
+            where TResource : IResource, new()
+        {
+            var filterchain = Filterchain.FilterTo<TResource>(filters);
+
+            return Add(filterchain);
+        }
+
+        /// <summary>
+        /// Adds a new instance of a filterchain to the filtergraph
+        /// </summary>
+        /// <typeparam name="TResource">the Type of output for the new filterchain</typeparam>
+        public Filtergraph FilterTo<TResource>(TResource output, params IFilter[] filters)
+            where TResource : IResource
+        {
+            var filterchain = Filterchain.FilterTo<TResource>(output, filters);
+
+            return Add(filterchain);
+        }
+
         /// <summary>
         /// adds the given Filterchain to the Filtergraph
         /// </summary>
         /// <typeparam name="TOutput">the generic type of the filterchain</typeparam>
         /// <param name="filterchain">the filterchain to be added to the filtergraph</param>
-        public Filtergraph Add<TOutput>(TOutput filterchain)
-            where TOutput : Filterchain<IResource>
+        public Filtergraph Add<TOutput>(Filterchain<TOutput> filterchain)
+            where TOutput : IResource
         {
-            FilterchainList.Add(filterchain);
+            FilterchainList.Add(filterchain as Filterchain<IResource>);
             return this;
         }
        
@@ -39,7 +65,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// removes the Filterchain at the given index from the Filtergraph
         /// </summary>
         /// <param name="index">the index of the desired Filterchain to be removed from the Filtergraph</param>
-        public Filtergraph Remove(int index)
+        public Filtergraph RemoveAt(int index)
         {
             FilterchainList.RemoveAt(index);
             return this;
@@ -60,7 +86,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             //perform simple validation on filter graph
             if (FilterchainList.Count == 0)
             {
-                throw new ArgumentException("Filtergraph must contain at least one Filterchain.");
+                throw new InvalidOperationException("Filtergraph must contain at least one Filterchain.");
             }
 
             var filtergraph = new StringBuilder(100);

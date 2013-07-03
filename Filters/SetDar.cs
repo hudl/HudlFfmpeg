@@ -15,12 +15,16 @@ namespace Hudl.Ffmpeg.Filters
         private const int FilterMaxInputs = 1;
         private const string FilterType = "setdar";
 
-        public SetDar(FfmpegRatio ratio)
+        public SetDar()
             : base(FilterType, FilterMaxInputs)
+        {
+        }
+        public SetDar(FfmpegRatio ratio)
+            : this()
         {
             if (ratio == null)
             {
-                throw new ArgumentException("Ratio cannot be null.", "ratio");
+                throw new ArgumentNullException("ratio");
             }
 
             Ratio = ratio;
@@ -32,7 +36,7 @@ namespace Hudl.Ffmpeg.Filters
         {
             if (Ratio == null)
             {
-                throw new ArgumentException("Ratio cannot be null.");
+                throw new InvalidOperationException("Ratio cannot be null.");
             }
 
             return string.Concat(Type, "=dar=", Ratio);

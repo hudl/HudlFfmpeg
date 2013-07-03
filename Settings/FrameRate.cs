@@ -29,7 +29,7 @@ namespace Hudl.Ffmpeg.Settings
         {
             if (Rate <= 0)
             {
-                throw new ArgumentException("Frame rate must be greater than zero.");
+                throw new InvalidOperationException("Frame rate must be greater than zero.");
             }
 
             return string.Concat(Type, " ", Rate);

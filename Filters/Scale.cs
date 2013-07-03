@@ -32,7 +32,7 @@ namespace Hudl.Ffmpeg.Filters
         public Scale()
             : base(FilterType, FilterMaxInputs)
         {
-            Dimensions = new Point(1, 1);
+            Dimensions = new Point(0, 0);
         }
         public Scale(ScalePresetTypes preset)
             : this() 
@@ -65,11 +65,11 @@ namespace Hudl.Ffmpeg.Filters
         {
             if (Dimensions.X <= 0)
             {
-                throw new ArgumentException("Dimensions.X must be greater than zero for scaling.");
+                throw new InvalidOperationException("Dimensions.X must be greater than zero for scaling.");
             }
             if (Dimensions.Y <= 0)
             {
-                throw new ArgumentException("Dimensions.Y must be greater than zero for scaling.");
+                throw new InvalidOperationException("Dimensions.Y must be greater than zero for scaling.");
             }
 
             return string.Concat(Type, "=w=", Dimensions.X, ":h=", Dimensions.Y);

@@ -147,9 +147,9 @@ namespace Hudl.Ffmpeg.Filters.Templates
             }
 
             prepatoryCommandBeggining.Resources.First()
-                                     .Settings.Merge(begginingSettingsCollection, FfmpegMergeOptionTypes.NewWins);
+                                     .Settings.MergeRange(begginingSettingsCollection, FfmpegMergeOptionTypes.NewWins);
             prepatoryCommandMiddle.Resources.First()
-                                  .Settings.Merge(middleSettingsCollection, FfmpegMergeOptionTypes.NewWins);
+                                  .Settings.MergeRange(middleSettingsCollection, FfmpegMergeOptionTypes.NewWins);
 
             if (endSettingsCollection.Items.Count > 0)
             {

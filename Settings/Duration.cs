@@ -41,11 +41,11 @@ namespace Hudl.Ffmpeg.Settings
         {
             if (Length == null)
             {
-                throw new ArgumentException("Duration length cannot be null.");
+                throw new InvalidOperationException("Duration length cannot be null.");
             }
             if (Length.TotalSeconds <= 0)
             {
-                throw new ArgumentException("Duration length must be greater than zero.");
+                throw new InvalidOperationException("Duration length must be greater than zero.");
             }
 
             return string.Concat(Type, " ", Formats.Duration(Length));

@@ -74,7 +74,7 @@ namespace Hudl.Ffmpeg.Filters
                 Highlight.Green.Value == 0 &&
                 Highlight.Blue.Value == 0)
             {
-                throw new ArgumentException("At least one Color Balance ratio greater or less than 0 is required.");
+                throw new InvalidOperationException("At least one Color Balance ratio greater or less than 0 is required.");
             }
 
             var filter = new StringBuilder(100);

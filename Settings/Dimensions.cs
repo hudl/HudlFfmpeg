@@ -62,15 +62,15 @@ namespace Hudl.Ffmpeg.Settings
         {
             if (Size == null)
             {
-                throw new ArgumentException("Dimensions size cannot be null.");
+                throw new InvalidOperationException("Dimensions size cannot be null.");
             }
             if (Size.X <= 0)
             {
-                throw new ArgumentException("Dimensions width must be greater than zero.");
+                throw new InvalidOperationException("Dimensions width must be greater than zero.");
             }
             if (Size.Y <= 0)
             {
-                throw new ArgumentException("Dimensions height must be greater than zero.");
+                throw new InvalidOperationException("Dimensions height must be greater than zero.");
             }
 
             return string.Concat(Type, " ", Size.X, "x", Size.Y);

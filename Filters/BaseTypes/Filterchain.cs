@@ -6,7 +6,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
     public class Filterchain
     {
         /// <summary>
-        /// adds a new given Filterchain to the Filtergraph
+        /// Returns a new instance of the filterchain
         /// </summary>
         /// <typeparam name="TResource">the Type of output for the new filterchain</typeparam>
         public static Filterchain<TResource> FilterTo<TResource>(params IFilter[] filters)
@@ -16,7 +16,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         }
 
         /// <summary>
-        /// adds a new given Filterchain to the Filtergraph
+        /// Returns a new instance of the filterchain
         /// </summary>
         /// <typeparam name="TResource">the Type of output for the new filterchain</typeparam>
         public static Filterchain<TResource> FilterTo<TResource>(TResource output, params IFilter[] filters)

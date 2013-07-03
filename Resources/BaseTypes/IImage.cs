@@ -1,6 +1,6 @@
 ﻿namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
-    interface IImage : IResource
+    public interface IImage : IResource
     {
     }
 }

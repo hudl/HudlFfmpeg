@@ -21,12 +21,18 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         internal SettingsCollection(SettingsCollectionResourceTypes type, params ISetting[] settings)
         {
             Type = type;
-            SettingsList = new List<ISetting>(settings);   
+            SettingsList = new List<ISetting>();
+            if (settings.Length > 0)
+            {
+                new List<ISetting>(settings).ForEach(s => Add(s));
+            }
         }
 
         public IReadOnlyList<ISetting> Items { get { return SettingsList.AsReadOnly(); } }
 
-        public SettingsCollectionResourceTypes Type { get; protected set; } 
+        public SettingsCollectionResourceTypes Type { get; protected set; }
+
+        public int Count { get { return SettingsList.Count;  } }
 
         /// <summary>
         /// returns a new settings collection instance for input collections
@@ -37,7 +43,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         }
 
         /// <summary>
-        /// returns a new settins collection instance for output collections
+        /// returns a new settings collection instance for output collections
         /// </summary>
         public static SettingsCollection ForOutput(params ISetting[] settings)
         {
@@ -56,14 +62,13 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             {
                 throw new ArgumentNullException("setting");
             }
-            if (Contains<TSetting>())
+            if (Contains(setting))
             {
-                throw new ArgumentException(string.Format("The SettingsCollection already contains a type of {0}.", typeof(TSetting).Name));
+                throw new ArgumentException(string.Format("The SettingsCollection already contains a type of {0}.", setting.GetType().Name), "setting");
             }
-            if (Type != SettingsCollectionResourceTypes.Any &&
-                !Validate.IsSettingFor<TSetting>(Type))
+            if (!Validate.IsSettingFor(setting, Type))
             {
-                throw new ArgumentException(string.Format("The SettingsCollection is restricted only to {0} settings.", typeof(TSetting).Name));
+                throw new ArgumentException(string.Format("The SettingsCollection is restricted only to {0} settings.", Type), "setting");
             }
 
             SettingsList.Add(setting);
@@ -116,11 +121,15 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// <summary>
         /// merges the current SettingsCollection into the set based on the merge option type.
         /// </summary>
-        public SettingsCollection Merge(SettingsCollection settings, FfmpegMergeOptionTypes option)
+        public SettingsCollection MergeRange(SettingsCollection settings, FfmpegMergeOptionTypes option)
         {
             if (settings == null)
             {
                 throw new ArgumentNullException("settings");
+            }
+            if (settings.Type != Type)
+            {
+                throw new ArgumentException(string.Format("Settings parameter must be of the same type {0} as the SettingsCollection.", Type));
             }
 
             settings.SettingsList.ForEach(s => Merge(s, option));
@@ -137,13 +146,13 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         }
 
         /// <summary>
-        /// removes the Setting at the given index from the SettingsCollection
+        /// determines if the settings collection already contains this setting type
         /// </summary>
-        /// <param name="index">the index of the desired Setting to be removed from the SettingsCollection</param>
-        public SettingsCollection Remove(int index)
+        public bool Contains<TSetting>(TSetting item)
+            where TSetting : ISetting
         {
-            SettingsList.RemoveAt(index);
-            return this;
+            var itemType = item.GetType();
+            return (SettingsList.Count(s => s.GetType().IsAssignableFrom(itemType)) > 0);
         }
 
         /// <summary>
@@ -154,6 +163,16 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             where TSetting : ISetting
         {
             SettingsList.RemoveAll(s => s is TSetting);
+            return this;
+        }
+
+        /// <summary>
+        /// removes the Setting at the given index from the SettingsCollection
+        /// </summary>
+        /// <param name="index">the index of the desired Setting to be removed from the SettingsCollection</param>
+        public SettingsCollection RemoveAt(int index)
+        {
+            SettingsList.RemoveAt(index);
             return this;
         }
 

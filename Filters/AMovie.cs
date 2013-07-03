@@ -14,8 +14,12 @@ namespace Hudl.Ffmpeg.Filters
         private const int FilterMaxInputs = 1;
         private const string FilterType = "amovie";
 
-        public AMovie(IAudio file)
+        public AMovie()
             : base(FilterType, FilterMaxInputs)
+        {
+        }
+        public AMovie(IAudio file)
+            : this()
         {
             File = file;
         }
@@ -26,7 +30,7 @@ namespace Hudl.Ffmpeg.Filters
         {
             if (File == null)
             {
-                throw new ArgumentException("AMovie input cannot be nothing");
+                throw new InvalidOperationException("AMovie input cannot be nothing");
             }
 
             return string.Concat(Type, "=", File.Path);

@@ -58,11 +58,11 @@ namespace Hudl.Ffmpeg.Filters
         {
             if (Resources.Count < 2)
             {
-                throw new ArgumentException("Number of inputs cannot be less than defualt of 2");
+                throw new InvalidOperationException("Number of inputs cannot be less than defualt of 2");
             }
             if (DropoutTransition < 2)
             {
-                throw new ArgumentException("Dropout transition cannot be less than default of 2");
+                throw new InvalidOperationException("Dropout transition cannot be less than default of 2");
             }
 
             //build the filter string 

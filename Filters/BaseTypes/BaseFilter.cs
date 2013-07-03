@@ -14,6 +14,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             Type = type;
             MaxInputs = maxInputs;
+            Resources = new List<CommandResource<IResource>>();
         }
     
         /// <summary>

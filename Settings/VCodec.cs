@@ -28,7 +28,7 @@ namespace Hudl.Ffmpeg.Settings
         {
             if (string.IsNullOrWhiteSpace(Codec))
             {
-                throw new ArgumentException("Codec cannot be empty for this setting.");
+                throw new InvalidOperationException("Codec cannot be empty for this setting.");
             }
 
             return string.Concat(Type, " ", Codec);

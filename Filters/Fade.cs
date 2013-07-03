@@ -39,7 +39,7 @@ namespace Hudl.Ffmpeg.Filters
         {
             if (Duration == 0)
             {
-                throw new ArgumentException("Duration of the Video Fade cannot be zero.");
+                throw new InvalidOperationException("Duration of the Video Fade cannot be zero.");
             }
 
             var filter = new StringBuilder(100);

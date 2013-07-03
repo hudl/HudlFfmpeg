@@ -15,16 +15,20 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             Output = outputToUse;
             ResourceList = new List<CommandResourceReceipt>();
+            Filters = new AppliesToCollection<IFilter, TOutput>();
         }
         internal Filterchain(TOutput outputToUse, params IFilter[] filters) 
             : this(outputToUse)
         {
-            Filters.AddRange(filters); 
+            if (filters.Length > 0)
+            {
+                Filters.AddRange(filters); 
+            }
         }
 
         public TOutput Output { get; protected set; }
 
-        public AppliesToCollecion<IFilter, TOutput> Filters { get; protected set; }
+        public AppliesToCollection<IFilter, TOutput> Filters { get; protected set; }
 
         public IReadOnlyList<CommandResourceReceipt> Resources { get { return ResourceList.AsReadOnly(); } }
 
@@ -65,11 +69,11 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             if (Filters.Count == 0)
             {
-                throw new ArgumentException("Filterchain must contain at least one filter.");
+                throw new InvalidOperationException("Filterchain must contain at least one filter.");
             }
             if (Resources.Count == 0)
             {
-                throw new ArgumentException("Filterchain must contain at least one resource.");
+                throw new InvalidOperationException("Filterchain must contain at least one resource.");
             }
 
             var filterChain = new StringBuilder(100);
