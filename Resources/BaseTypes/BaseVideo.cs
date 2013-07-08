@@ -7,18 +7,20 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         BaseResource,
         IVideo
     {
+        private const string ResourceIndicatorType = "v";
+
         protected BaseVideo(string format) 
-            : base(format)
+            : base(format, ResourceIndicatorType)
         {
             Settings = SettingsCollection.ForInput();
         }
-        protected BaseVideo(string format, string path) 
-            : base(format, path)
+        protected BaseVideo(string format, string path)
+            : base(format, ResourceIndicatorType, path)
         {
             Settings = SettingsCollection.ForInput();
         }
-        protected BaseVideo(string format, string path, TimeSpan length) 
-            : base(format, path, length)
+        protected BaseVideo(string format, string path, TimeSpan length)
+            : base(format, ResourceIndicatorType, path, length)
         {
             Settings = SettingsCollection.ForInput();
         }

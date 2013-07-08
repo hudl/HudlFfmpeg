@@ -27,7 +27,7 @@ namespace Hudl.Ffmpeg.Command
 
             command.ResourceList.ForEach(WriteResource);
 
-            WriteFiltergraph(command.Filtergraph);
+            WriteFiltergraph(command, command.Filtergraph);
 
             WriteOutput(command.Output);
 
@@ -56,6 +56,7 @@ namespace Hudl.Ffmpeg.Command
             WriteResourcePreSettings(resource, settingsData);
 
             var inputResource = new Input(resource.Resource);
+            _builderBase.Append(" ");
             _builderBase.Append(inputResource);
 
             WriteResourcePostSettings(resource, settingsData);
@@ -75,6 +76,7 @@ namespace Hudl.Ffmpeg.Command
                     if (!settingInfoData.PreDeclaration) return;
                     if (settingInfoData.ResourceType != SettingsCollectionResourceTypes.Input) return;
 
+                    _builderBase.Append(" ");
                     _builderBase.Append(setting);
                 });
         }
@@ -93,12 +95,13 @@ namespace Hudl.Ffmpeg.Command
                 if (!settingInfoData.PreDeclaration) return;
                 if (settingInfoData.ResourceType != SettingsCollectionResourceTypes.Input) return;
 
+                _builderBase.Append(" ");
                 _builderBase.Append(setting);
             });
 
         }
 
-        private void WriteFiltergraph(Filtergraph filtergraph)
+        private void WriteFiltergraph(Command<IResource> command, Filtergraph filtergraph)
         {
             if (filtergraph == null)
             {
@@ -114,19 +117,27 @@ namespace Hudl.Ffmpeg.Command
                     }
                     else
                     {
+                        _builderBase.Append(" -filter_complex \"");
                         shouldIncludeDelimitor = true; 
                     }
 
-                    WriteFilterchain(filterchain);
+                    WriteFilterchain(command, filterchain);
                 });
+         
+            if (!shouldIncludeDelimitor)
+            {
+                _builderBase.Append("\"");
+            }
         }
         
-        private void WriteFilterchain(Filterchain<IResource> filterchain)
+        private void WriteFilterchain(Command<IResource> command, Filterchain<IResource> filterchain)
         {
             if (filterchain == null)
             {
                 throw new ArgumentNullException("filterchain");
             }
+
+            WriteFilterchainIn(command, filterchain);
 
             var shouldIncludeDelimitor = false;
             filterchain.Filters.List.ForEach(filter =>
@@ -137,11 +148,15 @@ namespace Hudl.Ffmpeg.Command
                     }
                     else
                     {
+                        _builderBase.Append(" ");
                         shouldIncludeDelimitor = true;
                     }
 
+                    filter.Setup(command, filterchain);
                     WriteFilter(filter);
                 });
+
+            WriteFilterchainOut(command, filterchain);
         }
 
         private void WriteFilter(IFilter filter)
@@ -152,6 +167,30 @@ namespace Hudl.Ffmpeg.Command
             }
 
             _builderBase.Append(filter.ToString());
+        }
+
+        private void WriteFilterchainIn(Command<IResource> command, Filterchain<IResource> filterchain)
+        {
+            filterchain.ResourceList.ForEach(resource =>
+                {
+                    _builderBase.Append(" ");
+                    var indexOfResource = command.ResourceList.FindIndex(r => r.Resource.Map == resource.Map);
+                    if (indexOfResource >= 0)
+                    {
+                        var commandResource = command.ResourceList[indexOfResource];
+                        _builderBase.Append(Formats.Map(commandResource.Resource, indexOfResource)); 
+                    }
+                    else
+                    {
+                        _builderBase.Append(Formats.Map(filterchain.Output));
+                    }
+                });
+        }
+
+        private void WriteFilterchainOut(Command<IResource> command, Filterchain<IResource> filterchain)
+        {
+            _builderBase.Append(" ");
+            _builderBase.Append(Formats.Map(filterchain.Output));
         }
 
         private void WriteOutput(CommandOutput<IResource> output)
@@ -183,6 +222,7 @@ namespace Hudl.Ffmpeg.Command
                 if (!settingInfoData.PreDeclaration) return;
                 if (settingInfoData.ResourceType != SettingsCollectionResourceTypes.Output) return;
 
+                _builderBase.Append(" ");
                 _builderBase.Append(setting);
             });
         }

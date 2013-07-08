@@ -31,68 +31,42 @@ namespace Hudl.Ffmpeg.Common
         /// </summary>
         public static bool AppliesTo(Type objectType, Type restrictedType)
         {
-            var attributeType = typeof(AppliesToResourceAttribute);
-
-            var allAttributes = new List<CustomAttributeData>(objectType.CustomAttributes);
-            var matchingAttributes = allAttributes.FindAll(a => a.AttributeType == attributeType);
+            var matchingAttributes = GetAttributes<AppliesToResourceAttribute>(objectType);
             if (matchingAttributes.Count == 0)
             {
                 return false;
             }
 
-            var appliesTo = matchingAttributes.Any(attribute =>
-            {
-                var namedArguments = attribute.NamedArguments;
-                if (namedArguments == null) return false;
-                return namedArguments.Any(argument =>
-                {
-                    if (argument.MemberName != "Type") return false;
-                    var namedArgType = (argument.TypedValue.Value as Type);
-                    return namedArgType != null &&
-                           (namedArgType == restrictedType ||
-                            namedArgType.IsAssignableFrom(restrictedType));
-                });
-            });
-            return appliesTo; 
+            return matchingAttributes.Any(attribute => (attribute.Type == restrictedType ||
+                                                        attribute.Type.IsAssignableFrom(restrictedType)));
         }
 
         public static bool IsSettingFor<TSetting>(TSetting item, SettingsCollectionResourceTypes type)
             where TSetting : ISetting
         {
-            var objectType = item.GetType();
-            var attributeType = typeof (SettingsApplicationAttribute);
-
-            var allAttributes = new List<CustomAttributeData>(objectType.CustomAttributes);
-            var matchingAttribute = allAttributes.FirstOrDefault(a => a.AttributeType == attributeType);
-            if (matchingAttribute == null || matchingAttribute.NamedArguments == null)
-            {
-                return false;
-            }
-
-            var resourceTypeArgument = matchingAttribute.NamedArguments
-                                                         .FirstOrDefault(a => a.MemberName == "ResourceType");
-            var resourceTypeValue = (SettingsCollectionResourceTypes)resourceTypeArgument.TypedValue.Value;
-            return (type == resourceTypeValue);
+            var itemType = item.GetType();
+            var matchingAttribute = GetAttribute<SettingsApplicationAttribute>(itemType);
+            
+            return matchingAttribute != null && type == matchingAttribute.ResourceType;
         }
 
         internal static SettingsApplicationData GetSettingData<TSetting>()
             where TSetting : ISetting
         {
-            var typeAAttributes = new List<CustomAttributeData>(typeof (TSetting).CustomAttributes);
-            var typeASettingsAttributes = typeAAttributes.FirstOrDefault(a => a.AttributeType == typeof (SettingsApplicationAttribute));
-            if (typeASettingsAttributes == null || typeASettingsAttributes.NamedArguments == null)
-            {
-                return null;
-            }
-            var dataArgument = typeASettingsAttributes.NamedArguments
-                                                      .FirstOrDefault(a => a.MemberName == "Data");
-            return (SettingsApplicationData)dataArgument.TypedValue.Value;
+            return GetSettingData(typeof(TSetting));
         }
 
         internal static SettingsApplicationData GetSettingData<TSetting>(TSetting setting)
             where TSetting : ISetting
         {
-            return GetSettingData<TSetting>();
+            return GetSettingData(setting.GetType());
+        }
+
+        internal static SettingsApplicationData GetSettingData(Type itemType)
+        {
+            var matchingAttribute = GetAttribute<SettingsApplicationAttribute>(itemType);
+
+            return matchingAttribute == null ? null : matchingAttribute.Data;
         }
 
         internal static Dictionary<Type, SettingsApplicationData> GetSettingCollectionData(SettingsCollection collection)
@@ -105,6 +79,25 @@ namespace Hudl.Ffmpeg.Common
                     settingsDictionary.Add(settingsType, GetSettingData(setting));
                 });
             return settingsDictionary;
+        }
+
+        private static TAttribute GetAttribute<TAttribute>(Type itemType)
+            where TAttribute : Attribute
+        {
+            return GetAttributes<TAttribute>(itemType).FirstOrDefault();
+        }
+
+        private static List<TAttribute> GetAttributes<TAttribute>(Type itemType)
+            where TAttribute : Attribute
+        {
+            var allAttributes = itemType.GetCustomAttributes(true);
+            if (allAttributes.Length == 0)
+            {
+                return null;
+            }
+
+            var matchingAttribute = allAttributes.OfType<TAttribute>().ToList();
+            return matchingAttribute;
         }
     }
 }

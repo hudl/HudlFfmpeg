@@ -24,12 +24,17 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// </summary>
         string Format { get; }
         /// <summary>
+        /// the ffmpeg resource indicator
+        /// </summary>
+        string ResourceIndicator { get;  }
+        /// <summary>
         /// the duration of the input video, this is used in the processing of time
         /// </summary>
         TimeSpan Length { get; set; }
         /// <summary>
         /// method for copying a resource for its base types.
         /// </summary>
-        IResource Copy();
+        TResource Copy<TResource>()
+            where TResource : IResource;
     }
 }

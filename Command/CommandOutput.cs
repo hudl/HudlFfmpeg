@@ -51,7 +51,7 @@ namespace Hudl.Ffmpeg.Command
         {
             get
             {
-                return TimeSpan.FromSeconds(Helpers.GetLength(Parent as Command<IResource>));
+                return TimeSpan.FromSeconds(Helpers.GetLength(Parent));
             }
         }
 

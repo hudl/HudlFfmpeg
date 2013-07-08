@@ -19,30 +19,30 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Adds a new command using TOutput as a new instance
         /// </summary>
-        public Command<TOutput> OutputTo<TOutput>()
+        public Command<TOutput> CreateOutput<TOutput>()
             where TOutput : IResource, new()
         {
-            return OutputTo(new TOutput(), true);
+            return CreateOutput(new TOutput(), true);
         }
 
         /// <summary>
         /// Adds a new command using TOutput as a new instance
         /// </summary>
         /// <param name="export">Determines if the output from this command should be included in factory output</param>
-        public Command<TOutput> OutputTo<TOutput>(bool export)
+        public Command<TOutput> CreateOutput<TOutput>(bool export)
             where TOutput : IResource, new()
         {
-            return OutputTo(new TOutput(), export);
+            return CreateOutput(new TOutput(), export);
         }
 
         /// <summary>
         /// Adds a new command using outputToUse as definition for the output file
         /// </summary>
         /// <param name="outputToUse">The output definition to use in the ffmpeg command.</param>
-        public Command<TOutput> OutputTo<TOutput>(TOutput outputToUse)
+        public Command<TOutput> CreateOutput<TOutput>(TOutput outputToUse)
             where TOutput : IResource, new()
         {
-            return OutputTo(outputToUse, true);
+            return CreateOutput(outputToUse, true);
         }
 
         /// <summary>
@@ -50,10 +50,10 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         /// <param name="outputToUse">The output definition to use in the ffmpeg command.</param>
         /// <param name="export">Determines if the output from this command should be included in factory output</param>
-        public Command<TOutput> OutputTo<TOutput>(TOutput outputToUse, bool export)
+        public Command<TOutput> CreateOutput<TOutput>(TOutput outputToUse, bool export)
             where TOutput : IResource, new()
         {
-            return OutputTo(outputToUse, SettingsCollection.ForOutput(), export);
+            return CreateOutput(outputToUse, SettingsCollection.ForOutput(), export);
         }
 
         /// <summary>
@@ -61,10 +61,10 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         /// <param name="outputToUse">The output definition to use in the ffmpeg command.</param>
         /// <param name="outputSettings">The output settings to use for the command.</param>
-        public Command<TOutput> OutputTo<TOutput>(TOutput outputToUse, SettingsCollection outputSettings)
+        public Command<TOutput> CreateOutput<TOutput>(TOutput outputToUse, SettingsCollection outputSettings)
             where TOutput : IResource, new()
         {
-            return OutputTo(outputToUse, SettingsCollection.ForOutput(), true);
+            return CreateOutput(outputToUse, SettingsCollection.ForOutput(), true);
         }
 
         /// <summary>
@@ -73,14 +73,34 @@ namespace Hudl.Ffmpeg.Command
         /// <param name="outputToUse">The output definition to use in the ffmpeg command.</param>
         /// <param name="outputSettings">The output settings to use for the command.</param>
         /// <param name="export">Determines if the output from this command should be included in factory output</param>
-        public Command<TOutput> OutputTo<TOutput>(TOutput outputToUse, SettingsCollection outputSettings, bool export)
+        public Command<TOutput> CreateOutput<TOutput>(TOutput outputToUse, SettingsCollection outputSettings, bool export)
             where TOutput : IResource, new()
         {
-            var command = Command.OutputTo(this, outputToUse, outputSettings, export); 
-            CommandList.Add(command);
-            return command;
+            return Command.OutputTo(this, outputToUse, outputSettings, export);
         }
         #endregion 
+
+        /// <summary>
+        /// Adds a new command using outputToUse as definition for the output file
+        /// </summary>
+        public CommandFactory Add(Command<IResource> command)
+        {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+            if (Contains(command))
+            {
+                throw new ArgumentException("Command Factory already contains this command.", "command");
+            }
+            if (command.Parent.Id != Id)
+            {
+                throw new ArgumentException("Command was not created as a child of this factory.", "command");
+            }
+
+            CommandList.Add(command);
+            return this;
+        }
 
         /// <summary>
         /// Select the output resources for the current command factory 

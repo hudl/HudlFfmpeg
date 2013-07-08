@@ -108,5 +108,34 @@ namespace Hudl.Ffmpeg.Common
             return string.Format("\"{0}\"",
                                  resource.Path.Replace('\\', '/'));
         }
+
+        public static List<CommandResourceReceipt[]> BreakReceipts(int division, params CommandResourceReceipt[] resources)
+        {
+            if (resources == null)
+            {
+                throw new ArgumentNullException("resources");
+            }
+
+            var index = 0;
+            var subDivision = division - 1;
+            var breakouts = new List<CommandResourceReceipt[]>();
+            var resourcesRemainderCount = resources.Length;
+            resourcesRemainderCount -= (resourcesRemainderCount > division)
+                                            ? division
+                                            : resources.Length;
+            breakouts.Add(resources.SubArray(0, division));
+            while (resourcesRemainderCount > 0)
+            {
+                index++;
+                var length = (resourcesRemainderCount > subDivision)
+                                    ? subDivision
+                                    : resourcesRemainderCount;
+                resourcesRemainderCount -= length;
+                breakouts.Add(resources.SubArray(1 + (index * subDivision), length));
+            }
+
+            return breakouts;
+        }
+
     }
 }

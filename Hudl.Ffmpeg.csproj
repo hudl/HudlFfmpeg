@@ -43,7 +43,6 @@
     <Compile Include="BaseTypes\AppliesToResourceAttribute.cs" />
     <Compile Include="BaseTypes\AppliesToCollection.cs" />
     <Compile Include="BaseTypes\AppliesToInvalidException.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
     <Compile Include="Command\BatchCommandProcessorReciever.cs" />
     <Compile Include="Command\CommandBuilder.cs" />
@@ -57,6 +56,7 @@
     <Compile Include="Common\AudioCodecTypes.cs" />
     <Compile Include="Common\BlendVideoOptionTypes.cs" />
     <Compile Include="Common\BlendVideoModeTypes.cs" />
+    <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\Helpers.cs" />
     <Compile Include="Common\FfmpegMergeOptionTypes.cs" />
     <Compile Include="Common\OverlayVideoEvalTypes.cs" />
@@ -88,11 +88,11 @@
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
     <Compile Include="Filters\AMovie.cs" />
-    <Compile Include="Filters\Templates\Filterchain\Resolution720P.cs" />
-    <Compile Include="Filters\Templates\Filterchain\Resolution1080P.cs" />
-    <Compile Include="Filters\Templates\Filterchain\Resolution360P.cs" />
-    <Compile Include="Filters\Templates\Filterchain\Resolution240P.cs" />
-    <Compile Include="Filters\Templates\Filterchain\Resolution480P.cs" />
+    <Compile Include="Resolution\R720P.cs" />
+    <Compile Include="Resolution\R1080P.cs" />
+    <Compile Include="Resolution\R360P.cs" />
+    <Compile Include="Resolution\R240P.cs" />
+    <Compile Include="Resolution\R480P.cs" />
     <Compile Include="Filters\Templates\Crossfade.cs" />
     <Compile Include="Filters\Volume.cs" />
     <Compile Include="Filters\SetSar.cs" />
@@ -101,6 +101,7 @@
     <Compile Include="Filters\Movie.cs" />
     <Compile Include="Filters\Overlay.cs" />
     <Compile Include="Filters\Scale.cs" />
+    <Compile Include="Resolution\BaseTypes\IResolutionTemplate.cs" />
     <Compile Include="Resources\Jpg.cs" />
     <Compile Include="Resources\Png.cs" />
     <Compile Include="Resources\ResourceColletion.cs" />
@@ -138,6 +139,9 @@
     <Compile Include="Settings\Dimensions.cs" />
     <Compile Include="Settings\FrameRate.cs" />
     <Compile Include="Templates\CampaignProject.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Filters\Templates\Filterchain\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

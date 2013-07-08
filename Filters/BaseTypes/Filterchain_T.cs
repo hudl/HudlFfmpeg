@@ -13,9 +13,14 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
     {
         internal Filterchain(TOutput outputToUse) 
         {
+            if (outputToUse == null)
+            {
+                throw new ArgumentNullException("outputToUse");
+            }
+
             Output = outputToUse;
             ResourceList = new List<CommandResourceReceipt>();
-            Filters = new AppliesToCollection<IFilter, TOutput>();
+            Filters = new AppliesToCollection<IFilter>(outputToUse.GetType());
         }
         internal Filterchain(TOutput outputToUse, params IFilter[] filters) 
             : this(outputToUse)
@@ -38,7 +43,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
 
         public TOutput Output { get; protected set; }
 
-        public AppliesToCollection<IFilter, TOutput> Filters { get; protected set; }
+        public AppliesToCollection<IFilter> Filters { get; protected set; }
 
         public IReadOnlyList<CommandResourceReceipt> Resources { get { return ResourceList.AsReadOnly(); } }
 
@@ -70,9 +75,10 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             ResourceList = resources;
         }
 
-        public Filterchain<IResource> Copy()
+        public Filterchain<TResource> Copy<TResource>()
+            where TResource : IResource
         {
-            return Filterchain.FilterTo(Output.Copy(), Filters.List.ToArray());
+            return Filterchain.FilterTo(Output.Copy<TResource>(), Filters.List.ToArray());
         }
 
         public override string ToString()

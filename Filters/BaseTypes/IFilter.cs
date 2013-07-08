@@ -46,7 +46,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// sets up the filter based on the settings in the filterchain
         /// </summary>
-        void Setup<TOutput>(Command<TOutput> command, Filterchain<TOutput> filterchain)
-            where TOutput : IResource;
+        void Setup(Command<IResource> command, Filterchain<IResource> filterchain);
     }
 }

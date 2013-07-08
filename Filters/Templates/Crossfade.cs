@@ -13,6 +13,9 @@ namespace Hudl.Ffmpeg.Filters.Templates
     public class Crossfade : Blend, IFilterValidator, IFilterProcessor
     {
         private const string CrossfadeAlgorithm = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
+        private readonly SettingsCollection _outputSettings = SettingsCollection.ForOutput(
+            new OverwriteOutput(), 
+            new VCodec(VideoCodecTypes.Copy));
 
         public Crossfade(TimeSpan duration)
         {
@@ -40,16 +43,16 @@ namespace Hudl.Ffmpeg.Filters.Templates
             get { return TimeSpan.FromSeconds(Duration.TotalSeconds*-1); }
         }
        
-        public bool Validate(Command<IResource> command, Filterchain<IResource> filterchain)
+        public bool Validate(Command<IResource> command, Filterchain<IResource> filterchain, List<CommandResourceReceipt> resources)
         {
-            if (filterchain.Resources.Count != 2)
+            if (resources.Count != 2)
             {
                 return false;
             }
             var indexOfFirstArgsInCommand =
-                command.ResourceList.FindIndex(a => a.Resource.Map == filterchain.Resources[0].Map);
+                command.ResourceList.FindIndex(a => a.Resource.Map == resources[0].Map);
             var indexOfSecondArgsInCommand =
-                command.ResourceList.FindIndex(a => a.Resource.Map == filterchain.Resources[0].Map);
+                command.ResourceList.FindIndex(a => a.Resource.Map == resources[1].Map);
             return (indexOfFirstArgsInCommand + 1) == indexOfSecondArgsInCommand;
         }
 
@@ -57,34 +60,22 @@ namespace Hudl.Ffmpeg.Filters.Templates
             where TOutput : IResource 
             where TResource : IResource
         {
-            var prepatoryCommandMiddle = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
-            var prepatoryCommandBeggining = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
-            var receiptVideoTo = filterchain.Resources[1];
-            var receiptVideoFrom = filterchain.Resources[0];
-            //var begginingReceipt = receiptVideoFrom;
-            //var middleReceipt = receiptVideoFrom;
-            var receiptVideoToIndex = command.ResourceList.FindIndex(c => c.Resource.Map == receiptVideoTo.Map);
-            var receiptVideoFromIndex = command.ResourceList.FindIndex(c => c.Resource.Map == receiptVideoFrom.Map);
-            var resourceTo = command.PrepResourcesFromReceipts(receiptVideoTo).FirstOrDefault();
-            var resourceFrom = command.PrepResourcesFromReceipts(receiptVideoFrom).FirstOrDefault();
+            var addCommand1 = false;
+            var addCommand4 = false;
+            var videoTo = filterchain.Resources[1];
+            var videoFrom = filterchain.Resources[0];
+            var resourceTo = command.PrepResourcesFromReceipts(videoTo).FirstOrDefault();
+            var resourceFrom = command.PrepResourcesFromReceipts(videoFrom).FirstOrDefault();
             if (resourceTo == null)
             {
-                resourceTo = command.ResourcesFromReceipts(receiptVideoTo).FirstOrDefault();
+                addCommand4 = true;
+                resourceTo = command.ResourcesFromReceipts(videoTo).FirstOrDefault();
             }
-            else
-            {
-                prepatoryCommandMiddle = command.PrepCommandFromReceipt(receiptVideoTo);
-            }
-
             if (resourceFrom == null)
             {
-                resourceFrom = command.ResourcesFromReceipts(receiptVideoFrom).FirstOrDefault();
+                addCommand1 = true;
+                resourceFrom = command.ResourcesFromReceipts(videoFrom).FirstOrDefault();
             }
-            else
-            {
-                prepatoryCommandBeggining = command.PrepCommandFromReceipt(receiptVideoFrom);
-            }
-            
             if (resourceTo == null)
             {
                 throw new InvalidOperationException("To resource does not belong to the Command or Command Factory.");
@@ -94,69 +85,81 @@ namespace Hudl.Ffmpeg.Filters.Templates
                 throw new InvalidOperationException("From resource does not belong to the Command or Command Factory.");
             }
 
-            var currentFromVideoLength = TimeSpan.FromSeconds(Helpers.GetLength(resourceFrom));
-            var videoDuration1 = currentFromVideoLength - Duration;
-            var videoDuration2 = currentFromVideoLength - Duration - TimeSpan.FromSeconds(1);
-            
-            if (prepatoryCommandBeggining == null)
+            var videoFromIndex = command.ResourceList.FindIndex(a => a.Resource.Map == videoFrom.Map);
+
+            var prepCommand1 = command.PrepCommandFromReceipt(videoFrom) ??
+                               new Command<IResource>(command.Parent, command.Output.Resource.Copy<TResource>(), _outputSettings);
+            var prepCommand2 = new Command<IResource>(command.Parent, command.Output.Resource.Copy<TResource>(), _outputSettings);
+            var prepCommand3 = command.PrepCommandFromReceipt(videoTo) ??
+                               new Command<IResource>(command.Parent, command.Output.Resource.Copy<TResource>(), _outputSettings);
+            var prepCommand4 = new Command<IResource>(command.Parent, command.Output.Resource.Copy<TResource>(), _outputSettings);
+           
+            if (addCommand1)
             {
-                prepatoryCommandBeggining = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
-                prepatoryCommandBeggining.Add(resourceFrom.Resource);
+                prepCommand1.Add(resourceFrom.Resource);
             }
-            if (prepatoryCommandMiddle == null)
+            if (addCommand4)
             {
-                prepatoryCommandMiddle = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
-                prepatoryCommandMiddle.Add(resourceTo.Resource);
+                prepCommand4.Add(resourceTo.Resource);
+            }
+            prepCommand2.Add(resourceFrom.Resource);
+            prepCommand3.Add(resourceTo.Resource);
+
+            var settingsCollection1 = SettingsCollection.ForInput();
+            var settingsCollection2 = SettingsCollection.ForInput();
+            var settingsCollection3 = SettingsCollection.ForInput();
+            var settingsCollection4 = SettingsCollection.ForInput();
+
+            var videoToLength = TimeSpan.FromSeconds(Helpers.GetLength(resourceTo));
+            var videoFromLength = TimeSpan.FromSeconds(Helpers.GetLength(resourceFrom));
+            var video1ADuration = videoFromLength - Duration;
+            var video2BDuration = videoToLength - Duration;
+            var video1BStartAt = video1ADuration;
+            var startAt1A = prepCommand1.ResourceList.First().Settings.Item<StartAt>();
+            var startAt2B = prepCommand3.ResourceList.First().Settings.Item<StartAt>();
+            if (startAt1A != null)
+            {
+                video1ADuration -= startAt1A.Length;
+            }
+            if (startAt2B != null)
+            {
+                video2BDuration -= startAt2B.Length;
             }
 
-            var endSettingsCollection = SettingsCollection.ForInput(); 
-            var begginingSettingsCollection = SettingsCollection.ForInput(new OverwriteOutput(),
-                                                                          new VCodec(VideoCodecTypes.Copy));
-            var middleSettingsCollection = SettingsCollection.ForInput(new OverwriteOutput(),
-                                                                       new VCodec(VideoCodecTypes.Copy));
+            settingsCollection1.Add(new Duration(video1ADuration));
+            settingsCollection2.Add(new Duration(Duration));
+            settingsCollection2.Add(new StartAt(video1BStartAt));
+            settingsCollection3.Add(new Duration(Duration));
+            settingsCollection4.Add(new Duration(video2BDuration));
+            settingsCollection4.Add(new StartAt(Duration));
 
-            if (receiptVideoFromIndex == 0)
-            {
-                begginingSettingsCollection.Add(new Duration(videoDuration1));
-                middleSettingsCollection.AddRange(SettingsCollection.ForInput(
-                    new StartAt(videoDuration1), 
-                    new Duration(Duration)
-                ));
-            }
-            else if (receiptVideoToIndex == (command.ResourceList.Count - 1))
-            {
-                begginingSettingsCollection.Add(new Duration(Duration));
-                middleSettingsCollection.AddRange(SettingsCollection.ForInput(
-                    new StartAt(Duration), 
-                    new Duration(videoDuration1)
-                ));
-            }
-            else
-            {
-                begginingSettingsCollection.Add(new Duration(Duration));
-                middleSettingsCollection.AddRange(SettingsCollection.ForInput(
-                    new StartAt(Duration), 
-                    new Duration(videoDuration2)
-                ));
-                endSettingsCollection.AddRange(SettingsCollection.ForInput(
-                    new OverwriteOutput(),
-                    new VCodec(VideoCodecTypes.Copy),
-                    new StartAt(videoDuration1),
-                    new Duration(Duration)
-                ));
-            }
+            prepCommand1.Resources.First()
+                        .Settings.MergeRange(settingsCollection1, FfmpegMergeOptionTypes.NewWins);
+            prepCommand2.Resources.First()
+                        .Settings.MergeRange(settingsCollection2, FfmpegMergeOptionTypes.NewWins);
+            prepCommand3.Resources.First()
+                        .Settings.MergeRange(settingsCollection3, FfmpegMergeOptionTypes.NewWins);
+            prepCommand4.Resources.First()
+                        .Settings.MergeRange(settingsCollection4, FfmpegMergeOptionTypes.NewWins);
 
-            prepatoryCommandBeggining.Resources.First()
-                                     .Settings.MergeRange(begginingSettingsCollection, FfmpegMergeOptionTypes.NewWins);
-            prepatoryCommandMiddle.Resources.First()
-                                  .Settings.MergeRange(middleSettingsCollection, FfmpegMergeOptionTypes.NewWins);
+            var receipt2A = command.Insert(videoFromIndex + 1, prepCommand3.Output.Resource);
+            var receipt1B = command.Insert(videoFromIndex + 1, prepCommand2.Output.Resource);
 
-            if (endSettingsCollection.Items.Count > 0)
+            filterchain.SetResources(receipt1B, receipt2A);
+
+            if (addCommand1)
             {
-                var prepatoryCommandEnd = new Command<IResource>(command.Parent, command.Output.Resource.Copy());
-                prepatoryCommandEnd.Add(endSettingsCollection, resourceFrom.Resource);
-                command.CommandList.Add(prepatoryCommandEnd);
+                command.CommandList.Add(prepCommand1);
+                command.Replace(videoFrom, prepCommand1.Output.Resource);
             }
+            if (addCommand4)
+            {
+                command.CommandList.Add(prepCommand4);
+                command.Replace(videoTo, prepCommand4.Output.Resource);
+            }
+            command.CommandList.Add(prepCommand2);
+            command.CommandList.Add(prepCommand3);
+
         }
     }
 }

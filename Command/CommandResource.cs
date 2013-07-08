@@ -53,7 +53,7 @@ namespace Hudl.Ffmpeg.Command
         /// <returns></returns>
         public CommandResourceReceipt GetReciept()
         {
-            return new CommandResourceReceipt(Parent.Parent.Id, Parent.Id, Id);
+            return new CommandResourceReceipt(Parent.Parent.Id, Parent.Id, Resource.Map);
         }
 
         #region Internals

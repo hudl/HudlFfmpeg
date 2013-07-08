@@ -6,16 +6,18 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         BaseResource,
         IImage
     {
+        private const string ResourceIndicatorType = "v";
+
         protected BaseImage(string format) 
-            : base(format)
+            : base(format, ResourceIndicatorType)
         {
         }
         protected BaseImage(string format, string path) 
-            : base(format, path)
+            : base(format, ResourceIndicatorType, path)
         {
         }
         protected BaseImage(string format, string path, TimeSpan length) 
-            : base(format, path, length)
+            : base(format, ResourceIndicatorType, path, length)
         {
         }
     }

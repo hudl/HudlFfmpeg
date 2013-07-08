@@ -8,16 +8,22 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.BaseTypes
 {
     /// <summary>
-    /// a collecton of <see cref="TCollection"/>, that will be validated to only include those that are applicable to <see cref="TRestrictedTo"/>
+    /// a collecton of <see cref="TCollection"/>, that will be validated to only include those that are applicable to the RestrictionType
     /// </summary>
     /// <typeparam name="TCollection">the type of the collection</typeparam>
-    /// <typeparam name="TRestrictedTo">the type the collection must apply to</typeparam>
-    public class AppliesToCollection<TCollection, TRestrictedTo>
-        where TRestrictedTo : IResource
+    public class AppliesToCollection<TCollection>
     {
-        public AppliesToCollection()
+        private readonly Type _restrictedType;
+
+        public AppliesToCollection(Type restrictedType)
         {
+            if (restrictedType == null)
+            {
+                throw new ArgumentNullException("restrictedType");
+            }
+
             List = new List<TCollection>();
+            _restrictedType = restrictedType;
         }
 
         public IReadOnlyList<TCollection> Items
@@ -36,45 +42,8 @@ namespace Hudl.Ffmpeg.BaseTypes
             } 
         }
 
-        public AppliesToCollection<TCollection, TRestrictedTo> Add<TItem>(TItem item)
-            where TItem : TCollection
-        {
-            var applierType = item.GetType();
-            var appliedTo = typeof (TRestrictedTo);
-            if (!Validate.AppliesTo(applierType, appliedTo))
-            {
-                throw new AppliesToInvalidException(applierType, appliedTo); 
-            }
-            if (Contains(item))
-            {
-                throw new InvalidOperationException(string.Format("A member '{0}' already exists in the collection.", applierType.Name));
-            }
-
-            List.Add(item);
-
-            return this;
-        }
-
-        public AppliesToCollection<TCollection, TRestrictedTo> AddRange(params TCollection[] list)
-        {
-            foreach (var item in list)
-            {
-                Add(item);
-            }
-
-            return this;
-        }
-
-        public AppliesToCollection<TCollection, TRestrictedTo> Remove<TItem>()
-        {
-            if (Contains<TItem>())
-            {
-                List.RemoveAll(f => f is TItem);
-            }
-            return this;
-        }
-
         public bool Contains<TItem>()
+            where TItem : TCollection
         {
             return (List.Count(f => f is TItem) > 0);
         }
@@ -86,14 +55,52 @@ namespace Hudl.Ffmpeg.BaseTypes
             return (List.Count(f => f.GetType().IsAssignableFrom(itemType)) > 0);
         }
 
-        public AppliesToCollection<TCollection, TRestrictedTo> RemoveAt(int index)
+        public AppliesToCollection<TCollection> Add<TItem>(TItem item)
+            where TItem : TCollection
+        {
+            var applierType = item.GetType();
+            if (!Validate.AppliesTo(applierType, _restrictedType))
+            {
+                throw new AppliesToInvalidException(applierType, _restrictedType); 
+            }
+            if (Contains(item))
+            {
+                throw new InvalidOperationException(string.Format("A member '{0}' already exists in the collection.", applierType.Name));
+            }
+
+            List.Add(item);
+
+            return this;
+        }
+
+        public AppliesToCollection<TCollection> AddRange(params TCollection[] list)
+        {
+            foreach (var item in list)
+            {
+                Add(item);
+            }
+
+            return this;
+        }
+
+        public AppliesToCollection<TCollection> Remove<TItem>()
+            where TItem : TCollection
+        {
+            if (Contains<TItem>())
+            {
+                List.RemoveAll(f => f is TItem);
+            }
+            return this;
+        }
+
+        public AppliesToCollection<TCollection> RemoveAt(int index)
         {
             List.RemoveAt(index);
 
             return this;
         }
 
-        public AppliesToCollection<TCollection, TRestrictedTo> RemoveAll(Predicate<TCollection> pred)
+        public AppliesToCollection<TCollection> RemoveAll(Predicate<TCollection> pred)
         {
             List.RemoveAll(pred);
 

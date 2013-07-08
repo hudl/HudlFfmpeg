@@ -14,9 +14,14 @@ namespace Hudl.Ffmpeg.Resources
         {
         }
 
-        public override IResource Copy()
+        protected override IResource InstanceOfMe()
         {
-            return Copy<Jpg>();
+            return new Jpg
+                {
+                    Id = Id, 
+                    Length = Length, 
+                    Path = Path
+                };
         }
     }
 }

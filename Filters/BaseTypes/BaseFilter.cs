@@ -37,8 +37,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// </summary>
         /// <param name="command">The command chain the current filter belongs to.</param>
         /// <param name="filterchain">The filterchain that the filter belongs to</param>
-        public void Setup<TOutput>(Command<TOutput> command, Filterchain<TOutput> filterchain) 
-            where TOutput : IResource
+        public void Setup(Command<IResource> command, Filterchain<IResource> filterchain) 
         {
             Resources = command.ResourcesFromReceipts(new List<CommandResourceReceipt>(filterchain.Resources));
 

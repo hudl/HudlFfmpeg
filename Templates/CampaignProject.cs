@@ -7,7 +7,7 @@ using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Filters.Templates;
-using Hudl.Ffmpeg.Filters.Templates.Filterchain;
+using Hudl.Ffmpeg.Resolution;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings;
@@ -47,7 +47,9 @@ namespace Hudl.Ffmpeg.Templates
        
         public CampaignProject()
         {
-            Factory = new CommandFactory();        
+            Factory = new CommandFactory();       
+            AudioList = new List<IAudio>();
+            VideoList = new List<IVideo>();
         }
 
         public void Add(IAudio resource)
@@ -105,11 +107,12 @@ namespace Hudl.Ffmpeg.Templates
             // Campaign m4a (AAC Interview audio) 
             // **********************************
             #region ...
-            var campaignM4A = Factory.OutputTo<M4A>();
+            var campaignM4A = Factory.CreateOutput<M4A>();
             var campaignM4AResource1 = campaignM4A.Add(_musicSilence);
             var campaignM4AResource2 = campaignM4A.Add(_musicBackground);
             var campaignM4AReceipts = AudioList.Select(campaignM4A.Add).ToList();
             CommandResourceReceipt lastM4AReceipt = null;
+            CommandResourceReceipt firstM4AReceipt = null;
 
             //FILTERS/SETTINGS
             var filterchainM4A1 = Filterchain.FilterTo<M4A>(
@@ -129,7 +132,7 @@ namespace Hudl.Ffmpeg.Templates
             );
 
             //FILTER APPLICATION
-            campaignM4A.ApplyFilter(filterchainM4A1, campaignM4AResource2); 
+            firstM4AReceipt = campaignM4A.ApplyFilter(filterchainM4A1, campaignM4AResource2); 
             
             campaignM4AReceipts.ForEach(receipt =>
                 {
@@ -140,23 +143,22 @@ namespace Hudl.Ffmpeg.Templates
 
             lastM4AReceipt = campaignM4A.ApplyFilter(filterchainM4A3, lastM4AReceipt);
 
-            lastM4AReceipt = campaignM4A.ApplyFilter(filterchainM4A4, campaignM4AResource2, lastM4AReceipt);
+            lastM4AReceipt = campaignM4A.ApplyFilter(filterchainM4A4, firstM4AReceipt, lastM4AReceipt);
 
             campaignM4A.ApplyFilter(filterchainM4A5, lastM4AReceipt);
+
+            Factory.Add(campaignM4A);
             #endregion
 
             // **********************************
             // Campaign mp4 (480p resolution w/o audio)
             // **********************************
             #region ...
-            var campaign480Mp4 = Factory.OutputTo<Mp4>();
-            var campaign480Mp4Resource1 = campaignM4A.Add(_imageVignette);
-            var campaign480Mp4Resource2 = campaignM4A.Add(_videoFilmGrain);
+            var campaign480Mp4 = Factory.CreateOutput<Mp4>();
             var campaign480Mp4Receipts = VideoList.Select(campaign480Mp4.Add).ToList();
             CommandResourceReceipt last480Mp4Receipt = null;
 
             //FILTERS/SETTINGS
-            var filterchain480Mp41 = new Resolution480P<Mp4>();
             var filterchain480Mp42 = Filterchain.FilterTo<Mp4>(
                 new Crossfade(TimeSpan.FromSeconds(1))
             );
@@ -179,14 +181,11 @@ namespace Hudl.Ffmpeg.Templates
                 new OverwriteOutput(),
                 new BitRate(3000),
                 new FrameRate(29.97),
-                new Dimensions(ScalePresetTypes.Hd480),
                 new PixelFormat(PixelFormatTypes.Yuv420P),
                 new VCodec(VideoCodecTypes.Libx264)
             );
 
             //FILTER APPLICATION 
-            campaign480Mp4.ApplyFilterToEach(filterchain480Mp41);
-
             campaign480Mp4Receipts.ForEach(receipt =>
                 {
                     if (last480Mp4Receipt == null)
@@ -196,50 +195,57 @@ namespace Hudl.Ffmpeg.Templates
                     }
 
                     campaign480Mp4.ApplyFilter(filterchain480Mp42, last480Mp4Receipt, receipt);
+                    last480Mp4Receipt = receipt;
                 });
 
             last480Mp4Receipt = campaign480Mp4.ApplyFilter(filterchain480Mp43);
 
+            var campaign480Mp4Resource1 = campaignM4A.Add(_imageVignette);
             last480Mp4Receipt = campaign480Mp4.ApplyFilter(filterchain480Mp44, last480Mp4Receipt, campaign480Mp4Resource1);
 
+            var campaign480Mp4Resource2 = campaignM4A.Add(_videoFilmGrain);
             last480Mp4Receipt = campaign480Mp4.ApplyFilter(filterchain480Mp45, last480Mp4Receipt, campaign480Mp4Resource2);
 
             campaign480Mp4.ApplyFilter(filterchain480Mp46, last480Mp4Receipt);
 
-            campaign480Mp4.Output.Settings = outputSettings480Mp4; 
+            campaign480Mp4.SetResolution(new R480P<Mp4>());
+
+            campaign480Mp4.Output.Settings = outputSettings480Mp4;
+
+            Factory.Add(campaign480Mp4);
             #endregion
 
             // **********************************
             // Campaign mp4 (240p resolution w/o audio)
             // **********************************
             #region ...
-            var campaign240Mp4 = Factory.OutputTo<Mp4>(false);
+            var campaign240Mp4 = Factory.CreateOutput<Mp4>(false);
             campaign240Mp4.Add(campaign480Mp4.Output.Resource);
 
             //FILTERS/SETTINGS
-            var filterchain240Mp41 = new Resolution240P<Mp4>();
             var outputSettings240Mp4 = SettingsCollection.ForOutput(
                 new RemoveAudio(),
                 new TrimShortest(),
                 new OverwriteOutput(),
                 new BitRate(3000),
                 new FrameRate(29.97),
-                new Dimensions(ScalePresetTypes.Hd480),
                 new PixelFormat(PixelFormatTypes.Yuv420P),
                 new VCodec(VideoCodecTypes.Libx264)
             );
 
             //FILTER APPLICATION 
-            campaign240Mp4.ApplyFilter(filterchain240Mp41);
+            campaign240Mp4.SetResolution(new R240P<Mp4>());
 
-            campaign240Mp4.Output.Settings = outputSettings240Mp4; 
+            campaign240Mp4.Output.Settings = outputSettings240Mp4;
+
+            Factory.Add(campaign240Mp4);
             #endregion
 
             // **********************************
             // Campaign mp4 (480p resolution w/audio)
             // **********************************
             #region ...
-            var campaign480Mp4WAudio = Factory.OutputTo<Mp4>();
+            var campaign480Mp4WAudio = Factory.CreateOutput<Mp4>();
             campaign480Mp4WAudio.Add(campaignM4A.Output.Resource);
             campaign480Mp4WAudio.Add(campaign480Mp4.Output.Resource);
 
@@ -252,14 +258,16 @@ namespace Hudl.Ffmpeg.Templates
             );
 
             //FILTER APPLICATION 
-            campaign480Mp4WAudio.Output.Settings = outputSettings480Mp4WAudio; 
+            campaign480Mp4WAudio.Output.Settings = outputSettings480Mp4WAudio;
+
+            Factory.Add(campaign480Mp4WAudio);
             #endregion
 
             // **********************************
             // Campaign mp4 (240p resolution w/audio)
             // **********************************
             #region ...
-            var campaign240Mp4WAudio = Factory.OutputTo<Mp4>();
+            var campaign240Mp4WAudio = Factory.CreateOutput<Mp4>();
             campaign240Mp4WAudio.Add(campaignM4A.Output.Resource);
             campaign240Mp4WAudio.Add(campaign240Mp4.Output.Resource);
 
@@ -273,25 +281,30 @@ namespace Hudl.Ffmpeg.Templates
 
             //FILTER APPLICATION 
             campaign240Mp4WAudio.Output.Settings = outputSettings240Mp4WAudio;
+
+            Factory.Add(campaign240Mp4WAudio);
             #endregion
 
             // **********************************
             // Campaign Jpg (240p resolution w/audio)
             // **********************************
             #region ...
-            var campaignJpg = Factory.OutputTo<Jpg>();
-            campaignJpg.Add(campaign480Mp4.Output.Resource);
+            var campaignJpg = Factory.CreateOutput<Jpg>();
+            campaignJpg.Add(SettingsCollection.ForInput(
+                new Duration(1),
+                new SeekTo(TimeSpan.FromSeconds(5))
+            ), campaign480Mp4.Output.Resource);
 
             //FILTERS/SETTINGS
             var outputSettingsJpg = SettingsCollection.ForOutput(
                 new OverwriteOutput(),
-                new FrameRate(1),
-                new Duration(1),
-                new StartAt(TimeSpan.FromSeconds(5))
+                new FrameRate(1)
             );
 
             //FILTER APPLICATION 
             campaignJpg.Output.Settings = outputSettingsJpg;
+
+            Factory.Add(campaignJpg);
             #endregion
         }
 

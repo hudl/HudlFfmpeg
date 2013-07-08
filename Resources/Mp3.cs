@@ -19,9 +19,14 @@ namespace Hudl.Ffmpeg.Resources
         {
         }
 
-        public override IResource Copy()
+        protected override IResource InstanceOfMe()
         {
-            return Copy<Mp3>();
+            return new Mp3
+            {
+                Id = Id,
+                Length = Length,
+                Path = Path
+            };
         }
     }
 }

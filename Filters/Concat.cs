@@ -47,7 +47,7 @@ namespace Hudl.Ffmpeg.Filters
             {
                 throw new InvalidOperationException("Number of Audios out cannot be greater than Resources in.");
             }
-
+            
             var filter = new StringBuilder(100);
             if (numberOfResources > FilterMinInputs)
             {

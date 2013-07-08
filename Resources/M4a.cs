@@ -19,9 +19,14 @@ namespace Hudl.Ffmpeg.Resources
         {
         }
 
-        public override IResource Copy()
+        protected override IResource InstanceOfMe()
         {
-            return Copy<M4A>();
+            return new M4A
+            {
+                Id = Id,
+                Length = Length,
+                Path = Path
+            };
         }
     }
 }

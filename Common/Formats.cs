@@ -20,6 +20,10 @@ namespace Hudl.Ffmpeg.Common
                                  timespan.Minutes.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'),
                                  timespan.Seconds.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'));
         }
+        public static string Map(IResource input, int index)
+        {
+            return Map(string.Concat(index, ":", input.ResourceIndicator));
+        }
         public static string Map(IResource input)
         {
             return Map(input.Map);

@@ -101,7 +101,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
                 throw new ArgumentNullException("setting");
             }
 
-            var alreadyContainsSetting = Contains<TSetting>(); 
+            var alreadyContainsSetting = Contains(setting); 
             if (alreadyContainsSetting)
             {
                 if (option == FfmpegMergeOptionTypes.NewWins)
@@ -154,6 +154,16 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             var itemType = item.GetType();
             return (SettingsList.Count(s => s.GetType().IsAssignableFrom(itemType)) > 0);
         }
+
+        /// <summary>
+        /// will return the TSetting item in the settings collection list
+        /// </summary>
+        public TSetting Item<TSetting>()
+            where TSetting : class, ISetting
+        {
+            return SettingsList.FirstOrDefault(s => s is TSetting) as TSetting;
+        }
+
 
         /// <summary>
         /// removes the specified setting type from the SettingsCollection
