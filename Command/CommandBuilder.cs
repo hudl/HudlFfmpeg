@@ -124,7 +124,7 @@ namespace Hudl.Ffmpeg.Command
                     WriteFilterchain(command, filterchain);
                 });
          
-            if (!shouldIncludeDelimitor)
+            if (shouldIncludeDelimitor)
             {
                 _builderBase.Append("\"");
             }
@@ -182,7 +182,7 @@ namespace Hudl.Ffmpeg.Command
                     }
                     else
                     {
-                        _builderBase.Append(Formats.Map(filterchain.Output));
+                        _builderBase.Append(Formats.Map(resource.Map));
                     }
                 });
         }
