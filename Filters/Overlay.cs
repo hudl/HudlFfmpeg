@@ -41,9 +41,9 @@ namespace Hudl.Ffmpeg.Filters
 
         public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
-            return Shortest ? 
-                resources.Max(r => r.Resource.Length) : 
-                resources.Min(r => r.Resource.Length);
+            return Shortest
+                ? resources.Min(r => r.Resource.Length) 
+                : resources.Max(r => r.Resource.Length);
         }
 
         public override string ToString() 

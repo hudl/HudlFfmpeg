@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
@@ -33,6 +34,11 @@ namespace Hudl.Ffmpeg.Filters
         public BlendVideoModeTypes Mode { get; set; }
 
         public string Expression { get; set; }
+
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource<IResource>> resources)
+        {
+            return resources.Min(r => r.Resource.Length);
+        }
 
         public override string ToString() 
         {

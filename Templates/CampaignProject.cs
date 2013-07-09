@@ -121,9 +121,6 @@ namespace Hudl.Ffmpeg.Templates
             var filterchainMp3ToM4A1 = Filterchain.FilterTo<M4A>(
                 new Concat(1, 0)
             );
-            var filterchainMp3ToM4A2 = Filterchain.FilterTo<M4A>(
-                new Volume(1.5m)
-            );
             var outputSettingsMp3ToM4A = SettingsCollection.ForOutput(
                 new TrimShortest(),
                 new OverwriteOutput(),
@@ -139,49 +136,9 @@ namespace Hudl.Ffmpeg.Templates
                     campaignMp3ToM4A.ApplyFilter(filterchainMp3ToM4A1, lastMp3ToM4AReceipt, campaignMp3ToM4AResource1, receipt);
             });
 
-            campaignMp3ToM4A.ApplyFilter(filterchainMp3ToM4A2, lastMp3ToM4AReceipt);
-
             campaignMp3ToM4A.Output.Settings = outputSettingsMp3ToM4A;
 
             Factory.AddToResources(campaignMp3ToM4A);
-            #endregion
-
-            // **********************************
-            // Campaign m4a (AAC Interview audio) 
-            // **********************************
-            #region ...
-            var campaignM4A = Factory.CreateOutput<M4A>("audio_aac.m4a");
-            var campaignM4AResource1 = campaignM4A.Add(_musicBackground);
-            var campaignM4AResource2 = campaignM4A.Add(campaignMp3ToM4A.Output.Resource);
-            CommandResourceReceipt lastM4AReceipt = null;
-
-            //FILTERS/SETTINGS
-            var filterchainM4A1 = Filterchain.FilterTo<M4A>(
-                new Volume(.2m)
-            );
-            var filterchainM4A2 = Filterchain.FilterTo<M4A>(
-                new AMix(DurationTypes.First)
-            );
-            var filterchainM4A3 = Filterchain.FilterTo<M4A>(
-                new AFade(FadeTransitionTypes.Out, 2)
-            );
-            var outputSettingsM4A = SettingsCollection.ForOutput(
-                new TrimShortest(),
-                new OverwriteOutput(),
-                new AudioBitRate(125),
-                new ACodec(AudioCodecTypes.ExperimentalAac)
-            );
-
-            //FILTER APPLICATION
-            lastM4AReceipt = campaignM4A.ApplyFilter(filterchainM4A1, campaignM4AResource2);
-
-            lastM4AReceipt = campaignM4A.ApplyFilter(filterchainM4A2, campaignM4AResource1, lastM4AReceipt);
-
-            campaignM4A.ApplyFilter(filterchainM4A3, lastM4AReceipt);
-
-            campaignM4A.Output.Settings = outputSettingsM4A;
-
-            Factory.AddToOutput(campaignM4A);
             #endregion
 
             // **********************************
@@ -277,6 +234,51 @@ namespace Hudl.Ffmpeg.Templates
 
             Factory.AddToResources(campaign240Mp4);
             #endregion
+
+            // **********************************
+            // Campaign m4a (AAC Interview audio) 
+            // **********************************
+            #region ...
+            var campaignM4AStartFade = (int)Helpers.GetLength(campaign480Mp4);
+            var campaignM4A = Factory.CreateOutput<M4A>("audio_aac.m4a");
+            var campaignM4AResource1 = campaignM4A.Add(_musicBackground);
+            var campaignM4AResource2 = campaignM4A.Add(campaignMp3ToM4A.Output.Resource);
+
+            //FILTERS/SETTINGS
+            var filterchainM4A1 = Filterchain.FilterTo<M4A>(
+                new Volume(.3m)
+            );
+            var filterchainM4A2 = Filterchain.FilterTo<M4A>(
+                new Volume(1.4m)
+            );
+            var filterchainM4A3 = Filterchain.FilterTo<M4A>(
+                new AMix(DurationTypes.First)
+            );
+            var filterchainM4A4 = Filterchain.FilterTo<M4A>(
+                new AFade(FadeTransitionTypes.Out, 2, campaignM4AStartFade - 2)
+            );
+
+            var outputSettingsM4A = SettingsCollection.ForOutput(
+                new TrimShortest(),
+                new OverwriteOutput(),
+                new AudioBitRate(125),
+                new ACodec(AudioCodecTypes.ExperimentalAac)
+            );
+
+            //FILTER APPLICATION
+            var lastM4AReceipt1 = campaignM4A.ApplyFilter(filterchainM4A1, campaignM4AResource1);
+
+            var lastM4AReceipt2 = campaignM4A.ApplyFilter(filterchainM4A2, campaignM4AResource2);
+
+            lastM4AReceipt1 = campaignM4A.ApplyFilter(filterchainM4A3, lastM4AReceipt1, lastM4AReceipt2);
+
+            campaignM4A.ApplyFilter(filterchainM4A4, lastM4AReceipt1);
+
+            campaignM4A.Output.Settings = outputSettingsM4A;
+
+            Factory.AddToOutput(campaignM4A);
+            #endregion
+
 
             // **********************************
             // Campaign mp4 (480p resolution w/audio)

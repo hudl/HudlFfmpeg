@@ -29,12 +29,19 @@ namespace Hudl.Ffmpeg.Filters
             Transition = transition;
             Duration = duration;
         }
+        public AFade(FadeTransitionTypes transition, int duration, int overrideStartAt)
+            : this(transition, duration)
+        {
+            OverrideStartAt = overrideStartAt;
+        }
 
         public FadeTransitionTypes Transition { get; set; } 
 
         public FadeAudioUnitTypes Unit { get; set; }
         
         public double Duration { get; set; }
+
+        public double? OverrideStartAt { get; set; }
 
         public override string ToString()
         {
@@ -45,7 +52,11 @@ namespace Hudl.Ffmpeg.Filters
 
             var filter = new StringBuilder(100);
             var startAtLocation = 0d;
-            if (Transition == FadeTransitionTypes.Out)
+            if (OverrideStartAt.HasValue)
+            {
+                startAtLocation = OverrideStartAt.Value;
+            }
+            else if (Transition == FadeTransitionTypes.Out)
             {
                 startAtLocation = Resources[0].Resource.Length.TotalSeconds - Duration; 
             }

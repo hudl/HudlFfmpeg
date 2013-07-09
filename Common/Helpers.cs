@@ -98,18 +98,16 @@ namespace Hudl.Ffmpeg.Common
                 throw new ArgumentNullException("command");
             }
 
-            var commandResourceLength = GetLength(command.ResourceList);
-            var commandFiltergraphLength = command.Filtergraph.Filterchains.Sum(filterchain =>
-                {
-                    var resourceList = command.ResourcesFromReceipts(filterchain.ResourceList);
-                    return filterchain.Filters.List.Sum(filter =>
-                        {
-                            var lengthFromInputs = filter.LengthFromInputs(resourceList);
-                            return lengthFromInputs.HasValue ? lengthFromInputs.Value.TotalSeconds : 0D;
-                        });
-                });
-            return commandResourceLength + commandFiltergraphLength; 
+            if (command.Filtergraph.FilterchainList.Count > 0)
+            {
+                return GetLength(command, command.Filtergraph.FilterchainList.Last());
+            }
+            else
+            {
+                return command.ResourceList.Sum(r => GetLength(r));
+            }
         }
+        
 
         /// <summary>
         /// calculates the real time length based on the contents
@@ -125,21 +123,71 @@ namespace Hudl.Ffmpeg.Common
                 throw new ArgumentNullException("command");
             }
 
-            var filterchainInputMaps = filterchain.ResourceList.Select(r => r.Map).ToList();
-            var filterchainIndexInCommand = command.Filtergraph.FilterchainList.FindIndex(f => f.Output.Resource.Map == filterchain.Output.Resource.Map);
-            var filterchainsInSequenceTo = command.Filtergraph.FilterchainList
-                                                  .GetRange(0, filterchainIndexInCommand + 1)
-                                                  .Where(f => filterchainInputMaps.Contains(f.Output.Resource.Map))
-                                                  .ToList();
-            var commandOnlyResourcesFromReceipts = command.CommandOnlyResourcesFromReceipts(filterchain.ResourceList);
-            var filterchainOutputsFromSequence = filterchainsInSequenceTo.Select(f => new CommandResource<IResource>(command, f.GetOutput(command).GetOutput())).ToList();
-            var commandResourceLength = GetLength(commandOnlyResourcesFromReceipts);
-            var commandFiltergraphLength = filterchain.Filters.List.Sum(filter =>
+            //var filterchainInputMaps = filterchain.ResourceList.Select(r => r.Map).ToList();
+            //var filterchainIndexInCommand = command.Filtergraph.FilterchainList.FindIndex(f => f.Output.Resource.Map == filterchain.Output.Resource.Map);
+            //var filterchainsInSequenceTo = command.Filtergraph.FilterchainList
+            //                                      .GetRange(0, filterchainIndexInCommand + 1)
+            //                                      .Where(f => filterchainInputMaps.Contains(f.Output.Resource.Map))
+            //                                      .ToList();
+            //var filterchainOutputsFromSequence = filterchainsInSequenceTo.Select(f => new CommandResource<IResource>(command, f.GetOutput(command).GetOutput())).ToList();
+            //var commandResourceLength = GetLength(commandOnlyResourcesFromReceipts);
+
+            var finalFilterLength = 0d;
+            var calculatedFilterOutputDictionary = new Dictionary<string, CommandResource<IResource>>();
+            var calculatedPrepOutputDictionary = new Dictionary<string, CommandResource<IResource>>();
+            var filterchainIndex = command.Filtergraph.FilterchainList.FindIndex(f => f.Output.Resource.Map == filterchain.Output.Resource.Map);
+
+            if (command.CommandList.Count > 0)
+            {
+                command.CommandList.ForEach(c =>
+                    {
+                        var commandOutputLength = GetLength(c);
+                        var newResource = c.Output.Resource.Copy<IResource>();
+                        newResource.Length = TimeSpan.FromSeconds(commandOutputLength);
+                        var newCommandResource = new CommandResource<IResource>(c, newResource);
+                        calculatedPrepOutputDictionary.Add(c.Output.Resource.Map, newCommandResource);
+                    });    
+            }
+
+            command.Filtergraph.FilterchainList
+                .GetRange(0, filterchainIndex + 1)
+                .ForEach(filter =>
                 {
-                    var lengthFromInputs = filter.LengthFromInputs(filterchainOutputsFromSequence);
-                    return lengthFromInputs.HasValue ? lengthFromInputs.Value.TotalSeconds : 0D;
+                    var resourceList = new List<CommandResource<IResource>>();
+                    var filterlistMaps = filter.ResourceList.Select(f => f.Map).ToList();
+                    var commandOnlyResourcesFromReceiptsRaw = command.CommandOnlyResourcesFromReceipts(filter.ResourceList);
+                    var commandOnlyResourcesFromReceipts = commandOnlyResourcesFromReceiptsRaw.Select(r =>
+                        {
+                            if (calculatedPrepOutputDictionary.ContainsKey(r.Resource.Map))
+                            {
+                                return calculatedPrepOutputDictionary[r.Resource.Map];
+                            }
+                            var newLength = GetLength(r);
+                            var newResource = r.Resource.Copy<IResource>();
+                            newResource.Length = TimeSpan.FromSeconds(newLength);
+                            return new CommandResource<IResource>(r.Parent, newResource);
+                        }).ToList();
+                    var filterOnlyResourceFromReceipts = calculatedFilterOutputDictionary.Where(r => filterlistMaps.Contains(r.Key))
+                                                                                         .Select(r => r.Value).ToList();
+
+                    if (commandOnlyResourcesFromReceipts.Count > 0)
+                    {
+                        resourceList.AddRange(commandOnlyResourcesFromReceipts);
+                    }
+                    if (filterOnlyResourceFromReceipts.Count > 0)
+                    {
+                        resourceList.AddRange(filterOnlyResourceFromReceipts);
+                    }
+                   
+                    var filterLength = filter.Filters.Items.First().LengthFromInputs(resourceList);
+                    finalFilterLength = filterLength.HasValue ? filterLength.Value.TotalSeconds : 0d;
+                    filter.Output.Length = filterLength.HasValue ? filterLength.Value : TimeSpan.FromSeconds(0);
+                    var newCommandResource = new CommandResource<IResource>(command, filter.Output.GetOutput());
+                    calculatedFilterOutputDictionary.Add(filter.Output.Resource.Map, newCommandResource);
                 });
-            return commandResourceLength + commandFiltergraphLength;
+
+
+            return finalFilterLength;
         }
 
         /// <summary>

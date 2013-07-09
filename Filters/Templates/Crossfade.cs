@@ -162,7 +162,7 @@ namespace Hudl.Ffmpeg.Filters.Templates
             var receipt2A = command.Insert(videoFromIndex + 1, prepCommand3.Output.Resource);
             var receipt1B = command.Insert(videoFromIndex + 1, prepCommand2.Output.Resource);
 
-            filterchain.SetResources(receipt1B, receipt2A);
+            filterchain.SetResources(receipt2A, receipt1B);
 
             if (addCommand1)
             {

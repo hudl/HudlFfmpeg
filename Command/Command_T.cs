@@ -632,7 +632,6 @@ namespace Hudl.Ffmpeg.Command
             var receiptMaps = receipts.Select(d => d.Map).ToList();
             return ResourceList.Where(r => receiptMaps.Contains(r.Resource.Map)).ToList();
         }
-        
         internal List<CommandResource<IResource>> ResourcesFromReceipts(params CommandResourceReceipt[] receipts)
         {
             return ResourcesFromReceipts(new List<CommandResourceReceipt>(receipts));
