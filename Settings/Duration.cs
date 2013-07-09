@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
@@ -29,12 +31,9 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public override TimeSpan? LengthOverride
+        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
-            get
-            {
-                return Length; 
-            }
+            return Length; 
         }
 
         public override string ToString()

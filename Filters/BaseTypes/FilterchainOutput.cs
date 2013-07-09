@@ -1,14 +1,13 @@
 ﻿using System;
-using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
-    public class FilterOutput<TResource>
+    public class FilterchainOutput<TResource>
         where TResource : IResource
     {
-        internal FilterOutput(Filterchain<IResource> parent, TResource resource)
+        internal FilterchainOutput(Filterchain<TResource> parent, TResource resource)
         {
             if (parent == null)
             {
@@ -23,21 +22,15 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             Resource = resource;
         }
 
-        public Filterchain<IResource> Parent { get; protected set; }
+        public TimeSpan Length { get; set; }
 
-        //public TimeSpan Length
-        //{
-        //    get
-        //    {
-        //        return TimeSpan.FromSeconds(Helpers.GetLength(Parent as Filterchain<IResource>));
-        //    }
-        //}
+        public Filterchain<TResource> Parent { get; protected set; }
 
-        //public TResource Output()
-        //{
-        //    Resource.Length = Length;
-        //    return Resource;
-        //}
+        public TResource GetOutput()
+        {
+            Resource.Length = Length;
+            return Resource;
+        }
 
         #region Internals
         internal TResource Resource { get; set; }

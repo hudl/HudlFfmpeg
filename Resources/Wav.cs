@@ -6,16 +6,9 @@ namespace Hudl.Ffmpeg.Resources
     public class Wav : BaseAudio
     {
         private const string FileFormat = ".wav";
+        
         public Wav() 
             : base(FileFormat)
-        {
-        }
-        public Wav(string path) 
-            : base(FileFormat, path)
-        {
-        }
-        public Wav(string path, TimeSpan length) 
-            : base(FileFormat, path, length)
         {
         }
 
@@ -25,6 +18,7 @@ namespace Hudl.Ffmpeg.Resources
             {
                 Id = Id,
                 Length = Length,
+                Name = Name,
                 Path = Path
             };
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Hudl.Ffmpeg.Common;
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
@@ -9,19 +10,29 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         {
             Format = format;
             Id = Guid.NewGuid().ToString();
-            Map = Guid.NewGuid().ToString();
+            Map = Helpers.NewMap();
             ResourceIndicator = resourceIndicator;
-            Path = string.Concat(Guid.NewGuid(), format);
+            Name = string.Concat(Guid.NewGuid(), format);
         }
-        protected BaseResource(string format, string resourceIndicator, string path) 
+        protected BaseResource(string format, string resourceIndicator, string name) 
             : this(format, resourceIndicator)
         {
-            Path = path; 
+            Name = name; 
         }
-        protected BaseResource(string format, string resourceIndicator, string path, TimeSpan length) 
-            : this(format, resourceIndicator, path)
+        protected BaseResource(string format, string resourceIndicator, string name, string path)
+            : this(format, resourceIndicator, name)
+        {
+            Path = path;
+        }
+        protected BaseResource(string format, string resourceIndicator, string name, TimeSpan length) 
+            : this(format, resourceIndicator, name)
         {
             Length = length; 
+        }
+        protected BaseResource(string format, string resourceIndicator, string name, string path, TimeSpan length)
+            : this(format, resourceIndicator, name, length)
+        {
+            Path = path;
         }
 
         /// <summary>
@@ -35,22 +46,38 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         public string Map { get; set; }
         
         /// <summary>
-        /// a readable path for ffmpeg to access 
+        /// the file name of the resource that is used
         /// </summary>
-        public string Path 
-        { 
-            get { return _path; }
+        public string Name
+        {
+            get { return _name; }
             set
             {
                 if (!ValidateFormat(value))
                 {
                     throw new ArgumentException(string.Format(
-                        "Path must have an extension of '{0}' for this resource.", Format));
+                        "Name must have an extension of '{0}' for this resource.", Format));
                 }
-                _path = value;
+                _name = value;
             }
         }
-        private string _path; 
+        private string _name;
+        
+        /// <summary>
+        /// the file domain\directory for the resource
+        /// </summary>
+        public string Path { get; set; }
+        
+        /// <summary>
+        /// a readable path for ffmpeg to access 
+        /// </summary>
+        public string FullName
+        {
+            get
+            {
+                return System.IO.Path.Combine(Path, Name);
+            }
+        }
 
         /// <summary>
         /// the extension of the file, 
@@ -74,8 +101,16 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
             where TResource : IResource
         {
             var instanceNew = InstanceOfMe();
-            instanceNew.Map = Guid.NewGuid().ToString();
+            instanceNew.Map = Helpers.NewMap();
             return (TResource)instanceNew; 
+        }
+
+        public TResource CreateFrom<TResource>() 
+            where TResource : IResource
+        {
+            var instanceNew = Copy<TResource>();
+            Name = string.Concat(Guid.NewGuid(), Format);
+            return instanceNew; 
         }
 
         protected abstract IResource InstanceOfMe();
@@ -84,5 +119,11 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         {
             return !string.IsNullOrWhiteSpace(path) && path.Trim().ToUpper().EndsWith(Format.Trim().ToUpper());
         }
+
+
+
+
+
+       
     }
 }

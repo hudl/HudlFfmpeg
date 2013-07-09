@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
@@ -55,7 +56,7 @@ namespace Hudl.Ffmpeg.Command
             }
         }
 
-        public TResource Output()
+        public TResource GetOutput()
         {
             Resource.Length = Length;
             return Resource;

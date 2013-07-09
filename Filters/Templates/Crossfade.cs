@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
@@ -38,11 +39,11 @@ namespace Hudl.Ffmpeg.Filters.Templates
             }
         }
 
-        public override TimeSpan? LengthDifference
+        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
-            get { return TimeSpan.FromSeconds(Duration.TotalSeconds*-1); }
+            return Duration;
         }
-       
+
         public bool Validate(Command<IResource> command, Filterchain<IResource> filterchain, List<CommandResourceReceipt> resources)
         {
             if (resources.Count != 2)
@@ -87,12 +88,21 @@ namespace Hudl.Ffmpeg.Filters.Templates
 
             var videoFromIndex = command.ResourceList.FindIndex(a => a.Resource.Map == videoFrom.Map);
 
+            var output1 = command.Output.Resource.CreateFrom<TResource>();
+            output1.Path = command.Parent.Configuration.TempPath;
+            var output2 = command.Output.Resource.CreateFrom<TResource>();
+            output2.Path = command.Parent.Configuration.TempPath;
+            var output3 = command.Output.Resource.CreateFrom<TResource>();
+            output3.Path = command.Parent.Configuration.TempPath;
+            var output4 = command.Output.Resource.CreateFrom<TResource>();
+            output4.Path = command.Parent.Configuration.TempPath;
+
             var prepCommand1 = command.PrepCommandFromReceipt(videoFrom) ??
-                               new Command<IResource>(command.Parent, command.Output.Resource.Copy<TResource>(), _outputSettings);
-            var prepCommand2 = new Command<IResource>(command.Parent, command.Output.Resource.Copy<TResource>(), _outputSettings);
+                               new Command<IResource>(command.Parent, output1, _outputSettings);
+            var prepCommand2 = new Command<IResource>(command.Parent, output2, _outputSettings);
             var prepCommand3 = command.PrepCommandFromReceipt(videoTo) ??
-                               new Command<IResource>(command.Parent, command.Output.Resource.Copy<TResource>(), _outputSettings);
-            var prepCommand4 = new Command<IResource>(command.Parent, command.Output.Resource.Copy<TResource>(), _outputSettings);
+                               new Command<IResource>(command.Parent, output3, _outputSettings);
+            var prepCommand4 = new Command<IResource>(command.Parent, output4, _outputSettings);
            
             if (addCommand1)
             {
@@ -119,11 +129,18 @@ namespace Hudl.Ffmpeg.Filters.Templates
             var startAt2B = prepCommand3.ResourceList.First().Settings.Item<StartAt>();
             if (startAt1A != null)
             {
-                video1ADuration -= startAt1A.Length;
+                video1BStartAt += startAt1A.Length;
+                if (startAt1A.Length > Duration)
+                {
+                    video1ADuration -= (startAt1A.Length - Duration);
+                }
             }
             if (startAt2B != null)
             {
-                video2BDuration -= startAt2B.Length;
+                if (startAt2B.Length > Duration)
+                {
+                    video2BDuration -= (startAt2B.Length - Duration);
+                }
             }
 
             settingsCollection1.Add(new Duration(video1ADuration));
@@ -152,14 +169,13 @@ namespace Hudl.Ffmpeg.Filters.Templates
                 command.CommandList.Add(prepCommand1);
                 command.Replace(videoFrom, prepCommand1.Output.Resource);
             }
+            command.CommandList.Add(prepCommand2);
+            command.CommandList.Add(prepCommand3);
             if (addCommand4)
             {
                 command.CommandList.Add(prepCommand4);
                 command.Replace(videoTo, prepCommand4.Output.Resource);
             }
-            command.CommandList.Add(prepCommand2);
-            command.CommandList.Add(prepCommand3);
-
         }
     }
 }

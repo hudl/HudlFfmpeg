@@ -28,8 +28,8 @@ namespace Hudl.Ffmpeg.Filters
         public Concat(int numberOfAudioOut, int numberOfVideoOut)
             : base(FilterType, FilterMaxInputs)
         {
-            NumberOfVideoOut = numberOfAudioOut;
-            NumberOfAudioOut = numberOfVideoOut;
+            NumberOfAudioOut = numberOfAudioOut;
+            NumberOfVideoOut = numberOfVideoOut;
         }
 
         public int NumberOfVideoOut { get; set; }
@@ -53,19 +53,19 @@ namespace Hudl.Ffmpeg.Filters
             {
                 filter.AppendFormat("{1}n={0}", 
                     numberOfResources, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                    (filter.Length > 0) ?  ":" : "=");
             }
-            if (NumberOfVideoOut > DefaultVideoOut) 
+            if (NumberOfVideoOut != DefaultVideoOut) 
             {
                 filter.AppendFormat("{1}v={0}", 
-                    NumberOfVideoOut, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                    NumberOfVideoOut,
+                    (filter.Length > 0) ? ":" : "=");
             }
-            if (NumberOfAudioOut > DefaultAudioOut)
+            if (NumberOfAudioOut != DefaultAudioOut)
             {
                 filter.AppendFormat("{1}a={0}", 
-                    NumberOfAudioOut, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                    NumberOfAudioOut,
+                    (filter.Length > 0) ? ":" : "=");
             }
 
             return string.Concat(Type, filter.ToString());

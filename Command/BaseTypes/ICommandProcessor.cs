@@ -18,7 +18,7 @@ namespace Hudl.Ffmpeg.Command.BaseTypes
         /// <summary>
         /// opens a command builder session, should get the processor started and ready to recieve commands
         /// </summary>
-        bool Open();
+        bool Open(CommandConfiguration configuration);
         /// <summary>
         /// closes a command builder session, should perform all necessary clean up and stop listening for commands
         /// </summary>

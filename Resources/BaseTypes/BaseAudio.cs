@@ -1,5 +1,4 @@
 ﻿using System;
-using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
@@ -9,22 +8,25 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
     {
         private const string ResourceIndicatorType = "a";
 
-        protected BaseAudio(string format) 
+        protected BaseAudio(string format)
             : base(format, ResourceIndicatorType)
         {
-            Settings = SettingsCollection.ForInput();
         }
-        protected BaseAudio(string format, string path) 
-            : base(format, ResourceIndicatorType, path)
+        protected BaseAudio(string format, string name)
+            : base(format, ResourceIndicatorType, name)
         {
-            Settings = SettingsCollection.ForInput();
         }
-        protected BaseAudio(string format, string path, TimeSpan length) 
-            : base(format, ResourceIndicatorType, path, length)
+        protected BaseAudio(string format, string name, string path)
+            : base(format, ResourceIndicatorType, name, path)
         {
-            Settings = SettingsCollection.ForInput();
         }
-
-        public SettingsCollection Settings { get; set; }
+        protected BaseAudio(string format, string name, TimeSpan length)
+            : base(format, ResourceIndicatorType, name, length)
+        {
+        }
+        protected BaseAudio(string format, string name, string path, TimeSpan length)
+            : base(format, ResourceIndicatorType, name, path, length)
+        {
+        }
     }
 }

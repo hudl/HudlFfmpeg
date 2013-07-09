@@ -6,16 +6,9 @@ namespace Hudl.Ffmpeg.Resources
     public class M4A : BaseAudio
     {
         private const string FileFormat = ".m4a";
+
         public M4A() 
             : base(FileFormat)
-        {
-        }
-        public M4A(string path) 
-            : base(FileFormat, path)
-        {
-        }
-        public M4A(string path, TimeSpan length) 
-            : base(FileFormat, path, length)
         {
         }
 
@@ -25,6 +18,7 @@ namespace Hudl.Ffmpeg.Resources
             {
                 Id = Id,
                 Length = Length,
+                Name = Name,
                 Path = Path
             };
         }

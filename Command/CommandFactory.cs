@@ -2,118 +2,69 @@
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command.BaseTypes;
+using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Command
 {
+    /// <summary>
+    /// Command Factory is a management list of all the commands to be run in an Ffmpeg job.
+    /// </summary>
     public class CommandFactory
     {
-        public CommandFactory()
+        public CommandFactory(CommandConfiguration configuration)
         {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
             Id = Guid.NewGuid().ToString();
+            Configuration = configuration;
             CommandList = new List<Command<IResource>>();
         }
 
-        #region Command Helper Visability
         /// <summary>
-        /// Adds a new command using TOutput as a new instance
+        /// Returns the count of commands that are in the factory, excluding prep commands
         /// </summary>
-        public Command<TOutput> CreateOutput<TOutput>()
-            where TOutput : IResource, new()
+        public int Count { get { return CommandList.Count; } }
+
+        /// <summary>
+        /// Returns the path location for the command factory to store the output files.
+        /// </summary>
+        public CommandConfiguration Configuration { get; private set; }
+
+        /// <summary>
+        /// Adds a new command and marks the output to be exported.
+        /// </summary>
+        public CommandFactory AddToOutput(Command<IResource> command)
         {
-            return CreateOutput(new TOutput(), true);
+            command.Output.Resource.Path = Configuration.OutputPath;
+            return Add(command, true);
         }
 
         /// <summary>
-        /// Adds a new command using TOutput as a new instance
+        /// Adds a new command and marks the output to be exported.
         /// </summary>
-        /// <param name="export">Determines if the output from this command should be included in factory output</param>
-        public Command<TOutput> CreateOutput<TOutput>(bool export)
-            where TOutput : IResource, new()
+        public CommandFactory AddToResources(Command<IResource> command)
         {
-            return CreateOutput(new TOutput(), export);
-        }
-
-        /// <summary>
-        /// Adds a new command using outputToUse as definition for the output file
-        /// </summary>
-        /// <param name="outputToUse">The output definition to use in the ffmpeg command.</param>
-        public Command<TOutput> CreateOutput<TOutput>(TOutput outputToUse)
-            where TOutput : IResource, new()
-        {
-            return CreateOutput(outputToUse, true);
-        }
-
-        /// <summary>
-        /// Adds a new command using outputToUse as definition for the output file
-        /// </summary>
-        /// <param name="outputToUse">The output definition to use in the ffmpeg command.</param>
-        /// <param name="export">Determines if the output from this command should be included in factory output</param>
-        public Command<TOutput> CreateOutput<TOutput>(TOutput outputToUse, bool export)
-            where TOutput : IResource, new()
-        {
-            return CreateOutput(outputToUse, SettingsCollection.ForOutput(), export);
-        }
-
-        /// <summary>
-        /// Adds a new command using outputToUse as definition for the output file
-        /// </summary>
-        /// <param name="outputToUse">The output definition to use in the ffmpeg command.</param>
-        /// <param name="outputSettings">The output settings to use for the command.</param>
-        public Command<TOutput> CreateOutput<TOutput>(TOutput outputToUse, SettingsCollection outputSettings)
-            where TOutput : IResource, new()
-        {
-            return CreateOutput(outputToUse, SettingsCollection.ForOutput(), true);
-        }
-
-        /// <summary>
-        /// Adds a new command using outputToUse as definition for the output file
-        /// </summary>
-        /// <param name="outputToUse">The output definition to use in the ffmpeg command.</param>
-        /// <param name="outputSettings">The output settings to use for the command.</param>
-        /// <param name="export">Determines if the output from this command should be included in factory output</param>
-        public Command<TOutput> CreateOutput<TOutput>(TOutput outputToUse, SettingsCollection outputSettings, bool export)
-            where TOutput : IResource, new()
-        {
-            return Command.OutputTo(this, outputToUse, outputSettings, export);
-        }
-        #endregion 
-
-        /// <summary>
-        /// Adds a new command using outputToUse as definition for the output file
-        /// </summary>
-        public CommandFactory Add(Command<IResource> command)
-        {
-            if (command == null)
-            {
-                throw new ArgumentNullException("command");
-            }
-            if (Contains(command))
-            {
-                throw new ArgumentException("Command Factory already contains this command.", "command");
-            }
-            if (command.Parent.Id != Id)
-            {
-                throw new ArgumentException("Command was not created as a child of this factory.", "command");
-            }
-
-            CommandList.Add(command);
-            return this;
+            command.Output.Resource.Path = Configuration.TempPath;
+            return Add(command, false);
         }
 
         /// <summary>
         /// Select the output resources for the current command factory 
         /// </summary>
-        /// <returns></returns>
         public List<IResource> GetOutput()
         {
             return CommandList.Where(c => c.Output.IsExported)
                               .Select(c => c.Output.Resource).ToList();
         }
 
-        public int Count { get { return CommandList.Count; } }
-
+        /// <summary>
+        /// Returns a boolean indicating if the command already exists in the factory
+        /// </summary>
         public bool Contains<TOutput>(Command<TOutput> command)
             where TOutput : IResource
         {
@@ -125,7 +76,7 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public List<IResource> Render()
         {
-            return RenderWith<BatchCommandProcessorReciever>();
+            return RenderWith<WinCmdProcessorReciever>();
         }
 
         /// <summary>
@@ -136,7 +87,7 @@ namespace Hudl.Ffmpeg.Command
         {
             var commandProcessor = new TProcessor();
 
-            if (!commandProcessor.Open())
+            if (!commandProcessor.Open(Configuration))
             {
                 throw commandProcessor.Error;
             }
@@ -166,14 +117,76 @@ namespace Hudl.Ffmpeg.Command
                 {
                     var output = command.RenderWith(processor);
                     return output.IsExported 
-                        ? output.Output() 
+                        ? output.GetOutput() 
                         : null;
                 }).ToList();
         }
+
+        #region Command Helper Visibility
+        /// <summary>
+        /// Adds a new command using TOutput as a new instance
+        /// </summary>
+        public Command<TOutput> CreateOutput<TOutput>()
+            where TOutput : class, IResource, new()
+        {
+            var temporaryResource = new TOutput();
+            return CreateOutput<TOutput>(SettingsCollection.ForOutput(), temporaryResource.Name);
+        }
+
+        /// <summary>
+        /// Adds a new command using TOutput as a new instance
+        /// </summary>
+        public Command<TOutput> CreateOutput<TOutput>(string fileName)
+            where TOutput : class, IResource, new()
+        {
+            return CreateOutput<TOutput>(SettingsCollection.ForOutput(), fileName);
+        }
+
+        /// <summary>
+        /// Adds a new command using TOutput as a new instance
+        /// </summary>
+        public Command<TOutput> CreateOutput<TOutput>(SettingsCollection settings, string fileName)
+            where TOutput : class, IResource, new()
+        {
+            if (settings == null)
+            {
+                throw new ArgumentNullException("settings");
+            }
+            if (string.IsNullOrWhiteSpace("fileName"))
+            {
+                throw new ArgumentException("Output file name cannot be empty", "fileName");
+            }
+
+            var newResource = Resource.Create<TOutput>(Configuration.OutputPath, fileName);
+            return Command.OutputTo(this, newResource, settings);
+        }
+        #endregion 
 
         #region Internals
         internal string Id { get; set; }
         internal List<Command<IResource>> CommandList { get; set; }
         #endregion
+
+        #region Utility
+        private CommandFactory Add(Command<IResource> command, bool export)
+        {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+            if (Contains(command))
+            {
+                throw new ArgumentException("Command Factory already contains this command.", "command");
+            }
+            if (command.Parent.Id != Id)
+            {
+                throw new ArgumentException("Command was not created as a child of this factory.", "command");
+            }
+
+            command.Output.IsExported = export;
+            CommandList.Add(command);
+            return this;
+        }
+        #endregion 
     }
 }

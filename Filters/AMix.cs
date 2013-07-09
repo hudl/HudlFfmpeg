@@ -76,7 +76,7 @@ namespace Hudl.Ffmpeg.Filters
             if (Duration != DurationTypes.Longest)  
             {
                 filter.AppendFormat("{1}duration={0}", 
-                    Duration, 
+                    Duration.ToString().ToLower(), 
                     filter.Length > 0 ? ":" : "=");
             }
             if (DropoutTransition > 2)

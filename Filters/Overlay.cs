@@ -53,40 +53,40 @@ namespace Hudl.Ffmpeg.Filters
             {
                 filter.AppendFormat("{1}x={0}", 
                     X, 
-                    (filter.Length > 0) ? ":" : string.Empty);
+                    (filter.Length > 0) ? ":" : "=");
             }
             if (!string.IsNullOrWhiteSpace(Y))
             {
                 filter.AppendFormat("{1}y={0}", 
-                    Y, 
-                    (filter.Length > 0) ? ":" : string.Empty);
+                    Y,
+                    (filter.Length > 0) ? ":" : "=");
             }
             if (Eval != OverlayVideoEvalTypes.Frame)  
             {
                 filter.AppendFormat("{1}eval={0}", 
-                    Eval.ToString().ToLower(), 
-                    (filter.Length > 0) ? ":" : string.Empty);
+                    Eval.ToString().ToLower(),
+                    (filter.Length > 0) ? ":" : "=");
             }
             if (Format != OverlayVideoFormatTypes.Yuv420)  
             {
                 filter.AppendFormat("{1}format={0}", 
-                    Format.ToString().ToLower(), 
-                    (filter.Length > 0) ? ":" : string.Empty);
+                    Format.ToString().ToLower(),
+                    (filter.Length > 0) ? ":" : "=");
             }
             if (Shortest)  
             {
                 filter.AppendFormat("{1}shortest={0}", 
                     Convert.ToInt32(Shortest),
-                    (filter.Length > 0) ? ":" : string.Empty);
+                    (filter.Length > 0) ? ":" : "=");
             }
             if (RepeatLast)  
             {
                 filter.AppendFormat("{1}repeatlast={0}", 
-                    Convert.ToInt32(RepeatLast), 
-                    (filter.Length > 0) ? ":" : string.Empty);
+                    Convert.ToInt32(RepeatLast),
+                    (filter.Length > 0) ? ":" : "=");
             }
 
-            return string.Concat(Type, "=", filter.ToString());
+            return string.Concat(Type, filter.ToString());
         }
     }
 }

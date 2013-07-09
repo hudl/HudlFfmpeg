@@ -6,16 +6,9 @@ namespace Hudl.Ffmpeg.Resources
     public class Mp4 : BaseVideo
     {
         private const string FileFormat = ".mp4";
+
         public Mp4() 
             : base(FileFormat)
-        {
-        }
-        public Mp4(string path) 
-            : base(FileFormat, path)
-        {
-        }
-        public Mp4(string path, TimeSpan length) 
-            : base(FileFormat, path, length)
         {
         }
 
@@ -25,6 +18,7 @@ namespace Hudl.Ffmpeg.Resources
             {
                 Id = Id,
                 Length = Length,
+                Name = Name,
                 Path = Path
             };
         }

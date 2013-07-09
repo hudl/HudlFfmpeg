@@ -4,29 +4,33 @@ using Hudl.Ffmpeg.Command.BaseTypes;
 
 namespace Hudl.Ffmpeg.Command
 {
-    public class BatchCommandProcessorReciever : ICommandProcessor
+    public class WinCmdProcessorReciever : ICommandProcessor
     {
         private StreamWriter _outputWriter;
 
-        public BatchCommandProcessorReciever()
+        public WinCmdProcessorReciever()
         {
             Status = CommandProcessorStatus.Closed;
         }
+
+        private CommandConfiguration Configuration { get; set; }
 
         public Exception Error { get; protected set; }
 
         public CommandProcessorStatus Status { get; protected set; }
 
-        public bool Open()
+        public bool Open(CommandConfiguration configuration)
         {
             if (Status != CommandProcessorStatus.Closed)
             {
                 throw new InvalidOperationException(string.Format("Cannot open a command processor that is currently in the '{0}' state.", Status));
             }
 
+            Configuration = configuration;
+
             try
             {
-                _outputWriter = new StreamWriter(Path.Combine("c:/source/campaigns/", Guid.NewGuid() + ".bat"));
+                _outputWriter = new StreamWriter(Path.Combine(configuration.OutputPath, Guid.NewGuid() + ".bat"));
                 Status = CommandProcessorStatus.Ready;
             }
             catch (Exception err)
@@ -35,6 +39,10 @@ namespace Hudl.Ffmpeg.Command
                 Status = CommandProcessorStatus.Faulted;
                 return false;
             }
+
+            //write the commands for preparation 
+            WritePreparation();
+
             return true;
         }
 
@@ -45,6 +53,9 @@ namespace Hudl.Ffmpeg.Command
                 throw new InvalidOperationException(string.Format("Cannot close a command processor that is currently in the '{0}' state.", Status));
             }
 
+            //write the command for clean up
+            WriteCleanUp();
+            
             try
             {
                 _outputWriter.Flush();
@@ -87,6 +98,20 @@ namespace Hudl.Ffmpeg.Command
                 return false;
             }
             return true;
+        }
+
+        private void WritePreparation()
+        {
+            Send("cd " + Configuration.FfmpegPath);
+
+            Send("mkdir " + Configuration.TempPath);
+
+            Send("mkdir " + Configuration.OutputPath);
+        }
+
+        private void WriteCleanUp()
+        {
+            Send("rmdir " + Configuration.TempPath);
         }
     }
 }

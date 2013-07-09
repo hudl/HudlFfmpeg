@@ -44,7 +44,7 @@
     <Compile Include="BaseTypes\AppliesToCollection.cs" />
     <Compile Include="BaseTypes\AppliesToInvalidException.cs" />
     <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
-    <Compile Include="Command\BatchCommandProcessorReciever.cs" />
+    <Compile Include="Command\WinCmdProcessorReciever.cs" />
     <Compile Include="Command\CommandBuilder.cs" />
     <Compile Include="Command\CommandFactory.cs" />
     <Compile Include="Command\CommandProcessorStatus.cs" />
@@ -53,6 +53,7 @@
     <Compile Include="Command\CommandResourceReceiptc.cs" />
     <Compile Include="Command\CommandOutput.cs" />
     <Compile Include="Command\Command.cs" />
+    <Compile Include="Command\CommandConfiguration.cs" />
     <Compile Include="Common\AudioCodecTypes.cs" />
     <Compile Include="Common\BlendVideoOptionTypes.cs" />
     <Compile Include="Common\BlendVideoModeTypes.cs" />
@@ -77,7 +78,7 @@
     <Compile Include="Filters\AMix.cs" />
     <Compile Include="Filters\BaseTypes\BaseFilter.cs" />
     <Compile Include="Filters\BaseTypes\FIlterchain.cs" />
-    <Compile Include="Filters\BaseTypes\FilterOutput.cs" />
+    <Compile Include="Filters\BaseTypes\FilterchainOutput.cs" />
     <Compile Include="Filters\BaseTypes\IFilterValidator.cs" />
     <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
     <Compile Include="Filters\BaseTypes\Filterchain_T.cs" />
@@ -104,7 +105,7 @@
     <Compile Include="Resolution\BaseTypes\IResolutionTemplate.cs" />
     <Compile Include="Resources\Jpg.cs" />
     <Compile Include="Resources\Png.cs" />
-    <Compile Include="Resources\ResourceColletion.cs" />
+    <Compile Include="Resources\Resources.cs" />
     <Compile Include="Resources\Wav.cs" />
     <Compile Include="Resources\BaseTypes\BaseAudio.cs" />
     <Compile Include="Resources\BaseTypes\BaseVideo.cs" />
@@ -127,6 +128,7 @@
     <Compile Include="Common\SettingsCollectionResourceTypes.cs" />
     <Compile Include="Settings\BitRate.cs" />
     <Compile Include="Settings\ACodec.cs" />
+    <Compile Include="Settings\AudioBitRate.cs" />
     <Compile Include="Settings\Input.cs" />
     <Compile Include="Settings\TrimShortest.cs" />
     <Compile Include="Settings\SeekTo.cs" />
@@ -140,9 +142,7 @@
     <Compile Include="Settings\FrameRate.cs" />
     <Compile Include="Templates\CampaignProject.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Filters\Templates\Filterchain\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

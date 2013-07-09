@@ -26,7 +26,7 @@ namespace Hudl.Ffmpeg.Settings
                 throw new InvalidOperationException("Resource cannot be empty.");
             }
 
-            var escapedPath = Resource.Path.Replace('\\', '/');
+            var escapedPath = Resource.FullName.Replace('\\', '/');
             return string.Concat(Type, " \"", escapedPath, "\"");
         }
     }

@@ -18,8 +18,8 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
                 throw new ArgumentNullException("outputToUse");
             }
 
-            Output = outputToUse;
             ResourceList = new List<CommandResourceReceipt>();
+            Output = new FilterchainOutput<TOutput>(this, outputToUse);
             Filters = new AppliesToCollection<IFilter>(outputToUse.GetType());
         }
         internal Filterchain(TOutput outputToUse, params IFilter[] filters) 
@@ -33,15 +33,13 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
 
         public static implicit operator Filterchain<IResource>(Filterchain<TOutput> filterchain)
         {
-            var filterchainNew = new Filterchain<IResource>(filterchain.Output, filterchain.Filters.List.ToArray());
+            var filterchainNew = new Filterchain<IResource>(filterchain.Output.Resource, filterchain.Filters.List.ToArray());
             if (filterchain.ResourceList.Count > 0)
             {
                 filterchainNew.SetResources(filterchain.ResourceList);
             }
             return filterchainNew;
         }
-
-        public TOutput Output { get; protected set; }
 
         public AppliesToCollection<IFilter> Filters { get; protected set; }
 
@@ -78,51 +76,18 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         public Filterchain<TResource> Copy<TResource>()
             where TResource : IResource
         {
-            return Filterchain.FilterTo(Output.Copy<TResource>(), Filters.List.ToArray());
+            return Filterchain.FilterTo(Output.Resource.Copy<TResource>(), Filters.List.ToArray());
         }
 
-        public override string ToString()
+        public FilterchainOutput<TOutput> GetOutput(Command<IResource> command)
         {
-            if (Filters.Count == 0)
-            {
-                throw new InvalidOperationException("Filterchain must contain at least one filter.");
-            }
-            if (Resources.Count == 0)
-            {
-                throw new InvalidOperationException("Filterchain must contain at least one resource.");
-            }
-
-            var filterChain = new StringBuilder(100);
-            var firstFilter = true;
-
-            ResourceList.ForEach(resource =>
-            {
-                filterChain.Append(Formats.Map(resource.Map));
-                filterChain.Append(" ");
-            });
-
-            Filters.List.ForEach(filter =>
-            {
-                if (firstFilter)
-                {
-                    firstFilter = false;
-                }
-                else
-                {
-                    filterChain.Append(",");
-                }
-
-                filterChain.Append(filter.ToString());
-                filterChain.Append(" ");
-            });
-
-            filterChain.Append(Formats.Map(Output.Map));
-
-            return filterChain.ToString();
+            Output.Length = TimeSpan.FromSeconds(Helpers.GetLength(command, this));
+            return Output;
         }
 
-        #region Internals 
-        public List<CommandResourceReceipt> ResourceList { get; protected set; } 
-        #endregion 
+        #region Internals
+        internal List<CommandResourceReceipt> ResourceList { get; set; } 
+        internal FilterchainOutput<TOutput> Output { get; set; }
+        #endregion
     }
 }

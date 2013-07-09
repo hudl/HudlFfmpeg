@@ -106,7 +106,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             {
                 if (option == FfmpegMergeOptionTypes.NewWins)
                 {
-                    Remove<TSetting>();
+                    Remove(setting);
                     Add(setting);
                 }
             }
@@ -173,6 +173,18 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             where TSetting : ISetting
         {
             SettingsList.RemoveAll(s => s is TSetting);
+            return this;
+        }
+
+        /// <summary>
+        /// removes the specified setting type from the SettingsCollection
+        /// </summary>
+        /// <typeparam name="TSetting">the settings type that is to be removed</typeparam>
+        public SettingsCollection Remove<TSetting>(TSetting setting)
+            where TSetting : ISetting
+        {
+            var settingType = setting.GetType();
+            SettingsList.RemoveAll(s => s.GetType().IsAssignableFrom(settingType));
             return this;
         }
 

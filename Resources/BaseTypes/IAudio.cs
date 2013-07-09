@@ -3,7 +3,7 @@
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
-    public interface IAudio : IResource, ISettingable
+    public interface IAudio : IResource
     {
     }
 }

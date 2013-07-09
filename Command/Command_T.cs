@@ -5,6 +5,7 @@ using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resolution.BaseTypes;
+using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
@@ -92,51 +93,80 @@ namespace Hudl.Ffmpeg.Command
             return (ResourceList.Count(r => r.Resource.Map == resource.Map) > 0);
         }
 
-        public CommandResourceReceipt Add<TResource>(string path) 
-            where TResource : IResource, new()
+        public CommandResourceReceipt AddResource<TResource>(string fullName)
+            where TResource : class, IResource, new()
         {
-            return Add<TResource>(SettingsCollection.ForInput(), path);
+            return AddResource<TResource>(SettingsCollection.ForInput(), fullName, TimeSpan.FromSeconds(0));
         }
 
-        public CommandResourceReceipt Add<TResource>(string path, TimeSpan length) 
-            where TResource : IResource, new()
+        public CommandResourceReceipt AddResource<TResource>(string fullName, TimeSpan length)
+            where TResource : class, IResource, new()
         {
-            return Add<TResource>(SettingsCollection.ForInput(), path, length);
+            return AddResource<TResource>(SettingsCollection.ForInput(), fullName, length);
         }
 
-        public CommandResourceReceipt Add<TResource>(SettingsCollection settings, string path)
-            where TResource : IResource, new()
+        public CommandResourceReceipt AddResource<TResource>(SettingsCollection settings, string fullName)
+            where TResource : class, IResource, new()
         {
-            if (string.IsNullOrWhiteSpace(path))
+            return AddResource<TResource>(settings, fullName, TimeSpan.FromSeconds(0));
+        }
+
+        public CommandResourceReceipt AddResource<TResource>(SettingsCollection settings, string fullName, TimeSpan length)
+            where TResource : class, IResource, new()
+        {
+            if (settings == null)
             {
-                throw new ArgumentException("Resource path cannot be null or empty.", "path");
-            }
-
-            return Add(settings,
-                       new TResource
-                       {
-                           Path = path
-                       });
-        }
-
-        public CommandResourceReceipt Add<TResource>(SettingsCollection settings, string path, TimeSpan length)
-            where TResource : IResource, new()
-        {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                throw new ArgumentException("Resource path cannot be null or empty.", "path");
+                throw new ArgumentNullException("settings");
             }
             if (length == null)
             {
-                throw new ArgumentException("Resource length cannot be null or empty.", "length");
+                throw new ArgumentNullException("length");
+            }
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                throw new ArgumentException("Resource full name cannot be null or empty.", "fullName");
             }
 
-            return Add(settings,
-                       new TResource
-                           {
-                               Path = path,
-                               Length = length
-                           });
+            var newResource = Resource.Create<TResource>(fullName, length);
+            return Add(settings, newResource);
+        }
+
+        public CommandResourceReceipt AddAsset<TResource>(string fileName)
+            where TResource : class, IResource, new()
+        {
+            return AddAsset<TResource>(SettingsCollection.ForInput(), fileName, TimeSpan.FromSeconds(0));
+        }
+
+        public CommandResourceReceipt AddAsset<TResource>(string fileName, TimeSpan length)
+            where TResource : class, IResource, new()
+        {
+            return AddAsset<TResource>(SettingsCollection.ForInput(), fileName, length);
+        }
+
+        public CommandResourceReceipt AddAsset<TResource>(SettingsCollection settings, string fileName)
+            where TResource : class, IResource, new()
+        {
+            return AddAsset<TResource>(settings, fileName, TimeSpan.FromSeconds(0));
+        }
+
+        public CommandResourceReceipt AddAsset<TResource>(SettingsCollection settings, string fileName, TimeSpan length)
+            where TResource : class, IResource, new()
+        {
+            if (settings == null)
+            {
+                throw new ArgumentNullException("settings");
+            }
+            if (length == null)
+            {
+                throw new ArgumentNullException("length");
+            }
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                throw new ArgumentException("Resource name cannot be null or empty.", "fileName");
+            }
+
+            var newResource = Resource.Create<TResource>(Parent.Configuration.AssetsPath, fileName, length);
+            return Add(settings, newResource);
         }
 
         public CommandResourceReceipt Add(IResource resource)
@@ -172,7 +202,7 @@ namespace Hudl.Ffmpeg.Command
             ResourceList.Add(commandResource);
             return commandResource.GetReciept();
         }
-        
+
         public List<CommandResourceReceipt> AddRange(List<IResource> resourceList)
         {
             if (resourceList == null)
@@ -452,7 +482,7 @@ namespace Hudl.Ffmpeg.Command
                     filterchainCopy.SetResources(segmentList);
                     ProcessFilters(filterchainCopy);
                     Filtergraph.Add(filterchainCopy);
-                    lastFilterchainReceipt = new CommandResourceReceipt(Parent.Id, Id, filterchainCopy.Output.Map);  
+                    lastFilterchainReceipt = new CommandResourceReceipt(Parent.Id, Id, filterchainCopy.Output.Resource.Map);  
                 });
 
             return lastFilterchainReceipt;
@@ -513,7 +543,7 @@ namespace Hudl.Ffmpeg.Command
                 {
                     var newFilterchain = filterchain.Copy<IResource>();
                     newFilterchain.SetResources(receipt);
-                    var newReceipt = new CommandResourceReceipt(Parent.Id, Id, newFilterchain.Output.Map);  
+                    var newReceipt = new CommandResourceReceipt(Parent.Id, Id, newFilterchain.Output.Resource.Map);  
                     Filtergraph.FilterchainList.ForEach(otherFilterchain =>
                         {
                             if (otherFilterchain.ResourceList.Any(r => r.Map == receipt.Map))
@@ -534,7 +564,7 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public CommandOutput<TOutput> Render()
         {
-            return RenderWith<BatchCommandProcessorReciever>();
+            return RenderWith<WinCmdProcessorReciever>();
         }
 
         /// <summary>
@@ -545,7 +575,7 @@ namespace Hudl.Ffmpeg.Command
         {
             var commandProcessor = new TProcessor();
 
-            if (!commandProcessor.Open())
+            if (!commandProcessor.Open(Parent.Configuration))
             {
                 throw commandProcessor.Error;
             }
@@ -588,6 +618,21 @@ namespace Hudl.Ffmpeg.Command
         internal Filtergraph Filtergraph { get; set; }
         internal List<Command<IResource>> CommandList { get; set; }
         internal List<CommandResource<IResource>> ResourceList { get; set; }
+        internal List<CommandResource<IResource>> CommandOnlyResourcesFromReceipts(params CommandResourceReceipt[] receipts)
+        {
+            return CommandOnlyResourcesFromReceipts(new List<CommandResourceReceipt>(receipts));
+        }
+        internal List<CommandResource<IResource>> CommandOnlyResourcesFromReceipts(List<CommandResourceReceipt> receipts)
+        {
+            if (receipts == null)
+            {
+                throw new ArgumentNullException("receipts");
+            }
+
+            var receiptMaps = receipts.Select(d => d.Map).ToList();
+            return ResourceList.Where(r => receiptMaps.Contains(r.Resource.Map)).ToList();
+        }
+        
         internal List<CommandResource<IResource>> ResourcesFromReceipts(params CommandResourceReceipt[] receipts)
         {
             return ResourcesFromReceipts(new List<CommandResourceReceipt>(receipts));
@@ -602,8 +647,8 @@ namespace Hudl.Ffmpeg.Command
             var receiptMaps = receipts.Select(d => d.Map).ToList();
             var outputList = new List<CommandResource<IResource>>();
             var commandResources = ResourceList.Where(r => receiptMaps.Contains(r.Resource.Map)).ToList();
-            var filterchainResources = Filtergraph.FilterchainList.Where(f => receiptMaps.Contains(f.Output.Map))
-                                                                  .Select(f => new CommandResource<IResource>(this, f.Output))
+            var filterchainResources = Filtergraph.FilterchainList.Where(f => receiptMaps.Contains(f.Output.Resource.Map))
+                                                                  .Select(f => new CommandResource<IResource>(this, f.GetOutput(this).GetOutput()))
                                                                   .ToList();
             if (commandResources.Count > 0)
             {
@@ -698,8 +743,8 @@ namespace Hudl.Ffmpeg.Command
                Filtergraph.FilterchainList.Where(
                    filterchain =>
                    !Filtergraph.FilterchainList.Any(
-                       f => f.ResourceList.Any(r => r.Map == filterchain.Output.Map)))
-                           .Select(f => new CommandResourceReceipt(Parent.Id, Id, f.Output.Map))
+                       f => f.ResourceList.Any(r => r.Map == filterchain.Output.Resource.Map)))
+                           .Select(f => new CommandResourceReceipt(Parent.Id, Id, f.Output.Resource.Map))
                            .ToList();
 
            if (commandReceipts.Count > 0)

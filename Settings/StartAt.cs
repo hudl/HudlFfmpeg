@@ -29,12 +29,15 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public override TimeSpan? LengthDifference
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource<IResource>> resources)
         {
-            get
+            var overallLength = TimeSpan.FromSeconds(0);
+            var baseCalculatedLength = base.LengthFromInputs(resources);
+            if (baseCalculatedLength == null)
             {
-                return TimeSpan.FromSeconds(Length.TotalSeconds * -1);
+                return overallLength;
             }
+            return baseCalculatedLength - Length;
         }
 
         public override string ToString()

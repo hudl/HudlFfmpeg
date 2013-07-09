@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -51,19 +52,22 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             }
         }
 
-        public virtual TimeSpan? LengthDifference
-        {
-            get { return null; }
-        }
+        //public virtual TimeSpan? LengthDifference
+        //{
+        //    get { return null; }
+        //}
 
-        public virtual TimeSpan? LengthOverride
-        {
-            get { return null; }
-        }
+        //public virtual TimeSpan? LengthOverride
+        //{
+        //    get { return null; }
+        //}
 
         public virtual TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
-            return null;
+            var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);
+            return totalSeconds > 0d
+                       ? (TimeSpan?)TimeSpan.FromSeconds(totalSeconds)
+                       : null;
         }
     }
 }

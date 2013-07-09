@@ -16,9 +16,17 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// </summary>
         string Map { get; set; }
         /// <summary>
+        /// the file name of the resource that is used
+        /// </summary>
+        string Name { get; set; }
+        /// <summary>
+        /// the file domain\directory for the resource
+        /// </summary>
+        string Path { get; set; }
+        /// <summary>
         /// a readable path for ffmpeg to access 
         /// </summary>
-        string Path { get; set;  }
+        string FullName { get; }
         /// <summary>
         /// the extension of the file, 
         /// </summary>
@@ -35,6 +43,11 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// method for copying a resource for its base types.
         /// </summary>
         TResource Copy<TResource>()
+            where TResource : IResource;
+        /// <summary>
+        /// method for creating a new resource from the base resource with a new name.
+        /// </summary>
+        TResource CreateFrom<TResource>()
             where TResource : IResource;
     }
 }
