@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command.BaseTypes;
@@ -56,9 +57,9 @@ namespace Hudl.Ffmpeg.Command
 
         public TimeSpan Length { get { return TimeSpan.FromSeconds(Helpers.GetLength(this)); } }
 
-        public IReadOnlyList<CommandResource<IResource>> Resources { get { return ResourceList.AsReadOnly();  } }
+        public ReadOnlyCollection<CommandResource<IResource>> Resources { get { return ResourceList.AsReadOnly(); } }
 
-        public IReadOnlyList<Filterchain<IResource>> Filterchains { get { return Filtergraph.FilterchainList.AsReadOnly(); } }
+        public ReadOnlyCollection<Filterchain<IResource>> Filterchains { get { return Filtergraph.FilterchainList.AsReadOnly(); } }
 
         public static implicit operator Command<IResource>(Command<TOutput> command)
         {

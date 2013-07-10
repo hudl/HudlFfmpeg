@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Common;
@@ -28,7 +29,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             }
         }
 
-        public IReadOnlyList<ISetting> Items { get { return SettingsList.AsReadOnly(); } }
+        public ReadOnlyCollection<ISetting> Items { get { return SettingsList.AsReadOnly(); } }
 
         public SettingsCollectionResourceTypes Type { get; protected set; }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Common;
@@ -26,7 +27,7 @@ namespace Hudl.Ffmpeg.BaseTypes
             _restrictedType = restrictedType;
         }
 
-        public IReadOnlyList<TCollection> Items
+        public ReadOnlyCollection<TCollection> Items
         { 
             get 
             { 

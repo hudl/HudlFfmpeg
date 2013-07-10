@@ -117,7 +117,19 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
 
         private bool ValidateFormat(string path)
         {
-            return !string.IsNullOrWhiteSpace(path) && path.Trim().ToUpper().EndsWith(Format.Trim().ToUpper());
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return false;
+            }
+
+            var upperFormat = Format.ToLower().ToUpper();
+            var upperPath = path.Trim().ToUpper();
+            var queryStringIndex = upperPath.IndexOf("?", StringComparison.Ordinal); 
+            if (queryStringIndex != -1)
+            {
+                upperPath = upperPath.Substring(0, queryStringIndex);
+            }
+            return upperPath.EndsWith(upperFormat);
         }
 
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -15,7 +16,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             FilterchainList = new List<Filterchain<IResource>>();
         }
 
-        public IReadOnlyList<Filterchain<IResource>> Filterchains
+        public ReadOnlyCollection<Filterchain<IResource>> Filterchains
         {
             get
             {
