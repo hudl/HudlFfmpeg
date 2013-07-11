@@ -9,17 +9,17 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Resolution
 {
-    public class R360P<TResource> : IResolutionTemplate
+    public class Template480P<TResource> : IResolutionTemplate
         where TResource : IVideo, new()
     {
-        public R360P()
+        public Template480P()
         {
-            var resolutionFilterchain = Filterchain.FilterTo<TResource>(
-                new Scale(ScalePresetTypes.Sd360),
+            var resolutionFilterchain = Filters.BaseTypes.Filterchain.FilterTo<TResource>(
+                new Scale(ScalePresetType.Hd480),
                 new SetDar(new FfmpegRatio(16, 9)),
                 new SetSar(new FfmpegRatio(1, 1)));
             var outputSettings = SettingsCollection.ForOutput(
-                new Dimensions(ScalePresetTypes.Sd360));
+                new Dimensions(ScalePresetType.Hd480));
 
             Filterchains = new List<Filterchain<IResource>> {resolutionFilterchain};
             OutputSettings = outputSettings;

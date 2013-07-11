@@ -41,7 +41,7 @@ namespace Hudl.Ffmpeg.Common
                                                         attribute.Type.IsAssignableFrom(restrictedType)));
         }
 
-        public static bool IsSettingFor<TSetting>(TSetting item, SettingsCollectionResourceTypes type)
+        public static bool IsSettingFor<TSetting>(TSetting item, SettingsCollectionResourceType type)
             where TSetting : ISetting
         {
             var itemType = item.GetType();

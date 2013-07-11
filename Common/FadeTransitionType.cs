@@ -3,7 +3,7 @@
     /// <summary>
     /// the fade transition effect type applied in a Fade or AFade filter. 
     /// </summary>
-    public enum FadeTransitionTypes
+    public enum FadeTransitionType
     {
         // ReSharper disable UnusedMember.Local
         /// <summary>

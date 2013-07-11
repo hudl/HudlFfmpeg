@@ -9,37 +9,26 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class Dimensions : BaseSetting
     {
         private const string SettingType = "-s";
-
-        private readonly Dictionary<ScalePresetTypes, Point> _scalingPresets = new Dictionary<ScalePresetTypes, Point>
-        {
-            { ScalePresetTypes.Svga, new Point(800, 600) }, 
-            { ScalePresetTypes.Xga, new Point(1024, 768) }, 
-            { ScalePresetTypes.Ega, new Point(640, 350) }, 
-            { ScalePresetTypes.Sd240, new Point(432, 240) }, 
-            { ScalePresetTypes.Sd360, new Point(640, 360) }, 
-            { ScalePresetTypes.Hd480, new Point(852, 480) }, 
-            { ScalePresetTypes.Hd720, new Point(1280, 720) },
-            { ScalePresetTypes.Hd1080, new Point(1920, 1080) }
-        };
 
         public Dimensions()
             : base(SettingType)
         {
             Size = new Point(1, 1);
         }
-        public Dimensions(ScalePresetTypes preset)
+        public Dimensions(ScalePresetType preset)
             : this()
         {
-            if (!_scalingPresets.ContainsKey(preset))
+            var scalingPresets = Helpers.ScalingPresets;
+            if (!scalingPresets.ContainsKey(preset))
             {
                 throw new ArgumentException("The preset does not currently exist.", "preset");
             }
 
-            Size = _scalingPresets[preset];
+            Size = scalingPresets[preset];
         }
         public Dimensions(int x, int y)
             : this()

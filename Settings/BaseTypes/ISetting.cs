@@ -15,18 +15,6 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// </summary>
         string Type { get; }
 
-        ///// <summary>
-        ///// the difference the setting will make on the output video length
-        ///// </summary>
-        ///// <returns>Null indicates that the length difference does not apply</returns>
-        //TimeSpan? LengthDifference { get; }
-
-        ///// <summary>
-        ///// the length override property is an override to the input video length
-        ///// </summary>
-        ///// <returns>Null indicates that the length difference does not apply</returns>
-        //TimeSpan? LengthOverride { get; }
-
         /// <summary>
         /// the length override function, overrided when a setting requires a length change of output calculated from the resources.
         /// </summary>

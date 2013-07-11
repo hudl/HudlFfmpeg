@@ -3,7 +3,7 @@
     /// <summary>
     /// Video Blend filter options, give further definition to the blend filter. 
     /// </summary>
-    public enum BlendVideoOptionTypes
+    public enum BlendVideoOptionType
     {
         // ReSharper disable InconsistentNaming
         c0_mode,

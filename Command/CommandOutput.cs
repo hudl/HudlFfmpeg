@@ -31,7 +31,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 throw new ArgumentNullException("outputToUse");
             }
-            if (outputSettings.Type != SettingsCollectionResourceTypes.Output)
+            if (outputSettings.Type != SettingsCollectionResourceType.Output)
             {
                 throw new ArgumentException("CommandOutput only accepts output settings collections");
             }

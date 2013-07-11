@@ -19,39 +19,46 @@ namespace Hudl.Ffmpeg.Filters
         public Fade()
             : base(FilterType, FilterMaxInputs)
         {
-            Transition = FadeTransitionTypes.In;
-            Unit = FadeVideoUnitTypes.Seconds;
+            Transition = FadeTransitionType.In;
+            Unit = FadeVideoUnitType.Seconds;
         }
-        public Fade(FadeTransitionTypes transition, int duration)
+        public Fade(FadeTransitionType transition, double duration)
             : this() 
         {
             Transition = transition;
             Duration = duration;
         }
+        public Fade(FadeTransitionType transition, double duration, double overrideStartAt)
+            : this(transition, duration)
+        {
+            OverrideStartAt = overrideStartAt;
+        }
 
-        public int Duration { get; set; } 
+        public double Duration { get; set; }
 
-        public FadeVideoUnitTypes Unit { get; set; }
+        public double? OverrideStartAt { get; set; }
 
-        public FadeTransitionTypes Transition { get; set; }
+        public FadeVideoUnitType Unit { get; set; }
+
+        public FadeTransitionType Transition { get; set; }
 
         public override string ToString()
         {
-            if (Duration == 0)
+            if (Duration <= 0)
             {
                 throw new InvalidOperationException("Duration of the Video Fade cannot be zero.");
             }
 
             var filter = new StringBuilder(100);
             var startAtLocation = 0d;
-            if (Transition == FadeTransitionTypes.Out)
+            if (Transition == FadeTransitionType.Out)
             {
-                startAtLocation = Resources[0].Resource.Length.TotalSeconds - Duration;
+                startAtLocation = CommandResources[0].Resource.Length.TotalSeconds - Duration;
             }
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit)
             {
-                case FadeVideoUnitTypes.Frames:
+                case FadeVideoUnitType.Frames:
                     filter.AppendFormat(":s={0}:n={1}",
                         startAtLocation,
                         Duration);

@@ -6,8 +6,12 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// Audio Codec for an audio resource file. applies to both audio files, and videos with audio tracks
+    /// </summary>
+    [AppliesToResource(Type = typeof(IAudio))]
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class ACodec : BaseSetting
     {
         private const string SettingType = "-acodec";
@@ -17,7 +21,7 @@ namespace Hudl.Ffmpeg.Settings
         {
             Codec = codec;
         }
-        public ACodec(AudioCodecTypes codec)
+        public ACodec(AudioCodecType codec)
             : this(Formats.Library(codec))
         {
         }

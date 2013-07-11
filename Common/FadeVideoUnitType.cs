@@ -3,7 +3,7 @@
     /// <summary>
     /// Video fade units of measurement, used in the application of a Fade filter.
     /// </summary>
-    public enum FadeVideoUnitTypes
+    public enum FadeVideoUnitType
     {
         /// <summary>
         /// indicates in a Video Fade filter the unit of measure is in seconds.

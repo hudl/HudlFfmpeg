@@ -16,12 +16,12 @@ namespace Hudl.Ffmpeg.Filters.Templates
         private const string CrossfadeAlgorithm = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
         private readonly SettingsCollection _outputSettings = SettingsCollection.ForOutput(
             new OverwriteOutput(), 
-            new VCodec(VideoCodecTypes.Copy));
+            new VCodec(VideoCodecType.Copy));
 
         public Crossfade(TimeSpan duration)
         {
             Duration = duration;
-            Option = BlendVideoOptionTypes.all_expr;
+            Option = BlendVideoOptionType.all_expr;
         }
 
         private TimeSpan _duration; 
@@ -151,13 +151,13 @@ namespace Hudl.Ffmpeg.Filters.Templates
             settingsCollection4.Add(new StartAt(Duration));
 
             prepCommand1.Resources.First()
-                        .Settings.MergeRange(settingsCollection1, FfmpegMergeOptionTypes.NewWins);
+                        .Settings.MergeRange(settingsCollection1, FfmpegMergeOptionType.NewWins);
             prepCommand2.Resources.First()
-                        .Settings.MergeRange(settingsCollection2, FfmpegMergeOptionTypes.NewWins);
+                        .Settings.MergeRange(settingsCollection2, FfmpegMergeOptionType.NewWins);
             prepCommand3.Resources.First()
-                        .Settings.MergeRange(settingsCollection3, FfmpegMergeOptionTypes.NewWins);
+                        .Settings.MergeRange(settingsCollection3, FfmpegMergeOptionType.NewWins);
             prepCommand4.Resources.First()
-                        .Settings.MergeRange(settingsCollection4, FfmpegMergeOptionTypes.NewWins);
+                        .Settings.MergeRange(settingsCollection4, FfmpegMergeOptionType.NewWins);
 
             var receipt2A = command.Insert(videoFromIndex + 1, prepCommand3.Output.Resource);
             var receipt1B = command.Insert(videoFromIndex + 1, prepCommand2.Output.Resource);

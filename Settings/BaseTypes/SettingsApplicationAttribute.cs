@@ -14,18 +14,27 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             Data = new SettingsApplicationData();
         }
 
+        /// <summary>
+        /// Pre declaration indicates that the setting must go before the setting declaration
+        /// </summary>
         public bool PreDeclaration
         {
             get { return Data.PreDeclaration; } 
             set { Data.PreDeclaration = value; }
         } 
 
-        public SettingsCollectionResourceTypes ResourceType
+        /// <summary>
+        /// Resource Type indicates what type of resource the setting applies to.
+        /// </summary>
+        public SettingsCollectionResourceType ResourceType
         {
             get { return Data.ResourceType; }
             set { Data.ResourceType = value; }
         }
 
+        /// <summary>
+        /// internal accessor to get the data while parsing the attributes.
+        /// </summary>
         internal SettingsApplicationData Data { get; set; }
     }
 }

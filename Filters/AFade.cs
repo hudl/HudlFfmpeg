@@ -20,24 +20,24 @@ namespace Hudl.Ffmpeg.Filters
         public AFade()
             : base(FilterType, FilterMaxInputs)
         {
-            Transition = FadeTransitionTypes.In;
-            Unit = FadeAudioUnitTypes.Seconds;
+            Transition = FadeTransitionType.In;
+            Unit = FadeAudioUnitType.Seconds;
         }
-        public AFade(FadeTransitionTypes transition, int duration)
+        public AFade(FadeTransitionType transition, double duration)
             : this()
         {
             Transition = transition;
             Duration = duration;
         }
-        public AFade(FadeTransitionTypes transition, int duration, int overrideStartAt)
+        public AFade(FadeTransitionType transition, double duration, double overrideStartAt)
             : this(transition, duration)
         {
             OverrideStartAt = overrideStartAt;
         }
 
-        public FadeTransitionTypes Transition { get; set; } 
+        public FadeTransitionType Transition { get; set; } 
 
-        public FadeAudioUnitTypes Unit { get; set; }
+        public FadeAudioUnitType Unit { get; set; }
         
         public double Duration { get; set; }
 
@@ -56,14 +56,14 @@ namespace Hudl.Ffmpeg.Filters
             {
                 startAtLocation = OverrideStartAt.Value;
             }
-            else if (Transition == FadeTransitionTypes.Out)
+            else if (Transition == FadeTransitionType.Out)
             {
-                startAtLocation = Resources[0].Resource.Length.TotalSeconds - Duration; 
+                startAtLocation = CommandResources[0].Resource.Length.TotalSeconds - Duration; 
             }
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit) 
             {
-                case FadeAudioUnitTypes.Sample:
+                case FadeAudioUnitType.Sample:
                     filter.AppendFormat(":ss={0}:ns={1}",
                         startAtLocation, 
                         Duration);

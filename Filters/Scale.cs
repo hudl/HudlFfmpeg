@@ -17,32 +17,21 @@ namespace Hudl.Ffmpeg.Filters
         private const int FilterMaxInputs = 1;
         private const string FilterType = "scale";
 
-        private readonly Dictionary<ScalePresetTypes, Point> _scalingPresets = new Dictionary<ScalePresetTypes, Point>
-        {
-            { ScalePresetTypes.Svga, new Point(800, 600) }, 
-            { ScalePresetTypes.Xga, new Point(1024, 768) }, 
-            { ScalePresetTypes.Ega, new Point(640, 350) }, 
-            { ScalePresetTypes.Sd240, new Point(432, 240) }, 
-            { ScalePresetTypes.Sd360, new Point(640, 360) }, 
-            { ScalePresetTypes.Hd480, new Point(852, 480) }, 
-            { ScalePresetTypes.Hd720, new Point(1280, 720) },
-            { ScalePresetTypes.Hd1080, new Point(1920, 1080) }
-        };
-
         public Scale()
             : base(FilterType, FilterMaxInputs)
         {
             Dimensions = new Point(0, 0);
         }
-        public Scale(ScalePresetTypes preset)
-            : this() 
+        public Scale(ScalePresetType preset)
+            : this()
         {
-            if (!_scalingPresets.ContainsKey(preset))
+            var scalingPresets = Helpers.ScalingPresets;
+            if (!scalingPresets.ContainsKey(preset))
             {
                 throw new ArgumentException("The preset does not currently exist.", "preset");
             }
 
-            Dimensions = _scalingPresets[preset];
+            Dimensions = scalingPresets[preset];
         }
         public Scale(int x, int y)
             : this()

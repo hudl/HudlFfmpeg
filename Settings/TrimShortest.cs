@@ -9,8 +9,12 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// The trim shortest setting will trim the output resource to the shortest input resource setting.
+    /// </summary>
+    [AppliesToResource(Type = typeof(IAudio))]
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class TrimShortest : BaseSetting
     {
         private const string SettingType = "-shortest";

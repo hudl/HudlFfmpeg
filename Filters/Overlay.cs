@@ -23,8 +23,8 @@ namespace Hudl.Ffmpeg.Filters
         public Overlay()
             : base(FilterType, FilterMaxInputs)
         {
-            Format = OverlayVideoFormatTypes.Yuv420; 
-            Eval = OverlayVideoEvalTypes.Frame;
+            Format = OverlayVideoFormatType.Yuv420; 
+            Eval = OverlayVideoEvalType.Frame;
         }
        
         public string X { get; set; }
@@ -35,9 +35,9 @@ namespace Hudl.Ffmpeg.Filters
         
         public bool RepeatLast { get; set; }
 
-        public OverlayVideoEvalTypes Eval { get; set; }
+        public OverlayVideoEvalType Eval { get; set; }
         
-        public OverlayVideoFormatTypes Format { get; set; }
+        public OverlayVideoFormatType Format { get; set; }
 
         public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
@@ -61,13 +61,13 @@ namespace Hudl.Ffmpeg.Filters
                     Y,
                     (filter.Length > 0) ? ":" : "=");
             }
-            if (Eval != OverlayVideoEvalTypes.Frame)  
+            if (Eval != OverlayVideoEvalType.Frame)  
             {
                 filter.AppendFormat("{1}eval={0}", 
                     Eval.ToString().ToLower(),
                     (filter.Length > 0) ? ":" : "=");
             }
-            if (Format != OverlayVideoFormatTypes.Yuv420)  
+            if (Format != OverlayVideoFormatType.Yuv420)  
             {
                 filter.AppendFormat("{1}format={0}", 
                     Format.ToString().ToLower(),

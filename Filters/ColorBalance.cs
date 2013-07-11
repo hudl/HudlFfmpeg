@@ -98,32 +98,38 @@ namespace Hudl.Ffmpeg.Filters
             }
             if (Midtone.Red.Value != 0) 
             {
-                filter.AppendFormat("{1}gm={0}", 
-                    Shadow.Green, 
+                filter.AppendFormat("{1}rm={0}",
+                    Midtone.Red, 
                     (filter.Length > 0) ?  ":" : string.Empty);
             }
             if (Midtone.Blue.Value != 0) 
             {
-                filter.AppendFormat("{1}bm={0}", 
-                    Shadow.Blue, 
+                filter.AppendFormat("{1}bm={0}",
+                    Midtone.Blue, 
                     (filter.Length > 0) ?  ":" : string.Empty);
+            }
+            if (Midtone.Green.Value != 0)
+            {
+                filter.AppendFormat("{1}gm={0}",
+                    Midtone.Green,
+                    (filter.Length > 0) ? ":" : string.Empty);
             }
             if (Highlight.Red.Value != 0) 
             {
-                filter.AppendFormat("{1}rh={0}", 
-                    Shadow.Red, 
+                filter.AppendFormat("{1}rh={0}",
+                    Highlight.Red, 
                     (filter.Length > 0) ?  ":" : string.Empty);
             }
             if (Highlight.Green.Value != 0) 
             {
-                filter.AppendFormat("{1}gh={0}", 
-                    Shadow.Green, 
+                filter.AppendFormat("{1}gh={0}",
+                    Highlight.Green, 
                     (filter.Length > 0) ?  ":" : string.Empty);
             }
             if (Highlight.Blue.Value != 0)
             {
-                filter.AppendFormat("{1}bh={0}", 
-                    Shadow.Blue, 
+                filter.AppendFormat("{1}bh={0}",
+                    Highlight.Blue, 
                     (filter.Length > 0) ?  ":" : string.Empty);
             }
 

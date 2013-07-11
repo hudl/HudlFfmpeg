@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
@@ -12,6 +13,31 @@ namespace Hudl.Ffmpeg.Common
     /// </summary>
     internal class Helpers
     {
+        /// <summary>
+        /// returns a list of scaling presets for ffmpeg.
+        /// </summary>
+        public static Dictionary<ScalePresetType, Point> ScalingPresets
+        {
+            get
+            {
+                return new Dictionary<ScalePresetType, Point>
+                {
+                    { ScalePresetType.Svga, new Point(800, 600) }, 
+                    { ScalePresetType.Xga, new Point(1024, 768) }, 
+                    { ScalePresetType.Ega, new Point(640, 350) }, 
+                    { ScalePresetType.Sd240, new Point(432, 240) }, 
+                    { ScalePresetType.Sd360, new Point(640, 360) }, 
+                    { ScalePresetType.Hd480, new Point(852, 480) }, 
+                    { ScalePresetType.Hd720, new Point(1280, 720) },
+                    { ScalePresetType.Hd1080, new Point(1920, 1080) }
+                };
+            }
+        } 
+
+        /// <summary>
+        /// generates a new resource map variable
+        /// </summary>
+        /// <returns></returns>
         public static string NewMap()
         {
             return string.Concat("mp", Guid.NewGuid().ToString().Substring(0, 8));
@@ -123,15 +149,6 @@ namespace Hudl.Ffmpeg.Common
                 throw new ArgumentNullException("command");
             }
 
-            //var filterchainInputMaps = filterchain.ResourceList.Select(r => r.Map).ToList();
-            //var filterchainIndexInCommand = command.Filtergraph.FilterchainList.FindIndex(f => f.Output.Resource.Map == filterchain.Output.Resource.Map);
-            //var filterchainsInSequenceTo = command.Filtergraph.FilterchainList
-            //                                      .GetRange(0, filterchainIndexInCommand + 1)
-            //                                      .Where(f => filterchainInputMaps.Contains(f.Output.Resource.Map))
-            //                                      .ToList();
-            //var filterchainOutputsFromSequence = filterchainsInSequenceTo.Select(f => new CommandResource<IResource>(command, f.GetOutput(command).GetOutput())).ToList();
-            //var commandResourceLength = GetLength(commandOnlyResourcesFromReceipts);
-
             var finalFilterLength = 0d;
             var calculatedFilterOutputDictionary = new Dictionary<string, CommandResource<IResource>>();
             var calculatedPrepOutputDictionary = new Dictionary<string, CommandResource<IResource>>();
@@ -204,6 +221,9 @@ namespace Hudl.Ffmpeg.Common
                                  resource.FullName.Replace('\\', '/'));
         }
 
+        /// <summary>
+        /// Breaks does command receipts into divisable subsets that then can be used to apply filters in chunks that ffmpeg will accept. while still abstracting from the user.
+        /// </summary>
         public static List<CommandResourceReceipt[]> BreakReceipts(int division, params CommandResourceReceipt[] resources)
         {
             if (resources == null)

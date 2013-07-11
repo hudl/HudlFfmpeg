@@ -6,8 +6,11 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// Video codec for a video resource file.
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class VCodec : BaseSetting
     {
         private const string SettingType = "-vcodec";
@@ -17,7 +20,7 @@ namespace Hudl.Ffmpeg.Settings
         {
             Codec = codec;
         }
-        public VCodec(VideoCodecTypes codec)
+        public VCodec(VideoCodecType codec)
             : this(Formats.Library(codec))
         {
         }

@@ -74,7 +74,7 @@ namespace Hudl.Ffmpeg.Command
                     var settingInfoData = settingsData[setting.GetType()];
                     if (settingInfoData == null) return;
                     if (!settingInfoData.PreDeclaration) return;
-                    if (settingInfoData.ResourceType != SettingsCollectionResourceTypes.Input) return;
+                    if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
 
                     _builderBase.Append(" ");
                     _builderBase.Append(setting);
@@ -93,7 +93,7 @@ namespace Hudl.Ffmpeg.Command
                 var settingInfoData = settingsData[setting.GetType()];
                 if (settingInfoData == null) return;
                 if (settingInfoData.PreDeclaration) return;
-                if (settingInfoData.ResourceType != SettingsCollectionResourceTypes.Input) return;
+                if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
 
                 _builderBase.Append(" ");
                 _builderBase.Append(setting);
@@ -226,7 +226,7 @@ namespace Hudl.Ffmpeg.Command
                 var settingInfoData = settingsData[setting.GetType()];
                 if (settingInfoData == null) return;
                 if (!settingInfoData.PreDeclaration) return;
-                if (settingInfoData.ResourceType != SettingsCollectionResourceTypes.Output) return;
+                if (settingInfoData.ResourceType != SettingsCollectionResourceType.Output) return;
 
                 _builderBase.Append(" ");
                 _builderBase.Append(setting);

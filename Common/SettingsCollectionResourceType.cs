@@ -3,7 +3,7 @@
     /// <summary>
     /// an enumeration describing how the setting applies to the command
     /// </summary>
-    public enum SettingsCollectionResourceTypes
+    public enum SettingsCollectionResourceType
     {
         /// <summary>
         /// indicates that the setting can be applied to input and output type

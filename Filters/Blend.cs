@@ -20,8 +20,8 @@ namespace Hudl.Ffmpeg.Filters
         public Blend() 
             : base(FilterType, FilterMaxInputs)
         {
-            Mode = BlendVideoModeTypes.and;
-            Option = BlendVideoOptionTypes.all_expr;
+            Mode = BlendVideoModeType.and;
+            Option = BlendVideoOptionType.all_expr;
         }
         public Blend(string expression) 
             : this()
@@ -29,10 +29,13 @@ namespace Hudl.Ffmpeg.Filters
             Expression = expression;
         }
 
-        public BlendVideoOptionTypes Option { get; set; }
+        public BlendVideoOptionType Option { get; set; }
 
-        public BlendVideoModeTypes Mode { get; set; }
+        public BlendVideoModeType Mode { get; set; }
 
+        /// <summary>
+        /// the blend expression details can be found at http://ffmpeg.org/ffmpeg-all.html#blend. 
+        /// </summary>
         public string Expression { get; set; }
 
         public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource<IResource>> resources)
@@ -42,7 +45,7 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString() 
         {
-            if (Option == BlendVideoOptionTypes.all_expr && string.IsNullOrWhiteSpace(Expression))
+            if (Option == BlendVideoOptionType.all_expr && string.IsNullOrWhiteSpace(Expression))
             {
                 throw new InvalidOperationException("Expression cannot be empty with Blend Option 'all_expr'");
             }
@@ -51,7 +54,7 @@ namespace Hudl.Ffmpeg.Filters
             filter.AppendFormat("{0}", Option.ToString());
             switch (Option) 
             {
-                case BlendVideoOptionTypes.all_expr:
+                case BlendVideoOptionType.all_expr:
                     filter.AppendFormat("='{0}'", Expression);
                     break;
                 default: 

@@ -1,6 +1,6 @@
 ﻿namespace Hudl.Ffmpeg.Common
 {
-    public enum ScalePresetTypes
+    public enum ScalePresetType
     {
         Svga,
         Xga,
