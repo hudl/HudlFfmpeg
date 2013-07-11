@@ -9,7 +9,7 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceTypes.Input)]
+    [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
     public class Duration : BaseSetting
     {
         private const string SettingType = "-t";

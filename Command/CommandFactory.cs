@@ -68,7 +68,7 @@ namespace Hudl.Ffmpeg.Command
         public bool Contains<TOutput>(Command<TOutput> command)
             where TOutput : IResource
         {
-            return (CommandList.Count(c => c.Id == command.Id) > 0);
+            return CommandList.Any(c => c.Id == command.Id);
         }
 
         /// <summary>

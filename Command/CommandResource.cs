@@ -26,7 +26,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 throw new ArgumentNullException("resource");
             }
-            if (settings.Type != SettingsCollectionResourceTypes.Input)
+            if (settings.Type != SettingsCollectionResourceType.Input)
             {
                 throw new ArgumentException("CommandResource only accepts input settings collections");
             }

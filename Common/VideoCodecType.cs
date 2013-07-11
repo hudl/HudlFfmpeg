@@ -4,7 +4,7 @@
     /// enumaration containing the know and extended codec libraries for the Hudl server
     /// </summary>
     /// <remarks></remarks>
-    public enum VideoCodecTypes
+    public enum VideoCodecType
     {
         /// <summary>
         /// indicates that the output video codec should be copied from the input 

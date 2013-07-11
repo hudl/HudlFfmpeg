@@ -4,7 +4,7 @@
     /// enumaration containing the known and extended codec libraries for the Hudl server
     /// </summary>
     /// <remarks></remarks>
-    public enum AudioCodecTypes
+    public enum AudioCodecType
     {
         /// <summary>
         /// indicates that the output aduio codec should be copied from the input 

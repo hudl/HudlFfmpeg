@@ -6,8 +6,11 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// Start At can only be used on the first input resource stream. Ffmpeg will not process the video until the starting point provided.
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Input)]
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
     public class StartAt : BaseSetting
     {
         private const string SettingType = "-ss";

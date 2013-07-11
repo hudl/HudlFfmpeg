@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
@@ -43,7 +44,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
 
         public AppliesToCollection<IFilter> Filters { get; protected set; }
 
-        public IReadOnlyList<CommandResourceReceipt> Resources { get { return ResourceList.AsReadOnly(); } }
+        public ReadOnlyCollection<CommandResourceReceipt> Resources { get { return ResourceList.AsReadOnly(); } }
 
         public void SetResources(params CommandResourceReceipt[] resources)
         {

@@ -7,7 +7,7 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.Filters
 {
     /// <summary>
-    /// CConcat Filter concatentates multiple resource streams into a collection of output streams
+    /// Concat Filter concatenates multiple resource streams into a collection of output streams
     /// </summary>
     [AppliesToResource(Type=typeof(IAudio))]
     [AppliesToResource(Type=typeof(IVideo))]
@@ -38,7 +38,7 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString()
         {
-            var numberOfResources = Resources.Count; 
+            var numberOfResources = CommandResources.Count; 
             if (NumberOfVideoOut > numberOfResources)
             {
                 throw new InvalidOperationException("Number of Videos out cannot be greater than Resources in.");

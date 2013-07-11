@@ -3,7 +3,7 @@
     /// <summary>
     /// Overlay eval command options for the Overlay Filter type.
     /// </summary>
-    public enum OverlayVideoEvalTypes
+    public enum OverlayVideoEvalType
     {
         Frame = 0,
         Init = 1

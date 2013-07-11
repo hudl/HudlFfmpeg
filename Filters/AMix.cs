@@ -24,14 +24,14 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
             DropoutTransition = AMixDropoutTransitionDefault;
-            Duration = DurationTypes.Longest;
+            DurationType = DurationType.Longest;
         }
-        public AMix(DurationTypes duration)
+        public AMix(DurationType duration)
             : this()
         {
-            Duration = duration;
+            DurationType = duration;
         }
-        public AMix(DurationTypes duration, int dropoutTransition)
+        public AMix(DurationType duration, int dropoutTransition)
             : this(duration)
         {
             DropoutTransition = dropoutTransition;
@@ -39,15 +39,15 @@ namespace Hudl.Ffmpeg.Filters
 
         public int DropoutTransition { get; set; }
 
-        public DurationTypes Duration { get; set; }
+        public DurationType DurationType { get; set; }
 
         public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
-            switch (Duration)
+            switch (DurationType)
             {
-                case DurationTypes.First:
+                case DurationType.First:
                     return resources.First().Resource.Length;
-                case DurationTypes.Shortest:
+                case DurationType.Shortest:
                     return resources.Min(r => r.Resource.Length);
                 default:
                     return resources.Max(r => r.Resource.Length);
@@ -56,7 +56,7 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString() 
         {
-            if (Resources.Count < 2)
+            if (CommandResources.Count < 2)
             {
                 throw new InvalidOperationException("Number of inputs cannot be less than defualt of 2");
             }
@@ -67,16 +67,16 @@ namespace Hudl.Ffmpeg.Filters
 
             //build the filter string 
             var filter = new StringBuilder(100);
-            if (Resources.Count > 2)
+            if (CommandResources.Count > 2)
             {
                 filter.AppendFormat("{1}inputs={0}",
-                    Resources.Count, 
+                    CommandResources.Count, 
                     filter.Length > 0 ? ":" : "=");
             }
-            if (Duration != DurationTypes.Longest)  
+            if (DurationType != DurationType.Longest)  
             {
                 filter.AppendFormat("{1}duration={0}", 
-                    Duration.ToString().ToLower(), 
+                    DurationType.ToString().ToLower(), 
                     filter.Length > 0 ? ":" : "=");
             }
             if (DropoutTransition > 2)

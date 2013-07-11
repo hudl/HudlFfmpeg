@@ -7,7 +7,7 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class PixelFormat : BaseSetting
     {
         private const string SettingType = "-pix_fmt";
@@ -22,7 +22,7 @@ namespace Hudl.Ffmpeg.Settings
 
             Library = library;
         }
-        public PixelFormat(PixelFormatTypes library)
+        public PixelFormat(PixelFormatType library)
             : this(Formats.Library(library))
         {
         }

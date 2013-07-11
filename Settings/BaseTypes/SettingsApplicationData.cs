@@ -10,6 +10,6 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
     {
         public bool PreDeclaration { get; set; } 
 
-        public SettingsCollectionResourceTypes ResourceType { get; set; } 
+        public SettingsCollectionResourceType ResourceType { get; set; } 
     }
 }

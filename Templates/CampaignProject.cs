@@ -12,6 +12,7 @@ using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.Ffmpeg.Templates.BaseTypes;
 
 namespace Hudl.Ffmpeg.Templates
 {
@@ -22,7 +23,7 @@ namespace Hudl.Ffmpeg.Templates
     ///   - Campaign mp4 (480p resolution w/audio)
     ///   - Campaign mp4 (240p resolution w/audio)
     /// </summary>
-    public class CampaignProject 
+    public class CampaignProject : BaseTemplate
     {
         private const string BlendExpression = "A*(6/10)+B*(1-(6/10))";
         private readonly M4A _musicBackground; 
@@ -46,58 +47,15 @@ namespace Hudl.Ffmpeg.Templates
         };
        
         public CampaignProject(CommandConfiguration configuration)
+            : base(configuration)
         {
-            Factory = new CommandFactory(configuration);       
-            AudioList = new List<IAudio>();
-            VideoList = new List<IVideo>();
             _musicBackground = Resource.Create<M4A>(configuration.AssetsPath, "music.m4a", TimeSpan.FromSeconds(212));
             _musicSilence = Resource.Create<Mp3>(configuration.AssetsPath, "silence.mp3", TimeSpan.FromSeconds(1));
             _videoFilmGrain = Resource.Create<Mp4>(configuration.AssetsPath, "overlay.mp4", TimeSpan.FromSeconds(212));
             _imageVignette = Resource.Create<Png>(configuration.AssetsPath, "vignette.png");
         }
 
-        public void Add(IAudio resource)
-        {
-            if (resource == null)
-            {
-                throw new ArgumentNullException("resource");
-            }
-            AudioList.Add(resource);
-        }
-        
-        public void Add(IVideo resource)
-        {
-            if (resource == null)
-            {
-                throw new ArgumentNullException("resource");
-            }
-            VideoList.Add(resource);
-        }
-
-        public List<IResource> Render()
-        {
-            SetupTemplate();
-
-            return Factory.Render();
-        }
-
-        public List<IResource> RenderWith<TProcessor>()
-            where TProcessor : ICommandProcessor, new()
-        {
-            SetupTemplate();
-
-            return Factory.RenderWith<TProcessor>();
-        }
-
-        public List<IResource> RenderWith<TProcessor>(TProcessor processor)
-            where TProcessor : ICommandProcessor, new()
-        {
-            SetupTemplate();
-
-            return Factory.RenderWith(processor);
-        }
-       
-        private void SetupTemplate()
+        protected override void SetupTemplate()
         {
             if (VideoList.Count == 0)
             {
@@ -125,7 +83,7 @@ namespace Hudl.Ffmpeg.Templates
                 new TrimShortest(),
                 new OverwriteOutput(),
                 new AudioBitRate(125),
-                new ACodec(AudioCodecTypes.ExperimentalAac)
+                new ACodec(AudioCodecType.ExperimentalAac)
             );
 
             //FILTER APPLICATION
@@ -164,7 +122,7 @@ namespace Hudl.Ffmpeg.Templates
             ); 
             var filterchain480Mp46 = Filterchain.FilterTo<Mp4>(
                 new ColorBalance(_shadows, _midtones, _highlights),
-                new Fade(FadeTransitionTypes.Out, 2)
+                new Fade(FadeTransitionType.Out, 2)
             );
             var outputSettings480Mp4 = SettingsCollection.ForOutput(
                 new RemoveAudio(),
@@ -172,12 +130,13 @@ namespace Hudl.Ffmpeg.Templates
                 new OverwriteOutput(),
                 new BitRate(3000),
                 new FrameRate(29.97),
-                new PixelFormat(PixelFormatTypes.Yuv420P),
-                new VCodec(VideoCodecTypes.Libx264)
+                new PixelFormat(PixelFormatType.Yuv420P),
+                new VCodec(VideoCodecType.Libx264)
             );
 
             //FILTER APPLICATION 
             var campaign480Mp4Concat = new List<CommandResourceReceipt>();
+            //apply the cross fade filter and setup the concat chain.
             campaign480Mp4Receipts.ForEach(receipt =>
                 {
                     if (last480Mp4Receipt == null)
@@ -202,7 +161,7 @@ namespace Hudl.Ffmpeg.Templates
 
             campaign480Mp4.ApplyFilter(filterchain480Mp46, last480Mp4Receipt);
 
-            campaign480Mp4.SetResolution(new R480P<Mp4>());
+            campaign480Mp4.SetResolution(new Template480P<Mp4>());
 
             campaign480Mp4.Output.Settings = outputSettings480Mp4;
 
@@ -223,12 +182,12 @@ namespace Hudl.Ffmpeg.Templates
                 new OverwriteOutput(),
                 new BitRate(3000),
                 new FrameRate(29.97),
-                new PixelFormat(PixelFormatTypes.Yuv420P),
-                new VCodec(VideoCodecTypes.Libx264)
+                new PixelFormat(PixelFormatType.Yuv420P),
+                new VCodec(VideoCodecType.Libx264)
             );
 
             //FILTER APPLICATION 
-            campaign240Mp4.SetResolution(new R240P<Mp4>());
+            campaign240Mp4.SetResolution(new Template240P<Mp4>());
 
             campaign240Mp4.Output.Settings = outputSettings240Mp4;
 
@@ -252,17 +211,17 @@ namespace Hudl.Ffmpeg.Templates
                 new Volume(1.4m)
             );
             var filterchainM4A3 = Filterchain.FilterTo<M4A>(
-                new AMix(DurationTypes.First)
+                new AMix(DurationType.First)
             );
             var filterchainM4A4 = Filterchain.FilterTo<M4A>(
-                new AFade(FadeTransitionTypes.Out, 2, campaignM4AStartFade - 2)
+                new AFade(FadeTransitionType.Out, 2, campaignM4AStartFade - 2)
             );
 
             var outputSettingsM4A = SettingsCollection.ForOutput(
                 new TrimShortest(),
                 new OverwriteOutput(),
                 new AudioBitRate(125),
-                new ACodec(AudioCodecTypes.ExperimentalAac)
+                new ACodec(AudioCodecType.ExperimentalAac)
             );
 
             //FILTER APPLICATION
@@ -279,7 +238,6 @@ namespace Hudl.Ffmpeg.Templates
             Factory.AddToOutput(campaignM4A);
             #endregion
 
-
             // **********************************
             // Campaign mp4 (480p resolution w/audio)
             // **********************************
@@ -292,8 +250,8 @@ namespace Hudl.Ffmpeg.Templates
             var outputSettings480Mp4WAudio = SettingsCollection.ForOutput(
                 new TrimShortest(),
                 new OverwriteOutput(),
-                new ACodec(AudioCodecTypes.Copy),
-                new VCodec(VideoCodecTypes.Copy)
+                new ACodec(AudioCodecType.Copy),
+                new VCodec(VideoCodecType.Copy)
             );
 
             //FILTER APPLICATION 
@@ -314,8 +272,8 @@ namespace Hudl.Ffmpeg.Templates
             var outputSettings240Mp4WAudio = SettingsCollection.ForOutput(
                 new TrimShortest(),
                 new OverwriteOutput(),
-                new ACodec(AudioCodecTypes.Copy),
-                new VCodec(VideoCodecTypes.Copy)
+                new ACodec(AudioCodecType.Copy),
+                new VCodec(VideoCodecType.Copy)
             );
 
             //FILTER APPLICATION 
@@ -346,11 +304,5 @@ namespace Hudl.Ffmpeg.Templates
             Factory.AddToOutput(campaignJpg);
             #endregion
         }
-
-        #region Internals
-        internal protected List<IVideo> VideoList { get; protected set; }
-        internal protected List<IAudio> AudioList { get; protected set; }
-        internal protected CommandFactory Factory { get; protected set; }
-        #endregion 
     }
 }

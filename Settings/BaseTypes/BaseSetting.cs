@@ -21,16 +21,9 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// </summary>
         public string Type { get; protected set; }
 
-        //public virtual TimeSpan? LengthDifference
-        //{
-        //    get { return null; }
-        //}
-
-        //public virtual TimeSpan? LengthOverride
-        //{
-        //    get { return null; }
-        //}
-
+        /// <summary>
+        /// Quick way to calculate the output length after a setting has been applied.
+        /// </summary>
         public virtual TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
             var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);

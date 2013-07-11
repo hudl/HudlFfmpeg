@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Common;
@@ -26,7 +27,7 @@ namespace Hudl.Ffmpeg.BaseTypes
             _restrictedType = restrictedType;
         }
 
-        public IReadOnlyList<TCollection> Items
+        public ReadOnlyCollection<TCollection> Items
         { 
             get 
             { 
@@ -45,14 +46,14 @@ namespace Hudl.Ffmpeg.BaseTypes
         public bool Contains<TItem>()
             where TItem : TCollection
         {
-            return (List.Count(f => f is TItem) > 0);
+            return List.Any(f => f is TItem);
         }
 
         public bool Contains<TItem>(TItem item)
             where TItem : TCollection
         {
             var itemType = item.GetType();
-            return (List.Count(f => f.GetType().IsAssignableFrom(itemType)) > 0);
+            return List.Any(f => f.GetType().IsAssignableFrom(itemType));
         }
 
         public AppliesToCollection<TCollection> Add<TItem>(TItem item)

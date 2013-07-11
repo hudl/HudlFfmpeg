@@ -3,7 +3,7 @@
     /// <summary>
     /// Enumeration that describes how to approach a merge of collections
     /// </summary>
-    public enum FfmpegMergeOptionTypes
+    public enum FfmpegMergeOptionType
     {
         /// <summary>
         /// value indicates that a new value from a merge wins and replaces the option in the collection, new values are appended.

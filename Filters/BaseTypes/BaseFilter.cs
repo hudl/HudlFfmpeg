@@ -15,7 +15,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             Type = type;
             MaxInputs = maxInputs;
-            Resources = new List<CommandResource<IResource>>();
+            CommandResources = new List<CommandResource<IResource>>();
         }
     
         /// <summary>
@@ -31,7 +31,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Available at [Render] time, brings the resources as available objects to the filters
         /// </summary>
-        protected List<CommandResource<IResource>> Resources { get; set; }
+        protected List<CommandResource<IResource>> CommandResources { get; set; }
 
         /// <summary>
         /// Method, called during [Render] to bring forward all the necessary resources, necessary action for maximum abstraction from the user.
@@ -40,28 +40,21 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <param name="filterchain">The filterchain that the filter belongs to</param>
         public void Setup(Command<IResource> command, Filterchain<IResource> filterchain) 
         {
-            Resources = command.ResourcesFromReceipts(new List<CommandResourceReceipt>(filterchain.Resources));
+            CommandResources = command.ResourcesFromReceipts(new List<CommandResourceReceipt>(filterchain.Resources));
 
-            if (Resources.Count == 0)
+            if (CommandResources.Count == 0)
             {
                 throw new InvalidOperationException("Cannot setup filter with a resource count of zero.");
             }
-            if (Resources.Count > MaxInputs)
+            if (CommandResources.Count > MaxInputs)
             {
                 throw new InvalidOperationException("The filter has exceeded the maximum allowed number of inputs.");
             }
         }
 
-        //public virtual TimeSpan? LengthDifference
-        //{
-        //    get { return null; }
-        //}
-
-        //public virtual TimeSpan? LengthOverride
-        //{
-        //    get { return null; }
-        //}
-
+        /// <summary>
+        /// Quick way to calculate the output length after a filter has been applied.
+        /// </summary>
         public virtual TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
             var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);

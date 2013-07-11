@@ -3,7 +3,7 @@
     /// <summary>
     /// Audio fade units of measurement, used in the application of an AFade filter.
     /// </summary>
-    public enum FadeAudioUnitTypes
+    public enum FadeAudioUnitType
     {
         // ReSharper disable UnusedMember.Local
         /// <summary>

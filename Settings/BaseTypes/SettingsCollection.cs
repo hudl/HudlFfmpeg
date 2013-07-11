@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Common;
@@ -11,14 +12,14 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
     public class SettingsCollection
     {
         internal SettingsCollection()
-            : this(SettingsCollectionResourceTypes.Input)
+            : this(SettingsCollectionResourceType.Input)
         {
         }
         internal SettingsCollection(params ISetting[] settings)
-            : this(SettingsCollectionResourceTypes.Input, settings)
+            : this(SettingsCollectionResourceType.Input, settings)
         {
         }
-        internal SettingsCollection(SettingsCollectionResourceTypes type, params ISetting[] settings)
+        internal SettingsCollection(SettingsCollectionResourceType type, params ISetting[] settings)
         {
             Type = type;
             SettingsList = new List<ISetting>();
@@ -28,9 +29,9 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             }
         }
 
-        public IReadOnlyList<ISetting> Items { get { return SettingsList.AsReadOnly(); } }
+        public ReadOnlyCollection<ISetting> Items { get { return SettingsList.AsReadOnly(); } }
 
-        public SettingsCollectionResourceTypes Type { get; protected set; }
+        public SettingsCollectionResourceType Type { get; protected set; }
 
         public int Count { get { return SettingsList.Count;  } }
 
@@ -39,7 +40,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// </summary>
         public static SettingsCollection ForInput(params ISetting[] settings)
         {
-            return new SettingsCollection(SettingsCollectionResourceTypes.Input, settings);
+            return new SettingsCollection(SettingsCollectionResourceType.Input, settings);
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// </summary>
         public static SettingsCollection ForOutput(params ISetting[] settings)
         {
-            return new SettingsCollection(SettingsCollectionResourceTypes.Output, settings);
+            return new SettingsCollection(SettingsCollectionResourceType.Output, settings);
         }
 
         /// <summary>
@@ -93,7 +94,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// <summary>
         /// merges the current setting into the set based on the merge option type
         /// </summary>
-        public SettingsCollection Merge<TSetting>(TSetting setting, FfmpegMergeOptionTypes option)
+        public SettingsCollection Merge<TSetting>(TSetting setting, FfmpegMergeOptionType option)
             where TSetting : ISetting
         {
             if (setting == null)
@@ -104,7 +105,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             var alreadyContainsSetting = Contains(setting); 
             if (alreadyContainsSetting)
             {
-                if (option == FfmpegMergeOptionTypes.NewWins)
+                if (option == FfmpegMergeOptionType.NewWins)
                 {
                     Remove(setting);
                     Add(setting);
@@ -121,7 +122,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// <summary>
         /// merges the current SettingsCollection into the set based on the merge option type.
         /// </summary>
-        public SettingsCollection MergeRange(SettingsCollection settings, FfmpegMergeOptionTypes option)
+        public SettingsCollection MergeRange(SettingsCollection settings, FfmpegMergeOptionType option)
         {
             if (settings == null)
             {
@@ -142,7 +143,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         public bool Contains<TSetting>()
             where TSetting : ISetting
         {
-            return (SettingsList.Count(s => s is TSetting) > 0);
+            return SettingsList.Any(s => s is TSetting);
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             where TSetting : ISetting
         {
             var itemType = item.GetType();
-            return (SettingsList.Count(s => s.GetType().IsAssignableFrom(itemType)) > 0);
+            return SettingsList.Any(s => s.GetType().IsAssignableFrom(itemType));
         }
 
         /// <summary>

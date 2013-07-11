@@ -43,15 +43,15 @@ namespace Hudl.Ffmpeg.Common
 
             return codecString;
         }
-        public static string Library(AudioCodecTypes codec)
+        public static string Library(AudioCodecType codec)
         {
             return Library(codec.ToString());
         }
-        public static string Library(VideoCodecTypes codec)
+        public static string Library(VideoCodecType codec)
         {
             return Library(codec.ToString());
         }
-        public static string Library(PixelFormatTypes library)
+        public static string Library(PixelFormatType library)
         {
             return Library(library.ToString());
         }

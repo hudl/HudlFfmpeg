@@ -7,7 +7,7 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IAudio))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceTypes.Output)]
+    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class AudioBitRate : BaseSetting
     {
         private const string SettingType = "-b:a";
@@ -16,6 +16,10 @@ namespace Hudl.Ffmpeg.Settings
             : base(SettingType)
         {
             Rate = rate;
+        }
+        public AudioBitRate(AudioBitRateType rate)
+            : this((int)rate)
+        {
         }
 
         public int Rate { get; set; }

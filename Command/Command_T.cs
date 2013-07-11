@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command.BaseTypes;
@@ -56,9 +57,9 @@ namespace Hudl.Ffmpeg.Command
 
         public TimeSpan Length { get { return TimeSpan.FromSeconds(Helpers.GetLength(this)); } }
 
-        public IReadOnlyList<CommandResource<IResource>> Resources { get { return ResourceList.AsReadOnly();  } }
+        public ReadOnlyCollection<CommandResource<IResource>> Resources { get { return ResourceList.AsReadOnly(); } }
 
-        public IReadOnlyList<Filterchain<IResource>> Filterchains { get { return Filtergraph.FilterchainList.AsReadOnly(); } }
+        public ReadOnlyCollection<Filterchain<IResource>> Filterchains { get { return Filtergraph.FilterchainList.AsReadOnly(); } }
 
         public static implicit operator Command<IResource>(Command<TOutput> command)
         {
@@ -83,14 +84,14 @@ namespace Hudl.Ffmpeg.Command
         {
             if (receipt.FactoryId == Parent.Id && receipt.CommandId == Id)
             {
-                return (ResourceList.Count(r => r.Resource.Map == receipt.Map) > 0);
+                return ResourceList.Any(r => r.Resource.Map == receipt.Map);
             }
             return false;
         }
 
         public bool Contains(IResource resource)
         {
-            return (ResourceList.Count(r => r.Resource.Map == resource.Map) > 0);
+            return ResourceList.Any(r => r.Resource.Map == resource.Map);
         }
 
         public CommandResourceReceipt AddResource<TResource>(string fullName)
@@ -193,7 +194,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 throw new ArgumentException("Command already contains the specified resource.", "resource");
             }
-            if (settings.Type != SettingsCollectionResourceTypes.Input)
+            if (settings.Type != SettingsCollectionResourceType.Input)
             {
                 throw new ArgumentException("Command input cannot be given an output settings collection.", "settings");
             }
@@ -219,7 +220,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 throw new ArgumentNullException("resourceDictionary");
             }
-            if (resourceDictionary.Count(kv => kv.Key.Type == SettingsCollectionResourceTypes.Output) > 0)
+            if (resourceDictionary.Any(kv => kv.Key.Type == SettingsCollectionResourceType.Output))
             {
                 throw new ArgumentException("Range of resources contains settings output collection.", "resourceDictionary");
             }
@@ -251,7 +252,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 throw new ArgumentException("Command already contains the specified resource.", "resource");
             }
-            if (settings.Type != SettingsCollectionResourceTypes.Input)
+            if (settings.Type != SettingsCollectionResourceType.Input)
             {
                 throw new ArgumentException("Command input cannot be given an output settings collection.", "settings");
             }
@@ -297,7 +298,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 throw new ArgumentException("Command does not contain the resource to replace.", "replace");
             }
-            if (settings.Type != SettingsCollectionResourceTypes.Input)
+            if (settings.Type != SettingsCollectionResourceType.Input)
             {
                 throw new ArgumentException("Command input cannot be given an output settings collection.", "settings");
             }
@@ -556,7 +557,7 @@ namespace Hudl.Ffmpeg.Command
                 }));
 
             //assign and merge the output resolutio settings for the resolution saying that the new wins 
-            Output.Settings.MergeRange(resolutionTemplate.OutputSettings, FfmpegMergeOptionTypes.NewWins);
+            Output.Settings.MergeRange(resolutionTemplate.OutputSettings, FfmpegMergeOptionType.NewWins);
         }
 
         /// <summary>

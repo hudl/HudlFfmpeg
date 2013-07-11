@@ -6,8 +6,11 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// Seek to should be used when StartAt cannot be used, Ffmpeg will process the video up to the timestamp provided, but discard it. 
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
-    [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceTypes.Input)]
+    [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
     public class SeekTo : BaseSetting
     {
         private const string SettingType = "-ss";
