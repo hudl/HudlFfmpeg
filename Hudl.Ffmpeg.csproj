@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.11\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -44,6 +47,7 @@
     <Compile Include="BaseTypes\AppliesToResourceAttribute.cs" />
     <Compile Include="BaseTypes\AppliesToCollection.cs" />
     <Compile Include="BaseTypes\AppliesToInvalidException.cs" />
+    <Compile Include="BaseTypes\FfmpegProcessingException.cs" />
     <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
     <Compile Include="Command\WinCmdProcessorReciever.cs" />
     <Compile Include="Command\CommandBuilder.cs" />

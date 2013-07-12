@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
+using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command.BaseTypes;
+using log4net;
 
 namespace Hudl.Ffmpeg.Command
 {
     public class WinCmdProcessorReciever : ICommandProcessor
     {
-        private StreamWriter _outputWriter;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(WinCmdProcessorReciever).Name);
 
         public WinCmdProcessorReciever()
         {
@@ -26,11 +29,15 @@ namespace Hudl.Ffmpeg.Command
                 throw new InvalidOperationException(string.Format("Cannot open a command processor that is currently in the '{0}' state.", Status));
             }
 
-            Configuration = configuration;
 
             try
             {
-                _outputWriter = new StreamWriter(Path.Combine(configuration.OutputPath, Guid.NewGuid() + ".bat"));
+                Log.DebugFormat("Opening command processor.");
+
+                Configuration = configuration;
+
+                Create();
+
                 Status = CommandProcessorStatus.Ready;
             }
             catch (Exception err)
@@ -41,7 +48,6 @@ namespace Hudl.Ffmpeg.Command
             }
 
             //write the commands for preparation 
-            WritePreparation();
 
             return true;
         }
@@ -53,14 +59,12 @@ namespace Hudl.Ffmpeg.Command
                 throw new InvalidOperationException(string.Format("Cannot close a command processor that is currently in the '{0}' state.", Status));
             }
 
-            //write the command for clean up
-            WriteCleanUp();
-            
             try
             {
-                _outputWriter.Flush();
-                _outputWriter.Close();
-                _outputWriter.Dispose();
+                Log.DebugFormat("Closing command processor.");
+
+                Delete();
+
                 Status = CommandProcessorStatus.Closed;
             }
             catch (Exception err)
@@ -87,7 +91,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 Status = CommandProcessorStatus.Processing;
 
-                _outputWriter.WriteLine(command);
+                ProcessIt(command);
 
                 Status = CommandProcessorStatus.Ready;
             }
@@ -100,18 +104,52 @@ namespace Hudl.Ffmpeg.Command
             return true;
         }
 
-        private void WritePreparation()
+        private void Create()
         {
-            Send("cd " + Configuration.FfmpegPath);
+            Log.DebugFormat("Creating temporary directories.");
 
-            Send("mkdir " + Configuration.TempPath);
+            Directory.CreateDirectory(Configuration.TempPath);
 
-            Send("mkdir " + Configuration.OutputPath);
+            Directory.CreateDirectory(Configuration.OutputPath);
         }
 
-        private void WriteCleanUp()
+        private void Delete()
         {
-            Send("rmdir " + Configuration.TempPath);
+            Log.DebugFormat("Removing temporary directories.");
+
+            Directory.Delete(Configuration.TempPath, true);
+        }
+
+        private void ProcessIt(string command)
+        {
+            using (var ffmpegProcess = new Process())
+            {
+                ffmpegProcess.StartInfo = new ProcessStartInfo()
+                {
+                    FileName = Path.Combine(Configuration.FfmpegPath, "ffmpeg.exe"),
+                    WorkingDirectory = Configuration.TempPath,
+                    Arguments = command.Trim(),
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                };
+
+                Log.DebugFormat("ffmpeg.exe Args={0}.", ffmpegProcess.StartInfo.Arguments);
+                
+                ffmpegProcess.Start();
+
+                var errorOutput = ffmpegProcess.StandardError.ReadToEnd();
+
+                ffmpegProcess.WaitForExit();
+
+                Log.DebugFormat("ffmpeg.exe Output={0}.", errorOutput);
+
+                var exitCode = ffmpegProcess.ExitCode;
+                if (exitCode != 0)
+                {
+                    throw new FfmpegProcessingException(exitCode, errorOutput);
+                }
+            }
         }
     }
 }

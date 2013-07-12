@@ -9,12 +9,15 @@ using Hudl.Ffmpeg.Resolution.BaseTypes;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
+using log4net;
 
 namespace Hudl.Ffmpeg.Command
 {
     public class Command<TOutput>
         where TOutput : IResource
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(Command<TOutput>).Name);
+
         private Command(CommandFactory parent)
         {
             if (parent == null)
@@ -578,14 +581,14 @@ namespace Hudl.Ffmpeg.Command
 
             if (!commandProcessor.Open(Parent.Configuration))
             {
-                throw commandProcessor.Error;
+                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
             }
 
             var returnType = RenderWith(commandProcessor);
 
             if (!commandProcessor.Close())
             {
-                throw commandProcessor.Error;
+                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
             }
 
             return returnType;
@@ -594,20 +597,20 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Renders the command stream with an existing command processor
         /// </summary>
-        public CommandOutput<TOutput> RenderWith<TProcessor>(TProcessor processor)
+        public CommandOutput<TOutput> RenderWith<TProcessor>(TProcessor commandProcessor)
             where TProcessor : ICommandProcessor
         {
-            if (processor == null)
+            if (commandProcessor == null)
             {
-                throw new ArgumentNullException("processor");
+                throw new ArgumentNullException("commandProcessor");
             }
 
             var commandBuilder = new CommandBuilder();
             commandBuilder.WriteCommand(this);
             
-            if (!processor.Send(commandBuilder.ToString()))
+            if (!commandProcessor.Send(commandBuilder.ToString()))
             {
-                throw processor.Error;
+                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
             }
 
             return Output;

@@ -21,7 +21,7 @@ namespace Hudl.Ffmpeg.Command
 
         public void WriteCommand(Command<IResource> command)
         {
-            command.CommandList.ForEach(WriteCommand);
+            //command.CommandList.ForEach(WriteCommand);
 
             WriteStart();
 
@@ -36,7 +36,7 @@ namespace Hudl.Ffmpeg.Command
 
         private void WriteStart()
         {
-            _builderBase.Append(FfmpegMethodName);
+            // _builderBase.Append(FfmpegMethodName);
         }
 
         private void WriteFinish()

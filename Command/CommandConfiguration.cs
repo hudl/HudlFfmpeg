@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Hudl.Ffmpeg.Command
 {
@@ -22,11 +23,17 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentException("Assets path path cannot be empty.", "assetsPath");
             }
 
-            OutputPath = outputPath;
-            FfmpegPath = ffmpegPath;
-            AssetsPath = assetsPath;
-            TempPath = Guid.NewGuid().ToString();
+            OutputPath = outputPath.Replace("/", "\\");
+            FfmpegPath = ffmpegPath.Replace("/", "\\");
+            AssetsPath = assetsPath.Replace("/", "\\");
+            EnvironmentVariables = new Dictionary<string, string>();
+            TempPath = System.IO.Path.Combine(FfmpegPath, Guid.NewGuid().ToString());
         }
+
+        /// <summary>
+        /// declares some environmental settings for the command
+        /// </summary>
+        public Dictionary<string, string> EnvironmentVariables { get; private set; }
 
         /// <summary>
         /// declares the temporary output path for the command factory, this is where all non-exported output should go.

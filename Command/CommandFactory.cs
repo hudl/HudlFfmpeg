@@ -5,6 +5,7 @@ using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
+using log4net; 
 
 namespace Hudl.Ffmpeg.Command
 {
@@ -13,6 +14,8 @@ namespace Hudl.Ffmpeg.Command
     /// </summary>
     public class CommandFactory
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CommandFactory).Name);
+
         public CommandFactory(CommandConfiguration configuration)
         {
             if (configuration == null)
@@ -89,14 +92,14 @@ namespace Hudl.Ffmpeg.Command
 
             if (!commandProcessor.Open(Configuration))
             {
-                throw commandProcessor.Error;
+                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
             }
 
             var returnType = RenderWith(commandProcessor);
 
             if (!commandProcessor.Close())
             {
-                throw commandProcessor.Error;
+                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
             }
 
             return returnType;
@@ -113,13 +116,21 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("processor");
             }
 
-            return CommandList.Select(command =>
-                {
-                    var output = command.RenderWith(processor);
-                    return output.IsExported 
-                        ? output.GetOutput() 
-                        : null;
-                }).ToList();
+            var outputList = GetOutput();
+            var commandCount = CommandList.Sum(c => 1 + c.CommandList.Count); 
+
+            Log.InfoFormat("Rendering command factory Outputs={0} Commands={1}", 
+                outputList.Count,
+                commandCount);
+
+            CommandList.ForEach(command =>
+            {
+                command.CommandList.ForEach(prepCommand => prepCommand.RenderWith(processor));
+
+                command.RenderWith(processor);
+            });
+
+            return outputList;
         }
 
         #region Command Helper Visibility
