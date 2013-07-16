@@ -8,6 +8,10 @@ namespace Hudl.Ffmpeg.Command
     /// </summary>
     public class CommandConfiguration
     {
+        public CommandConfiguration(string outputPath, string ffmpegPath)
+            : this(outputPath, ffmpegPath, outputPath)
+        {
+        }
         public CommandConfiguration(string outputPath, string ffmpegPath, string assetsPath)
         {
             if (string.IsNullOrWhiteSpace(outputPath))

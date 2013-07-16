@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -31,28 +30,28 @@ namespace Hudl.Ffmpeg.Templates
         private readonly Mp4 _videoFilmGrain;
         private readonly Png _imageVignette;
 
-        private FfmpegScaleRgb _shadows = new FfmpegScaleRgb
+        private readonly FfmpegScaleRgb _shadows = new FfmpegScaleRgb
         {
             Blue = new FfmpegScale(.2M)
         };
-        private FfmpegScaleRgb _midtones = new FfmpegScaleRgb
+        private readonly FfmpegScaleRgb _midtones = new FfmpegScaleRgb
         {
             Red = new FfmpegScale(.1M),
             Blue = new FfmpegScale(-.1M)
         };
-        private FfmpegScaleRgb _highlights = new FfmpegScaleRgb
+        private readonly FfmpegScaleRgb _highlights = new FfmpegScaleRgb
         {
             Red = new FfmpegScale(.1M),
             Blue = new FfmpegScale(-.2M)
         };
        
-        public CampaignProject(CommandConfiguration configuration)
+        public CampaignProject(CommandConfiguration configuration, M4A assetMusic, Mp3 assetSilence, Mp4 assetVideo, Png assetImage)
             : base(configuration)
         {
-            _musicBackground = Resource.Create<M4A>(configuration.AssetsPath, "music.m4a", TimeSpan.FromSeconds(212));
-            _musicSilence = Resource.Create<Mp3>(configuration.AssetsPath, "silence.mp3", TimeSpan.FromSeconds(1));
-            _videoFilmGrain = Resource.Create<Mp4>(configuration.AssetsPath, "overlay.mp4", TimeSpan.FromSeconds(212));
-            _imageVignette = Resource.Create<Png>(configuration.AssetsPath, "vignette.png");
+            _musicBackground = assetMusic;
+            _musicSilence = assetSilence; 
+            _videoFilmGrain = assetVideo;
+            _imageVignette = assetImage;
         }
 
         protected override void SetupTemplate()
@@ -199,7 +198,7 @@ namespace Hudl.Ffmpeg.Templates
             // **********************************
             #region ...
             var campaignM4AStartFade = (int)Helpers.GetLength(campaign480Mp4);
-            var campaignM4A = Factory.CreateOutput<M4A>("audio_aac.m4a");
+            var campaignM4A = Factory.CreateOutput<M4A>("audio_aac_" + Factory.Id + ".m4a");
             var campaignM4AResource1 = campaignM4A.Add(_musicBackground);
             var campaignM4AResource2 = campaignM4A.Add(campaignMp3ToM4A.Output.Resource);
 
@@ -236,13 +235,15 @@ namespace Hudl.Ffmpeg.Templates
             campaignM4A.Output.Settings = outputSettingsM4A;
 
             Factory.AddToOutput(campaignM4A);
+
+            AudioOutput = campaignM4A.Output.Resource;
             #endregion
 
             // **********************************
             // Campaign mp4 (480p resolution w/audio)
             // **********************************
             #region ...
-            var campaign480Mp4WAudio = Factory.CreateOutput<Mp4>("video_h264_480p.mp4");
+            var campaign480Mp4WAudio = Factory.CreateOutput<Mp4>("video_h264_480p_" + Factory.Id + ".mp4");
             campaign480Mp4WAudio.Add(campaignM4A.Output.Resource);
             campaign480Mp4WAudio.Add(campaign480Mp4.Output.Resource);
 
@@ -258,13 +259,15 @@ namespace Hudl.Ffmpeg.Templates
             campaign480Mp4WAudio.Output.Settings = outputSettings480Mp4WAudio;
 
             Factory.AddToOutput(campaign480Mp4WAudio);
+
+            Video480POutput = campaign480Mp4WAudio.Output.Resource;
             #endregion
 
             // **********************************
             // Campaign mp4 (240p resolution w/audio)
             // **********************************
             #region ...
-            var campaign240Mp4WAudio = Factory.CreateOutput<Mp4>("video_h264_240p.mp4");
+            var campaign240Mp4WAudio = Factory.CreateOutput<Mp4>("video_h264_240p_" + Factory.Id + ".mp4");
             campaign240Mp4WAudio.Add(campaignM4A.Output.Resource);
             campaign240Mp4WAudio.Add(campaign240Mp4.Output.Resource);
 
@@ -280,13 +283,15 @@ namespace Hudl.Ffmpeg.Templates
             campaign240Mp4WAudio.Output.Settings = outputSettings240Mp4WAudio;
 
             Factory.AddToOutput(campaign240Mp4WAudio);
+
+            Video240POutput = campaign240Mp4WAudio.Output.Resource;
             #endregion
 
             // **********************************
             // Campaign Jpg (240p resolution w/audio)
             // **********************************
             #region ...
-            var campaignJpg = Factory.CreateOutput<Jpg>("image_480p.jpg");
+            var campaignJpg = Factory.CreateOutput<Jpg>("image_480p_" + Factory.Id + ".jpg");
             campaignJpg.Add(SettingsCollection.ForInput(
                 new Duration(1),
                 new SeekTo(TimeSpan.FromSeconds(5))
@@ -302,7 +307,17 @@ namespace Hudl.Ffmpeg.Templates
             campaignJpg.Output.Settings = outputSettingsJpg;
 
             Factory.AddToOutput(campaignJpg);
+
+            Image480POutput = campaignJpg.Output.Resource;
             #endregion
         }
+
+        public IResource AudioOutput { get; set; }
+
+        public IResource Video240POutput { get; set; }
+
+        public IResource Video480POutput { get; set; }
+
+        public IResource Image480POutput { get; set; }
     }
 }

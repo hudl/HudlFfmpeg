@@ -95,6 +95,11 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
         /// </summary>
         protected abstract void SetupTemplate();
 
+        public List<IResource> GetAllWrittenFiles()
+        {
+            return Factory.GetAllOutput();
+        }
+
         #region Internals
         internal protected bool SetupCompleted { get; protected set; }
         internal protected List<IVideo> VideoList { get; protected set; }

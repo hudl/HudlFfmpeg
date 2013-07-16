@@ -66,6 +66,24 @@ namespace Hudl.Ffmpeg.Command
         }
 
         /// <summary>
+        /// Select the output and temp resources for the current command factory 
+        /// </summary>
+        public List<IResource> GetAllOutput()
+        {
+            return CommandList.SelectMany(c =>
+                {
+                    var outputTempList = new List<IResource>();
+                    outputTempList.Add(c.Output.Resource);
+                    var prepTempList = c.CommandList.Select(pc => pc.Output.Resource).ToList();
+                    if (prepTempList.Count > 0)
+                    {
+                        outputTempList.AddRange(prepTempList);
+                    }
+                    return outputTempList;
+                }).ToList();
+        }
+
+        /// <summary>
         /// Returns a boolean indicating if the command already exists in the factory
         /// </summary>
         public bool Contains<TOutput>(Command<TOutput> command)
