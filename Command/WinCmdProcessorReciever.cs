@@ -106,18 +106,24 @@ namespace Hudl.Ffmpeg.Command
 
         private void Create()
         {
-            Log.DebugFormat("Creating temporary directories.");
+            if (Configuration.RunSetup)
+            {
+                Log.DebugFormat("Creating temporary directories.");
 
-            Directory.CreateDirectory(Configuration.TempPath);
+                Directory.CreateDirectory(Configuration.TempPath);
 
-            Directory.CreateDirectory(Configuration.OutputPath);
+                Directory.CreateDirectory(Configuration.OutputPath);
+            }
         }
 
         private void Delete()
         {
-            Log.DebugFormat("Removing temporary directories.");
+            if (Configuration.RunCleanup)
+            {
+                Log.DebugFormat("Removing temporary directories.");
 
-            Directory.Delete(Configuration.TempPath, true);
+                Directory.Delete(Configuration.TempPath, true);
+            }
         }
 
         private void ProcessIt(string command)
@@ -126,7 +132,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 ffmpegProcess.StartInfo = new ProcessStartInfo()
                 {
-                    FileName = Path.Combine(Configuration.FfmpegPath, "ffmpeg.exe"),
+                    FileName = Configuration.FfmpegPath,
                     WorkingDirectory = Configuration.TempPath,
                     Arguments = command.Trim(),
                     CreateNoWindow = true,

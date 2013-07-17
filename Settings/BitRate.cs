@@ -10,7 +10,7 @@ namespace Hudl.Ffmpeg.Settings
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class BitRate : BaseSetting
     {
-        private const string SettingType = "-bt";
+        private const string SettingType = "-b:v";
 
         public BitRate(int rate)
             : base(SettingType)

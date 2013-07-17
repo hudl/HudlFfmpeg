@@ -31,7 +31,7 @@ namespace Hudl.Ffmpeg.Command
             FfmpegPath = ffmpegPath.Replace("/", "\\");
             AssetsPath = assetsPath.Replace("/", "\\");
             EnvironmentVariables = new Dictionary<string, string>();
-            TempPath = System.IO.Path.Combine(FfmpegPath, Guid.NewGuid().ToString());
+            TempPath = OutputPath; 
         }
 
         /// <summary>
@@ -58,6 +58,16 @@ namespace Hudl.Ffmpeg.Command
         /// declares the static resource files path for the command factory, this is where all static resource files will reside.
         /// </summary>
         public string AssetsPath { get; private set; }
+
+        /// <summary>
+        /// tells ffmpeg framework whether it should run clean up or not
+        /// </summary>
+        public bool RunSetup { get; set; }
+
+        /// <summary>
+        /// tells ffmpeg framework whether it should run clean up or not
+        /// </summary>
+        public bool RunCleanup { get; set; }
 
     }
 }

@@ -179,7 +179,7 @@ namespace Hudl.Ffmpeg.Templates
                 new RemoveAudio(),
                 new TrimShortest(),
                 new OverwriteOutput(),
-                new BitRate(3000),
+                new BitRate(1200),
                 new FrameRate(29.97),
                 new PixelFormat(PixelFormatType.Yuv420P),
                 new VCodec(VideoCodecType.Libx264)
@@ -288,7 +288,7 @@ namespace Hudl.Ffmpeg.Templates
             #endregion
 
             // **********************************
-            // Campaign Jpg (240p resolution w/audio)
+            // Campaign Jpg (480p resolution w/audio)
             // **********************************
             #region ...
             var campaignJpg = Factory.CreateOutput<Jpg>("image_480p_" + Factory.Id + ".jpg");
