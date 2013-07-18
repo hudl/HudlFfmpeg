@@ -7,11 +7,11 @@ using log4net;
 
 namespace Hudl.Ffmpeg.Command
 {
-    public class WinCmdProcessorReciever : ICommandProcessor
+    public class CmdProcessorReciever : ICommandProcessor
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(WinCmdProcessorReciever).Name);
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CmdProcessorReciever).Name);
 
-        public WinCmdProcessorReciever()
+        public CmdProcessorReciever()
         {
             Status = CommandProcessorStatus.Closed;
         }

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
+using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -568,7 +569,7 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public CommandOutput<TOutput> Render()
         {
-            return RenderWith<WinCmdProcessorReciever>();
+            return RenderWith<CmdProcessorReciever>();
         }
 
         /// <summary>
@@ -581,14 +582,14 @@ namespace Hudl.Ffmpeg.Command
 
             if (!commandProcessor.Open(Parent.Configuration))
             {
-                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
+                throw new FfmpegRenderingException(commandProcessor.Error);
             }
 
             var returnType = RenderWith(commandProcessor);
 
             if (!commandProcessor.Close())
             {
-                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
+                throw new FfmpegRenderingException(commandProcessor.Error);
             }
 
             return returnType;
@@ -610,7 +611,7 @@ namespace Hudl.Ffmpeg.Command
             
             if (!commandProcessor.Send(commandBuilder.ToString()))
             {
-                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
+                throw new FfmpegRenderingException(commandProcessor.Error);
             }
 
             return Output;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -97,7 +98,7 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public List<IResource> Render()
         {
-            return RenderWith<WinCmdProcessorReciever>();
+            return RenderWith<CmdProcessorReciever>();
         }
 
         /// <summary>
@@ -110,14 +111,14 @@ namespace Hudl.Ffmpeg.Command
 
             if (!commandProcessor.Open(Configuration))
             {
-                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
+                throw new FfmpegRenderingException(commandProcessor.Error);
             }
 
             var returnType = RenderWith(commandProcessor);
 
             if (!commandProcessor.Close())
             {
-                throw new Exception("Ffmpeg RenderWith Error", commandProcessor.Error);
+                throw new FfmpegRenderingException(commandProcessor.Error);
             }
 
             return returnType;
