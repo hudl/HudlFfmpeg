@@ -27,9 +27,9 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentException("Assets path path cannot be empty.", "assetsPath");
             }
 
-            OutputPath = outputPath.Replace("/", "\\");
-            FfmpegPath = ffmpegPath.Replace("/", "\\");
-            AssetsPath = assetsPath.Replace("/", "\\");
+            OutputPath = outputPath;
+            FfmpegPath = ffmpegPath;
+            AssetsPath = assetsPath;
             EnvironmentVariables = new Dictionary<string, string>();
             TempPath = OutputPath; 
         }
