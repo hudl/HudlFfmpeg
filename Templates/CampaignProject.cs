@@ -66,6 +66,34 @@ namespace Hudl.Ffmpeg.Templates
             }
 
             // **********************************
+            // Campaign video precise trimming
+            // **********************************
+            #region ...
+            var videoListTrimmed = VideoList.Select(video =>
+                {
+                    var campaignVideoTrim = Factory.CreateOutput<Mp4>();
+
+                    //FILTERS/SETTINGS
+                    var inputSettingsVideoTrim = SettingsCollection.ForInput(
+                        new Duration(Math.Floor(video.Length.TotalSeconds))
+                    );
+                    var outputSettingsVideoTrim = SettingsCollection.ForOutput(
+                        new OverwriteOutput(),
+                        new VCodec(VideoCodecType.Copy)
+                    );
+
+                    //FILTER APPLICATION 
+                    campaignVideoTrim.Add(inputSettingsVideoTrim, video);
+
+                    campaignVideoTrim.Output.Settings = outputSettingsVideoTrim;
+
+                    Factory.AddToResources(campaignVideoTrim);
+
+                    return campaignVideoTrim.Output.GetOutput();
+                }).ToList();
+            #endregion 
+
+            // **********************************
             // Campaign mp3 => m4a (AAC Interview audio) 
             // **********************************
             #region ...
@@ -103,7 +131,7 @@ namespace Hudl.Ffmpeg.Templates
             // **********************************
             #region ...
             var campaign480Mp4 = Factory.CreateOutput<Mp4>();
-            var campaign480Mp4Receipts = VideoList.Select(campaign480Mp4.Add).ToList();
+            var campaign480Mp4Receipts = videoListTrimmed.Select(campaign480Mp4.Add).ToList();
             CommandResourceReceipt last480Mp4Receipt = null;
 
             //FILTERS/SETTINGS
@@ -179,7 +207,7 @@ namespace Hudl.Ffmpeg.Templates
                 new RemoveAudio(),
                 new TrimShortest(),
                 new OverwriteOutput(),
-                new BitRate(1200),
+                new BitRate(1100),
                 new FrameRate(29.97),
                 new PixelFormat(PixelFormatType.Yuv420P),
                 new VCodec(VideoCodecType.Libx264)
