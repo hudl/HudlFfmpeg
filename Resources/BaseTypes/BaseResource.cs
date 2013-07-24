@@ -122,7 +122,7 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
                 return false;
             }
 
-            var upperFormat = Format.ToLower().ToUpper();
+            var upperFormat = Format.ToUpper();
             var upperPath = path.Trim().ToUpper();
             var queryStringIndex = upperPath.IndexOf("?", StringComparison.Ordinal); 
             if (queryStringIndex != -1)
