@@ -33,5 +33,10 @@ namespace Hudl.Ffmpeg.Common
         {
             return string.Concat(_numerator, "/", _denominator); 
         }
+
+        public string ToRatio()
+        {
+            return string.Concat(_numerator, ":", _denominator); 
+        }
     }
 }

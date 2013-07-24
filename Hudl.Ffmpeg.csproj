@@ -135,6 +135,7 @@
     <Compile Include="Settings\BitRate.cs" />
     <Compile Include="Settings\ACodec.cs" />
     <Compile Include="Settings\AudioBitRate.cs" />
+    <Compile Include="Settings\AspectRatio.cs" />
     <Compile Include="Settings\Input.cs" />
     <Compile Include="Settings\TrimShortest.cs" />
     <Compile Include="Settings\SeekTo.cs" />

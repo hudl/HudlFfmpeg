@@ -27,7 +27,7 @@ namespace Hudl.Ffmpeg.Common
                     { ScalePresetType.Ega, new Point(640, 350) }, 
                     { ScalePresetType.Sd240, new Point(432, 240) }, 
                     { ScalePresetType.Sd360, new Point(640, 360) }, 
-                    { ScalePresetType.Hd480, new Point(852, 480) }, 
+                    { ScalePresetType.Hd480, new Point(854, 480) }, 
                     { ScalePresetType.Hd720, new Point(1280, 720) },
                     { ScalePresetType.Hd1080, new Point(1920, 1080) }
                 };

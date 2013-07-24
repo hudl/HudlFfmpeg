@@ -157,6 +157,7 @@ namespace Hudl.Ffmpeg.Templates
                 new OverwriteOutput(),
                 new BitRate(3000),
                 new FrameRate(29.97),
+                new AspectRatio(new FfmpegRatio(16, 9)), 
                 new PixelFormat(PixelFormatType.Yuv420P),
                 new VCodec(VideoCodecType.Libx264)
             );

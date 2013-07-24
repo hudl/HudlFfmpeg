@@ -19,7 +19,8 @@ namespace Hudl.Ffmpeg.Resolution
                 new SetDar(new FfmpegRatio(16, 9)),
                 new SetSar(new FfmpegRatio(1, 1)));
             var outputSettings = SettingsCollection.ForOutput(
-                new Dimensions(ScalePresetType.Hd480));
+                new Dimensions(ScalePresetType.Hd480), 
+                new AspectRatio(new FfmpegRatio(16, 9)));
 
             Filterchains = new List<Filterchain<IResource>> {resolutionFilterchain};
             OutputSettings = outputSettings;
