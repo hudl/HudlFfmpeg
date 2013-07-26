@@ -22,7 +22,7 @@ namespace Hudl.Ffmpeg.Templates
     ///   - Campaign mp4 (480p resolution w/audio)
     ///   - Campaign mp4 (240p resolution w/audio)
     /// </summary>
-    public class CampaignProject : BaseTemplate
+    public class CampaignProject : BaseCommandFactoryTemplate
     {
         private const string BlendExpression = "A*(6/10)+B*(1-(6/10))";
         private readonly M4A _musicBackground; 
@@ -66,34 +66,6 @@ namespace Hudl.Ffmpeg.Templates
             }
 
             // **********************************
-            // Campaign video precise trimming
-            // **********************************
-            #region ...
-            var videoListTrimmed = VideoList.Select(video =>
-                {
-                    var campaignVideoTrim = Factory.CreateOutput<Mp4>();
-
-                    //FILTERS/SETTINGS
-                    var inputSettingsVideoTrim = SettingsCollection.ForInput(
-                        new Duration(Math.Floor(video.Length.TotalSeconds))
-                    );
-                    var outputSettingsVideoTrim = SettingsCollection.ForOutput(
-                        new OverwriteOutput(),
-                        new VCodec(VideoCodecType.Copy)
-                    );
-
-                    //FILTER APPLICATION 
-                    campaignVideoTrim.Add(inputSettingsVideoTrim, video);
-
-                    campaignVideoTrim.Output.Settings = outputSettingsVideoTrim;
-
-                    Factory.AddToResources(campaignVideoTrim);
-
-                    return campaignVideoTrim.Output.GetOutput();
-                }).ToList();
-            #endregion 
-
-            // **********************************
             // Campaign mp3 => m4a (AAC Interview audio) 
             // **********************************
             #region ...
@@ -131,10 +103,11 @@ namespace Hudl.Ffmpeg.Templates
             // **********************************
             #region ...
             var campaign480Mp4 = Factory.CreateOutput<Mp4>();
-            var campaign480Mp4Receipts = videoListTrimmed.Select(campaign480Mp4.Add).ToList();
+            var campaign480Mp4Receipts = VideoList.Select(campaign480Mp4.Add).ToList();
             CommandResourceReceipt last480Mp4Receipt = null;
 
             //FILTERS/SETTINGS
+            var resolutionTemplate480 = new Resolution480P<Mp4>();
             var filterchain480Mp42 = Filterchain.FilterTo<Mp4>(
                 new Crossfade(TimeSpan.FromSeconds(1))
             );
@@ -161,6 +134,7 @@ namespace Hudl.Ffmpeg.Templates
                 new PixelFormat(PixelFormatType.Yuv420P),
                 new VCodec(VideoCodecType.Libx264)
             );
+            outputSettings480Mp4.MergeRange(resolutionTemplate480, FfmpegMergeOptionType.OldWins);
 
             //FILTER APPLICATION 
             var campaign480Mp4Concat = new List<CommandResourceReceipt>();
@@ -179,17 +153,20 @@ namespace Hudl.Ffmpeg.Templates
                     last480Mp4Receipt = receipt;
                 });
 
+            campaign480Mp4Concat = campaign480Mp4.ApplyFilterToEach<Mp4>(resolutionTemplate480, campaign480Mp4Concat);
+
             last480Mp4Receipt = campaign480Mp4.ApplyFilter(filterchain480Mp43, campaign480Mp4Concat);
 
-            var campaign480Mp4Resource1 = campaign480Mp4.Add(_imageVignette);
-            last480Mp4Receipt = campaign480Mp4.ApplyFilter(filterchain480Mp44, last480Mp4Receipt, campaign480Mp4Resource1);
+            var assetImageReceipt = campaign480Mp4.Add(_imageVignette);
+            var assetVideoReceipt = campaign480Mp4.Add(_videoFilmGrain);
+            assetImageReceipt = campaign480Mp4.ApplyFilter<Mp4>(resolutionTemplate480, assetImageReceipt);
+            assetVideoReceipt = campaign480Mp4.ApplyFilter<Mp4>(resolutionTemplate480, assetVideoReceipt);
 
-            var campaign480Mp4Resource2 = campaign480Mp4.Add(_videoFilmGrain);
-            last480Mp4Receipt = campaign480Mp4.ApplyFilter(filterchain480Mp45, last480Mp4Receipt, campaign480Mp4Resource2);
+            last480Mp4Receipt = campaign480Mp4.ApplyFilter(filterchain480Mp44, last480Mp4Receipt, assetImageReceipt);
+
+            last480Mp4Receipt = campaign480Mp4.ApplyFilter(filterchain480Mp45, last480Mp4Receipt, assetVideoReceipt);
 
             campaign480Mp4.ApplyFilter(filterchain480Mp46, last480Mp4Receipt);
-
-            campaign480Mp4.SetResolution(new Template480P<Mp4>());
 
             campaign480Mp4.Output.Settings = outputSettings480Mp4;
 
@@ -204,6 +181,7 @@ namespace Hudl.Ffmpeg.Templates
             campaign240Mp4.Add(campaign480Mp4.Output.Resource);
 
             //FILTERS/SETTINGS
+            var resolutionTemplate240 = new Resolution240P<Mp4>();
             var outputSettings240Mp4 = SettingsCollection.ForOutput(
                 new RemoveAudio(),
                 new TrimShortest(),
@@ -213,9 +191,10 @@ namespace Hudl.Ffmpeg.Templates
                 new PixelFormat(PixelFormatType.Yuv420P),
                 new VCodec(VideoCodecType.Libx264)
             );
+            outputSettings240Mp4.MergeRange(resolutionTemplate240, FfmpegMergeOptionType.OldWins);
 
             //FILTER APPLICATION 
-            campaign240Mp4.SetResolution(new Template240P<Mp4>());
+            campaign240Mp4.ApplyFilter<Mp4>(resolutionTemplate240);
 
             campaign240Mp4.Output.Settings = outputSettings240Mp4;
 

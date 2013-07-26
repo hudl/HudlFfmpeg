@@ -21,7 +21,7 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
             Transition = FadeTransitionType.In;
-            Unit = FadeAudioUnitType.Seconds;
+            Unit = AudioUnitType.Seconds;
         }
         public AFade(FadeTransitionType transition, double duration)
             : this()
@@ -37,7 +37,7 @@ namespace Hudl.Ffmpeg.Filters
 
         public FadeTransitionType Transition { get; set; } 
 
-        public FadeAudioUnitType Unit { get; set; }
+        public AudioUnitType Unit { get; set; }
         
         public double Duration { get; set; }
 
@@ -63,7 +63,7 @@ namespace Hudl.Ffmpeg.Filters
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit) 
             {
-                case FadeAudioUnitType.Sample:
+                case AudioUnitType.Sample:
                     filter.AppendFormat(":ss={0}:ns={1}",
                         startAtLocation, 
                         Duration);

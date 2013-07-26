@@ -71,8 +71,8 @@
     <Compile Include="Common\OverlayVideoEvalType.cs" />
     <Compile Include="Common\OverlayVideoFormatType.cs" />
     <Compile Include="Common\DurationType.cs" />
-    <Compile Include="Common\FadeAudioUnitType.cs" />
-    <Compile Include="Common\FadeVideoUnitType.cs" />
+    <Compile Include="Common\AudioUnitType.cs" />
+    <Compile Include="Common\VideoUnitType.cs" />
     <Compile Include="Common\FadeTransitionType.cs" />
     <Compile Include="Common\ScalePresetType.cs" />
     <Compile Include="Common\PixelFormatType.cs" />
@@ -96,11 +96,9 @@
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
     <Compile Include="Filters\AMovie.cs" />
-    <Compile Include="Resolution\Template720P.cs" />
-    <Compile Include="Resolution\Template1080P.cs" />
-    <Compile Include="Resolution\Template360P.cs" />
-    <Compile Include="Resolution\Template240P.cs" />
-    <Compile Include="Resolution\Template480P.cs" />
+    <Compile Include="Filters\Trim.cs" />
+    <Compile Include="Filters\SetPts.cs" />
+    <Compile Include="Obsolete\Obsolete.cs" />
     <Compile Include="Filters\Templates\Crossfade.cs" />
     <Compile Include="Filters\Volume.cs" />
     <Compile Include="Filters\SetSar.cs" />
@@ -109,7 +107,6 @@
     <Compile Include="Filters\Movie.cs" />
     <Compile Include="Filters\Overlay.cs" />
     <Compile Include="Filters\Scale.cs" />
-    <Compile Include="Resolution\BaseTypes\IResolutionTemplate.cs" />
     <Compile Include="Resources\Jpg.cs" />
     <Compile Include="Resources\Png.cs" />
     <Compile Include="Resources\Resource.cs" />
@@ -147,8 +144,17 @@
     <Compile Include="Settings\VCodec.cs" />
     <Compile Include="Settings\Dimensions.cs" />
     <Compile Include="Settings\FrameRate.cs" />
-    <Compile Include="Templates\BaseTypes\BaseTemplate.cs" />
+    <Compile Include="Templates\BaseTypes\BaseCommandFactoryTemplate.cs" />
+    <Compile Include="Templates\BaseTypes\BaseFilterchainTemplate.cs" />
+    <Compile Include="Templates\BaseTypes\BaseSettingsTemplate.cs" />
+    <Compile Include="Templates\BaseTypes\BaseFilterchainAndSettingsTemplate.cs" />
     <Compile Include="Templates\CampaignProject.cs" />
+    <Compile Include="Templates\VideoCutTo.cs" />
+    <Compile Include="Templates\Resolution1080P.cs" />
+    <Compile Include="Templates\Resolution240P.cs" />
+    <Compile Include="Templates\Resolution360P.cs" />
+    <Compile Include="Templates\Resolution480P.cs" />
+    <Compile Include="Templates\Resolution720P.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

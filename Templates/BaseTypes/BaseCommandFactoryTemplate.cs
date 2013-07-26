@@ -18,9 +18,9 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
     /// <summary>
     /// This is the base template file for CommandFactory projects. This format will contain the necessary base functions for adding and assigning video, audio, and images.
     /// </summary>
-    public abstract class BaseTemplate
+    public abstract class BaseCommandFactoryTemplate
     {
-        protected BaseTemplate(CommandConfiguration configuration)
+        protected BaseCommandFactoryTemplate(CommandConfiguration configuration)
         {
             Factory = new CommandFactory(configuration);       
             AudioList = new List<IAudio>();

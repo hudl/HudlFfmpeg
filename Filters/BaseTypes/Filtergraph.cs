@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -25,6 +27,18 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         }
 
         public int Count { get { return FilterchainList.Count; } }
+
+        public bool Contains<TOutput>(Filterchain<TOutput> filterchain)
+            where TOutput : IResource
+        {
+            return FilterchainList.Any(f => f.Output.Resource.Map == filterchain.Output.Resource.Map);
+        }
+
+        public int IndexOf<TOutput>(Filterchain<TOutput> filterchain)
+            where TOutput : IResource
+        {
+            return FilterchainList.FindIndex(f => f.Output.Resource.Map == filterchain.Output.Resource.Map);
+        }
 
         /// <summary>
         /// Adds a new instance of a filterchain to the filtergraph
@@ -61,7 +75,29 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             FilterchainList.Add(filterchain);
             return this;
         }
-       
+
+        /// <summary>
+        /// merges the given Filterchain to the Filtergraph
+        /// </summary>
+        /// <typeparam name="TOutput">the generic type of the filterchain</typeparam>
+        /// <param name="filterchain">the filterchain to be added to the filtergraph</param>
+        public Filtergraph Merge<TOutput>(Filterchain<TOutput> filterchain, FfmpegMergeOptionType optionType)
+            where TOutput : IResource
+        {
+            var indexOfItem = IndexOf(filterchain); 
+            if (indexOfItem != -1 && optionType == FfmpegMergeOptionType.NewWins)
+            {
+                FilterchainList.RemoveAt(indexOfItem);
+                FilterchainList.Insert(indexOfItem, filterchain);
+            }
+            else if (indexOfItem == -1)
+            {
+                FilterchainList.Add(filterchain);       
+            }
+
+            return this;
+        }
+
         /// <summary>
         /// removes the Filterchain at the given index from the Filtergraph
         /// </summary>

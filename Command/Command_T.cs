@@ -14,7 +14,7 @@ using log4net;
 
 namespace Hudl.Ffmpeg.Command
 {
-    public class Command<TOutput>
+    public partial class Command<TOutput>
         where TOutput : IResource
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Command<TOutput>).Name);
@@ -540,30 +540,8 @@ namespace Hudl.Ffmpeg.Command
             return resources.Select(r => ApplyFilter(filterchain, r)).ToList(); 
         }
 
-        public void SetResolution(IResolutionTemplate resolutionTemplate)
-        {
-            //assign the resolution template to all input resources as the first line of filterchain
-            var allInputReceipts = GetResourceReceipts(); 
-            allInputReceipts.ForEach(receipt => resolutionTemplate.Filterchains.ForEach(filterchain =>
-                {
-                    var newFilterchain = filterchain.Copy<IResource>();
-                    newFilterchain.SetResources(receipt);
-                    var newReceipt = new CommandResourceReceipt(Parent.Id, Id, newFilterchain.Output.Resource.Map);  
-                    Filtergraph.FilterchainList.ForEach(otherFilterchain =>
-                        {
-                            if (otherFilterchain.ResourceList.Any(r => r.Map == receipt.Map))
-                            {
-                                var currentIndex = otherFilterchain.ResourceList.FindIndex(r => r.Map == receipt.Map);
-                                otherFilterchain.ResourceList[currentIndex] = newReceipt;
-                            }
-                        });
-                    Filtergraph.FilterchainList.Insert(0, newFilterchain);
-                }));
-
-            //assign and merge the output resolutio settings for the resolution saying that the new wins 
-            Output.Settings.MergeRange(resolutionTemplate.OutputSettings, FfmpegMergeOptionType.NewWins);
-        }
-
+        
+        
         /// <summary>
         /// Renders the command stream with the defualt command processor
         /// </summary>
@@ -689,6 +667,38 @@ namespace Hudl.Ffmpeg.Command
 
             return CommandList.FirstOrDefault(c => receipt.Map == c.Output.Resource.Map);
         }
+        internal Filterchain<IResource> FilterchainFromReceipt(CommandResourceReceipt receipt)
+        {
+            if (receipt == null)
+            {
+                throw new ArgumentNullException("receipt");
+            }
+
+            return Filtergraph.FilterchainList.FirstOrDefault(f => f.Output.Resource.Map == receipt.Map);
+        }
+        internal CommandResource<IResource> GetCommandResource(CommandResourceReceipt receipt)
+        {
+            return ResourcesFromReceipts(receipt).FirstOrDefault();
+        }
+        internal CommandResourceReceipt RegenerateResourceMap(CommandResourceReceipt receipt)
+        {
+            if (receipt.FactoryId != Parent.Id ||
+                receipt.CommandId != Id)
+            {
+                throw new InvalidOperationException("Receipt is not a part of this command.");
+            }
+
+            var resource = ResourceList.FirstOrDefault(r => r.Resource.Map == receipt.Map);
+            if (resource == null)
+            {
+                throw new InvalidOperationException("Receipt is not a part of this command.");
+            }
+
+            resource.Resource.Map = Helpers.NewMap();
+
+            return resource.GetReciept();
+        }
+
         #endregion
 
         #region Utility
@@ -716,7 +726,7 @@ namespace Hudl.Ffmpeg.Command
             return maximumAllowedMinimum > 1 || (maximumAllowedMinimum == 1 && resources.Count == 1);
         }
         private void ProcessFilters<TResource>(Filterchain<TResource> filterchain)
-            where TResource : IResource
+            where TResource : IResource, new()
         {
             if (filterchain == null)
             {

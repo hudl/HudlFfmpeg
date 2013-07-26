@@ -16,6 +16,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <param name="filterchain">The Filterchain parent that the filter is part of</param>
         void PrepCommands<TOutput, TResource>(Command<TOutput> command, Filterchain<TResource> filterchain)
             where TOutput : IResource
-            where TResource : IResource;
+            where TResource : IResource, new();
     }
 }

@@ -56,6 +56,41 @@ namespace Hudl.Ffmpeg.BaseTypes
             return List.Any(f => f.GetType().IsAssignableFrom(itemType));
         }
 
+        public int IndexOf<TItem>()
+            where TItem : TCollection
+        {
+            return List.FindIndex(f => f is TItem);
+        }
+
+        public int IndexOf<TItem>(TItem item)
+            where TItem : TCollection
+        {
+            var itemType = item.GetType();
+            return List.FindIndex(f => f.GetType().IsAssignableFrom(itemType));
+        }
+
+        public AppliesToCollection<TCollection> Merge<TItem>(TItem item, FfmpegMergeOptionType optionType)
+            where TItem : TCollection
+        {
+            var applierType = item.GetType();
+            if (!Validate.AppliesTo(applierType, _restrictedType))
+            {
+                throw new AppliesToInvalidException(applierType, _restrictedType); 
+            }
+            var indexOfItem = IndexOf(item); 
+            if (indexOfItem != -1 && optionType == FfmpegMergeOptionType.NewWins)
+            {
+                List.RemoveAt(indexOfItem);
+                List.Insert(indexOfItem, item);
+            }
+            else if (indexOfItem == -1)
+            {
+                List.Add(item);       
+            }
+
+            return this;
+        }
+
         public AppliesToCollection<TCollection> Add<TItem>(TItem item)
             where TItem : TCollection
         {
@@ -92,6 +127,12 @@ namespace Hudl.Ffmpeg.BaseTypes
                 List.RemoveAll(f => f is TItem);
             }
             return this;
+        }
+
+        public TItem Get<TItem>()
+            where TItem : class, TCollection
+        {
+            return List.First(f => f is TItem) as TItem;
         }
 
         public AppliesToCollection<TCollection> RemoveAt(int index)

@@ -20,7 +20,7 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
             Transition = FadeTransitionType.In;
-            Unit = FadeVideoUnitType.Seconds;
+            Unit = VideoUnitType.Seconds;
         }
         public Fade(FadeTransitionType transition, double duration)
             : this() 
@@ -38,7 +38,7 @@ namespace Hudl.Ffmpeg.Filters
 
         public double? OverrideStartAt { get; set; }
 
-        public FadeVideoUnitType Unit { get; set; }
+        public VideoUnitType Unit { get; set; }
 
         public FadeTransitionType Transition { get; set; }
 
@@ -58,7 +58,7 @@ namespace Hudl.Ffmpeg.Filters
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit)
             {
-                case FadeVideoUnitType.Frames:
+                case VideoUnitType.Frames:
                     filter.AppendFormat(":s={0}:n={1}",
                         startAtLocation,
                         Duration);
