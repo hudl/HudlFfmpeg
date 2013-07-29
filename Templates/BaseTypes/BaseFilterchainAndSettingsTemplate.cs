@@ -43,6 +43,11 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
             return filterchainAndSettingsTemplate.BaseFilterchain;
         }
 
+        public static implicit operator Filterchain<IResource>(BaseFilterchainAndSettingsTemplate<TOutput> filterchainAndSettingsTemplate)
+        {
+            return filterchainAndSettingsTemplate.BaseFilterchain;
+        }
+
         public static implicit operator SettingsCollection(BaseFilterchainAndSettingsTemplate<TOutput> filterchainAndSettingsTemplate)
         {
             return filterchainAndSettingsTemplate.BaseSettings;

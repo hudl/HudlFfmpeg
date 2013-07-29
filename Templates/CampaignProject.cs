@@ -109,7 +109,7 @@ namespace Hudl.Ffmpeg.Templates
             //FILTERS/SETTINGS
             var resolutionTemplate480 = new Resolution480P<Mp4>();
             var filterchain480Mp42 = Filterchain.FilterTo<Mp4>(
-                new Crossfade(TimeSpan.FromSeconds(1))
+                new Crossfade(TimeSpan.FromSeconds(1), resolutionTemplate480)
             );
             var filterchain480Mp43 = Filterchain.FilterTo<Mp4>(
                 new Concat()

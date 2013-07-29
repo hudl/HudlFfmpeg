@@ -19,10 +19,11 @@ namespace Hudl.Ffmpeg.Filters.Templates
             new OverwriteOutput(), 
             new VCodec(VideoCodecType.Copy));
 
-        public Crossfade(TimeSpan duration)
+        public Crossfade(TimeSpan duration, Filterchain<IResource> resolutionFilterchain)
         {
             Duration = duration;
             Option = BlendVideoOptionType.all_expr;
+            ResolutionFilterchain = resolutionFilterchain;
         }
 
         private TimeSpan _duration; 
@@ -40,6 +41,8 @@ namespace Hudl.Ffmpeg.Filters.Templates
             }
         }
 
+        private Filterchain<IResource> ResolutionFilterchain { get; set; }
+
         public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
             return Duration;
@@ -49,6 +52,12 @@ namespace Hudl.Ffmpeg.Filters.Templates
             where TOutput : IResource
             where TResource : IResource, new()
         {
+            //verify that we have a resolution filterchain 
+            if (ResolutionFilterchain == null)
+            {
+                throw new InvalidOperationException("A resolution is required for the cross fade command, because of the Blend filter.");
+            }
+
             double resourceToLength;
             double resourceFromLength;
             Filterchain<IResource> filterchainCutupTransitionTo = null;
@@ -178,11 +187,19 @@ namespace Hudl.Ffmpeg.Filters.Templates
             command.Filtergraph.Add(filterchainCutupTransitionTo);
             command.Filtergraph.Merge(filterchainCutupBodyTo, FfmpegMergeOptionType.NewWins);
             
-            //assign new receipts to the input filterchain
             var transitionToReceipt = new CommandResourceReceipt(command.Parent.Id, command.Id, filterchainCutupTransitionTo.Output.Resource.Map);  
             var transitionFromReceipt = new CommandResourceReceipt(command.Parent.Id, command.Id, filterchainCutupTransitionFrom.Output.Resource.Map);
+            var filterchainCopyTo = ResolutionFilterchain.Copy<TResource>();
+            var filterchainCopyFrom = ResolutionFilterchain.Copy<TResource>();
+            filterchainCopyTo.SetResources(transitionToReceipt);
+            filterchainCopyFrom.SetResources(transitionFromReceipt);
+            command.Filtergraph.Add(filterchainCopyTo);
+            command.Filtergraph.Add(filterchainCopyFrom);
 
-            filterchain.SetResources(transitionToReceipt, transitionFromReceipt);
+            //assign new receipts to the input filterchain
+            var toReceipt = new CommandResourceReceipt(command.Parent.Id, command.Id, filterchainCopyTo.Output.Resource.Map);
+            var fromReceipt = new CommandResourceReceipt(command.Parent.Id, command.Id, filterchainCopyFrom.Output.Resource.Map);
+            filterchain.SetResources(toReceipt, fromReceipt);
         }
     }
 }
