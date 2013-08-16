@@ -149,6 +149,7 @@
     <Compile Include="Templates\BaseTypes\BaseSettingsTemplate.cs" />
     <Compile Include="Templates\BaseTypes\BaseFilterchainAndSettingsTemplate.cs" />
     <Compile Include="Templates\CampaignProject.cs" />
+    <Compile Include="Templates\VideoConversionProject.cs" />
     <Compile Include="Templates\VideoCutTo.cs" />
     <Compile Include="Templates\Resolution1080P.cs" />
     <Compile Include="Templates\Resolution240P.cs" />

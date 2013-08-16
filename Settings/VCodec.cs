@@ -13,7 +13,7 @@ namespace Hudl.Ffmpeg.Settings
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class VCodec : BaseSetting
     {
-        private const string SettingType = "-vcodec";
+        private const string SettingType = "-c:v";
 
         public VCodec(string codec)
             : base(SettingType)

@@ -16,72 +16,40 @@ using Hudl.Ffmpeg.Templates.BaseTypes;
 namespace Hudl.Ffmpeg.Templates
 {
     /// <summary>
-    /// CampaignProject is the template base for fundraising campaign videos and audio. it outputs the following 
-    ///   - Campaign m4a (AAC Interview audio) 
+    /// VideoTranscodingProject is the template base for transcoding video
+    ///   - Video To XXX Format
     ///   - Campaign Jpg (campaign image) 
     ///   - Campaign mp4 (480p resolution w/audio)
     ///   - Campaign mp4 (240p resolution w/audio)
     /// </summary>
-    public class CampaignProject : BaseCommandFactoryTemplate
+    public class VideoTranscodingProject<TOutput> : BaseCommandFactoryTemplate
+        where TOutput : class, IVideo
     {
-        private const string BlendExpression = "A*(6/10)+B*(1-(6/10))";
-        private readonly M4A _musicBackground; 
-        private readonly Mp3 _musicSilence;
-        private readonly Mp4 _videoFilmGrain;
-        private readonly Png _imageVignette;
-
-        private readonly FfmpegScaleRgb _shadows = new FfmpegScaleRgb
-        {
-            Blue = new FfmpegScale(.2M)
-        };
-        private readonly FfmpegScaleRgb _midtones = new FfmpegScaleRgb
-        {
-            Red = new FfmpegScale(.1M),
-            Blue = new FfmpegScale(-.1M)
-        };
-        private readonly FfmpegScaleRgb _highlights = new FfmpegScaleRgb
-        {
-            Red = new FfmpegScale(.1M),
-            Blue = new FfmpegScale(-.2M)
-        };
-       
-        public CampaignProject(CommandConfiguration configuration, M4A assetMusic, Mp3 assetSilence, Mp4 assetVideo, Png assetImage)
+        public VideoTranscodingProject(CommandConfiguration configuration)
             : base(configuration)
         {
-            _musicBackground = assetMusic;
-            _musicSilence = assetSilence; 
-            _videoFilmGrain = assetVideo;
-            _imageVignette = assetImage;
         }
 
         protected override void SetupTemplate()
         {
             if (VideoList.Count == 0)
             {
-                throw new InvalidOperationException("Cannot create a campaign project with an empty video list.");
-            }
-            if (AudioList.Count == 0)
-            {
-                throw new InvalidOperationException("Cannot create a campaign project with an empty audio list.");
+                throw new InvalidOperationException("Cannot create a transcoding project with an empty video list.");
             }
 
             // **********************************
-            // Campaign XXX => MP4 (AAC Interview audio) 
+            // Transcoding XXX => TOutput  
             // **********************************
             var videoConversion = Factory.CreateOutput<Mp4>();
             var videoConversionReceipts = VideoList.Select(videoConversion.Add).ToList();
 
-            //FILTERS/SETTINGS
-            var videoConversionSettings = SettingsCollection.ForOutput(
+            var outputSettingsMp3ToM4A = SettingsCollection.ForOutput(
+                new TrimShortest(),
                 new OverwriteOutput(),
-                new VCodec(VideoCodecType.Libx264)
+                new AudioBitRate(125),
+                new VCodec(AudioCodecType.Copy)
+                new ACodec(AudioCodecType.Copy)
             );
-
-            //FILTER APPLICATION
-            videoConversion.Output.Settings = videoConversionSettings;
-
-            Factory.AddToResources(videoConversion);
-            #endregion
 
 
             // **********************************

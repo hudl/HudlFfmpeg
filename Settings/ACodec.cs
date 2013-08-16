@@ -14,7 +14,7 @@ namespace Hudl.Ffmpeg.Settings
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class ACodec : BaseSetting
     {
-        private const string SettingType = "-acodec";
+        private const string SettingType = "-c:a";
 
         public ACodec(string codec)
             : base(SettingType)

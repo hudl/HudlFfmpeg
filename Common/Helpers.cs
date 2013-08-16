@@ -78,6 +78,31 @@ namespace Hudl.Ffmpeg.Common
         }
 
         /// <summary>
+        /// gets the extension from a full name base
+        /// </summary>
+        public static string GetExtensionFromFullName(string fullName)
+        {
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                throw new ArgumentException("Full name cannot be empty", "fullName");
+            }
+
+            var queryStringIndex = fullName.IndexOf("?", StringComparison.Ordinal);
+            if (queryStringIndex != -1)
+            {
+                fullName = fullName.Substring(0, queryStringIndex);
+            }
+
+            var finalIndex = fullName.LastIndexOf(".", StringComparison.Ordinal); 
+            if (queryStringIndex != -1)
+            {
+                fullName = fullName.Substring(finalIndex + 1);
+            }
+
+            return fullName;
+        }
+
+        /// <summary>
         /// calculates the real time length based on the contents
         /// </summary>
         public static double GetLength(CommandResource<IResource> commandResource)
