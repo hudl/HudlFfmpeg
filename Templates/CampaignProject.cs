@@ -65,22 +65,37 @@ namespace Hudl.Ffmpeg.Templates
                 throw new InvalidOperationException("Cannot create a campaign project with an empty audio list.");
             }
 
+           
             // **********************************
-            // Campaign XXX => MP4 (AAC Interview audio) 
+            // Campaign XXX => MP4 Conversion 
             // **********************************
-            var videoConversion = Factory.CreateOutput<Mp4>();
-            var videoConversionReceipts = VideoList.Select(videoConversion.Add).ToList();
+            #region ...
+            for (var i = 0; i < VideoList.Count; i++)
+            {
+                if (VideoList[i] is Mp4)
+                {
+                    continue;
+                }
 
-            //FILTERS/SETTINGS
-            var videoConversionSettings = SettingsCollection.ForOutput(
-                new OverwriteOutput(),
-                new VCodec(VideoCodecType.Libx264)
-            );
+                var videoConversion = Factory.CreateOutput<Mp4>();
+               
+                videoConversion.Add(VideoList[i]); 
 
-            //FILTER APPLICATION
-            videoConversion.Output.Settings = videoConversionSettings;
+                //FILTERS/SETTINGS
+                var videoConversionSettings = SettingsCollection.ForOutput(
+                    new OverwriteOutput(),
+                    new BitRate(3000),
+                    new FrameRate(29.97),
+                    new VCodec(VideoCodecType.Libx264)
+                );
 
-            Factory.AddToResources(videoConversion);
+                //FILTER APPLICATION
+                videoConversion.Output.Settings = videoConversionSettings;
+
+                Factory.AddToResources(videoConversion);
+
+                VideoList[i] = videoConversion.Output.GetOutput();
+            }
             #endregion
 
 

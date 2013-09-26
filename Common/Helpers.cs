@@ -93,8 +93,8 @@ namespace Hudl.Ffmpeg.Common
                 fullName = fullName.Substring(0, queryStringIndex);
             }
 
-            var finalIndex = fullName.LastIndexOf(".", StringComparison.Ordinal); 
-            if (queryStringIndex != -1)
+            var finalIndex = fullName.LastIndexOf(".", StringComparison.Ordinal);
+            if (finalIndex != -1)
             {
                 fullName = fullName.Substring(finalIndex + 1);
             }

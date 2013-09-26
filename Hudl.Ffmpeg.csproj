@@ -107,6 +107,7 @@
     <Compile Include="Filters\Movie.cs" />
     <Compile Include="Filters\Overlay.cs" />
     <Compile Include="Filters\Scale.cs" />
+    <Compile Include="Resources\Wmv.cs" />
     <Compile Include="Resources\Jpg.cs" />
     <Compile Include="Resources\Png.cs" />
     <Compile Include="Resources\Resource.cs" />
@@ -149,7 +150,6 @@
     <Compile Include="Templates\BaseTypes\BaseSettingsTemplate.cs" />
     <Compile Include="Templates\BaseTypes\BaseFilterchainAndSettingsTemplate.cs" />
     <Compile Include="Templates\CampaignProject.cs" />
-    <Compile Include="Templates\VideoConversionProject.cs" />
     <Compile Include="Templates\VideoCutTo.cs" />
     <Compile Include="Templates\Resolution1080P.cs" />
     <Compile Include="Templates\Resolution240P.cs" />

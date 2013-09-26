@@ -65,21 +65,21 @@ namespace Hudl.Ffmpeg.Resources
         /// </summary>
         public static IVideo VideoFrom(string fullPath)
         {
-            VideoFrom(fullPath, TimeSpan.FromSeconds(0));
+            return VideoFrom(fullPath, TimeSpan.FromSeconds(0));
         }
         /// <summary>
         /// Creates a new resource with the full path name provided.
         /// </summary>
         public static IAudio AudioFrom(string fullPath)
         {
-            AudioFrom(fullPath, TimeSpan.FromSeconds(0));
+            return AudioFrom(fullPath, TimeSpan.FromSeconds(0));
         }
         /// <summary>
         /// Creates a new resource with the full path name provided.
         /// </summary>
         public static IImage ImageFrom(string fullPath)
         {
-            ImageFrom(fullPath, TimeSpan.FromSeconds(0));
+            return ImageFrom(fullPath, TimeSpan.FromSeconds(0));
         }
 
         /// <summary>
