@@ -8,15 +8,9 @@ namespace Hudl.Ffmpeg.Command
     /// <summary>
     /// Represents a single resource file for a command. 
     /// </summary>
-    /// <typeparam name="TResource">The resource type</typeparam>
-    public class CommandResource<TResource>
-        where TResource : IResource
+    public class CommandResourcev2
     {
-        internal CommandResource(Command<IResource> parent, TResource resource)
-            : this(parent, SettingsCollection.ForInput(), resource)
-        {
-        }
-        internal CommandResource(Command<IResource> parent, SettingsCollection settings, TResource resource)
+        private CommandResourcev2(IResource resource, SettingsCollection settings)
         {
             if (settings == null)
             {
@@ -31,16 +25,25 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentException("CommandResource only accepts input settings collections");
             }
 
-            Parent = parent;
             Resource = resource;
             Settings = settings;
             Id = Guid.NewGuid().ToString();
+        }
+        
+        public static CommandResourcev2 Create(IResource resource)
+        {
+            return Create(resource, SettingsCollection.ForInput());
+        }
+
+        public static CommandResourcev2 Create(IResource resource, SettingsCollection settings)
+        {
+            return new CommandResourcev2(resource, settings);
         }
 
         /// <summary>
         /// the resource input file that is part of the command.
         /// </summary>
-        public TResource Resource { get; set; }
+        public IResource Resource { get; set; }
 
         /// <summary>
         /// the collection of settings that apply to this input
@@ -51,14 +54,15 @@ namespace Hudl.Ffmpeg.Command
         /// returns a receipt for the command resource
         /// </summary>
         /// <returns></returns>
-        public CommandResourceReceipt GetReciept()
+        public CommandReceipt GetReceipt()
         {
-            return new CommandResourceReceipt(Parent.Parent.Id, Parent.Id, Resource.Map);
+            return CommandReceipt.CreateFromInput(Owner.Owner.Id, Owner.Id, Resource.Map);
         }
+
 
         #region Internals
         internal string Id { get; set; }
-        internal Command<IResource> Parent { get; set; }
+        internal Commandv2 Owner { get; set; }
         #endregion
     }
 }

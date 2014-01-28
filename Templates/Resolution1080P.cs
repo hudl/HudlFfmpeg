@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters;
-using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
@@ -9,11 +8,10 @@ using Hudl.Ffmpeg.Templates.BaseTypes;
 
 namespace Hudl.Ffmpeg.Templates
 {
-    public class Resolution1080P<TResource> : BaseFilterchainAndSettingsTemplate<TResource>
-        where TResource : IVideo, new()
+    public class Resolution1080P : BaseFilterchainAndSettingsTemplate
     {
-        public Resolution1080P()
-            : base(SettingsCollectionResourceType.Output)
+        private Resolution1080P(IResource resourceToUse)
+            : base(resourceToUse, SettingsCollectionResourceType.Output)
         {
             BaseFilterchain.Filters.AddRange(
                 new Scale(ScalePresetType.Hd1080),
@@ -25,6 +23,21 @@ namespace Hudl.Ffmpeg.Templates
                 new Dimensions(ScalePresetType.Hd1080),
                 new AspectRatio(new FfmpegRatio(16, 9)))
             );
+        }
+
+        public static Resolution1080P Create<TResource>()
+            where TResource : IVideo, new()
+        {
+            return Create(new TResource());
+        }
+        public static Resolution1080P Create(IResource resourceToUse)
+        {
+            if (resourceToUse == null)
+            {
+                throw new ArgumentNullException("resourceToUse");
+            }
+
+            return new Resolution1080P(resourceToUse);
         }
     }
 }

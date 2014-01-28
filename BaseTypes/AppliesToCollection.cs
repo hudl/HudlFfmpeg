@@ -149,6 +149,16 @@ namespace Hudl.Ffmpeg.BaseTypes
             return this;
         }
 
+        public TCollection LastOrDefault()
+        {
+            return List.LastOrDefault(); 
+        }
+
+        public TCollection FirstOrDefault()
+        {
+            return List.FirstOrDefault();
+        }
+
         #region Internals
         internal List<TCollection> List { get; set; }
         #endregion

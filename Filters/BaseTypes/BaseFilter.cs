@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
+//TODO:CB --> figure out what to do with additional calls here, they are far from optimal 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
     /// <summary>
@@ -31,16 +32,16 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Available at [Render] time, brings the resources as available objects to the filters
         /// </summary>
-        protected List<CommandResource<IResource>> CommandResources { get; set; }
+        protected List<CommandResourcev2> CommandResources { get; set; }
 
         /// <summary>
         /// Method, called during [Render] to bring forward all the necessary resources, necessary action for maximum abstraction from the user.
         /// </summary>
         /// <param name="command">The command chain the current filter belongs to.</param>
         /// <param name="filterchain">The filterchain that the filter belongs to</param>
-        public void Setup(Command<IResource> command, Filterchain<IResource> filterchain) 
+        public void Setup(Commandv2 command, Filterchainv2 filterchain)
         {
-            CommandResources = command.ResourcesFromReceipts(new List<CommandResourceReceipt>(filterchain.Resources));
+            CommandResourcesv2 = command.ResourcesFromReceipts(new List<CommandReceipt>(filterchain.Resources));
 
             if (CommandResources.Count == 0)
             {
@@ -55,7 +56,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Quick way to calculate the output length after a filter has been applied.
         /// </summary>
-        public virtual TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        public virtual TimeSpan? LengthFromInputs(List<CommandResourcev2> resources)
         {
             var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);
             return totalSeconds > 0d

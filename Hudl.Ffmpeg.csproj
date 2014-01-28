@@ -55,13 +55,18 @@
     <Compile Include="Command\CmdProcessorReciever.cs" />
     <Compile Include="Command\CommandBuilder.cs" />
     <Compile Include="Command\CommandFactory.cs" />
+    <Compile Include="Command\CommandObjects.cs" />
     <Compile Include="Command\CommandProcessorStatus.cs" />
-    <Compile Include="Command\Command_T.cs" />
-    <Compile Include="Command\CommandResource.cs" />
-    <Compile Include="Command\CommandResourceReceiptc.cs" />
+    <Compile Include="Command\Commandv2.cs" />
+    <Compile Include="Command\CommandResourcev2.cs" />
+    <Compile Include="Command\CommandReceipt.cs" />
     <Compile Include="Command\CommandOutput.cs" />
     <Compile Include="Command\Command.cs" />
     <Compile Include="Command\CommandConfiguration.cs" />
+    <Compile Include="Command\CommandReceiptType.cs" />
+    <Compile Include="Command\Managers\Commandv2FilterchainManager.cs" />
+    <Compile Include="Command\Managers\Commandv2OutputManager.cs" />
+    <Compile Include="Command\Managers\Commandv2ResourceManager.cs" />
     <Compile Include="Common\AudioCodecType.cs" />
     <Compile Include="Common\BlendVideoOptionType.cs" />
     <Compile Include="Common\BlendVideoModeType.cs" />
@@ -86,19 +91,22 @@
     <Compile Include="Filters\AFade.cs" />
     <Compile Include="Filters\AMix.cs" />
     <Compile Include="Filters\BaseTypes\BaseFilter.cs" />
+    <Compile Include="Filters\BaseTypes\FilterchainOutputv2.cs" />
+    <Compile Include="Filters\BaseTypes\Filterchainv2.cs" />
+    <Compile Include="Filters\BaseTypes\IFilterMultiOutput.cs" />
     <Compile Include="Filters\BaseTypes\FIlterchain.cs" />
-    <Compile Include="Filters\BaseTypes\FilterchainOutput.cs" />
     <Compile Include="Filters\BaseTypes\IFilterValidator.cs" />
-    <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
-    <Compile Include="Filters\BaseTypes\Filterchain_T.cs" />
+    <Compile Include="Filters\BaseTypes\Filtergraphv2.cs" />
     <Compile Include="Filters\BaseTypes\IFilter.cs" />
     <Compile Include="Filters\BaseTypes\IFilterProcessor.cs" />
     <Compile Include="Filters\Blend.cs" />
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
     <Compile Include="Filters\AMovie.cs" />
+    <Compile Include="Filters\Split.cs" />
     <Compile Include="Filters\Trim.cs" />
     <Compile Include="Filters\SetPts.cs" />
+    <Compile Include="Filters\Utilities.cs" />
     <Compile Include="Obsolete\Obsolete.cs" />
     <Compile Include="Filters\Templates\Crossfade.cs" />
     <Compile Include="Filters\Volume.cs" />
@@ -161,6 +169,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\..\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\..\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

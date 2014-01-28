@@ -11,7 +11,7 @@ namespace Hudl.Ffmpeg.Common
     /// <summary>
     /// helper class that helps with validation of objects in a ffmpeg project
     /// </summary>
-    internal class Helpers
+    internal partial class Helpers
     {
         /// <summary>
         /// returns a list of scaling presets for ffmpeg.
@@ -102,47 +102,9 @@ namespace Hudl.Ffmpeg.Common
             return fullName;
         }
 
-        /// <summary>
-        /// calculates the real time length based on the contents
-        /// </summary>
-        public static double GetLength(CommandResource<IResource> commandResource)
-        {
-            if (commandResource == null)
-            {
-                throw new ArgumentNullException("commandResource");
-            }
+     
 
-            var resourceDefaultLength = commandResource.Resource.Length.TotalSeconds;
-            var resourceSettingsLength = 0d; 
-            if (commandResource.Settings.Count > 0)
-            {
-                resourceSettingsLength = commandResource.Settings.Items.Min(s =>
-                {
-                    var lengthFromInputs = s.LengthFromInputs(new List<CommandResource<IResource>> { commandResource });
-                    return lengthFromInputs.HasValue ? lengthFromInputs.Value.TotalSeconds : 0D;
-                });
-            }
-            return resourceSettingsLength > 0d
-                       ? resourceSettingsLength
-                       : resourceDefaultLength;
-        }
-        
-        /// <summary>
-        /// calculates the real time length based on the contents
-        /// </summary>
-        public static double GetLength(List<CommandResource<IResource>> resourceList)
-        {
-            if (resourceList == null)
-            {
-                throw new ArgumentNullException("resourceList");
-            }
-            return resourceList.Sum(cr => GetLength(cr)); 
-        }
-        
-        /// <summary>
-        /// calculates the real time length based on the contents
-        /// </summary>
-        public static double GetLength(Command<IResource> command)
+        public static double GetLength(Commandv2 command)
         {
             if (command == null)
             {
@@ -160,10 +122,11 @@ namespace Hudl.Ffmpeg.Common
         }
         
 
+        
         /// <summary>
         /// calculates the real time length based on the contents
         /// </summary>
-        public static double GetLength(Command<IResource> command, Filterchain<IResource> filterchain)
+        public static double GetLength(Commandv2 command, Filterchainv2 filterchain)
         {
             if (command == null)
             {
@@ -171,44 +134,30 @@ namespace Hudl.Ffmpeg.Common
             }
             if (filterchain == null)
             {
-                throw new ArgumentNullException("command");
+                throw new ArgumentNullException("filterchain");
             }
 
             var finalFilterLength = 0d;
-            var calculatedFilterOutputDictionary = new Dictionary<string, CommandResource<IResource>>();
-            var calculatedPrepOutputDictionary = new Dictionary<string, CommandResource<IResource>>();
-            var filterchainIndex = command.Filtergraph.FilterchainList.FindIndex(f => f.Output.Resource.Map == filterchain.Output.Resource.Map);
+            var calculatedFilterOutputDictionary = new Dictionary<string, CommandResourcev2>();
+            var filterchainIndex = command.FiltergraphObject.FilterchainList.FindIndex(f => 
+                filterchain.OutputList.Any(output => f.Output.Resource.Map == output.Resource.Map));
 
-            if (command.CommandList.Count > 0)
-            {
-                command.CommandList.ForEach(c =>
-                    {
-                        var commandOutputLength = GetLength(c);
-                        var newResource = c.Output.Resource.Copy<IResource>();
-                        newResource.Length = TimeSpan.FromSeconds(commandOutputLength);
-                        var newCommandResource = new CommandResource<IResource>(c, newResource);
-                        calculatedPrepOutputDictionary.Add(c.Output.Resource.Map, newCommandResource);
-                    });    
-            }
 
-            command.Filtergraph.FilterchainList
+            command.FiltergraphObject.FilterchainList
                 .GetRange(0, filterchainIndex + 1)
                 .ForEach(filter =>
                 {
-                    var resourceList = new List<CommandResource<IResource>>();
+                    var resourceList = new List<CommandResourcev2>();
                     var filterlistMaps = filter.ResourceList.Select(f => f.Map).ToList();
                     var commandOnlyResourcesFromReceiptsRaw = command.CommandOnlyResourcesFromReceipts(filter.ResourceList);
                     var commandOnlyResourcesFromReceipts = commandOnlyResourcesFromReceiptsRaw.Select(r =>
-                        {
-                            if (calculatedPrepOutputDictionary.ContainsKey(r.Resource.Map))
-                            {
-                                return calculatedPrepOutputDictionary[r.Resource.Map];
-                            }
-                            var newLength = GetLength(r);
-                            var newResource = r.Resource.Copy<IResource>();
-                            newResource.Length = TimeSpan.FromSeconds(newLength);
-                            return new CommandResource<IResource>(r.Parent, newResource);
-                        }).ToList();
+                    {
+                        var newLength = GetLength(r);
+                        var newResource = r.Resource.Copy<IResource>();
+                        newResource.Length = TimeSpan.FromSeconds(newLength);
+                        return new CommandResource<IResource>(r.Parent, newResource);
+                    }).ToList();
+
                     var filterOnlyResourceFromReceipts = calculatedFilterOutputDictionary.Where(r => filterlistMaps.Contains(r.Key))
                                                                                          .Select(r => r.Value).ToList();
 
@@ -220,7 +169,7 @@ namespace Hudl.Ffmpeg.Common
                     {
                         resourceList.AddRange(filterOnlyResourceFromReceipts);
                     }
-                   
+
                     var filterLength = filter.Filters.Items.First().LengthFromInputs(resourceList);
                     finalFilterLength = filterLength.HasValue ? filterLength.Value.TotalSeconds : 0d;
                     filter.Output.Length = filterLength.HasValue ? filterLength.Value : TimeSpan.FromSeconds(0);
@@ -231,6 +180,7 @@ namespace Hudl.Ffmpeg.Common
 
             return finalFilterLength;
         }
+
 
         /// <summary>
         /// escapes the path of the provided resource.
@@ -249,6 +199,7 @@ namespace Hudl.Ffmpeg.Common
         /// <summary>
         /// Breaks does command receipts into divisable subsets that then can be used to apply filters in chunks that ffmpeg will accept. while still abstracting from the user.
         /// </summary>
+        [Obsolete("BreakReceipts is obsolete, use BreakReceipts with CommandReceipt resources.")]
         public static List<CommandResourceReceipt[]> BreakReceipts(int division, params CommandResourceReceipt[] resources)
         {
             if (resources == null)
@@ -272,6 +223,37 @@ namespace Hudl.Ffmpeg.Common
                                     : resourcesRemainderCount;
                 resourcesRemainderCount -= length;
                 breakouts.Add(resources.SubArray(1 + (index * subDivision), length));
+            }
+
+            return breakouts;
+        }
+        
+        /// <summary>
+        /// Breaks does command receipts into divisable subsets that then can be used to apply filters in chunks that ffmpeg will accept. while still abstracting from the user.
+        /// </summary>
+        public static List<CommandReceipt[]> BreakReceipts(int division, params CommandReceipt[] receipts)
+        {
+            if (receipts == null)
+            {
+                throw new ArgumentNullException("receipts");
+            }
+
+            var index = 0;
+            var subDivision = division - 1;
+            var breakouts = new List<CommandReceipt[]>();
+            var resourcesRemainderCount = receipts.Length;
+            resourcesRemainderCount -= (resourcesRemainderCount > division)
+                                            ? division
+                                            : receipts.Length;
+            breakouts.Add(receipts.SubArray(0, division));
+            while (resourcesRemainderCount > 0)
+            {
+                index++;
+                var length = (resourcesRemainderCount > subDivision)
+                                    ? subDivision
+                                    : resourcesRemainderCount;
+                resourcesRemainderCount -= length;
+                breakouts.Add(receipts.SubArray(1 + (index * subDivision), length));
             }
 
             return breakouts;

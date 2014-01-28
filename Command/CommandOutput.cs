@@ -6,23 +6,10 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Command
 {
-    public class CommandOutput<TResource>
-        where TResource : IResource
+    public class CommandOutput
     {
-        internal CommandOutput(Command<TResource> parent, TResource outputToUse)
-            : this(parent, outputToUse, SettingsCollection.ForOutput(), true)
+        private CommandOutput(IResource outputToUse, SettingsCollection outputSettings, bool export)
         {
-        }
-        internal CommandOutput(Command<TResource> parent, TResource outputToUse, SettingsCollection outputSettings)
-            : this(parent, outputToUse, outputSettings, true)
-        {
-        }
-        internal CommandOutput(Command<TResource> parent, TResource outputToUse, SettingsCollection outputSettings, bool export)
-        {
-            if (parent == null)
-            {
-                throw new ArgumentNullException("parent");
-            }
             if (outputSettings == null)
             {
                 throw new ArgumentNullException("outputSettings");
@@ -36,34 +23,50 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentException("CommandOutput only accepts output settings collections");
             }
 
-            Parent = parent;
             Resource = outputToUse;
             Settings = outputSettings;
             IsExported = export;
         }
 
-        public Command<TResource> Parent { get; protected set; }
-
-        public SettingsCollection Settings { get; set; }
+        public static CommandOutput Create(IResource outputToUse, SettingsCollection outputSettings)
+        {
+            return Create(outputToUse, outputSettings, true);
+        }
+        public static CommandOutput Create(IResource outputToUse, SettingsCollection outputSettings, bool export)
+        {
+            return new CommandOutput(outputToUse, outputSettings, export);
+        }
 
         public bool IsExported { get; set; }
-
+        
+        public SettingsCollection Settings { get; set; }
+        
         public TimeSpan Length
         {
             get
             {
-                return TimeSpan.FromSeconds(Helpers.GetLength(Parent));
+                return TimeSpan.FromSeconds(Helpers.GetLength(Owner));
             }
         }
 
-        public TResource GetOutput()
+        public IResource Output()
         {
             Resource.Length = Length;
             return Resource;
         }
 
+        /// <summary>
+        /// returns a receipt for the command output
+        /// </summary>
+        /// <returns></returns>
+        public CommandReceipt GetReceipt()
+        {
+            return CommandReceipt.CreateFromOutput(Owner.Owner.Id, Owner.Id, Resource.Map);
+        }
+
         #region Internals
-        internal TResource Resource { get; set; }
+        internal Commandv2 Owner { get; set; }
+        internal IResource Resource { get; set; }
         #endregion 
     }
 }

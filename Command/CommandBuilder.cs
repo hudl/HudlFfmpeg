@@ -19,30 +19,24 @@ namespace Hudl.Ffmpeg.Command
             _builderBase = new StringBuilder(100);            
         }
 
-        public void WriteCommand(Command<IResource> command)
+        public void WriteCommand(Commandv2 command)
         {
-            command.ResourceList.ForEach(WriteResource);
+            command.Objects.Inputs.ForEach(WriteResource);
 
             WriteFiltergraph(command, command.Filtergraph);
 
-            WriteOutput(command.Output);
+            command.Objects.Outputs.ForEach(WriteOutput);
 
             WriteFinish();
         }
-
-        private void WriteFinish()
-        {
-            _builderBase.AppendLine();
-        }
-
-        private void WriteResource(CommandResource<IResource> resource)
+        private void WriteResource(CommandResourcev2 resource)
         {
             if (resource == null)
             {
                 throw new ArgumentNullException("resource");
             }
 
-            var settingsData = Validate.GetSettingCollectionData(resource.Settings); 
+            var settingsData = Validate.GetSettingCollectionData(resource.Settings);
 
             WriteResourcePreSettings(resource, settingsData);
 
@@ -52,8 +46,7 @@ namespace Hudl.Ffmpeg.Command
 
             WriteResourcePostSettings(resource, settingsData);
         }
-        
-        private void WriteResourcePreSettings(CommandResource<IResource> resource, Dictionary<Type, SettingsApplicationData> settingsData)
+        private void WriteResourcePreSettings(CommandResourcev2 resource, Dictionary<Type, SettingsApplicationData> settingsData)
         {
             if (resource == null)
             {
@@ -61,18 +54,17 @@ namespace Hudl.Ffmpeg.Command
             }
 
             resource.Settings.SettingsList.ForEach(setting =>
-                {
-                    var settingInfoData = settingsData[setting.GetType()];
-                    if (settingInfoData == null) return;
-                    if (!settingInfoData.PreDeclaration) return;
-                    if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
+            {
+                var settingInfoData = settingsData[setting.GetType()];
+                if (settingInfoData == null) return;
+                if (!settingInfoData.PreDeclaration) return;
+                if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
 
-                    _builderBase.Append(" ");
-                    _builderBase.Append(setting);
-                });
+                _builderBase.Append(" ");
+                _builderBase.Append(setting);
+            });
         }
-      
-        private void WriteResourcePostSettings(CommandResource<IResource> resource, Dictionary<Type, SettingsApplicationData> settingsData)
+        private void WriteResourcePostSettings(CommandResourcev2 resource, Dictionary<Type, SettingsApplicationData> settingsData)
         {
             if (resource == null)
             {
@@ -91,8 +83,7 @@ namespace Hudl.Ffmpeg.Command
             });
 
         }
-
-        private void WriteFiltergraph(Command<IResource> command, Filtergraph filtergraph)
+        private void WriteFiltergraph(Commandv2 command, Filtergraphv2 filtergraph)
         {
             if (filtergraph == null)
             {
@@ -101,27 +92,26 @@ namespace Hudl.Ffmpeg.Command
 
             var shouldIncludeDelimitor = false;
             filtergraph.FilterchainList.ForEach(filterchain =>
+            {
+                if (shouldIncludeDelimitor)
                 {
-                    if (shouldIncludeDelimitor)
-                    {
-                        _builderBase.Append(";");
-                    }
-                    else
-                    {
-                        _builderBase.Append(" -filter_complex \"");
-                        shouldIncludeDelimitor = true; 
-                    }
+                    _builderBase.Append(";");
+                }
+                else
+                {
+                    _builderBase.Append(" -filter_complex \"");
+                    shouldIncludeDelimitor = true;
+                }
 
-                    WriteFilterchain(command, filterchain);
-                });
-         
+                WriteFilterchain(command, filterchain);
+            });
+
             if (shouldIncludeDelimitor)
             {
                 _builderBase.Append("\"");
             }
         }
-        
-        private void WriteFilterchain(Command<IResource> command, Filterchain<IResource> filterchain)
+        private void WriteFilterchain(Commandv2 command, Filterchainv2 filterchain)
         {
             if (filterchain == null)
             {
@@ -132,65 +122,50 @@ namespace Hudl.Ffmpeg.Command
 
             var shouldIncludeDelimitor = false;
             filterchain.Filters.List.ForEach(filter =>
+            {
+                if (shouldIncludeDelimitor)
                 {
-                    if (shouldIncludeDelimitor)
-                    {
-                        _builderBase.Append(",");
-                    }
-                    else
-                    {
-                        _builderBase.Append(" ");
-                        shouldIncludeDelimitor = true;
-                    }
+                    _builderBase.Append(",");
+                }
+                else
+                {
+                    _builderBase.Append(" ");
+                    shouldIncludeDelimitor = true;
+                }
 
-                    filter.Setup(command, filterchain);
-                    WriteFilter(filter);
-                });
+                filter.Setup(command, filterchain);
+                WriteFilter(filter);
+            });
 
             WriteFilterchainOut(command, filterchain);
         }
-
-        private void WriteFilter(IFilter filter)
+        private void WriteFilterchainIn(Commandv2 command, Filterchainv2 filterchain)
         {
-            if (filter == null)
-            { 
-                throw new ArgumentNullException("filter");
-            }
-
-            _builderBase.Append(filter.ToString());
-        }
-
-        private void WriteFilterchainIn(Command<IResource> command, Filterchain<IResource> filterchain)
-        {
-            filterchain.ResourceList.ForEach(resource =>
-                {
-                    _builderBase.Append(" ");
-                    var indexOfResource = command.ResourceList.FindIndex(r => r.Resource.Map == resource.Map);
-                    if (indexOfResource >= 0)
-                    {
-                        var commandResource = command.ResourceList[indexOfResource];
-                        _builderBase.Append(Formats.Map(commandResource.Resource, indexOfResource)); 
-                    }
-                    else
-                    {
-                        _builderBase.Append(Formats.Map(resource.Map));
-                    }
-                });
-        }
-
-        private void WriteFilterchainOut(Command<IResource> command, Filterchain<IResource> filterchain)
-        {
-            var filterchainIndex =
-                command.Filtergraph.FilterchainList.FindIndex(
-                    f => f.Output.Resource.Map == filterchain.Output.Resource.Map); 
-            if (filterchainIndex < command.Filtergraph.Count - 1)
+            filterchain.ReceiptList.ForEach(receipt =>
             {
                 _builderBase.Append(" ");
-                _builderBase.Append(Formats.Map(filterchain.Output.Resource));
-            }
+                var indexOfResource = command.Objects.Inputs.FindIndex(r => r.Resource.Map == receipt.Map);
+                if (indexOfResource >= 0)
+                {
+                    var commandResource = command.Objects.Inputs[indexOfResource];
+                    _builderBase.Append(Formats.Map(commandResource.Resource, indexOfResource));
+                }
+                else
+                {
+                    _builderBase.Append(Formats.Map(receipt.Map));
+                }
+            });
         }
-
-        private void WriteOutput(CommandOutput<IResource> output)
+        private void WriteFilterchainOut(Commandv2 command, Filterchainv2 filterchain)
+        {
+            var filterchainOutputs = filterchain.GetReceipts(); 
+            filterchainOutputs.ForEach(receipt =>
+                {
+                    _builderBase.Append(" ");
+                    _builderBase.Append(Formats.Map(receipt.Map));
+                });
+        }
+        private void WriteOutput(CommandOutput output)
         {
             if (output == null)
             {
@@ -201,10 +176,9 @@ namespace Hudl.Ffmpeg.Command
 
             WriteOutputSettings(output);
 
-            _builderBase.AppendFormat(" {0}", Helpers.EscapePath(output.GetOutput()));
+            _builderBase.AppendFormat(" {0}", Helpers.EscapePath(output.Output()));
         }
-
-        private void WriteOutputSettings(CommandOutput<IResource> output)
+        private void WriteOutputSettings(CommandOutput output)
         {
             if (output == null)
             {
@@ -222,6 +196,21 @@ namespace Hudl.Ffmpeg.Command
                 _builderBase.Append(" ");
                 _builderBase.Append(setting);
             });
+        }
+
+        //common 
+        private void WriteFinish()
+        {
+            _builderBase.AppendLine();
+        }
+        private void WriteFilter(IFilter filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException("filter");
+            }
+
+            _builderBase.Append(filter.ToString());
         }
 
         public override string ToString()

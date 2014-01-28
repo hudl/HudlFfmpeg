@@ -19,7 +19,7 @@ namespace Hudl.Ffmpeg.Filters.Templates
             new OverwriteOutput(), 
             new VCodec(VideoCodecType.Copy));
 
-        public Crossfade(TimeSpan duration, Filterchain<IResource> resolutionFilterchain)
+        public Crossfade(TimeSpan duration, Filterchainv2 resolutionFilterchain)
         {
             Duration = duration;
             Option = BlendVideoOptionType.all_expr;
@@ -41,16 +41,14 @@ namespace Hudl.Ffmpeg.Filters.Templates
             }
         }
 
-        private Filterchain<IResource> ResolutionFilterchain { get; set; }
+        private Filterchainv2 ResolutionFilterchain { get; set; }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        public override TimeSpan? LengthFromInputs(List<CommandResourcev2> resources)
         {
             return Duration;
         }
 
-        public void PrepCommands<TOutput, TResource>(Command<TOutput> command, Filterchain<TResource> filterchain)
-            where TOutput : IResource
-            where TResource : IResource, new()
+        public void PrepCommands(Commandv2 command, Filterchainv2 filterchain)
         {
             //verify that we have a resolution filterchain 
             if (ResolutionFilterchain == null)
@@ -60,28 +58,30 @@ namespace Hudl.Ffmpeg.Filters.Templates
 
             double resourceToLength;
             double resourceFromLength;
-            Filterchain<IResource> filterchainCutupTransitionTo = null;
-            Filterchain<IResource> filterchainCutupTransitionFrom = null;
+            Filterchainv2 filterchainCutupTransitionTo = null;
+            Filterchainv2 filterchainCutupTransitionFrom = null;
 
-            var resourceTo = command.CommandOnlyResourcesFromReceipts(filterchain.Resources[1]).FirstOrDefault();
-            var resourceFrom = command.CommandOnlyResourcesFromReceipts(filterchain.Resources[0]).FirstOrDefault();
-            var filterchainCutupBodyTo = command.FilterchainFromReceipt(filterchain.Resources[1]);
-            var filterchainCutupBodyFrom = command.FilterchainFromReceipt(filterchain.Resources[0]);
+            var receiptTo = filterchain.Resources[1];
+            var receiptFrom = filterchain.Resources[1];
+            var resourceTo = command.ResourcesFromReceipts(receiptTo).First();
+            var resourceFrom = command.ResourcesFromReceipts(receiptFrom).First();
+            var filterchainCutupBodyTo = command.FilterchainFromReceipt(receiptTo);
+            var filterchainCutupBodyFrom = command.FilterchainFromReceipt(receiptFrom);
 
             //validate that the resources in fact come from the appropriate command
-            if (resourceTo == null && filterchainCutupBodyTo == null)
+            if (resourceTo == null)
             {
                 throw new InvalidOperationException("To resource does not belong to the Command or Command Factory.");
             } 
-            if (resourceFrom == null && filterchainCutupBodyFrom == null)
+            if (resourceFrom == null)
             {
                 throw new InvalidOperationException("From resource does not belong to the Command or Command Factory.");
             } 
 
             //get the filterchain body cutup
-            if (filterchainCutupBodyTo != null)
+            if (receiptTo.Type == CommandReceiptType.Stream)
             {
-                resourceToLength = filterchainCutupBodyTo.GetOutput(command).Length.TotalSeconds;
+                resourceToLength = filterchainCutupBodyTo.Outputs(command).First().Length.TotalSeconds;
                 var hasPreExistingTrim = filterchainCutupBodyTo.Filters.Contains<Trim>();
                 if (hasPreExistingTrim)
                 {
@@ -101,9 +101,9 @@ namespace Hudl.Ffmpeg.Filters.Templates
                 resourceToLength = resourceTo.Resource.Length.TotalSeconds;
             }
 
-            if (filterchainCutupBodyFrom != null)
+            if (receiptFrom.Type == CommandReceiptType.Stream)
             {
-                resourceFromLength = filterchainCutupBodyFrom.GetOutput(command).Length.TotalSeconds;
+                resourceFromLength = filterchainCutupBodyFrom.Outputs(command).First().Length.TotalSeconds;
                 var hasPreExistingTrim = filterchainCutupBodyFrom.Filters.Contains<Trim>();
                 if (hasPreExistingTrim)
                 {

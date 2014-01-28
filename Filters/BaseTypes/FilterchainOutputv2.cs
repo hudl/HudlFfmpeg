@@ -4,36 +4,37 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
-    public class FilterchainOutput<TResource>
-        where TResource : IResource
+    public class FilterchainOutputv2
     {
-        internal FilterchainOutput(Filterchain<TResource> parent, TResource resource)
+        internal FilterchainOutputv2(Filterchainv2 owner, IResource resource)
         {
-            if (parent == null)
+            if (owner == null)
             {
-                throw new ArgumentNullException("parent");
+                throw new ArgumentNullException("owner");
             }
             if (resource == null)
             {
                 throw new ArgumentNullException("resource");
             }
 
-            Parent = parent;
+            Owner = owner;
             Resource = resource;
+            Id = Guid.NewGuid().ToString();
         }
 
         public TimeSpan Length { get; set; }
 
-        public Filterchain<TResource> Parent { get; protected set; }
+        public Filterchainv2 Owner { get; protected set; }
 
-        public TResource GetOutput()
+        public IResource Output()
         {
             Resource.Length = Length;
             return Resource;
         }
 
         #region Internals
-        internal TResource Resource { get; set; }
+        internal string Id { get; set; }
+        internal IResource Resource { get; set; }
         #endregion 
     }
 }

@@ -42,7 +42,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Adds a new command and marks the output to be exported.
         /// </summary>
-        public CommandFactory AddToOutput(Command<IResource> command)
+        public CommandFactory AddToOutput(Commandv2 command)
         {
             command.Output.Resource.Path = Configuration.OutputPath;
             return Add(command, true);
@@ -51,7 +51,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Adds a new command and marks the output to be exported.
         /// </summary>
-        public CommandFactory AddToResources(Command<IResource> command)
+        public CommandFactory AddToResources(Commandv2 command)
         {
             command.Output.Resource.Path = Configuration.TempPath;
             return Add(command, false);
@@ -87,8 +87,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Returns a boolean indicating if the command already exists in the factory
         /// </summary>
-        public bool Contains<TOutput>(Command<TOutput> command)
-            where TOutput : IResource
+        public bool Contains(Commandv2 command)
         {
             return CommandList.Any(c => c.Id == command.Id);
         }
@@ -136,69 +135,24 @@ namespace Hudl.Ffmpeg.Command
             }
 
             var outputList = GetOutput();
-            var commandCount = CommandList.Sum(c => 1 + c.CommandList.Count); 
 
             Log.InfoFormat("Rendering command factory Outputs={0} Commands={1}", 
                 outputList.Count,
-                commandCount);
+                CommandList.Count);
 
-            CommandList.ForEach(command =>
-            {
-                command.CommandList.ForEach(prepCommand => prepCommand.RenderWith(processor));
-
-                command.RenderWith(processor);
-            });
+            CommandList.ForEach(command => command.RenderWith(processor));
 
             return outputList;
         }
 
-        #region Command Helper Visibility
-        /// <summary>
-        /// Adds a new command using TOutput as a new instance
-        /// </summary>
-        public Command<TOutput> CreateOutput<TOutput>()
-            where TOutput : class, IResource, new()
-        {
-            var temporaryResource = new TOutput();
-            return CreateOutput<TOutput>(SettingsCollection.ForOutput(), temporaryResource.Name);
-        }
-
-        /// <summary>
-        /// Adds a new command using TOutput as a new instance
-        /// </summary>
-        public Command<TOutput> CreateOutput<TOutput>(string fileName)
-            where TOutput : class, IResource, new()
-        {
-            return CreateOutput<TOutput>(SettingsCollection.ForOutput(), fileName);
-        }
-
-        /// <summary>
-        /// Adds a new command using TOutput as a new instance
-        /// </summary>
-        public Command<TOutput> CreateOutput<TOutput>(SettingsCollection settings, string fileName)
-            where TOutput : class, IResource, new()
-        {
-            if (settings == null)
-            {
-                throw new ArgumentNullException("settings");
-            }
-            if (string.IsNullOrWhiteSpace("fileName"))
-            {
-                throw new ArgumentException("Output file name cannot be empty", "fileName");
-            }
-
-            var newResource = Resource.Create<TOutput>(Configuration.OutputPath, fileName);
-            return Command.OutputTo(this, newResource, settings);
-        }
-        #endregion 
 
         #region Internals
         internal string Id { get; set; }
-        internal List<Command<IResource>> CommandList { get; set; }
+        internal List<Commandv2> CommandList { get; set; }
         #endregion
 
         #region Utility
-        private CommandFactory Add(Command<IResource> command, bool export)
+        private CommandFactory Add(Commandv2 command, bool export)
         {
             if (command == null)
             {
@@ -208,13 +162,15 @@ namespace Hudl.Ffmpeg.Command
             {
                 throw new ArgumentException("Command Factory already contains this command.", "command");
             }
-            if (command.Parent.Id != Id)
+            if (command.Owner.Id != Id)
             {
                 throw new ArgumentException("Command was not created as a child of this factory.", "command");
             }
 
-            command.Output.IsExported = export;
+            command.Objects.Outputs.ForEach(output => output.IsExported = export);
+
             CommandList.Add(command);
+
             return this;
         }
         #endregion 

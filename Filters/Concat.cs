@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -11,7 +13,7 @@ namespace Hudl.Ffmpeg.Filters
     /// </summary>
     [AppliesToResource(Type=typeof(IAudio))]
     [AppliesToResource(Type=typeof(IVideo))]
-    public class Concat : BaseFilter
+    public class Concat : BaseFilter, IFilterValidator
     {
         private const int FilterMinInputs = 2;
         private const int FilterMaxInputs = 4;
@@ -70,5 +72,13 @@ namespace Hudl.Ffmpeg.Filters
 
             return string.Concat(Type, filter.ToString());
         }
+
+        #region IFilterValidator
+        public bool Validate(Commandv2 command, Filterchainv2 filterchain, List<CommandReceipt> receipts)
+        {
+            //concat filters should be used independently of other filters
+            return filterchain.Filters.Count > 1;
+        }
+        #endregion
     }
 }

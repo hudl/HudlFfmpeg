@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -8,27 +9,28 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Returns a new instance of the filterchain
         /// </summary>
-        /// <typeparam name="TResource">the Type of output for the new filterchain</typeparam>
-        public static Filterchain<TResource> FilterTo<TResource>(params IFilter[] filters)
+        public static Filterchainv2 FilterTo<TResource>(int count, params IFilter[] filters)
             where TResource : IResource, new()
         {
-            return FilterTo(new TResource(), filters);
+            var outputList = new List<IResource>();
+            for (var i = 0; i < count; i++)
+            {
+                outputList.Add(new TResource());
+            }
+            return FilterTo(outputList, filters);
         }
 
         /// <summary>
         /// Returns a new instance of the filterchain
         /// </summary>
-        /// <typeparam name="TResource">the Type of output for the new filterchain</typeparam>
-        public static Filterchain<TResource> FilterTo<TResource>(TResource output, params IFilter[] filters)
-            where TResource : IResource
+        public static Filterchainv2 FilterTo(List<IResource> output, params IFilter[] filters)
         {
             if (output == null)
             {
                 throw new ArgumentNullException("output");
             }
 
-            return new Filterchain<TResource>(output, filters);
+            return new Filterchainv2(output, filters);
         }
-
     }
 }

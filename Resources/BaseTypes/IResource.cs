@@ -44,6 +44,7 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// </summary>
         TResource Copy<TResource>()
             where TResource : IResource;
+
         /// <summary>
         /// method for creating a new resource from the base resource with a new name.
         /// </summary>

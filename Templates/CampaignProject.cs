@@ -3,15 +3,15 @@ using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Filters.Templates;
-using Hudl.Ffmpeg.Resolution;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
-using Hudl.Ffmpeg.Templates.BaseTypes;
+using Hudl.Ffmpeg.Templates.Obsolete.BaseTypes;
+using Hudl.Ffmpeg.Filters.Obsolete;
+using Hudl.Ffmpeg.Filters.Obsolete.BaseTypes;
+using Hudl.Ffmpeg.Filters.Obsolete.Templates;
+using Hudl.Ffmpeg.Command.Obsolete;
 
 namespace Hudl.Ffmpeg.Templates
 {
@@ -141,7 +141,7 @@ namespace Hudl.Ffmpeg.Templates
             CommandResourceReceipt last480Mp4Receipt = null;
 
             //FILTERS/SETTINGS
-            var resolutionTemplate480 = new Resolution480P<Mp4>();
+            var resolutionTemplate480 = new Obsolete.Resolution480P<Mp4>();
             var filterchain480Mp42 = Filterchain.FilterTo<Mp4>(
                 new Crossfade(TimeSpan.FromSeconds(1), resolutionTemplate480)
             );
@@ -215,7 +215,7 @@ namespace Hudl.Ffmpeg.Templates
             campaign240Mp4.Add(campaign480Mp4.Output.Resource);
 
             //FILTERS/SETTINGS
-            var resolutionTemplate240 = new Resolution240P<Mp4>();
+            var resolutionTemplate240 = new Obsolete.Resolution240P<Mp4>();
             var outputSettings240Mp4 = SettingsCollection.ForOutput(
                 new RemoveAudio(),
                 new TrimShortest(),

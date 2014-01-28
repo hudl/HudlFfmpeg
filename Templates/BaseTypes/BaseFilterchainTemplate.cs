@@ -1,43 +1,27 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters;
+﻿using System.Collections.Generic;
 using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Filters.Templates;
-using Hudl.Ffmpeg.Resolution;
-using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Templates.BaseTypes
 {
     /// <summary>
     /// This is the base template file for filterchains. This format will contain the necessary base functions for adding and assigning multiple chains for quick functionality.
     /// </summary>
-    public abstract class BaseFilterchainTemplate<TOutput>
-        where TOutput : IResource, new()
+    public abstract class BaseFilterchainTemplate
     {
-        protected BaseFilterchainTemplate()
+        protected BaseFilterchainTemplate(IResource resourceToUse)
         {
-            Base = Filterchain.FilterTo<TOutput>();
+            var resourceList = new List<IResource> {resourceToUse};
+            Base = Filterchain.FilterTo(resourceList);
         }
 
-        public static implicit operator Filterchain<TOutput>(BaseFilterchainTemplate<TOutput> filterchain)
-        {
-            return filterchain.Base;
-        }
-
-        public static implicit operator Filterchain<IResource>(BaseFilterchainTemplate<TOutput> filterchain)
+        public static implicit operator Filterchainv2(BaseFilterchainTemplate filterchain)
         {
             return filterchain.Base;
         }
 
         #region Internals
-        internal protected Filterchain<TOutput> Base { get; protected set; }
+        internal protected Filterchainv2 Base { get; protected set; }
         #endregion
     }
 }
