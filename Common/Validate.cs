@@ -81,13 +81,13 @@ namespace Hudl.Ffmpeg.Common
             return settingsDictionary;
         }
 
-        private static TAttribute GetAttribute<TAttribute>(Type itemType)
+        internal static TAttribute GetAttribute<TAttribute>(Type itemType)
             where TAttribute : Attribute
         {
             return GetAttributes<TAttribute>(itemType).FirstOrDefault();
         }
 
-        private static List<TAttribute> GetAttributes<TAttribute>(Type itemType)
+        internal static List<TAttribute> GetAttributes<TAttribute>(Type itemType)
             where TAttribute : Attribute
         {
             var allAttributes = itemType.GetCustomAttributes(true);

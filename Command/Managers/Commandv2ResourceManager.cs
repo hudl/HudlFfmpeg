@@ -26,12 +26,12 @@ namespace Hudl.Ffmpeg.Command.Managers
                 throw new ArgumentNullException("resource");
             }
 
+            resource.Owner = Owner;
+
             if (Owner.Objects.ContainsInput(resource.GetReceipt()))
             {
                 throw new ArgumentException("Command already contains the specified resource.", "resource");
             }
-
-            resource.Owner = Owner;
 
             Owner.Objects.Inputs.Add(resource);
 
@@ -40,9 +40,9 @@ namespace Hudl.Ffmpeg.Command.Managers
 
         public List<CommandReceipt> AddRange(List<CommandResourcev2> resources)
         {
-            if (resources == null)
+            if (resources == null || resources.Count == 0)
             {
-                throw new ArgumentNullException("resources");
+                throw new ArgumentException("Cannot add resources from a list that is null or empty.", "resources");
             }
 
             return resources.Select(Add).ToList();
@@ -54,12 +54,14 @@ namespace Hudl.Ffmpeg.Command.Managers
             {
                 throw new ArgumentNullException("resource");
             }
+            
+            resource.Owner = Owner;
+
             if (Owner.Objects.ContainsInput(resource.GetReceipt()))
             {
                 throw new ArgumentException("Command already contains the specified resource.", "resource");
             }
 
-            resource.Owner = Owner;
 
             Owner.Objects.Inputs.Insert(index, resource);
 
@@ -76,16 +78,17 @@ namespace Hudl.Ffmpeg.Command.Managers
             {
                 throw new ArgumentNullException("replaceWith");
             }
-            if (Owner.Objects.ContainsInput(replace))
+            if (!Owner.Objects.ContainsInput(replace))
             {
                 throw new ArgumentException("Command does not contain the resource to replace.", "replace");
             }
+
+            replaceWith.Owner = Owner;
+            
             if (Owner.Objects.ContainsInput(replaceWith.GetReceipt()))
             {
                 throw new ArgumentException("Command already contains the specified resource.", "replaceWith");
             }
-
-            replaceWith.Owner = Owner;
 
             var replaceIndex = Owner.Objects.Inputs.FindIndex(c => c.Resource.Map == replace.Map);
             Owner.Objects.Inputs.RemoveAt(replaceIndex);

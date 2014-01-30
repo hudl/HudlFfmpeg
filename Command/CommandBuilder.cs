@@ -23,7 +23,7 @@ namespace Hudl.Ffmpeg.Command
         {
             command.Objects.Inputs.ForEach(WriteResource);
 
-            WriteFiltergraph(command, command.Filtergraph);
+            WriteFiltergraph(command, command.Objects.Filtergraph);
 
             command.Objects.Outputs.ForEach(WriteOutput);
 

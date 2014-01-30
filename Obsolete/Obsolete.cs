@@ -5,17 +5,16 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.Obsolete.BaseTypes;
-using Hudl.Ffmpeg.Filters.Obsolete.Templates;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.Ffmpeg.Command.BaseTypes;
+using Hudl.Ffmpeg.Settings.Obsolete;
+using Hudl.Ffmpeg.Settings.Obsolete.BaseTypes;
 using Hudl.Ffmpeg.Templates.Obsolete;
 using Hudl.Ffmpeg.Templates.Obsolete.BaseTypes;
+using Hudl.Ffmpeg.Filters.Obsolete;
+using Hudl.Ffmpeg.Filters.Obsolete.BaseTypes;
 using Hudl.Ffmpeg.Command.Obsolete;
 using log4net;
 
@@ -147,6 +146,80 @@ namespace Hudl.Ffmpeg.Common
 
 
             return finalFilterLength;
+        }
+
+        [Obsolete("BreakReceipts is obsolete, use BreakReceipts with CommandReceipt resources.", false)]
+        public static List<CommandResourceReceipt[]> BreakReceipts(int division, params CommandResourceReceipt[] resources)
+        {
+            if (resources == null)
+            {
+                throw new ArgumentNullException("resources");
+            }
+
+            var index = 0;
+            var subDivision = division - 1;
+            var breakouts = new List<CommandResourceReceipt[]>();
+            var resourcesRemainderCount = resources.Length;
+            resourcesRemainderCount -= (resourcesRemainderCount > division)
+                                            ? division
+                                            : resources.Length;
+            breakouts.Add(resources.SubArray(0, division));
+            while (resourcesRemainderCount > 0)
+            {
+                index++;
+                var length = (resourcesRemainderCount > subDivision)
+                                    ? subDivision
+                                    : resourcesRemainderCount;
+                resourcesRemainderCount -= length;
+                breakouts.Add(resources.SubArray(1 + (index * subDivision), length));
+            }
+
+            return breakouts;
+        }
+    }
+
+   
+}
+
+namespace Hudl.Ffmpeg.Common.Obsolete
+{
+    public class Validate
+    {
+        [Obsolete("IsSettingFor<TSetting> is obsolete, do not reference Obsolete namespace.", false)]
+        public static bool IsSettingFor<TSetting>(TSetting item, SettingsCollectionResourceType type)
+            where TSetting : ISetting
+        {
+            var itemType = item.GetType();
+            var matchingAttribute = Common.Validate.GetAttribute<Settings.BaseTypes.SettingsApplicationAttribute>(itemType);
+
+            return matchingAttribute != null && type == matchingAttribute.ResourceType;
+        }
+
+        [Obsolete("GetSettingData<TSetting> is obsolete, do not reference Obsolete namespace.", false)]
+        internal static Settings.BaseTypes.SettingsApplicationData GetSettingData<TSetting>()
+            where TSetting : ISetting
+        {
+            return Common.Validate.GetSettingData(typeof(TSetting));
+        }
+
+        [Obsolete("GetSettingData<TSetting> is obsolete, do not reference Obsolete namespace.", false)]
+        internal static Settings.BaseTypes.SettingsApplicationData GetSettingData<TSetting>(TSetting setting)
+            where TSetting : ISetting
+        {
+            return Common.Validate.GetSettingData(setting.GetType());
+        }
+
+        [Obsolete("GetSettingCollectionData is obsolete, do not reference Obsolete namespace.", false)]
+        internal static Dictionary<Type, Settings.BaseTypes.SettingsApplicationData> GetSettingCollectionData(SettingsCollection collection)
+        {
+            var settingsDictionary = new Dictionary<Type, Settings.BaseTypes.SettingsApplicationData>();
+            collection.SettingsList.ForEach(setting =>
+            {
+                var settingsType = setting.GetType();
+                if (settingsDictionary.ContainsKey(settingsType)) return;
+                settingsDictionary.Add(settingsType, GetSettingData(setting));
+            });
+            return settingsDictionary;
         }
     }
 }
@@ -310,9 +383,9 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
 
             ResourceList = new List<CommandResourceReceipt>();
             Output = new FilterchainOutput<TOutput>(this, outputToUse);
-            Filters = new AppliesToCollection<Filters.BaseTypes.IFilter>(outputToUse.GetType());
+            Filters = new AppliesToCollection<IFilter>(outputToUse.GetType());
         }
-        internal Filterchain(TOutput outputToUse, params Filters.BaseTypes.IFilter[] filters)
+        internal Filterchain(TOutput outputToUse, params IFilter[] filters)
             : this(outputToUse)
         {
             if (filters.Length > 0)
@@ -331,7 +404,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
             return filterchainNew;
         }
 
-        public AppliesToCollection<Filters.BaseTypes.IFilter> Filters { get; protected set; }
+        public AppliesToCollection<IFilter> Filters { get; protected set; }
 
         public ReadOnlyCollection<CommandResourceReceipt> Resources { get { return ResourceList.AsReadOnly(); } }
 
@@ -951,7 +1024,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete
         /// </summary>
         public string Expression { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource<IResource>> resources)
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource<IResource>> resources)
         {
             return resources.Min(r => r.Resource.Length);
         }
@@ -1569,7 +1642,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete
         /// </summary>
         public VideoUnitType TimebaseUnit { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource<IResource>> resources)
+        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
         {
             return TimeSpan.FromSeconds(Duration);
         }
@@ -1659,7 +1732,7 @@ namespace Hudl.Ffmpeg.Templates.Obsolete.BaseTypes
     [Obsolete("BaseCommandFactoryTemplate is obsolete, use BaseCommandFactoryTemplate instead.", false)]
     public abstract class BaseCommandFactoryTemplate
     {
-        protected BaseCommandFactoryTemplate(CommandConfiguration configuration)
+        protected BaseCommandFactoryTemplate(Command.CommandConfiguration configuration)
         {
             Factory = new Command.Obsolete.CommandFactory(configuration);       
             AudioList = new List<IAudio>();
@@ -2046,7 +2119,7 @@ namespace Hudl.Ffmpeg.Command.Obsolete
                 throw new ArgumentNullException("resource");
             }
 
-            var settingsData = Validate.GetSettingCollectionData(resource.Settings);
+            var settingsData = Common.Obsolete.Validate.GetSettingCollectionData(resource.Settings);
 
             WriteResourcePreSettings(resource, settingsData);
 
@@ -2056,7 +2129,7 @@ namespace Hudl.Ffmpeg.Command.Obsolete
 
             WriteResourcePostSettings(resource, settingsData);
         }
-        private void WriteResourcePreSettings(CommandResource<IResource> resource, Dictionary<Type, SettingsApplicationData> settingsData)
+        private void WriteResourcePreSettings(CommandResource<IResource> resource, Dictionary<Type, Settings.BaseTypes.SettingsApplicationData> settingsData)
         {
             if (resource == null)
             {
@@ -2074,7 +2147,7 @@ namespace Hudl.Ffmpeg.Command.Obsolete
                 _builderBase.Append(setting);
             });
         }
-        private void WriteResourcePostSettings(CommandResource<IResource> resource, Dictionary<Type, SettingsApplicationData> settingsData)
+        private void WriteResourcePostSettings(CommandResource<IResource> resource, Dictionary<Type, Settings.BaseTypes.SettingsApplicationData> settingsData)
         {
             if (resource == null)
             {
@@ -2184,7 +2257,7 @@ namespace Hudl.Ffmpeg.Command.Obsolete
                 throw new ArgumentNullException("output");
             }
 
-            var settingsData = Validate.GetSettingCollectionData(output.Settings);
+            var settingsData = Common.Obsolete.Validate.GetSettingCollectionData(output.Settings);
 
             WriteOutputSettings(output);
 
@@ -2197,7 +2270,7 @@ namespace Hudl.Ffmpeg.Command.Obsolete
                 throw new ArgumentNullException("output");
             }
 
-            var settingsData = Validate.GetSettingCollectionData(output.Settings);
+            var settingsData = Common.Obsolete.Validate.GetSettingCollectionData(output.Settings);
             output.Settings.SettingsList.ForEach(setting =>
             {
                 var settingInfoData = settingsData[setting.GetType()];
@@ -3358,8 +3431,794 @@ namespace Hudl.Ffmpeg.Command.Obsolete
         }
     }
 }
-#endregion
 
+namespace Hudl.Ffmpeg.Settings.Obsolete.BaseTypes
+{
+    [Obsolete("ISetting is obsolete, do not reference Obsolete namespace.", false)]
+    public interface ISetting
+    {
+        /// <summary>
+        /// the command name for the affect
+        /// </summary>
+        string Type { get; }
+
+        /// <summary>
+        /// the length override function, overrided when a setting requires a length change of output calculated from the resources.
+        /// </summary>
+        /// <returns>Null indicates that the length difference does not apply</returns>
+        TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources);
+
+        /// <summary>
+        /// builds the command necessary to complete the effect
+        /// </summary>
+        string ToString();
+    }
+
+    [Obsolete("BaseSetting is obsolete, do not reference Obsolete namespace.", false)]
+    public abstract class BaseSetting : ISetting
+    {
+        protected BaseSetting(string type)
+        {
+            Type = type;
+        }
+
+        /// <summary>
+        /// Defines the settings type, name that is given to ffmpeg
+        /// </summary>
+        public string Type { get; protected set; }
+
+        /// <summary>
+        /// Quick way to calculate the output length after a setting has been applied.
+        /// </summary>
+        public virtual TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        {
+            var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);
+            return totalSeconds > 0d
+                       ? (TimeSpan?)TimeSpan.FromSeconds(totalSeconds)
+                       : null;
+        }
+    }
+
+    [Obsolete("SettingsCollection is obsolete, do not reference Obsolete namespace.", false)]
+    public class SettingsCollection
+    {
+        internal SettingsCollection()
+            : this(SettingsCollectionResourceType.Input)
+        {
+        }
+        internal SettingsCollection(params ISetting[] settings)
+            : this(SettingsCollectionResourceType.Input, settings)
+        {
+        }
+        internal SettingsCollection(SettingsCollectionResourceType type, params ISetting[] settings)
+        {
+            Type = type;
+            SettingsList = new List<ISetting>();
+            if (settings.Length > 0)
+            {
+                new List<ISetting>(settings).ForEach(s => Add(s));
+            }
+        }
+
+        public ReadOnlyCollection<ISetting> Items { get { return SettingsList.AsReadOnly(); } }
+
+        public SettingsCollectionResourceType Type { get; protected set; }
+
+        public int Count { get { return SettingsList.Count; } }
+
+        /// <summary>
+        /// returns a new settings collection instance for input collections
+        /// </summary>
+        public static SettingsCollection ForInput(params ISetting[] settings)
+        {
+            return new SettingsCollection(SettingsCollectionResourceType.Input, settings);
+        }
+
+        /// <summary>
+        /// returns a new settings collection instance for output collections
+        /// </summary>
+        public static SettingsCollection ForOutput(params ISetting[] settings)
+        {
+            return new SettingsCollection(SettingsCollectionResourceType.Output, settings);
+        }
+
+        /// <summary>
+        /// adds the given Setting to the SettingsCollection
+        /// </summary>
+        /// <typeparam name="TSetting">the generic type of the Setting</typeparam>
+        /// <param name="setting">the Setting to be added to the SettingsCollection</param>
+        public SettingsCollection Add<TSetting>(TSetting setting)
+            where TSetting : ISetting
+        {
+            if (setting == null)
+            {
+                throw new ArgumentNullException("setting");
+            }
+            if (Contains(setting))
+            {
+                throw new ArgumentException(string.Format("The SettingsCollection already contains a type of {0}.", setting.GetType().Name), "setting");
+            }
+            if (!Common.Obsolete.Validate.IsSettingFor(setting, Type))
+            {
+                throw new ArgumentException(string.Format("The SettingsCollection is restricted only to {0} settings.", Type), "setting");
+            }
+
+            SettingsList.Add(setting);
+            return this;
+        }
+
+        /// <summary>
+        /// adds the given SettingsCollection range to the SettingsCollection
+        /// </summary>
+        /// <param name="settings">the SettingsCollection to be added  to be added to the SettingsCollection</param>
+        public SettingsCollection AddRange(SettingsCollection settings)
+        {
+            if (settings == null)
+            {
+                throw new ArgumentNullException("settings");
+            }
+
+            settings.SettingsList.ForEach(s => Add(s));
+            return this;
+        }
+
+        /// <summary>
+        /// merges the current setting into the set based on the merge option type
+        /// </summary>
+        public SettingsCollection Merge<TSetting>(TSetting setting, FfmpegMergeOptionType option)
+            where TSetting : ISetting
+        {
+            if (setting == null)
+            {
+                throw new ArgumentNullException("setting");
+            }
+
+            var alreadyContainsSetting = Contains(setting);
+            if (alreadyContainsSetting)
+            {
+                if (option == FfmpegMergeOptionType.NewWins)
+                {
+                    Remove(setting);
+                    Add(setting);
+                }
+            }
+            else
+            {
+                Add(setting);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// merges the current SettingsCollection into the set based on the merge option type.
+        /// </summary>
+        public SettingsCollection MergeRange(SettingsCollection settings, FfmpegMergeOptionType option)
+        {
+            if (settings == null)
+            {
+                throw new ArgumentNullException("settings");
+            }
+            if (settings.Type != Type)
+            {
+                throw new ArgumentException(string.Format("Settings parameter must be of the same type {0} as the SettingsCollection.", Type));
+            }
+
+            settings.SettingsList.ForEach(s => Merge(s, option));
+            return this;
+        }
+
+        /// <summary>
+        /// determines if the settings collection already contains this setting type
+        /// </summary>
+        public bool Contains<TSetting>()
+            where TSetting : ISetting
+        {
+            return SettingsList.Any(s => s is TSetting);
+        }
+
+        /// <summary>
+        /// determines if the settings collection already contains this setting type
+        /// </summary>
+        public bool Contains<TSetting>(TSetting item)
+            where TSetting : ISetting
+        {
+            var itemType = item.GetType();
+            return SettingsList.Any(s => s.GetType().IsAssignableFrom(itemType));
+        }
+
+        /// <summary>
+        /// will return the TSetting item in the settings collection list
+        /// </summary>
+        public TSetting Item<TSetting>()
+            where TSetting : class, ISetting
+        {
+            return SettingsList.FirstOrDefault(s => s is TSetting) as TSetting;
+        }
+
+
+        /// <summary>
+        /// removes the specified setting type from the SettingsCollection
+        /// </summary>
+        /// <typeparam name="TSetting">the settings type that is to be removed</typeparam>
+        public SettingsCollection Remove<TSetting>()
+            where TSetting : ISetting
+        {
+            SettingsList.RemoveAll(s => s is TSetting);
+            return this;
+        }
+
+        /// <summary>
+        /// removes the specified setting type from the SettingsCollection
+        /// </summary>
+        /// <typeparam name="TSetting">the settings type that is to be removed</typeparam>
+        public SettingsCollection Remove<TSetting>(TSetting setting)
+            where TSetting : ISetting
+        {
+            var settingType = setting.GetType();
+            SettingsList.RemoveAll(s => s.GetType().IsAssignableFrom(settingType));
+            return this;
+        }
+
+        /// <summary>
+        /// removes the Setting at the given index from the SettingsCollection
+        /// </summary>
+        /// <param name="index">the index of the desired Setting to be removed from the SettingsCollection</param>
+        public SettingsCollection RemoveAt(int index)
+        {
+            SettingsList.RemoveAt(index);
+            return this;
+        }
+
+        /// <summary>
+        /// removes all the Setting matching the provided criteria
+        /// </summary>
+        /// <param name="pred">the predicate of required criteria</param>
+        public SettingsCollection RemoveAll(Predicate<ISetting> pred)
+        {
+            SettingsList.RemoveAll(pred);
+            return this;
+        }
+
+        #region Internals
+        internal List<ISetting> SettingsList { get; set; }
+        #endregion
+    }
+}
+
+namespace Hudl.Ffmpeg.Settings.Obsolete
+{
+    [Obsolete("ACodec is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IAudio))]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class ACodec : BaseSetting
+    {
+        private const string SettingType = "-c:a";
+
+        public ACodec(string codec)
+            : base(SettingType)
+        {
+            Codec = codec;
+        }
+
+        public ACodec(AudioCodecType codec)
+            : this(Formats.Library(codec))
+        {
+        }
+
+        public string Codec { get; set; }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrWhiteSpace(Codec))
+            {
+                throw new InvalidOperationException("Codec cannot be empty for this setting.");
+            }
+
+            return string.Concat(Type, " ", Codec);
+        }
+    }
+
+    [Obsolete("AspectRatio is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class AspectRatio : BaseSetting
+    {
+        private const string SettingType = "-aspect";
+
+        public AspectRatio()
+            : base(SettingType)
+        {
+        }
+
+        public AspectRatio(FfmpegRatio ratio)
+            : this()
+        {
+            if (ratio == null)
+            {
+                throw new ArgumentNullException("ratio");
+            }
+
+            Ratio = ratio;
+        }
+
+        public FfmpegRatio Ratio { get; set; }
+
+        public override string ToString()
+        {
+            if (Ratio == null)
+            {
+                throw new InvalidOperationException("Ratio cannot be null.");
+            }
+
+            return string.Concat(Type, " ", Ratio.ToRatio());
+        }
+    }
+
+    [Obsolete("AudioBitRate is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IAudio))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class AudioBitRate : BaseSetting
+    {
+        private const string SettingType = "-b:a";
+
+        public AudioBitRate(int rate)
+            : base(SettingType)
+        {
+            Rate = rate;
+        }
+
+        public AudioBitRate(AudioBitRateType rate)
+            : this((int) rate)
+        {
+        }
+
+        public int Rate { get; set; }
+
+        public override string ToString()
+        {
+            if (Rate <= 0)
+            {
+                throw new InvalidOperationException("Bit Rate must be greater than zero.");
+            }
+
+            return string.Concat(Type, " ", Rate, "k");
+        }
+    }
+
+    [Obsolete("BitRate is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class BitRate : BaseSetting
+    {
+        private const string SettingType = "-b:v";
+
+        public BitRate(int rate)
+            : base(SettingType)
+        {
+            Rate = rate;
+        }
+
+        public int Rate { get; set; }
+
+        public override string ToString()
+        {
+            if (Rate <= 0)
+            {
+                throw new InvalidOperationException("Bit Rate must be greater than zero.");
+            }
+
+            return string.Concat(Type, " ", Rate, "k");
+        }
+    }
+
+    [Obsolete("Dimensions is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class Dimensions : BaseSetting
+    {
+        private const string SettingType = "-s";
+
+        public Dimensions()
+            : base(SettingType)
+        {
+            Size = new Point(1, 1);
+        }
+
+        public Dimensions(ScalePresetType preset)
+            : this()
+        {
+            var scalingPresets = Helpers.ScalingPresets;
+            if (!scalingPresets.ContainsKey(preset))
+            {
+                throw new ArgumentException("The preset does not currently exist.", "preset");
+            }
+
+            Size = scalingPresets[preset];
+        }
+
+        public Dimensions(int x, int y)
+            : this()
+        {
+            if (x <= 0)
+            {
+                throw new ArgumentException("Dimensions X must be greater than zero.");
+            }
+            if (y <= 0)
+            {
+                throw new ArgumentException("Dimensions Y must be greater than zero.");
+            }
+
+            Size = new Point(x, y);
+        }
+
+        public Point Size { get; set; }
+
+        public override string ToString()
+        {
+            if (Size == null)
+            {
+                throw new InvalidOperationException("Dimensions size cannot be null.");
+            }
+            if (Size.X <= 0)
+            {
+                throw new InvalidOperationException("Dimensions width must be greater than zero.");
+            }
+            if (Size.Y <= 0)
+            {
+                throw new InvalidOperationException("Dimensions height must be greater than zero.");
+            }
+
+            return string.Concat(Type, " ", Size.X, "x", Size.Y);
+        }
+    }
+
+    [Obsolete("Duration is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)
+    ]
+    public class Duration : BaseSetting
+    {
+        private const string SettingType = "-t";
+
+        public Duration(TimeSpan length)
+            : base(SettingType)
+        {
+            if (length == null)
+            {
+                throw new ArgumentNullException("length");
+            }
+
+            Length = length;
+        }
+
+        public Duration(double seconds)
+            : this(TimeSpan.FromSeconds(seconds))
+        {
+        }
+
+        public TimeSpan Length { get; set; }
+
+        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        {
+            return Length;
+        }
+
+        public override string ToString()
+        {
+            if (Length == null)
+            {
+                throw new InvalidOperationException("Duration length cannot be null.");
+            }
+            if (Length.TotalSeconds <= 0)
+            {
+                throw new InvalidOperationException("Duration length must be greater than zero.");
+            }
+
+            return string.Concat(Type, " ", Formats.Duration(Length));
+        }
+    }
+
+    [Obsolete("FrameRate is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class FrameRate : BaseSetting
+    {
+        private const string SettingType = "-r";
+
+        public FrameRate(double rate)
+            : base(SettingType)
+        {
+            if (rate <= 0)
+            {
+                throw new ArgumentException("Frame rate must be greater than zero.");
+            }
+
+            Rate = rate;
+        }
+
+        public double Rate { get; set; }
+
+        public override string ToString()
+        {
+            if (Rate <= 0)
+            {
+                throw new InvalidOperationException("Frame rate must be greater than zero.");
+            }
+
+            return string.Concat(Type, " ", Rate);
+        }
+    }
+
+    [Obsolete("Input is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IResource))]
+    internal class Input : BaseSetting
+    {
+        private const string SettingType = "-i";
+
+        public Input(IResource resource)
+            : base(SettingType)
+        {
+            Resource = resource;
+        }
+
+        public IResource Resource { get; protected set; }
+
+        public override string ToString()
+        {
+            if (Resource == null)
+            {
+                throw new InvalidOperationException("Resource cannot be empty.");
+            }
+
+            var escapedPath = Resource.FullName.Replace('\\', '/');
+            return string.Concat(Type, " \"", escapedPath, "\"");
+        }
+    }
+
+    [Obsolete("OverwriteOutput is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class OverwriteOutput : BaseSetting
+    {
+        private const string SettingType = "-y";
+
+        public OverwriteOutput()
+            : base(SettingType)
+        {
+        }
+
+        public override string ToString()
+        {
+            return Type;
+        }
+    }
+
+    [Obsolete("PixelFormat is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class PixelFormat : BaseSetting
+    {
+        private const string SettingType = "-pix_fmt";
+
+        public PixelFormat(string library)
+            : base(SettingType)
+        {
+            if (string.IsNullOrWhiteSpace(library))
+            {
+                throw new ArgumentNullException("library");
+            }
+
+            Library = library;
+        }
+
+        public PixelFormat(PixelFormatType library)
+            : this(Formats.Library(library))
+        {
+        }
+
+        public string Library { get; set; }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrWhiteSpace(Library))
+            {
+                throw new InvalidOperationException("Library cannot be empty for this setting.");
+            }
+
+            return string.Concat(Type, " ", Library);
+        }
+    }
+
+    [Obsolete("RemoveAudio is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class RemoveAudio : BaseSetting
+    {
+        private const string SettingType = "-an";
+
+        public RemoveAudio()
+            : base(SettingType)
+        {
+        }
+
+        public override string ToString()
+        {
+            return Type;
+        }
+    }
+
+    [Obsolete("SeekTo is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)
+    ]
+    public class SeekTo : BaseSetting
+    {
+        private const string SettingType = "-ss";
+
+        public SeekTo(TimeSpan length)
+            : base(SettingType)
+        {
+            if (length == null)
+            {
+                throw new ArgumentNullException("length");
+            }
+
+            Length = length;
+        }
+
+        public SeekTo(double seconds)
+            : this(TimeSpan.FromSeconds(seconds))
+        {
+        }
+
+        public TimeSpan Length { get; set; }
+
+        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        {
+            var overallLength = TimeSpan.FromSeconds(0);
+            var baseCalculatedLength = base.LengthFromInputs(resources);
+            if (baseCalculatedLength == null)
+            {
+                return overallLength;
+            }
+            return baseCalculatedLength - Length;
+        }
+
+        public override string ToString()
+        {
+            if (Length == null)
+            {
+                throw new InvalidOperationException("SeekTo length cannot be null.");
+            }
+            if (Length.TotalSeconds <= 0)
+            {
+                throw new InvalidOperationException("SeekTo length must be greater than zero.");
+            }
+
+            return string.Concat(Type, " ", Formats.Duration(Length));
+        }
+    }
+
+    [Obsolete("StartAt is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
+    public class StartAt : BaseSetting
+    {
+        private const string SettingType = "-ss";
+
+        public StartAt(TimeSpan length)
+            : base(SettingType)
+        {
+            if (length == null)
+            {
+                throw new ArgumentNullException("length");
+            }
+
+            Length = length;
+        }
+
+        public StartAt(double seconds)
+            : this(TimeSpan.FromSeconds(seconds))
+        {
+        }
+
+        public TimeSpan Length { get; set; }
+
+        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        {
+            var overallLength = TimeSpan.FromSeconds(0);
+            var baseCalculatedLength = base.LengthFromInputs(resources);
+            if (baseCalculatedLength == null)
+            {
+                return overallLength;
+            }
+            return baseCalculatedLength - Length;
+        }
+
+        public override string ToString()
+        {
+            if (Length == null)
+            {
+                throw new InvalidOperationException("StartAt length cannot be null.");
+            }
+            if (Length.TotalSeconds <= 0)
+            {
+                throw new InvalidOperationException("StartAt length must be greater than zero.");
+            }
+
+            return string.Concat(Type, " ", Formats.Duration(Length));
+        }
+    }
+
+    [Obsolete("TrimShortest is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IAudio))]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class TrimShortest : BaseSetting
+    {
+        private const string SettingType = "-shortest";
+
+        public TrimShortest()
+            : base(SettingType)
+        {
+        }
+
+        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        {
+            return resources.Min(r => r.Resource.Length);
+        }
+
+        public override string ToString()
+        {
+            return Type;
+        }
+    }
+
+    [Obsolete("VCodec is obsolete, do not reference Obsolete namespace.", false)]
+    [AppliesToResource(Type = typeof (IVideo))]
+    [Settings.BaseTypes.SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)
+    ]
+    public class VCodec : BaseSetting
+    {
+        private const string SettingType = "-c:v";
+
+        public VCodec(string codec)
+            : base(SettingType)
+        {
+            Codec = codec;
+        }
+
+        public VCodec(VideoCodecType codec)
+            : this(Formats.Library(codec))
+        {
+        }
+
+        public string Codec { get; set; }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrWhiteSpace(Codec))
+            {
+                throw new InvalidOperationException("Codec cannot be empty for this setting.");
+            }
+
+            return string.Concat(Type, " ", Codec);
+        }
+    }
+}
+#endregion
 
 /* 
 * Stage 2 Obsolete is an error state for objects that have full tested and working solutions. 

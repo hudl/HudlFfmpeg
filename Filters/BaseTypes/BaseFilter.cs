@@ -16,7 +16,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             Type = type;
             MaxInputs = maxInputs;
-            CommandResources = new List<CommandResource<IResource>>();
+            CommandResources = new List<CommandResourcev2>();
         }
     
         /// <summary>
@@ -41,7 +41,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <param name="filterchain">The filterchain that the filter belongs to</param>
         public void Setup(Commandv2 command, Filterchainv2 filterchain)
         {
-            CommandResourcesv2 = command.ResourcesFromReceipts(new List<CommandReceipt>(filterchain.Resources));
+            CommandResources = command.ResourcesFromReceipts(new List<CommandReceipt>(filterchain.Resources));
 
             if (CommandResources.Count == 0)
             {

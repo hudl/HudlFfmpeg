@@ -19,7 +19,7 @@ namespace Hudl.Ffmpeg.Command.Managers
 
         private Commandv2 Owner { get; set; }
 
-        private void Add(CommandOutput output)
+        public void Add(CommandOutput output)
         {
             if (output == null)
             {
@@ -34,6 +34,16 @@ namespace Hudl.Ffmpeg.Command.Managers
             }
 
             Owner.Objects.Outputs.Add(output);
+        }
+
+        public void AddRange(List<CommandOutput> outputList)
+        {
+            if (outputList == null || outputList.Count == 0)
+            {
+                throw new ArgumentException("Cannot add outputs from a list that is null or empty.", "outputList");
+            }
+
+            outputList.ForEach(Add);
         }
     }
 }

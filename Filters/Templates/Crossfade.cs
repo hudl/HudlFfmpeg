@@ -15,9 +15,6 @@ namespace Hudl.Ffmpeg.Filters.Templates
     public class Crossfade : Blend, IFilterProcessor
     {
         private const string CrossfadeAlgorithm = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
-        private readonly SettingsCollection _outputSettings = SettingsCollection.ForOutput(
-            new OverwriteOutput(), 
-            new VCodec(VideoCodecType.Copy));
 
         public Crossfade(TimeSpan duration, Filterchainv2 resolutionFilterchain)
         {
@@ -48,6 +45,7 @@ namespace Hudl.Ffmpeg.Filters.Templates
             return Duration;
         }
 
+        //TODO: CB -> it would be relatively easy to reconfigure this routine to utilize splits in order to do this more effeciently
         public void PrepCommands(Commandv2 command, Filterchainv2 filterchain)
         {
             //verify that we have a resolution filterchain 
@@ -130,7 +128,8 @@ namespace Hudl.Ffmpeg.Filters.Templates
             //an existing trim cannot be located, so a new one is required
             if (filterchainCutupBodyTo == null)
             {
-                filterchainCutupBodyTo = new VideoCutTo<TResource>(durationLength, resourceToLength);
+                var filterchainCutupBodyToResource = resourceTo.Resource.Copy<IResource>();
+                filterchainCutupBodyTo = VideoCutTo.Create(filterchainCutupBodyToResource, durationLength, resourceToLength);
             }
             else
             {
@@ -139,12 +138,14 @@ namespace Hudl.Ffmpeg.Filters.Templates
                 trimFilter.Duration = trimFilter.End - trimFilter.Start;
                 filterchainCutupBodyTo.Filters.Merge(trimFilter, FfmpegMergeOptionType.NewWins); 
             }
-            filterchainCutupTransitionTo = new VideoCutTo<TResource>(0D, durationLength);
+            var filterchainCutupTransitionToResource = resourceTo.Resource.Copy<IResource>();
+            filterchainCutupTransitionTo = VideoCutTo.Create(filterchainCutupTransitionToResource, 0D, durationLength);
 
             //an existing trim cannot be located, so a new one is required
             if (filterchainCutupBodyFrom == null)
             {
-                filterchainCutupBodyFrom = new VideoCutTo<TResource>(0D, durationFromEndLength);
+                var filterchainCutupBodyFromResource = resourceFrom.Resource.Copy<IResource>();
+                filterchainCutupBodyFrom = VideoCutTo.Create(filterchainCutupBodyFromResource, 0D, durationFromEndLength);
             }
             else
             {
@@ -155,10 +156,11 @@ namespace Hudl.Ffmpeg.Filters.Templates
                 durationFromEndLength = trimFilter.End;
                 resourceFromLength += Duration.TotalSeconds;
             }
-            filterchainCutupTransitionFrom = new VideoCutTo<TResource>(durationFromEndLength, resourceFromLength);
+            var filterchainCutupTransitionFromResource = resourceFrom.Resource.Copy<IResource>();
+            filterchainCutupTransitionFrom = VideoCutTo.Create(filterchainCutupTransitionFromResource, durationFromEndLength, resourceFromLength);
 
             //reset the filtergraph outputs
-            if (resourceTo != null)
+            if (receiptTo.Type == CommandReceiptType.Input)
             {
                 var newInputReceipt = command.RegenerateResourceMap(filterchain.Resources[1]);
                 filterchainCutupBodyTo.SetResources(newInputReceipt);
@@ -168,7 +170,8 @@ namespace Hudl.Ffmpeg.Filters.Templates
             {
                 filterchainCutupTransitionTo.SetResources(filterchainCutupBodyTo.Resources.First());
             }
-            if (resourceFrom != null)
+
+            if (receiptFrom.Type == CommandReceiptType.Input)
             {
                 var newInputReceipt = command.RegenerateResourceMap(filterchain.Resources[0]);
                 filterchainCutupBodyFrom.SetResources(newInputReceipt);
@@ -179,26 +182,26 @@ namespace Hudl.Ffmpeg.Filters.Templates
                 filterchainCutupTransitionFrom.SetResources(filterchainCutupBodyFrom.Resources.First());
             }
 
-            filterchainCutupBodyFrom.Output.Resource.Map = filterchain.Resources[0].Map;
-            filterchainCutupBodyTo.Output.Resource.Map = filterchain.Resources[1].Map;
+            filterchainCutupBodyFrom.OutputList.First().Resource.Map = filterchain.Resources[0].Map;
+            filterchainCutupBodyTo.OutputList.First().Resource.Map = filterchain.Resources[1].Map;
 
-            command.Filtergraph.Merge(filterchainCutupBodyFrom, FfmpegMergeOptionType.NewWins);
-            command.Filtergraph.Add(filterchainCutupTransitionFrom);
-            command.Filtergraph.Add(filterchainCutupTransitionTo);
-            command.Filtergraph.Merge(filterchainCutupBodyTo, FfmpegMergeOptionType.NewWins);
-            
-            var transitionToReceipt = new CommandResourceReceipt(command.Parent.Id, command.Id, filterchainCutupTransitionTo.Output.Resource.Map);  
-            var transitionFromReceipt = new CommandResourceReceipt(command.Parent.Id, command.Id, filterchainCutupTransitionFrom.Output.Resource.Map);
-            var filterchainCopyTo = ResolutionFilterchain.Copy<TResource>();
-            var filterchainCopyFrom = ResolutionFilterchain.Copy<TResource>();
+            command.Objects.Filtergraph.Merge(filterchainCutupBodyFrom, FfmpegMergeOptionType.NewWins);
+            command.Objects.Filtergraph.Add(filterchainCutupTransitionFrom);
+            command.Objects.Filtergraph.Add(filterchainCutupTransitionTo);
+            command.Objects.Filtergraph.Merge(filterchainCutupBodyTo, FfmpegMergeOptionType.NewWins);
+
+            var transitionToReceipt = CommandReceipt.CreateFromStream(command.Owner.Id, command.Id, filterchainCutupTransitionTo.OutputList.First().Resource.Map);
+            var transitionFromReceipt = CommandReceipt.CreateFromStream(command.Owner.Id, command.Id, filterchainCutupTransitionFrom.OutputList.First().Resource.Map);
+            var filterchainCopyTo = ResolutionFilterchain.Copy();
+            var filterchainCopyFrom = ResolutionFilterchain.Copy();
             filterchainCopyTo.SetResources(transitionToReceipt);
             filterchainCopyFrom.SetResources(transitionFromReceipt);
-            command.Filtergraph.Add(filterchainCopyTo);
-            command.Filtergraph.Add(filterchainCopyFrom);
+            command.FilterchainManager.Add(filterchainCopyTo);
+            command.FilterchainManager.Add(filterchainCopyFrom);
 
             //assign new receipts to the input filterchain
-            var toReceipt = new CommandResourceReceipt(command.Parent.Id, command.Id, filterchainCopyTo.Output.Resource.Map);
-            var fromReceipt = new CommandResourceReceipt(command.Parent.Id, command.Id, filterchainCopyFrom.Output.Resource.Map);
+            var toReceipt = CommandReceipt.CreateFromStream(command.Owner.Id, command.Id, filterchainCopyTo.OutputList.First().Resource.Map);
+            var fromReceipt = CommandReceipt.CreateFromStream(command.Owner.Id, command.Id, filterchainCopyFrom.OutputList.First().Resource.Map);
             filterchain.SetResources(toReceipt, fromReceipt);
         }
     }

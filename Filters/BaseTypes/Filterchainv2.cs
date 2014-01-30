@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
@@ -22,7 +21,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             Id = Guid.NewGuid().ToString();
             ReceiptList = new List<CommandReceipt>();
             OutputList = new List<FilterchainOutputv2>(); 
-            Filters = new AppliesToCollection<IFilter>(outputsToUse.FirstOrDefault().GetType());
+            Filters = new AppliesToCollection<IFilter>(outputsToUse.First().GetType());
             OutputList.AddRange(outputsToUse.Select(output => new FilterchainOutputv2(this, output)));
         }
         private Filterchainv2(List<IResource> outputsToUse, params IFilter[] filters)

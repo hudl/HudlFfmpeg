@@ -28,6 +28,10 @@ namespace Hudl.Ffmpeg.Command
             IsExported = export;
         }
 
+        public static CommandOutput Create(IResource outputToUse)
+        {
+            return Create(outputToUse, SettingsCollection.ForOutput());
+        }
         public static CommandOutput Create(IResource outputToUse, SettingsCollection outputSettings)
         {
             return Create(outputToUse, outputSettings, true);

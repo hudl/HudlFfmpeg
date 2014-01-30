@@ -26,7 +26,7 @@ namespace Hudl.Ffmpeg.Command
 
             Id = Guid.NewGuid().ToString();
             Configuration = configuration;
-            CommandList = new List<Command<IResource>>();
+            CommandList = new List<Commandv2>();
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public CommandFactory AddToOutput(Commandv2 command)
         {
-            command.Output.Resource.Path = Configuration.OutputPath;
+            command.Objects.Outputs.ForEach(output => output.Resource.Path = Configuration.OutputPath);
             return Add(command, true);
         }
 
@@ -53,7 +53,7 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public CommandFactory AddToResources(Commandv2 command)
         {
-            command.Output.Resource.Path = Configuration.TempPath;
+            command.Objects.Outputs.ForEach(output => output.Resource.Path = Configuration.TempPath);
             return Add(command, false);
         }
 
@@ -62,8 +62,14 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public List<IResource> GetOutput()
         {
-            return CommandList.Where(c => c.Output.IsExported)
-                              .Select(c => c.Output.Resource).ToList();
+            return CommandList.Where(c => c.Outputs.Any(cr => cr.IsExported))
+                              .SelectMany(c =>
+                                  {
+                                      var outputTempList = new List<IResource>();
+                                      outputTempList.AddRange(c.Outputs.Where(cr => cr.IsExported).Select(cr => cr.Resource));
+                                      return outputTempList;
+                                  })
+                              .ToList();
         }
 
         /// <summary>
@@ -71,17 +77,8 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public List<IResource> GetAllOutput()
         {
-            return CommandList.SelectMany(c =>
-                {
-                    var outputTempList = new List<IResource>();
-                    outputTempList.Add(c.Output.Resource);
-                    var prepTempList = c.CommandList.Select(pc => pc.Output.Resource).ToList();
-                    if (prepTempList.Count > 0)
-                    {
-                        outputTempList.AddRange(prepTempList);
-                    }
-                    return outputTempList;
-                }).ToList();
+            return CommandList.SelectMany(c => c.Outputs.Select(cr => cr.Resource))
+                              .ToList();
         }
 
         /// <summary>
@@ -144,7 +141,6 @@ namespace Hudl.Ffmpeg.Command
 
             return outputList;
         }
-
 
         #region Internals
         internal string Id { get; set; }

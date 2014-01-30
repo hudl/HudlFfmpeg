@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+﻿namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
     interface IFilterMultiOutput
     {

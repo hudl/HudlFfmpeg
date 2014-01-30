@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Filters.Templates;
-using Hudl.Ffmpeg.Resolution;
-using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Templates.BaseTypes
 {
@@ -23,36 +14,36 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
         protected BaseCommandFactoryTemplate(CommandConfiguration configuration)
         {
             Factory = new CommandFactory(configuration);       
-            AudioList = new List<IAudio>();
-            VideoList = new List<IVideo>();
-            ImageList = new List<IImage>();
+            AudioList = new List<string>();
+            VideoList = new List<string>();
+            ImageList = new List<string>();
         }
 
-        public void Add(IAudio resource)
+        public void AddAudio(string input)
         {
-            if (resource == null)
+            if (string.IsNullOrWhiteSpace(input))
             {
-                throw new ArgumentNullException("resource");
+                throw new ArgumentNullException("input");
             }
-            AudioList.Add(resource);
-        }
-        
-        public void Add(IVideo resource)
-        {
-            if (resource == null)
-            {
-                throw new ArgumentNullException("resource");
-            }
-            VideoList.Add(resource);
+            AudioList.Add(input);
         }
 
-        public void Add(IImage resource)
+        public void AddVideo(string input)
         {
-            if (resource == null)
+            if (string.IsNullOrWhiteSpace(input))
             {
-                throw new ArgumentNullException("resource");
+                throw new ArgumentNullException("input");
             }
-            ImageList.Add(resource);
+            VideoList.Add(input);
+        }
+
+        public void AddImage(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                throw new ArgumentNullException("input");
+            }
+            ImageList.Add(input);
         }
 
         public List<IResource> Render()
@@ -102,9 +93,9 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
 
         #region Internals
         internal protected bool SetupCompleted { get; protected set; }
-        internal protected List<IVideo> VideoList { get; protected set; }
-        internal protected List<IAudio> AudioList { get; protected set; }
-        internal protected List<IImage> ImageList { get; protected set; }
+        internal protected List<string> AudioList { get; protected set; }
+        internal protected List<string> VideoList { get; protected set; }
+        internal protected List<string> ImageList { get; protected set; }
         internal protected CommandFactory Factory { get; protected set; }
         #endregion 
     }

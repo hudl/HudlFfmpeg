@@ -31,7 +31,7 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        public override TimeSpan? LengthFromInputs(List<CommandResourcev2> resources)
         {
             return Length; 
         }

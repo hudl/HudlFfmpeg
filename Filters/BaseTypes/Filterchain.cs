@@ -23,14 +23,14 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Returns a new instance of the filterchain
         /// </summary>
-        public static Filterchainv2 FilterTo(List<IResource> output, params IFilter[] filters)
+        public static Filterchainv2 FilterTo(List<IResource> outputsToUse, params IFilter[] filters)
         {
-            if (output == null)
+            if (outputsToUse == null || outputsToUse.Count == 0)
             {
-                throw new ArgumentNullException("output");
+                throw new ArgumentException("Outputs specified cannot be null or empty.", "outputsToUse");
             }
 
-            return new Filterchainv2(output, filters);
+            return Filterchainv2.Create(outputsToUse, filters);
         }
     }
 }

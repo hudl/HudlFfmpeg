@@ -70,6 +70,8 @@ namespace Hudl.Ffmpeg.Command.Managers
 
                     finalFilterchain = filterchain.Copy();
 
+                    finalFilterchain.Owner = Owner.Objects.Filtergraph; 
+
                     finalFilterchain.SetResources(segmentList);
 
                     Filters.Utilities.ProcessFilters(Owner, finalFilterchain);

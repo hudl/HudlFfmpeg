@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -6,28 +8,29 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    [AppliesToResource(Type = typeof(IAudio))]
     [AppliesToResource(Type = typeof(IVideo))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class BitRate : BaseSetting
+    public class Level : BaseSetting
     {
-        private const string SettingType = "-b:v";
+        private const string SettingType = "-level";
 
-        public BitRate(int rate)
+        public Level(double setting)
             : base(SettingType)
         {
-            Rate = rate;
+            Setting = setting;
         }
-
-        public int Rate { get; set; }
+    
+        public double Setting { get; set; }
 
         public override string ToString()
         {
-            if (Rate <= 0)
+            if (Setting <= 0)
             {
-                throw new InvalidOperationException("Bit Rate must be greater than zero.");
+                throw new InvalidOperationException("Setting size must be greater than zero.");
             }
 
-            return string.Concat(Type, " ", Rate, "k");
+            return string.Concat(Type, " ", Setting);
         }
     }
 }

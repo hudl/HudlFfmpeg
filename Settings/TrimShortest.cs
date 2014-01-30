@@ -24,7 +24,7 @@ namespace Hudl.Ffmpeg.Settings
         {
         }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResource<IResource>> resources)
+        public override TimeSpan? LengthFromInputs(List<CommandResourcev2> resources)
         {
             return resources.Min(r => r.Resource.Length);
         }

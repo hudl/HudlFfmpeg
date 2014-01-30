@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -38,7 +39,7 @@ namespace Hudl.Ffmpeg.Filters
         /// </summary>
         public string Expression { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource<IResource>> resources)
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResourcev2> resources)
         {
             return resources.Min(r => r.Resource.Length);
         }

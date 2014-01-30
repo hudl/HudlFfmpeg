@@ -32,7 +32,7 @@ namespace Hudl.Ffmpeg.Common
         {
             return string.Format("[{0}]", map);
         }
-        private static string Library(string codec)
+        public static string Library(string codec)
         {
             var codecString = codec.ToLower();
             if (codecString.IndexOf(ExperimentalIndentifier, StringComparison.Ordinal) != -1)

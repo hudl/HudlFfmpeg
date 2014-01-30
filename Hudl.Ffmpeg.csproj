@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net">
@@ -61,7 +63,7 @@
     <Compile Include="Command\CommandResourcev2.cs" />
     <Compile Include="Command\CommandReceipt.cs" />
     <Compile Include="Command\CommandOutput.cs" />
-    <Compile Include="Command\Command.cs" />
+    <Compile Include="Command\FfmpegSugar.cs" />
     <Compile Include="Command\CommandConfiguration.cs" />
     <Compile Include="Command\CommandReceiptType.cs" />
     <Compile Include="Command\Managers\Commandv2FilterchainManager.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="Common\BlendVideoOptionType.cs" />
     <Compile Include="Common\BlendVideoModeType.cs" />
     <Compile Include="Common\AudioBitRateType.cs" />
+    <Compile Include="Common\VideoProfileType.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\Helpers.cs" />
     <Compile Include="Common\FfmpegMergeOptionType.cs" />
@@ -107,6 +110,8 @@
     <Compile Include="Filters\Trim.cs" />
     <Compile Include="Filters\SetPts.cs" />
     <Compile Include="Filters\Utilities.cs" />
+    <Compile Include="MediaInfo\MediaInfoDLL.cs" />
+    <Compile Include="MediaInfo\MediaLoader.cs" />
     <Compile Include="Obsolete\Obsolete.cs" />
     <Compile Include="Filters\Templates\Crossfade.cs" />
     <Compile Include="Filters\Volume.cs" />
@@ -134,15 +139,21 @@
     <Compile Include="Resources\M4A.cs" />
     <Compile Include="Resources\Mp4.cs" />
     <Compile Include="Settings\BaseTypes\BaseSetting.cs" />
+    <Compile Include="Settings\BaseTypes\BaseProfile.cs" />
     <Compile Include="Settings\BaseTypes\SettingsApplicationData.cs" />
     <Compile Include="Settings\BaseTypes\ISetting.cs" />
     <Compile Include="Settings\BaseTypes\SettingsApplicationAttribute.cs" />
     <Compile Include="Settings\BaseTypes\SettingsCollection.cs" />
     <Compile Include="Common\SettingsCollectionResourceType.cs" />
-    <Compile Include="Settings\BitRate.cs" />
-    <Compile Include="Settings\ACodec.cs" />
-    <Compile Include="Settings\AudioBitRate.cs" />
+    <Compile Include="Settings\BaseTypes\BaseBitRate.cs" />
+    <Compile Include="Settings\BitRateVideo.cs" />
+    <Compile Include="Settings\BaseTypes\BaseCodec.cs" />
+    <Compile Include="Settings\BitRateAudio.cs" />
     <Compile Include="Settings\AspectRatio.cs" />
+    <Compile Include="Settings\BitRateCompatibility.cs" />
+    <Compile Include="Settings\CodecAudio.cs" />
+    <Compile Include="Settings\Level.cs" />
+    <Compile Include="Settings\ProfileVideo.cs" />
     <Compile Include="Settings\Input.cs" />
     <Compile Include="Settings\TrimShortest.cs" />
     <Compile Include="Settings\SeekTo.cs" />
@@ -151,7 +162,7 @@
     <Compile Include="Settings\PixelFormat.cs" />
     <Compile Include="Settings\OverwriteOutput.cs" />
     <Compile Include="Settings\Duration.cs" />
-    <Compile Include="Settings\VCodec.cs" />
+    <Compile Include="Settings\CodecVideo.cs" />
     <Compile Include="Settings\Dimensions.cs" />
     <Compile Include="Settings\FrameRate.cs" />
     <Compile Include="Templates\BaseTypes\BaseCommandFactoryTemplate.cs" />
@@ -159,6 +170,7 @@
     <Compile Include="Templates\BaseTypes\BaseSettingsTemplate.cs" />
     <Compile Include="Templates\BaseTypes\BaseFilterchainAndSettingsTemplate.cs" />
     <Compile Include="Templates\CampaignProject.cs" />
+    <Compile Include="Templates\HighlightProject.cs" />
     <Compile Include="Templates\VideoCutTo.cs" />
     <Compile Include="Templates\Resolution1080P.cs" />
     <Compile Include="Templates\Resolution240P.cs" />
@@ -169,7 +181,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="MediaInfo.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\..\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\..\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

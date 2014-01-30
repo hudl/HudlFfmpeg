@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -68,18 +69,13 @@ namespace Hudl.Ffmpeg.Filters
         /// </summary>
         public VideoUnitType TimebaseUnit { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource<IResource>> resources)
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResourcev2> resources)
         {
             return TimeSpan.FromSeconds(Duration);
         }
 
         public override string ToString() 
         {
-            if (Duration <= 0)
-            {
-                throw new InvalidOperationException("Output duration cannot be empty for a video trim.");
-            }
-
             var filter = new StringBuilder(100);
             switch (TimebaseUnit)
             {
@@ -113,9 +109,12 @@ namespace Hudl.Ffmpeg.Filters
                     break;
             }
 
-            filter.AppendFormat("{1}duration={0}", 
+            if (Duration > 0)
+            {
+                filter.AppendFormat("{1}duration={0}", 
                     Duration, 
                     (filter.Length > 0) ?  ":" : string.Empty);
+            }
 
             return string.Concat(Type, filter.ToString());
         }

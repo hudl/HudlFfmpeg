@@ -7,10 +7,6 @@ using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Command.Managers;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resolution.BaseTypes;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
 using log4net;
 
 namespace Hudl.Ffmpeg.Command
@@ -32,6 +28,11 @@ namespace Hudl.Ffmpeg.Command
             OutputManager = Commandv2OutputManager.Create(this);
             ResourceManager = Commandv2ResourceManager.Create(this);
             FilterchainManager = Commandv2FilterchainManager.Create(this);
+        }
+
+        public static Commandv2 Create(CommandFactory owner)
+        {
+            return new Commandv2(owner);    
         }
 
         internal CommandObjects Objects { get; set; }
@@ -148,6 +149,25 @@ namespace Hudl.Ffmpeg.Command
             }
 
             return Objects.Filtergraph.FilterchainList.FirstOrDefault(f => f.GetReceipts().Any(r => r.Equals(receipt)));
+        }
+
+        internal CommandReceipt RegenerateResourceMap(CommandReceipt receipt)
+        {
+            if (receipt.FactoryId != Owner.Id ||
+                receipt.CommandId != Id)
+            {
+                throw new InvalidOperationException("Receipt is not a part of this command.");
+            }
+
+            var resource =  Objects.Inputs.FirstOrDefault(r => r.Resource.Map == receipt.Map);
+            if (resource == null)
+            {
+                throw new InvalidOperationException("Receipt is not a part of this command.");
+            }
+
+            resource.Resource.Map = Helpers.NewMap();
+
+            return resource.GetReceipt();
         }
         #endregion
     }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes; 
 
@@ -14,8 +15,28 @@ namespace Hudl.Ffmpeg.Resources
     {
         private static List<Type> _videoTypes = new List<Type>();
         private static List<Type> _audioTypes = new List<Type>();
-        private static List<Type> _imageTypes = new List<Type>(); 
+        private static List<Type> _imageTypes = new List<Type>();
 
+
+        /// <summary>
+        /// Creates a new resource with the full path name provided.
+        /// </summary>
+        public static TResource CreateOutput<TResource>(CommandConfiguration configuration)
+            where TResource : class, IResource, new()
+        {
+            var temporaryResource = new TResource();
+            return Create<TResource>(configuration.OutputPath, temporaryResource.FullName, TimeSpan.FromSeconds(0));
+        }
+
+        /// <summary>
+        /// Creates a new resource with the full path name provided.
+        /// </summary>
+        public static TResource Create<TResource>(CommandConfiguration configuration)
+            where TResource : class, IResource, new()
+        {
+            var temporaryResource = new TResource();
+            return Create<TResource>(configuration.TempPath, temporaryResource.FullName, TimeSpan.FromSeconds(0));
+        }
 
         /// <summary>
         /// Creates a new resource with the full path name provided.

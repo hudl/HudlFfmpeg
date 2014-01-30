@@ -50,7 +50,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Adds a new instance of a filterchain to the filtergraph
         /// </summary>
-        /// <typeparam name="TResource">the Type of output for the new filterchain</typeparam>
         public Filtergraphv2 FilterTo<TResource>(int count, params IFilter[] filters)
             where TResource : IResource, new()
         {
@@ -62,7 +61,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Adds a new instance of a filterchain to the filtergraph
         /// </summary>
-        /// <typeparam name="TResource">the Type of output for the new filterchain</typeparam>
         public Filtergraphv2 FilterTo(List<IResource> outputList, params IFilter[] filters)
         {
             var filterchain = Filterchain.FilterTo(outputList, filters);
@@ -84,6 +82,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// merges the given Filterchain to the Filtergraph
         /// </summary>
         /// <param name="filterchain">the filterchain to be added to the filtergraph</param>
+        /// <param name="optionType">the option specifying how the merge should declare a winner</param>
         public Filtergraphv2 Merge(Filterchainv2 filterchain, FfmpegMergeOptionType optionType)
         {
             var indexOfItem = IndexOf(filterchain); 
