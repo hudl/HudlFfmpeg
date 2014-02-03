@@ -16,6 +16,7 @@ namespace Hudl.Ffmpeg.Resources
         private static List<Type> _videoTypes = new List<Type>();
         private static List<Type> _audioTypes = new List<Type>();
         private static List<Type> _imageTypes = new List<Type>();
+        private static List<Type> _allTypes = new List<Type>();
 
 
         /// <summary>
@@ -80,6 +81,51 @@ namespace Hudl.Ffmpeg.Resources
                     Length = length
                 };
         }
+
+
+        /// <summary>
+        /// Creates a new resource with the full path name provided.
+        /// </summary>
+        public static IResource From(string fullPath)
+        {
+            var fileName = Helpers.GetNameFromFullName(fullPath);
+            var filePath = Helpers.GetPathFromFullName(fullPath);
+            return From(filePath, fileName); 
+        }
+        /// <summary>
+        /// Creates a new resource with the full path name provided.
+        /// </summary>
+        private static IResource From(string filePath, string fileName)
+        {
+            var fileExtension = Helpers.GetExtensionFromFullName(fileName);
+            if (_imageTypes.Count == 0)
+            {
+                _imageTypes = GetTypes<IImage>();
+                _allTypes.AddRange(_imageTypes);
+            }
+            if (_audioTypes.Count == 0)
+            {
+                _audioTypes = GetTypes<IAudio>();
+                _allTypes.AddRange(_audioTypes);
+            }
+            if (_videoTypes.Count == 0)
+            {
+                _videoTypes = GetTypes<IVideo>();
+                _allTypes.AddRange(_videoTypes);
+            }
+
+            var correctResource = _allTypes.FirstOrDefault(t => t.Name.ToUpper() == fileExtension.ToUpper());
+            if (correctResource == null)
+            {
+                throw new InvalidOperationException("Cannot derive resource type from path provided.");
+            }
+
+            var newInstance = (IResource)Activator.CreateInstance(correctResource);
+            newInstance.Path = filePath;
+            newInstance.Name = fileName;
+            return newInstance;
+        }
+
 
         /// <summary>
         /// Creates a new resource with the full path name provided.

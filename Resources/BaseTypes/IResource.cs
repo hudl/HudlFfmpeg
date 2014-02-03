@@ -38,7 +38,12 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// <summary>
         /// the duration of the input video, this is used in the processing of time
         /// </summary>
+        [Obsolete("Length is obsolete, use Info.Duration instead.", false)]
         TimeSpan Length { get; set; }
+        /// <summary>
+        /// the metadata information surrounding the resource
+        /// </summary>
+        MetadataInfo Info { get; set; }
         /// <summary>
         /// method for copying a resource for its base types.
         /// </summary>

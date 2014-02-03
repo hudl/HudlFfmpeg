@@ -59,7 +59,6 @@ namespace Hudl.Ffmpeg.Command
             return CommandReceipt.CreateFromInput(Owner.Owner.Id, Owner.Id, Resource.Map);
         }
 
-
         #region Internals
         internal string Id { get; set; }
         internal Commandv2 Owner { get; set; }

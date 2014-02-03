@@ -49,6 +49,9 @@ namespace Hudl.Ffmpeg.MediaInfo
 
                     double fr;
                     if (double.TryParse(_mi.Get(StreamKind.Video, 0, "FrameRate"), out fr)) FrameRate = fr;
+
+                    long br;
+                    if (long.TryParse(_mi.Get(StreamKind.Video, 0, "BitRate"), out br)) BitRate = br;
                 }
 
                 DateTime rd;
@@ -69,6 +72,7 @@ namespace Hudl.Ffmpeg.MediaInfo
         public bool HasAudio { get; protected set; }
         public int Width { get; protected set; }
         public int Height { get; protected set; }
+        public long BitRate { get; protected set; }
         public double AspectRatio { get; protected set; }
         public DateTime RecordingDate { get; protected set; }
         public double FrameRate { get; protected set; }

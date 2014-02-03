@@ -13,6 +13,7 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
             Map = Helpers.NewMap();
             ResourceIndicator = resourceIndicator;
             Name = string.Concat(Guid.NewGuid(), format);
+            Info = MetadataInfo.Create();
         }
         protected BaseResource(string format, string resourceIndicator, string name) 
             : this(format, resourceIndicator)
@@ -92,8 +93,14 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// <summary>
         /// the duration of the input video, this is used in the processing of time
         /// </summary>
-        public TimeSpan Length { get; set; }
-        
+        [Obsolete("Length is obsolete, use Info.Duration instead.", false)]
+        public TimeSpan Length { get { return Info.Duration; } set { Info.Duration = value; } }
+
+        /// <summary>
+        /// the metadata information surrounding the resource
+        /// </summary>
+        public MetadataInfo Info { get; set; }
+
         /// <summary>
         /// method for copying a resource.
         /// </summary>

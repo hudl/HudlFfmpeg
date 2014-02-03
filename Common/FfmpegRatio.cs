@@ -38,5 +38,10 @@ namespace Hudl.Ffmpeg.Common
         {
             return string.Concat(_numerator, ":", _denominator); 
         }
+
+        public static FfmpegRatio Create(int numerator, int denominator)
+        {
+            return new FfmpegRatio(numerator, denominator);
+        }
     }
 }

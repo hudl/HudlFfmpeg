@@ -61,7 +61,7 @@ namespace Hudl.Ffmpeg.Filters
                 throw new InvalidOperationException("Dimensions.Y must be greater than zero for scaling.");
             }
 
-            return string.Concat(Type, "=w=", Dimensions.X, ":h=", Dimensions.Y);
+            return string.Concat(Type, "=w=", Dimensions.X, ":h=", Dimensions.Y, ":flags=lanczos");
         }
     }
 }

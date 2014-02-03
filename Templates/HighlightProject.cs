@@ -1,9 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
+using Hudl.Ffmpeg.Filters;
+using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
@@ -13,26 +14,36 @@ namespace Hudl.Ffmpeg.Templates
 {
     public class HighlightProject : BaseCommandFactoryTemplate
     {
-        public const int NumberInSegments = 4;
-        public const string FfmpegStepOneOutputPrefix = "ffmpeg_1_";
-
         public HighlightProject(CommandConfiguration configuration)
             : base(configuration)
         {
+            Flags = FlagTypes.None;
+            CommandData = new List<VideoCommandData>();
         }
-        
-        public 
+
+        [Flags]
+        public enum FlagTypes
+        {
+            None = 0x0,
+            OutputHd = 0x1,
+            OutputSd = 0x2
+        }
+
+        public FlagTypes Flags { get; set; }
+
+        public List<VideoCommandData> CommandData { get; set; } 
+
+        private bool HasFlag(FlagTypes flag)
+        {
+            return (Flags & flag) == flag; 
+        }
 
         protected override void SetupTemplate()
         {
-            if (VideoList.Count == 0)
+            if (CommandData.Count == 0)
             {
                 throw new InvalidOperationException("Cannot create a highlight project with an empty video list.");
             }
-
-            //As of 1-30-2014 the highlight project will be used for trimming only, 
-            //we will process 4 videos at a time. 
-            var videoListSegments = SegmentList(VideoList, NumberInSegments);
 
             //settings definitiions
             #region ...
@@ -62,60 +73,133 @@ namespace Hudl.Ffmpeg.Templates
             stepOneOutputSettingsSd.MergeRange(resolutionTemplateSd, FfmpegMergeOptionType.NewWins);
             #endregion 
 
-            //filter definitiions
-            #region ...
-            var stepOne = Filterchain.FilterTo<Mp4>(
-                new Overlay()
-            );
-            #endregion 
-
-            videoListSegments.ForEach(videoInput =>
+            CommandData.ForEach(video =>
                 {
-                    var videoOutput = videoInput.Select(video =>
-                        {
-                            var temporaryInfo = new FileInfo(video);
-                            var temporaryName = string.Concat(FfmpegStepOneOutputPrefix, temporaryInfo.Name);
-                            return temporaryInfo.FullName.Replace(temporaryInfo.Name, temporaryName); 
-                        }).ToList();
+                    var command = Factory.AsOutput()
+                                         .WithInput(video.FullName);
+                   
+                    var receipt = ApplyTrimFilterchain(command, video);
 
-                    var command = Factory.CreateOutput()
-                                         .UsingVideo(videoInput)
-                                         .GivingVideo(videoOutput); 
+                    var splits = ApplySplitStreamFilterchain(command, receipt); 
 
-                    var streamModifier = command.StreamAt(0)
-                                                .FilterTo( )
-
-                    
-                });
-
-
-        }
-
-        private static List<List<string>> SegmentList(List<string> listToSegment, int numberInSegment)
-        {
-            var segmentList = new List<string>();
-            var segmentedList = new List<List<string>>();
-            var segmentCounter = 0;
-            listToSegment.ForEach(item =>
-                {
-                    segmentCounter++; 
-
-                    if (segmentCounter > 4)
+                    if (HasFlag(FlagTypes.OutputSd))
                     {
-                        segmentedList.Add(segmentList);
+                        var outputSd = ApplySdResizeFilterchain(command, splits.ElementAt(0));
 
-                        segmentList = new List<string>();
+                        command.WithReceipts(outputSd)
+                               .MapTo<Mp4>(stepOneOutputSettingsSd); 
                     }
 
-                    segmentList.Add(item);
-                });
+                    if (HasFlag(FlagTypes.OutputHd))
+                    {
+                        var outputHd = ApplyHdResizeFilterchain(command, splits.ElementAt(1)); 
 
-            if (segmentList.Count > 0)
+                        command.WithReceipts(outputHd)
+                               .MapTo<Mp4>(stepOneOutputSettingsHd); 
+                    }
+                });
+        }
+
+        private CommandReceipt ApplyTrimFilterchain(Commandv2 command,  VideoCommandData commandData)
+        {
+            var inputReceipt = command.ResourceReceiptAt(0); 
+
+            if (commandData.StartPointInTicks <= 0 || commandData.StopPointInTicks <= 0)
             {
-                segmentedList.Add(segmentList);
+                return inputReceipt;
             }
 
-            return segmentedList;
+            var filterchain = Filterchain.FilterTo<Mp4>(1, new Trim(), new SetPts(true)); 
+            if (commandData.StartPointInTicks > 0)
+            {
+                filterchain.Filters.Get<Trim>().Start = TimeSpan.FromTicks(commandData.StartPointInTicks).TotalSeconds; 
+            }
+            if (commandData.StopPointInTicks > 0)
+            {
+                filterchain.Filters.Get<Trim>().End = TimeSpan.FromTicks(commandData.StopPointInTicks).TotalSeconds; 
+
+            }
+
+            return command.WithReceipts(inputReceipt)
+                          .Filter(filterchain)
+                          .Receipts.First(); 
+        }
+
+        private List<CommandReceipt> ApplySplitStreamFilterchain(Commandv2 command, CommandReceipt receipt)
+        {
+            var renderInHd = HasFlag(FlagTypes.OutputHd);
+            var renderInSd = HasFlag(FlagTypes.OutputSd);
+            if (renderInSd && renderInHd)
+            {
+                return command.WithReceipts(receipt)
+                              .Filter(Filterchain.FilterTo<Mp4>(1, new Split(2)))
+                              .Receipts;
+            }
+
+            return new List<CommandReceipt> { receipt, receipt };
+        }  
+
+        private CommandReceipt ApplyHdResizeFilterchain(Commandv2 command, CommandReceipt receipt)
+        {
+            const long expectedBitRate = 3000L;
+            const int expectedHeight = 720;
+            const int expectedWidth = 1280;
+
+            return ApplyResizeFilterchain(command, receipt, ScalePresetType.Hd720, expectedBitRate, expectedWidth, expectedHeight); 
+        }
+        private CommandReceipt ApplySdResizeFilterchain(Commandv2 command, CommandReceipt receipt)
+        {
+            const long expectedBitRate = 1100L;
+            const int expectedHeight = 480;
+            const int expectedWidth = 852;
+
+            return ApplyResizeFilterchain(command, receipt, ScalePresetType.Hd720, expectedBitRate, expectedWidth, expectedHeight);
+        }
+        private static CommandReceipt ApplyResizeFilterchain(Commandv2 command, CommandReceipt receipt, ScalePresetType type,
+                                                      long expectedBitRate, int expectedWidth, int expectedHeight)
+        {
+            var resource = command.Resources.First().Resource;
+
+            if (resource.Info.BitRate == expectedBitRate &&
+                resource.Info.Dimensions.Width == expectedWidth &&
+                resource.Info.Dimensions.Height == expectedHeight)
+            {
+                return receipt;
+            }
+
+            var filterchain = Filterchain.FilterTo<Mp4>(1,
+                new Pad(Pad.ExprConvertTo169Aspect),
+                new Scale(type),
+                new SetDar(FfmpegRatio.Create(16, 9)),
+                new SetSar(FfmpegRatio.Create(1, 1))
+            );
+
+            return command.WithReceipts(receipt)
+                          .Filter(filterchain)
+                          .Receipts.First(); 
+        }
+    }
+
+    public class VideoCommandData
+    {
+        private VideoCommandData()
+        {
+        }
+
+        public string FullName { get; internal set; }
+
+        public long StartPointInTicks { get; internal set; }
+
+        public long StopPointInTicks { get; internal set; }
+
+        public static VideoCommandData Create(string fullName, long startPointInTicks, long stopPointInTicks)
+        {
+            return new VideoCommandData
+                {
+                    FullName = fullName,
+                    StopPointInTicks = stopPointInTicks,
+                    StartPointInTicks = startPointInTicks,
+                };
         }
     }
 }

@@ -1,0 +1,65 @@
+﻿using System;
+using System.Drawing;
+using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.Ffmpeg.Resources.BaseTypes;
+
+namespace Hudl.Ffmpeg.Filters
+{
+    /// <summary>
+    /// Filter that applies padding to input video 
+    /// </summary>
+    [AppliesToResource(Type = typeof(IVideo))]
+    public class Pad : BaseFilter
+    {
+        private const int FilterMaxInputs = 1;
+        private const string FilterType = "pad";
+
+        public const string ExprConvertTo169Aspect = "ih*16/9:ih:(ow-iw)/2:(oh-ih)/2"; 
+
+        public Pad() 
+            : base(FilterType, FilterMaxInputs)
+        {
+        }
+        public Pad(Size toDimensions, Point atPosition)
+            : this()
+        {
+             
+           
+        }
+        public Pad(string expression)
+            : this()
+        {
+        }
+
+        public string Expression { get; set; }
+
+        public Size To { get; set; }
+
+        public Point Position { get; set; }
+
+        public override string ToString() 
+        {
+            if (!string.IsNullOrWhiteSpace(Expression))
+            {
+                return string.Concat(Type, " ", Expression); 
+            }
+
+            if (To == null)
+            {
+                throw new InvalidOperationException("To dimensions cannot be null.");
+            }
+            if (Position == null)
+            {
+                throw new InvalidOperationException("Position point cannot be null.");
+            }
+
+            return string.Format("{0}=width={1}:height={2}:x={3}:y={4}", 
+                Type,
+                To.Width, 
+                To.Height,
+                Position.X, 
+                Position.Y);
+        }
+    }
+}

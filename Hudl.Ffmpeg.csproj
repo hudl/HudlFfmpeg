@@ -106,6 +106,7 @@
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
     <Compile Include="Filters\AMovie.cs" />
+    <Compile Include="Filters\Pad.cs" />
     <Compile Include="Filters\Split.cs" />
     <Compile Include="Filters\Trim.cs" />
     <Compile Include="Filters\SetPts.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Filters\Movie.cs" />
     <Compile Include="Filters\Overlay.cs" />
     <Compile Include="Filters\Scale.cs" />
+    <Compile Include="Resources\BaseTypes\MetadataInfo.cs" />
     <Compile Include="Resources\Wmv.cs" />
     <Compile Include="Resources\Jpg.cs" />
     <Compile Include="Resources\Png.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="Settings\AspectRatio.cs" />
     <Compile Include="Settings\BitRateCompatibility.cs" />
     <Compile Include="Settings\CodecAudio.cs" />
+    <Compile Include="Settings\Map.cs" />
     <Compile Include="Settings\Level.cs" />
     <Compile Include="Settings\ProfileVideo.cs" />
     <Compile Include="Settings\Input.cs" />
