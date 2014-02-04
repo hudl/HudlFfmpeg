@@ -2,12 +2,12 @@
 
 namespace Hudl.Ffmpeg.Settings.BaseTypes
 {
-   public abstract class BaseCodec : BaseSetting
+    public abstract class BaseCodec : BaseSetting
     {
         private const string SettingType = "-c";
 
         protected BaseCodec(string suffix, string codec)
-            : base(string.Format("{0}{1}", SettingType, suffix)))
+            : base(string.Format("{0}{1}", SettingType, suffix))
         {
             Codec = codec;
         }

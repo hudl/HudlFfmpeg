@@ -2,12 +2,12 @@
 
 namespace Hudl.Ffmpeg.Settings.BaseTypes
 {
-   public abstract class BaseProfile : BaseSetting
+    public abstract class BaseProfile : BaseSetting
     {
         private const string SettingType = "-profile";
 
         protected BaseProfile(string suffix, string profile)
-            : base(string.Format("{0}{1}", SettingType, suffix)))
+            : base(string.Format("{0}{1}", SettingType, suffix))
         {
             Profile = profile;
         }

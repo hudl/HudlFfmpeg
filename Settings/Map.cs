@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
@@ -20,19 +18,19 @@ namespace Hudl.Ffmpeg.Settings
         public Map(CommandReceipt receipt)
             : base(SettingType)
         {
-            Receipt = receipt;
+            Stream = receipt.Map;
         }
     
-        public CommandReceipt Receipt { get; set; }
+        public string Stream { get; set; }
 
         public override string ToString()
         {
-            if (Receipt == null)
+            if (string.IsNullOrWhiteSpace(Stream))
             {
-                throw new InvalidOperationException("Map setting receipt cannot be null.");
+                throw new InvalidOperationException("Map setting Stream cannot be null.");
             }
 
-            return string.Concat(Type, " ", Formats.Map(Receipt.Map));
+            return string.Concat(Type, " ", Formats.Map(Stream));
         }
     }
 }

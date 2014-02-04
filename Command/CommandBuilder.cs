@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
@@ -172,11 +171,9 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("output");
             }
 
-            var settingsData = Validate.GetSettingCollectionData(output.Settings);
-
             WriteOutputSettings(output);
 
-            _builderBase.AppendFormat(" {0}", Helpers.EscapePath(output.Output()));
+            _builderBase.AppendFormat(" {0}", Helpers.EscapePath(output.Resource));
         }
         private void WriteOutputSettings(CommandOutput output)
         {

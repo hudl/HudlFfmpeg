@@ -24,12 +24,13 @@ namespace Hudl.Ffmpeg.Filters
         public Pad(Size toDimensions, Point atPosition)
             : this()
         {
-             
-           
+            To = toDimensions;
+            Position = atPosition;
         }
         public Pad(string expression)
             : this()
         {
+            Expression = expression;
         }
 
         public string Expression { get; set; }
@@ -42,7 +43,7 @@ namespace Hudl.Ffmpeg.Filters
         {
             if (!string.IsNullOrWhiteSpace(Expression))
             {
-                return string.Concat(Type, " ", Expression); 
+                return string.Concat(Type, "=", Expression); 
             }
 
             if (To == null)

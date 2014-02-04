@@ -18,15 +18,13 @@ namespace Hudl.Ffmpeg.Command
         #region CommandFactory Sugar
         public static Commandv2 AsOutput(this CommandFactory factory)
         {
-            var newCommand = Commandv2.Create(factory);
-            factory.AddToOutput(newCommand);
-            return newCommand;
+            factory.AddToOutput(Commandv2.Create(factory));
+            return factory.CommandList[factory.CommandList.Count - 1];
         }
         public static Commandv2 AsResource(this CommandFactory factory)
         {
-            var newCommand = Commandv2.Create(factory);
-            factory.AddToResources(newCommand);
-            return newCommand;
+            factory.AddToResources(Commandv2.Create(factory));
+            return factory.CommandList[factory.CommandList.Count - 1];
         }
         #endregion
 
@@ -232,26 +230,31 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
             }
         }
-        public static Commandv2 MapTo<TOutputType>(this CommandStage stage)
+        public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage)
             where TOutputType : class, IResource, new()
         {
             return stage.MapTo<TOutputType>(SettingsCollection.ForOutput());
         }
-        public static Commandv2 MapTo<TOutputType>(this CommandStage stage, SettingsCollection settings)
+        public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage, SettingsCollection settings)
             where TOutputType : class, IResource, new()
         {
             ValidateMapTo(stage.Command);
 
+            var settingsCopy = settings.Copy();
+            var outputObjects = new List<CommandOutput>();
+
             stage.Receipts.ForEach(receipt =>
                 {
-                    var commandOutput = CommandOutput.Create(new TOutputType(), settings);
+                    var commandOutput = CommandOutput.Create(Resource.CreateOutput<TOutputType>(stage.Command.Owner.Configuration), settingsCopy);
 
                     commandOutput.Settings.Merge(new Map(receipt), FfmpegMergeOptionType.NewWins); 
 
                     stage.Command.OutputManager.Add(commandOutput);
+
+                    outputObjects.Add(commandOutput);
                 });
 
-            return stage.Command;
+            return outputObjects;
         }
         #endregion
     }

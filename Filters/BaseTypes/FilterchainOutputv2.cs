@@ -31,6 +31,11 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             return Resource;
         }
 
+        public FilterchainOutputv2 Copy()
+        {
+            return new FilterchainOutputv2(Owner, Output().Copy<IResource>());
+        }
+
         #region Internals
         internal string Id { get; set; }
         internal IResource Resource { get; set; }

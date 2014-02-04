@@ -165,6 +165,15 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             return SettingsList.FirstOrDefault(s => s is TSetting) as TSetting;
         }
 
+        /// <summary>
+        /// will return an exact copy of the settings collection.
+        /// </summary>
+        public SettingsCollection Copy()
+        {
+            var newSettingsCollection = new SettingsCollection(Type);
+            newSettingsCollection.MergeRange(this, FfmpegMergeOptionType.NewWins);
+            return newSettingsCollection;
+        }
 
         /// <summary>
         /// removes the specified setting type from the SettingsCollection

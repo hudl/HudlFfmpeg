@@ -18,6 +18,7 @@ namespace Hudl.Ffmpeg.Templates
             : base(configuration)
         {
             Flags = FlagTypes.None;
+            OutputData = new List<VideoOutputData>();
             CommandData = new List<VideoCommandData>();
         }
 
@@ -31,12 +32,27 @@ namespace Hudl.Ffmpeg.Templates
 
         public FlagTypes Flags { get; set; }
 
-        public List<VideoCommandData> CommandData { get; set; } 
+        public List<VideoCommandData> CommandData { get; set; }
 
-        private bool HasFlag(FlagTypes flag)
+        public List<VideoOutputData> OutputData { get; set; }
+ 
+        public bool HasFlag(FlagTypes flag)
         {
             return (Flags & flag) == flag; 
         }
+
+        public void SetFlag(FlagTypes flag, bool isOn)
+        {
+            if (isOn)
+            {
+                Flags |= flag;
+            }
+            else
+            {
+                Flags &= flag;
+            }
+        }
+
 
         protected override void SetupTemplate()
         {
@@ -51,7 +67,8 @@ namespace Hudl.Ffmpeg.Templates
             var resolutionTemplateSd = Resolution480P.Create<Mp4>();
             var stepOneOutputSettingsHd = SettingsCollection.ForOutput(
                 new Level(3.0),
-                new FrameRate(29.97),
+                new FrameRate(30),
+                new RemoveAudio(),
                 new OverwriteOutput(),
                 new BitRateVideo(3000),
                 new BitRateCompatibility(3000),
@@ -61,7 +78,8 @@ namespace Hudl.Ffmpeg.Templates
             );
             var stepOneOutputSettingsSd = SettingsCollection.ForOutput(
                 new Level(3.0),
-                new FrameRate(29.97),
+                new FrameRate(30),
+                new RemoveAudio(),
                 new OverwriteOutput(),
                 new BitRateVideo(1100),
                 new BitRateCompatibility(1100),
@@ -71,10 +89,12 @@ namespace Hudl.Ffmpeg.Templates
             );
             stepOneOutputSettingsHd.MergeRange(resolutionTemplateHd, FfmpegMergeOptionType.NewWins);
             stepOneOutputSettingsSd.MergeRange(resolutionTemplateSd, FfmpegMergeOptionType.NewWins);
-            #endregion 
+            #endregion
 
             CommandData.ForEach(video =>
                 {
+                    var outputData = VideoOutputData.Create(); 
+
                     var command = Factory.AsOutput()
                                          .WithInput(video.FullName);
                    
@@ -86,17 +106,23 @@ namespace Hudl.Ffmpeg.Templates
                     {
                         var outputSd = ApplySdResizeFilterchain(command, splits.ElementAt(0));
 
-                        command.WithReceipts(outputSd)
-                               .MapTo<Mp4>(stepOneOutputSettingsSd); 
+                        outputData.SdFullName = command.WithReceipts(outputSd)
+                                                       .MapTo<Mp4>(stepOneOutputSettingsSd)
+                                                       .First()
+                                                       .Resource.FullName;
                     }
 
                     if (HasFlag(FlagTypes.OutputHd))
                     {
-                        var outputHd = ApplyHdResizeFilterchain(command, splits.ElementAt(1)); 
+                        var outputHd = ApplyHdResizeFilterchain(command, splits.ElementAt(1));
 
-                        command.WithReceipts(outputHd)
-                               .MapTo<Mp4>(stepOneOutputSettingsHd); 
+                        outputData.HdFullName = command.WithReceipts(outputHd)
+                                                       .MapTo<Mp4>(stepOneOutputSettingsHd)
+                                                       .First()
+                                                       .Resource.FullName;
                     }
+
+                    OutputData.Add(outputData);
                 });
         }
 
@@ -153,7 +179,7 @@ namespace Hudl.Ffmpeg.Templates
             const int expectedHeight = 480;
             const int expectedWidth = 852;
 
-            return ApplyResizeFilterchain(command, receipt, ScalePresetType.Hd720, expectedBitRate, expectedWidth, expectedHeight);
+            return ApplyResizeFilterchain(command, receipt, ScalePresetType.Sd480, expectedBitRate, expectedWidth, expectedHeight);
         }
         private static CommandReceipt ApplyResizeFilterchain(Commandv2 command, CommandReceipt receipt, ScalePresetType type,
                                                       long expectedBitRate, int expectedWidth, int expectedHeight)
@@ -200,6 +226,22 @@ namespace Hudl.Ffmpeg.Templates
                     StopPointInTicks = stopPointInTicks,
                     StartPointInTicks = startPointInTicks,
                 };
+        }
+    }
+
+    public class VideoOutputData
+    {
+        private VideoOutputData()
+        {
+        }
+
+        public string SdFullName { get; internal set; }
+        
+        public string HdFullName { get; internal set; }
+
+        public static VideoOutputData Create()
+        {
+            return new VideoOutputData();
         }
     }
 }

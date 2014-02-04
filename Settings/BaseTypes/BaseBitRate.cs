@@ -7,7 +7,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         private const string SettingType = "-b";
 
         protected BaseBitRate(string suffix, int rate)
-            : base(string.Format("{0}{1}", SettingType, suffix)))
+            : base(string.Format("{0}{1}", SettingType, suffix))
         {
             Rate = rate;
         }

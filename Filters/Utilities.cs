@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters
 {
-    internal partial class Utilities
+    internal class Utilities
     {
         public static int GetFilterOutputMax(Filterchainv2 filterchain)
         {
+            if (filterchain == null)
+            {
+                throw new ArgumentNullException("filterchain");
+            }
+            
             return filterchain.Filters.List.Max(f =>
                 {
                     if (!(f is IFilterMultiOutput))
@@ -29,6 +32,11 @@ namespace Hudl.Ffmpeg.Filters
 
         public static bool ValidateFilters(Commandv2 command, Filterchainv2 filterchain, List<CommandReceipt> receipts)
         {
+            if (filterchain == null)
+            {
+                throw new ArgumentNullException("filterchain");
+            }
+
             return filterchain.Filters.List.TrueForAll(f =>
             {
                 if (!(f is IFilterValidator))

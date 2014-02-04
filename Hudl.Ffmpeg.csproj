@@ -93,6 +93,7 @@
     <Compile Include="Common\VideoCodecType.cs" />
     <Compile Include="Filters\AFade.cs" />
     <Compile Include="Filters\AMix.cs" />
+    <Compile Include="Filters\BaseTypes\BaseSplitFilter.cs" />
     <Compile Include="Filters\BaseTypes\BaseFilter.cs" />
     <Compile Include="Filters\BaseTypes\FilterchainOutputv2.cs" />
     <Compile Include="Filters\BaseTypes\Filterchainv2.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
     <Compile Include="Filters\AMovie.cs" />
+    <Compile Include="Filters\ASplit.cs" />
     <Compile Include="Filters\Pad.cs" />
     <Compile Include="Filters\Split.cs" />
     <Compile Include="Filters\Trim.cs" />

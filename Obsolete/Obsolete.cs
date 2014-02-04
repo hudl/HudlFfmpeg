@@ -1938,13 +1938,13 @@ namespace Hudl.Ffmpeg.Templates.Obsolete
             : base(SettingsCollectionResourceType.Output)
         {
             BaseFilterchain.Filters.AddRange(
-                new Scale(ScalePresetType.Hd480),
+                new Scale(ScalePresetType.Sd480),
                 new SetDar(new FfmpegRatio(16, 9)),
                 new SetSar(new FfmpegRatio(1, 1))
             );
 
             BaseSettings.AddRange(SettingsCollection.ForOutput(
-                new Dimensions(ScalePresetType.Hd480),
+                new Dimensions(ScalePresetType.Sd480),
                 new AspectRatio(new FfmpegRatio(16, 9)))
             );
         }

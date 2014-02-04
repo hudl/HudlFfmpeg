@@ -18,6 +18,10 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
 
         public long BitRate { get; internal set; }
 
+        public bool HasAudio { get; internal set; }
+
+        public bool HasVideo { get; internal set; }
+
         public static MetadataInfo Create()
         {
             return new MetadataInfo();
@@ -28,7 +32,9 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
                 {
                     BitRate = loader.BitRate, 
                     Duration = loader.Duration, 
-                    Dimensions = new Size(loader.Width, loader.Height)
+                    HasAudio = loader.HasAudio,
+                    HasVideo = loader.HasVideo,
+                    Dimensions = new Size(loader.Width, loader.Height),
                 };
         }
     }
