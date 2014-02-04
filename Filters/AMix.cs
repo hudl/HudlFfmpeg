@@ -41,7 +41,7 @@ namespace Hudl.Ffmpeg.Filters
 
         public DurationType DurationType { get; set; }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResourcev2> resources)
+        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
         {
             switch (DurationType)
             {

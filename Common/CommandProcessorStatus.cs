@@ -1,4 +1,4 @@
-﻿namespace Hudl.Ffmpeg.Command
+﻿namespace Hudl.Ffmpeg.Common
 {
     /// <summary>
     /// enumeration indicating the state of a command processor

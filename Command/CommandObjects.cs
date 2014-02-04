@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -9,23 +10,23 @@ namespace Hudl.Ffmpeg.Command
 {
     public class CommandObjects
     {
-        private CommandObjects(Commandv2 owner)
+        private CommandObjects(FfmpegCommand owner)
         {
             Outputs = new List<CommandOutput>();
-            Inputs = new List<CommandResourcev2>();
-            Filtergraph = Filtergraphv2.Create(owner);
+            Inputs = new List<CommandResource>();
+            Filtergraph = Filtergraph.Create(owner);
         }
 
-        public static CommandObjects Create(Commandv2 owner)
+        public static CommandObjects Create(FfmpegCommand owner)
         {
             return new CommandObjects(owner);
         }
 
-        public Filtergraphv2 Filtergraph { get; internal set; }
+        public Filtergraph Filtergraph { get; internal set; }
 
         public List<CommandOutput> Outputs { get; internal set; }
         
-        public List<CommandResourcev2> Inputs { get; internal set; }
+        public List<CommandResource> Inputs { get; internal set; }
 
         public bool ContainsInput(CommandReceipt receipt)
         {

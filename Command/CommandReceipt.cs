@@ -1,4 +1,6 @@
 ﻿
+using Hudl.Ffmpeg.Common;
+
 namespace Hudl.Ffmpeg.Command
 {
     /// <summary>

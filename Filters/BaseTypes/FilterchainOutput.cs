@@ -3,9 +3,9 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
-    public class FilterchainOutputv2
+    public class FilterchainOutput
     {
-        internal FilterchainOutputv2(Filterchainv2 owner, IResource resource)
+        internal FilterchainOutput(Filterchain owner, IResource resource)
         {
             if (owner == null)
             {
@@ -23,7 +23,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
 
         public TimeSpan Length { get; set; }
 
-        public Filterchainv2 Owner { get; protected set; }
+        public Filterchain Owner { get; protected set; }
 
         public IResource Output()
         {
@@ -31,9 +31,9 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             return Resource;
         }
 
-        public FilterchainOutputv2 Copy()
+        public FilterchainOutput Copy()
         {
-            return new FilterchainOutputv2(Owner, Output().Copy<IResource>());
+            return new FilterchainOutput(Owner, Output().Copy<IResource>());
         }
 
         #region Internals

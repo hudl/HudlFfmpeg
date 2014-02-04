@@ -1,23 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Hudl.Ffmpeg.Command.Managers
 {
-    public class Commandv2OutputManager
+    public class CommandOutputManager
     {
-        private Commandv2OutputManager(Commandv2 owner)
+        private CommandOutputManager(FfmpegCommand owner)
         {
             Owner = owner;
         }    
 
-        public static Commandv2OutputManager Create(Commandv2 owner)
+        public static CommandOutputManager Create(FfmpegCommand owner)
         {
-            return new Commandv2OutputManager(owner);
+            return new CommandOutputManager(owner);
         }
 
-        private Commandv2 Owner { get; set; }
+        private FfmpegCommand Owner { get; set; }
 
         public void Add(CommandOutput output)
         {

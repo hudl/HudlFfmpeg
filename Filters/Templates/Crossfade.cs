@@ -16,7 +16,7 @@ namespace Hudl.Ffmpeg.Filters.Templates
     {
         private const string CrossfadeAlgorithm = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
 
-        public Crossfade(TimeSpan duration, Filterchainv2 resolutionFilterchain)
+        public Crossfade(TimeSpan duration, Filterchain resolutionFilterchain)
         {
             Duration = duration;
             Option = BlendVideoOptionType.all_expr;
@@ -38,15 +38,15 @@ namespace Hudl.Ffmpeg.Filters.Templates
             }
         }
 
-        private Filterchainv2 ResolutionFilterchain { get; set; }
+        private Filterchain ResolutionFilterchain { get; set; }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResourcev2> resources)
+        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
         {
             return Duration;
         }
 
         //TODO: CB -> it would be relatively easy to reconfigure this routine to utilize splits in order to do this more effeciently
-        public void PrepCommands(Commandv2 command, Filterchainv2 filterchain)
+        public void PrepCommands(FfmpegCommand command, Filterchain filterchain)
         {
             //verify that we have a resolution filterchain 
             if (ResolutionFilterchain == null)
@@ -56,8 +56,8 @@ namespace Hudl.Ffmpeg.Filters.Templates
 
             double resourceToLength;
             double resourceFromLength;
-            Filterchainv2 filterchainCutupTransitionTo = null;
-            Filterchainv2 filterchainCutupTransitionFrom = null;
+            Filterchain filterchainCutupTransitionTo = null;
+            Filterchain filterchainCutupTransitionFrom = null;
 
             var receiptTo = filterchain.Resources[1];
             var receiptFrom = filterchain.Resources[1];

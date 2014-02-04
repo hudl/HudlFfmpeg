@@ -29,7 +29,7 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
             }
         }
 
-        public static implicit operator Filterchainv2(BaseFilterchainAndSettingsTemplate filterchainAndSettingsTemplate)
+        public static implicit operator Filterchain(BaseFilterchainAndSettingsTemplate filterchainAndSettingsTemplate)
         {
             return filterchainAndSettingsTemplate.BaseFilterchain;
         }
@@ -41,7 +41,7 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
 
         #region Internals
         internal protected SettingsCollection BaseSettings { get; protected set; }
-        internal protected Filterchainv2 BaseFilterchain { get; protected set; }
+        internal protected Filterchain BaseFilterchain { get; protected set; }
         #endregion
     }
 }

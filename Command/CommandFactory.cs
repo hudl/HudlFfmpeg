@@ -3,9 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
 using log4net; 
 
 namespace Hudl.Ffmpeg.Command
@@ -26,7 +24,7 @@ namespace Hudl.Ffmpeg.Command
 
             Id = Guid.NewGuid().ToString();
             Configuration = configuration;
-            CommandList = new List<Commandv2>();
+            CommandList = new List<FfmpegCommand>();
         }
 
         /// <summary>
@@ -42,7 +40,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Adds a new command and marks the output to be exported.
         /// </summary>
-        public CommandFactory AddToOutput(Commandv2 command)
+        public CommandFactory AddToOutput(FfmpegCommand command)
         {
             command.Objects.Outputs.ForEach(output => output.Resource.Path = Configuration.OutputPath);
             return Add(command, true);
@@ -51,7 +49,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Adds a new command and marks the output to be exported.
         /// </summary>
-        public CommandFactory AddToResources(Commandv2 command)
+        public CommandFactory AddToResources(FfmpegCommand command)
         {
             command.Objects.Outputs.ForEach(output => output.Resource.Path = Configuration.TempPath);
             return Add(command, false);
@@ -84,7 +82,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Returns a boolean indicating if the command already exists in the factory
         /// </summary>
-        public bool Contains(Commandv2 command)
+        public bool Contains(FfmpegCommand command)
         {
             return CommandList.Any(c => c.Id == command.Id);
         }
@@ -101,7 +99,7 @@ namespace Hudl.Ffmpeg.Command
         /// Renders the command stream with a new command processor
         /// </summary>
         public List<IResource> RenderWith<TProcessor>()
-            where TProcessor : ICommandProcessor, new()
+            where TProcessor : class, ICommandProcessor, new()
         {
             var commandProcessor = new TProcessor();
 
@@ -124,7 +122,7 @@ namespace Hudl.Ffmpeg.Command
         /// Renders the command stream with an existing command processor
         /// </summary>
         public List<IResource> RenderWith<TProcessor>(TProcessor processor)
-            where TProcessor : ICommandProcessor
+            where TProcessor : class, ICommandProcessor
         {
             if (processor == null)
             {
@@ -144,11 +142,11 @@ namespace Hudl.Ffmpeg.Command
 
         #region Internals
         internal string Id { get; set; }
-        internal List<Commandv2> CommandList { get; set; }
+        internal List<FfmpegCommand> CommandList { get; set; }
         #endregion
 
         #region Utility
-        private CommandFactory Add(Commandv2 command, bool export)
+        private CommandFactory Add(FfmpegCommand command, bool export)
         {
             if (command == null)
             {

@@ -15,13 +15,13 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
             Base = Filterchain.FilterTo(resourceList);
         }
 
-        public static implicit operator Filterchainv2(BaseFilterchainTemplate filterchain)
+        public static implicit operator Filterchain(BaseFilterchainTemplate filterchain)
         {
             return filterchain.Base;
         }
 
         #region Internals
-        internal protected Filterchainv2 Base { get; protected set; }
+        internal protected Filterchain Base { get; protected set; }
         #endregion
     }
 }

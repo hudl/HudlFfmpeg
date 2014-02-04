@@ -58,7 +58,7 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
         }
 
         public List<IResource> RenderWith<TProcessor>()
-            where TProcessor : ICommandProcessor, new()
+            where TProcessor : class, ICommandProcessor, new()
         {
             if (!SetupCompleted)
             {
@@ -70,7 +70,7 @@ namespace Hudl.Ffmpeg.Templates.BaseTypes
         }
 
         public List<IResource> RenderWith<TProcessor>(TProcessor processor)
-            where TProcessor : ICommandProcessor, new()
+            where TProcessor : class, ICommandProcessor, new()
         {
             if (!SetupCompleted)
             {

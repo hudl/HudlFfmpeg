@@ -12,22 +12,22 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
     /// <summary>
     /// A series of Filterchains that work together to convert Video, Audio, and Image streams.
     /// </summary>
-    public class Filtergraphv2
+    public class Filtergraph
     {
-        private Filtergraphv2()
+        private Filtergraph()
         {
-            FilterchainList = new List<Filterchainv2>();
+            FilterchainList = new List<Filterchain>();
         }
 
-        public static Filtergraphv2 Create(Commandv2 command)
+        public static Filtergraph Create(FfmpegCommand command)
         {
-            return new Filtergraphv2
+            return new Filtergraph
                 {
                     Owner = command
                 };
         }
 
-        public ReadOnlyCollection<Filterchainv2> Filterchains
+        public ReadOnlyCollection<Filterchain> Filterchains
         {
             get
             {
@@ -37,12 +37,12 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
 
         public int Count { get { return FilterchainList.Count; } }
 
-        public bool Contains(Filterchainv2 filterchain)
+        public bool Contains(Filterchain filterchain)
         {
             return FilterchainList.Any(f => f.Id == filterchain.Id); 
         }
 
-        public int IndexOf(Filterchainv2 filterchain)
+        public int IndexOf(Filterchain filterchain)
         {
             return FilterchainList.FindIndex(f => f.Id == filterchain.Id);
         }
@@ -50,7 +50,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Adds a new instance of a filterchain to the filtergraph
         /// </summary>
-        public Filtergraphv2 FilterTo<TResource>(int count, params IFilter[] filters)
+        public Filtergraph FilterTo<TResource>(int count, params IFilter[] filters)
             where TResource : IResource, new()
         {
             var filterchain = Filterchain.FilterTo<TResource>(count, filters);
@@ -61,7 +61,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Adds a new instance of a filterchain to the filtergraph
         /// </summary>
-        public Filtergraphv2 FilterTo(List<IResource> outputList, params IFilter[] filters)
+        public Filtergraph FilterTo(List<IResource> outputList, params IFilter[] filters)
         {
             var filterchain = Filterchain.FilterTo(outputList, filters);
 
@@ -72,7 +72,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// adds the given Filterchain to the Filtergraph
         /// </summary>
         /// <param name="filterchain">the filterchain to be added to the filtergraph</param>
-        public Filtergraphv2 Add(Filterchainv2 filterchain)
+        public Filtergraph Add(Filterchain filterchain)
         {
             FilterchainList.Add(filterchain);
             return this;
@@ -83,7 +83,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// </summary>
         /// <param name="filterchain">the filterchain to be added to the filtergraph</param>
         /// <param name="optionType">the option specifying how the merge should declare a winner</param>
-        public Filtergraphv2 Merge(Filterchainv2 filterchain, FfmpegMergeOptionType optionType)
+        public Filtergraph Merge(Filterchain filterchain, FfmpegMergeOptionType optionType)
         {
             var indexOfItem = IndexOf(filterchain); 
             if (indexOfItem != -1 && optionType == FfmpegMergeOptionType.NewWins)
@@ -103,7 +103,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// removes the Filterchain at the given index from the Filtergraph
         /// </summary>
         /// <param name="index">the index of the desired Filterchain to be removed from the Filtergraph</param>
-        public Filtergraphv2 RemoveAt(int index)
+        public Filtergraph RemoveAt(int index)
         {
             FilterchainList.RemoveAt(index);
             return this;
@@ -113,7 +113,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// removes all the Filterchain matching the provided criteria
         /// </summary>
         /// <param name="pred">the predicate of required criteria</param>
-        public Filtergraphv2 RemoveAll(Predicate<Filterchainv2> pred)
+        public Filtergraph RemoveAll(Predicate<Filterchain> pred)
         {
             FilterchainList.RemoveAll(pred);
             return this; 
@@ -139,8 +139,8 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         }
 
         #region Internals
-        internal Commandv2 Owner { get; set; }
-        internal List<Filterchainv2> FilterchainList { get; set; }
+        internal FfmpegCommand Owner { get; set; }
+        internal List<Filterchain> FilterchainList { get; set; }
         #endregion
     }
 }

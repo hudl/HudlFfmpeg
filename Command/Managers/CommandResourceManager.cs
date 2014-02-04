@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Hudl.Ffmpeg.Command.Managers
 {
-    public class Commandv2ResourceManager
+    public class CommandResourceManager
     {
-        private Commandv2ResourceManager(Commandv2 owner)
+        private CommandResourceManager(FfmpegCommand owner)
         {
             Owner = owner;
         }
 
-        public static Commandv2ResourceManager Create(Commandv2 owner)
+        public static CommandResourceManager Create(FfmpegCommand owner)
         {
-            return new Commandv2ResourceManager(owner);    
+            return new CommandResourceManager(owner);    
         }
 
-        private Commandv2 Owner { get; set; }
+        private FfmpegCommand Owner { get; set; }
 
-        public CommandReceipt Add(CommandResourcev2 resource)
+        public CommandReceipt Add(CommandResource resource)
         {
             if (resource == null)
             {
@@ -38,7 +37,7 @@ namespace Hudl.Ffmpeg.Command.Managers
             return resource.GetReceipt();
         }
 
-        public List<CommandReceipt> AddRange(List<CommandResourcev2> resources)
+        public List<CommandReceipt> AddRange(List<CommandResource> resources)
         {
             if (resources == null || resources.Count == 0)
             {
@@ -48,7 +47,7 @@ namespace Hudl.Ffmpeg.Command.Managers
             return resources.Select(Add).ToList();
         }
 
-        public CommandReceipt Insert(int index, CommandResourcev2 resource)
+        public CommandReceipt Insert(int index, CommandResource resource)
         {
             if (resource == null)
             {
@@ -68,7 +67,7 @@ namespace Hudl.Ffmpeg.Command.Managers
             return resource.GetReceipt();
         }
 
-        public CommandReceipt Replace(CommandReceipt replace, CommandResourcev2 replaceWith)
+        public CommandReceipt Replace(CommandReceipt replace, CommandResource replaceWith)
         {
             if (replace == null)
             {

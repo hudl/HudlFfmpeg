@@ -1,4 +1,5 @@
 ﻿using System;
+using Hudl.Ffmpeg.Common;
 
 namespace Hudl.Ffmpeg.Command.BaseTypes
 {

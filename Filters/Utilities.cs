@@ -8,7 +8,7 @@ namespace Hudl.Ffmpeg.Filters
 {
     internal class Utilities
     {
-        public static int GetFilterOutputMax(Filterchainv2 filterchain)
+        public static int GetFilterOutputMax(Filterchain filterchain)
         {
             if (filterchain == null)
             {
@@ -25,12 +25,12 @@ namespace Hudl.Ffmpeg.Filters
                 });
         }
 
-        public static int GetFilterInputMax(Filterchainv2 filterchain)
+        public static int GetFilterInputMax(Filterchain filterchain)
         {
             return filterchain.Filters.List.Min(f => f.MaxInputs);
         }
 
-        public static bool ValidateFilters(Commandv2 command, Filterchainv2 filterchain, List<CommandReceipt> receipts)
+        public static bool ValidateFilters(FfmpegCommand command, Filterchain filterchain, List<CommandReceipt> receipts)
         {
             if (filterchain == null)
             {
@@ -47,13 +47,13 @@ namespace Hudl.Ffmpeg.Filters
             });
         }
 
-        public static bool ValidateFiltersMax(Filterchainv2 filterchain, List<CommandReceipt> resources)
+        public static bool ValidateFiltersMax(Filterchain filterchain, List<CommandReceipt> resources)
         {
             var maximumAllowedMinimum = GetFilterInputMax(filterchain);
             return maximumAllowedMinimum > 1 || (maximumAllowedMinimum == 1 && resources.Count == 1);
         }
 
-        public static void ProcessFilters(Commandv2 command, Filterchainv2 filterchain)
+        public static void ProcessFilters(FfmpegCommand command, Filterchain filterchain)
         {
             if (filterchain == null)
             {

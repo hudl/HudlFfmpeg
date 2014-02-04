@@ -23,7 +23,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// the length override function, overrided when a fitler requires a length change of output calculated from the resources.
         /// </summary>
         /// <returns>Null indicates that the length difference does not apply</returns>
-        TimeSpan? LengthFromInputs(List<CommandResourcev2> resources);
+        TimeSpan? LengthFromInputs(List<CommandResource> resources);
 
         /// <summary>
         /// builds the command necessary to complete the effect
@@ -33,6 +33,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// sets up the filter based on the settings in the filterchain
         /// </summary>
-        void Setup(Commandv2 command, Filterchainv2 filterchain);
+        void Setup(FfmpegCommand command, Filterchain filterchain);
     }
 }

@@ -44,14 +44,14 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         #endregion
 
         #region IFilterProcessor
-        public bool Validate(Commandv2 command, Filterchainv2 filterchain, List<CommandReceipt> receipts)
+        public bool Validate(FfmpegCommand command, Filterchain filterchain, List<CommandReceipt> receipts)
         {
             return filterchain.Filters.Count == 1;
         }
         #endregion
 
         #region IFilterValidator
-        public void PrepCommands(Commandv2 command, Filterchainv2 filterchain)
+        public void PrepCommands(FfmpegCommand command, Filterchain filterchain)
         {
             if (filterchain.OutputList.Count == 0)
             {

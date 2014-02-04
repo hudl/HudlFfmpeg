@@ -11,11 +11,11 @@ using log4net;
 
 namespace Hudl.Ffmpeg.Command
 {
-    public class Commandv2
+    public class FfmpegCommand
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(Commandv2).Name);
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FfmpegCommand).Name);
 
-        private Commandv2(CommandFactory owner)
+        private FfmpegCommand(CommandFactory owner)
         {
             if (owner == null)
             {
@@ -25,29 +25,29 @@ namespace Hudl.Ffmpeg.Command
             Owner = owner;
             Id = Guid.NewGuid().ToString();
             Objects = CommandObjects.Create(this);
-            OutputManager = Commandv2OutputManager.Create(this);
-            ResourceManager = Commandv2ResourceManager.Create(this);
-            FilterchainManager = Commandv2FilterchainManager.Create(this);
+            OutputManager = CommandOutputManager.Create(this);
+            ResourceManager = CommandResourceManager.Create(this);
+            FilterchainManager = CommandFilterchainManager.Create(this);
         }
 
-        public static Commandv2 Create(CommandFactory owner)
+        public static FfmpegCommand Create(CommandFactory owner)
         {
-            return new Commandv2(owner);    
+            return new FfmpegCommand(owner);    
         }
 
         internal CommandObjects Objects { get; set; }
 
         public ReadOnlyCollection<CommandOutput> Outputs { get { return Objects.Outputs.AsReadOnly(); } }
 
-        public ReadOnlyCollection<CommandResourcev2> Resources { get { return Objects.Inputs.AsReadOnly(); } }
+        public ReadOnlyCollection<CommandResource> Resources { get { return Objects.Inputs.AsReadOnly(); } }
 
-        public ReadOnlyCollection<Filterchainv2> Filtergraph { get { return Objects.Filtergraph.FilterchainList.AsReadOnly(); } }
+        public ReadOnlyCollection<Filterchain> Filtergraph { get { return Objects.Filtergraph.FilterchainList.AsReadOnly(); } }
 
-        public Commandv2OutputManager OutputManager { get; set; }
+        public CommandOutputManager OutputManager { get; set; }
 
-        public Commandv2ResourceManager ResourceManager { get; set; }
+        public CommandResourceManager ResourceManager { get; set; }
 
-        public Commandv2FilterchainManager FilterchainManager { get; set; }
+        public CommandFilterchainManager FilterchainManager { get; set; }
 
         /// <summary>
         /// Renders the command stream with the defualt command processor
@@ -106,11 +106,11 @@ namespace Hudl.Ffmpeg.Command
         internal string Id { get; set; }
         internal CommandFactory Owner { get; set; }
 
-        internal List<CommandResourcev2> ResourcesFromReceipts(params CommandReceipt[] receipts)
+        internal List<CommandResource> ResourcesFromReceipts(params CommandReceipt[] receipts)
         {
             return ResourcesFromReceipts(new List<CommandReceipt>(receipts));
         }
-        internal List<CommandResourcev2> ResourcesFromReceipts(List<CommandReceipt> receipts)
+        internal List<CommandResource> ResourcesFromReceipts(List<CommandReceipt> receipts)
         {
             if (receipts == null || receipts.Count == 0)
             {
@@ -119,7 +119,7 @@ namespace Hudl.Ffmpeg.Command
 
             return receipts.Select(receipt =>
                 {
-                    CommandResourcev2 resource = null;
+                    CommandResource resource = null;
                     switch (receipt.Type)
                     {
                         case CommandReceiptType.Input:
@@ -128,7 +128,7 @@ namespace Hudl.Ffmpeg.Command
                         case CommandReceiptType.Stream:
                             var filterchain = Objects.Filtergraph.FilterchainList.FirstOrDefault(f => f.GetReceipts().Any(r => r.Equals(receipt)));
                             var filterchainOutput = filterchain.Outputs(this).FirstOrDefault(r => r.Resource.Map == receipt.Map);
-                            resource = CommandResourcev2.Create(filterchainOutput.Resource);
+                            resource = CommandResource.Create(filterchainOutput.Resource);
                             resource.Id = filterchainOutput.Id; 
                             resource.Owner = this;
                             break;
@@ -141,7 +141,7 @@ namespace Hudl.Ffmpeg.Command
                 }).ToList();
         }
 
-        internal Filterchainv2 FilterchainFromReceipt(CommandReceipt receipt)
+        internal Filterchain FilterchainFromReceipt(CommandReceipt receipt)
         {
             if (receipt == null)
             {

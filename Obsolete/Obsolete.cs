@@ -27,7 +27,7 @@ namespace Hudl.Ffmpeg.Common
 {
     internal partial class Helpers
     {
-        [Obsolete("GetLength is obsolete, use GetLength with Commandv2 resources.", false)]
+        [Obsolete("GetLength is obsolete, use GetLength with FfmpegCommand resources.", false)]
         public static double GetLength(CommandResource<IResource> commandResource)
         {
             if (commandResource == null)
@@ -50,7 +50,7 @@ namespace Hudl.Ffmpeg.Common
                        : resourceDefaultLength;
         }
 
-        [Obsolete("GetLength is obsolete, use GetLength with Commandv2 resources.", false)]
+        [Obsolete("GetLength is obsolete, use GetLength with FfmpegCommand resources.", false)]
         public static double GetLength(List<CommandResource<IResource>> resourceList)
         {
             if (resourceList == null)
@@ -60,7 +60,7 @@ namespace Hudl.Ffmpeg.Common
             return resourceList.Sum(cr => GetLength(cr));
         }
 
-        [Obsolete("GetLength is obsolete, use GetLength with Commandv2 resources.", false)]
+        [Obsolete("GetLength is obsolete, use GetLength with FfmpegCommand resources.", false)]
         public static double GetLength(Command<IResource> command)
         {
             if (command == null)
@@ -78,7 +78,7 @@ namespace Hudl.Ffmpeg.Common
             }
         }
 
-        [Obsolete("GetLength is obsolete, use GetLength with Commandv2 resources.", false)]
+        [Obsolete("GetLength is obsolete, use GetLength with FfmpegCommand resources.", false)]
         public static double GetLength(Command<IResource> command, Filterchain<IResource> filterchain)
         {
             if (command == null)
@@ -148,7 +148,7 @@ namespace Hudl.Ffmpeg.Common
             return finalFilterLength;
         }
 
-        [Obsolete("BreakReceipts is obsolete, use BreakReceipts with CommandReceipt resources.", false)]
+        [Obsolete("BreakReceipts is obsolete, use BreakReceipts with FfmpegCommandReceipt resources.", false)]
         public static List<CommandResourceReceipt[]> BreakReceipts(int division, params CommandResourceReceipt[] resources)
         {
             if (resources == null)
@@ -226,7 +226,7 @@ namespace Hudl.Ffmpeg.Common.Obsolete
 
 namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
 {
-    [Obsolete("Filterchain using Filterchain<TResource> is obsolete, use Filterchainv2 reference.", false)]
+    [Obsolete("Filterchain using Filterchain<TResource> is obsolete, use Filterchain reference.", false)]
     public class Filterchain
     {
         /// <summary>
@@ -256,7 +256,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
        
     }
 
-    [Obsolete("IFilter using Command<TResource> is obsolete, use Commandv2 reference.", false)]
+    [Obsolete("IFilter using Command<TResource> is obsolete, use FfmpegCommand reference.", false)]
     public interface IFilter
     {
         /// <summary>
@@ -286,7 +286,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
         void Setup(Command<IResource> command, Filterchain<IResource> filterchain);
     }
 
-    [Obsolete("IFilterProcessor using Command<TResource> is obsolete, use Commandv2 reference.", false)]
+    [Obsolete("IFilterProcessor using Command<TResource> is obsolete, use FfmpegCommand reference.", false)]
     public interface IFilterProcessor
     {
         /// <summary>
@@ -300,7 +300,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
             where TResource : IResource, new();
     }
 
-    [Obsolete("IFilterValidator using Command<TResource> is obsolete, use Commandv2 reference.", false)]
+    [Obsolete("IFilterValidator using Command<TResource> is obsolete, use FfmpegCommand reference.", false)]
     interface IFilterValidator
     {
         /// <summary>
@@ -312,7 +312,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
         bool Validate(Command<IResource> command, Filterchain<IResource> filterchain, List<CommandResourceReceipt> resources);
     }
 
-    [Obsolete("BaseFilter using Command<TResource> is obsolete, use Commandv2 reference.", false)]
+    [Obsolete("BaseFilter using Command<TResource> is obsolete, use FfmpegCommand reference.", false)]
     public abstract class BaseFilter : IFilter
     {
         protected BaseFilter(string type, int maxInputs)
@@ -370,7 +370,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
         }
     }
 
-    [Obsolete("Filterchain<TOutput> is obsolete, use Filterchainv2 reference.", false)]
+    [Obsolete("Filterchain<TOutput> is obsolete, use Filterchain reference.", false)]
     public class Filterchain<TOutput>
         where TOutput : IResource
     {
@@ -454,7 +454,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
         #endregion
     }
 
-    [Obsolete("FilterchainOutput<TOutput> is obsolete, use FilterchainOutputv2 reference.", false)]
+    [Obsolete("FilterchainOutput<TOutput> is obsolete, use FilterchainOutput reference.", false)]
     public class FilterchainOutput<TResource>
        where TResource : IResource
     {
@@ -488,7 +488,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
         #endregion
     }
 
-    [Obsolete("Filtergraph> is obsolete, use Filtergraphv2 reference.", false)]
+    [Obsolete("Filtergraph> is obsolete, use Filtergraph reference.", false)]
     public class Filtergraph
     {
         public Filtergraph()
@@ -623,7 +623,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete.BaseTypes
 
 namespace Hudl.Ffmpeg.Filters.Obsolete.Templates
 {
-    [Obsolete("Crossfade using Command<TResource> is obsolete, use Commandv2 reference.", false)]
+    [Obsolete("Crossfade using Command<TResource> is obsolete, use FfmpegCommand reference.", false)]
     public class Crossfade : Blend, IFilterProcessor
     {
         private const string CrossfadeAlgorithm = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
@@ -2028,47 +2028,47 @@ namespace Hudl.Ffmpeg.Templates.Obsolete
     }
 }
 
-namespace Hudl.Ffmpeg.Command 
+namespace Hudl.Ffmpeg.Command.Obsolete
 {
-    public partial class Command
+    public class Command
     {
-        [Obsolete("OutputTo is obsolete, use OutputTo with Commandv2 reference.", false)]
-        public static Command<TOutput> OutputTo<TOutput>(Obsolete.CommandFactory parent)
+        [Obsolete("OutputTo is obsolete, use OutputTo with FfmpegCommand reference.", false)]
+        public static Command<TOutput> OutputTo<TOutput>(CommandFactory parent)
             where TOutput : IResource, new()
         {
             return OutputTo(parent, new TOutput(), true);
         }
 
-        [Obsolete("OutputTo is obsolete, use OutputTo with Commandv2 reference.", false)]
-        public static Command<TOutput> OutputTo<TOutput>(Obsolete.CommandFactory parent, bool export)
+        [Obsolete("OutputTo is obsolete, use OutputTo with FfmpegCommand reference.", false)]
+        public static Command<TOutput> OutputTo<TOutput>(CommandFactory parent, bool export)
             where TOutput : IResource, new()
         {
             return OutputTo(parent, new TOutput(), export);
         }
 
-        [Obsolete("OutputTo is obsolete, use OutputTo with Commandv2 reference.", false)]
-        public static Command<TOutput> OutputTo<TOutput>(Obsolete.CommandFactory parent, TOutput outputToUse)
+        [Obsolete("OutputTo is obsolete, use OutputTo with FfmpegCommand reference.", false)]
+        public static Command<TOutput> OutputTo<TOutput>(CommandFactory parent, TOutput outputToUse)
             where TOutput : IResource, new()
         {
             return OutputTo(parent, outputToUse, true);
         }
 
-        [Obsolete("OutputTo is obsolete, use OutputTo with Commandv2 reference.", false)]
-        public static Command<TOutput> OutputTo<TOutput>(Obsolete.CommandFactory parent, TOutput outputToUse, bool export)
+        [Obsolete("OutputTo is obsolete, use OutputTo with FfmpegCommand reference.", false)]
+        public static Command<TOutput> OutputTo<TOutput>(CommandFactory parent, TOutput outputToUse, bool export)
             where TOutput : IResource, new()
         {
             return OutputTo(parent, outputToUse, SettingsCollection.ForOutput(), export);
         }
 
-        [Obsolete("OutputTo is obsolete, use OutputTo with Commandv2 reference.", false)]
-        public static Command<TOutput> OutputTo<TOutput>(Obsolete.CommandFactory parent, TOutput outputToUse, SettingsCollection outputSettings)
+        [Obsolete("OutputTo is obsolete, use OutputTo with FfmpegCommand reference.", false)]
+        public static Command<TOutput> OutputTo<TOutput>(CommandFactory parent, TOutput outputToUse, SettingsCollection outputSettings)
             where TOutput : IResource, new()
         {
             return OutputTo(parent, outputToUse, SettingsCollection.ForOutput(), true);
         }
 
-        [Obsolete("OutputTo is obsolete, use OutputTo with Commandv2 reference.", false)]
-        public static Command<TOutput> OutputTo<TOutput>(Obsolete.CommandFactory parent, TOutput outputToUse, SettingsCollection outputSettings, bool export)
+        [Obsolete("OutputTo is obsolete, use OutputTo with FfmpegCommand reference.", false)]
+        public static Command<TOutput> OutputTo<TOutput>(CommandFactory parent, TOutput outputToUse, SettingsCollection outputSettings, bool export)
             where TOutput : IResource, new()
         {
             if (parent == null)

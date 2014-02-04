@@ -8,9 +8,9 @@ namespace Hudl.Ffmpeg.Command
     /// <summary>
     /// Represents a single resource file for a command. 
     /// </summary>
-    public class CommandResourcev2
+    public class CommandResource
     {
-        private CommandResourcev2(IResource resource, SettingsCollection settings)
+        private CommandResource(IResource resource, SettingsCollection settings)
         {
             if (settings == null)
             {
@@ -30,14 +30,14 @@ namespace Hudl.Ffmpeg.Command
             Id = Guid.NewGuid().ToString();
         }
         
-        public static CommandResourcev2 Create(IResource resource)
+        public static CommandResource Create(IResource resource)
         {
             return Create(resource, SettingsCollection.ForInput());
         }
 
-        public static CommandResourcev2 Create(IResource resource, SettingsCollection settings)
+        public static CommandResource Create(IResource resource, SettingsCollection settings)
         {
-            return new CommandResourcev2(resource, settings);
+            return new CommandResource(resource, settings);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Hudl.Ffmpeg.Command
 
         #region Internals
         internal string Id { get; set; }
-        internal Commandv2 Owner { get; set; }
+        internal FfmpegCommand Owner { get; set; }
         #endregion
     }
 }

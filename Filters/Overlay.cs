@@ -39,7 +39,7 @@ namespace Hudl.Ffmpeg.Filters
         
         public OverlayVideoFormatType Format { get; set; }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResourcev2> resources)
+        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
         {
             return Shortest
                 ? resources.Min(r => r.Resource.Length) 

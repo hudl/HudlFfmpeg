@@ -105,7 +105,7 @@ namespace Hudl.Ffmpeg.Common
         /// <summary>
         /// calculates the real time length based on the contents
         /// </summary>
-        public static double GetLength(CommandResourcev2 commandResource)
+        public static double GetLength(CommandResource commandResource)
         {
             if (commandResource == null)
             {
@@ -118,7 +118,7 @@ namespace Hudl.Ffmpeg.Common
             {
                 resourceSettingsLength = commandResource.Settings.Items.Min(s =>
                 {
-                    var lengthFromInputs = s.LengthFromInputs(new List<CommandResourcev2> { commandResource });
+                    var lengthFromInputs = s.LengthFromInputs(new List<CommandResource> { commandResource });
                     return lengthFromInputs.HasValue ? lengthFromInputs.Value.TotalSeconds : 0D;
                 });
             }
@@ -130,7 +130,7 @@ namespace Hudl.Ffmpeg.Common
         /// <summary>
         /// calculates the real time length based on the contents
         /// </summary>
-        public static double GetLength(List<CommandResourcev2> resourceList)
+        public static double GetLength(List<CommandResource> resourceList)
         {
             if (resourceList == null)
             {
@@ -142,7 +142,7 @@ namespace Hudl.Ffmpeg.Common
         /// <summary>
         /// calculates the real time length based on the contents
         /// </summary>
-        public static double GetLength(Commandv2 command)
+        public static double GetLength(FfmpegCommand command)
         {
             if (command == null)
             {
@@ -162,7 +162,7 @@ namespace Hudl.Ffmpeg.Common
         /// <summary>
         /// calculates the real time length based on the contents
         /// </summary>
-        public static double GetLength(Commandv2 command, Filterchainv2 filterchain)
+        public static double GetLength(FfmpegCommand command, Filterchain filterchain)
         {
             if (command == null)
             {
@@ -174,14 +174,14 @@ namespace Hudl.Ffmpeg.Common
             }
 
             var finalFilterLength = 0d;
-            var calculatedFilterOutputDictionary = new Dictionary<string, CommandResourcev2>();
+            var calculatedFilterOutputDictionary = new Dictionary<string, CommandResource>();
             var filterchainIndex = command.Objects.Filtergraph.FilterchainList.FindIndex(f => f.Id == filterchain.Id);
 
             command.Objects.Filtergraph.FilterchainList
                 .GetRange(0, filterchainIndex + 1)
                 .ForEach(filter =>
                 {
-                    var resourceList = new List<CommandResourcev2>();
+                    var resourceList = new List<CommandResource>();
                     var filterlistMaps = filter.ReceiptList.Select(f => f.Map).ToList();
                     var commandOnlyResourcesFromReceiptsRaw = command.ResourcesFromReceipts(filter.ReceiptList.Where(r => r.Type == CommandReceiptType.Input).ToList());
                     var commandOnlyResourcesFromReceipts = commandOnlyResourcesFromReceiptsRaw.Select(r =>
@@ -189,7 +189,7 @@ namespace Hudl.Ffmpeg.Common
                         var newLength = GetLength(r);
                         var newResource = r.Resource.Copy<IResource>();
                         newResource.Length = TimeSpan.FromSeconds(newLength);
-                        var newCommandResourceTemp = CommandResourcev2.Create(newResource);
+                        var newCommandResourceTemp = CommandResource.Create(newResource);
                         newCommandResourceTemp.Owner = r.Owner;
                         return newCommandResourceTemp;
                     }).ToList();
@@ -211,7 +211,7 @@ namespace Hudl.Ffmpeg.Common
                     filter.OutputList.ForEach(output =>
                         {
                             output.Length = filterLength.HasValue ? filterLength.Value : TimeSpan.FromSeconds(0);
-                            var newCommandResource = CommandResourcev2.Create(output.Output());
+                            var newCommandResource = CommandResource.Create(output.Output());
                             newCommandResource.Owner = command;
                             calculatedFilterOutputDictionary.Add(output.Resource.Map, newCommandResource);
                         });

@@ -6,21 +6,21 @@ using Hudl.Ffmpeg.Filters.BaseTypes;
 
 namespace Hudl.Ffmpeg.Command.Managers
 {
-    public class Commandv2FilterchainManager
+    public class CommandFilterchainManager
     {
-        private Commandv2FilterchainManager(Commandv2 owner)
+        private CommandFilterchainManager(FfmpegCommand owner)
         {
             Owner = owner;
         }
 
-        public static Commandv2FilterchainManager Create(Commandv2 owner)
+        public static CommandFilterchainManager Create(FfmpegCommand owner)
         {
-            return new Commandv2FilterchainManager(owner);    
+            return new CommandFilterchainManager(owner);    
         }
 
-        private Commandv2 Owner { get; set; }
+        private FfmpegCommand Owner { get; set; }
 
-        public List<CommandReceipt> Add(Filterchainv2 filterchain, params CommandReceipt[] receipts)
+        public List<CommandReceipt> Add(Filterchain filterchain, params CommandReceipt[] receipts)
         {
             if (filterchain == null)
             {
@@ -56,9 +56,8 @@ namespace Hudl.Ffmpeg.Command.Managers
             }
 
             var maximumInputs = Filters.Utilities.GetFilterInputMax(filterchain);
-            var maximumOutputs = Filters.Utilities.GetFilterOutputMax(filterchain);
 
-            Filterchainv2 finalFilterchain = null;
+            Filterchain finalFilterchain = null;
             var segmentsList = Helpers.BreakReceipts(maximumInputs, receipts);
             segmentsList.ForEach(segment =>
                 {
@@ -88,7 +87,7 @@ namespace Hudl.Ffmpeg.Command.Managers
             return finalFilterchain.GetReceipts(); 
         }
 
-        public List<CommandReceipt> AddToEach(Filterchainv2 filterchain, params CommandReceipt[] receipts)
+        public List<CommandReceipt> AddToEach(Filterchain filterchain, params CommandReceipt[] receipts)
         {
             if (filterchain == null)
             {

@@ -39,7 +39,7 @@ namespace Hudl.Ffmpeg.Filters
         /// </summary>
         public string Expression { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResourcev2> resources)
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
         {
             return resources.Min(r => r.Resource.Length);
         }

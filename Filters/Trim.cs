@@ -69,7 +69,7 @@ namespace Hudl.Ffmpeg.Filters
         /// </summary>
         public VideoUnitType TimebaseUnit { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResourcev2> resources)
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
         {
             return TimeSpan.FromSeconds(Duration);
         }

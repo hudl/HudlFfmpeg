@@ -16,7 +16,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             Type = type;
             MaxInputs = maxInputs;
-            CommandResources = new List<CommandResourcev2>();
+            CommandResources = new List<CommandResource>();
         }
     
         /// <summary>
@@ -32,14 +32,14 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Available at [Render] time, brings the resources as available objects to the filters
         /// </summary>
-        protected List<CommandResourcev2> CommandResources { get; set; }
+        protected List<CommandResource> CommandResources { get; set; }
 
         /// <summary>
         /// Method, called during [Render] to bring forward all the necessary resources, necessary action for maximum abstraction from the user.
         /// </summary>
         /// <param name="command">The command chain the current filter belongs to.</param>
         /// <param name="filterchain">The filterchain that the filter belongs to</param>
-        public void Setup(Commandv2 command, Filterchainv2 filterchain)
+        public void Setup(FfmpegCommand command, Filterchain filterchain)
         {
             CommandResources = command.ResourcesFromReceipts(new List<CommandReceipt>(filterchain.Resources));
 
@@ -56,7 +56,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// Quick way to calculate the output length after a filter has been applied.
         /// </summary>
-        public virtual TimeSpan? LengthFromInputs(List<CommandResourcev2> resources)
+        public virtual TimeSpan? LengthFromInputs(List<CommandResource> resources)
         {
             var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);
             return totalSeconds > 0d

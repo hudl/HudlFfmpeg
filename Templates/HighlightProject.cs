@@ -8,6 +8,7 @@ using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.Ffmpeg.Sugar;
 using Hudl.Ffmpeg.Templates.BaseTypes;
 
 namespace Hudl.Ffmpeg.Templates
@@ -126,7 +127,7 @@ namespace Hudl.Ffmpeg.Templates
                 });
         }
 
-        private CommandReceipt ApplyTrimFilterchain(Commandv2 command,  VideoCommandData commandData)
+        private CommandReceipt ApplyTrimFilterchain(FfmpegCommand command, VideoCommandData commandData)
         {
             var inputReceipt = command.ResourceReceiptAt(0); 
 
@@ -151,7 +152,7 @@ namespace Hudl.Ffmpeg.Templates
                           .Receipts.First(); 
         }
 
-        private List<CommandReceipt> ApplySplitStreamFilterchain(Commandv2 command, CommandReceipt receipt)
+        private List<CommandReceipt> ApplySplitStreamFilterchain(FfmpegCommand command, CommandReceipt receipt)
         {
             var renderInHd = HasFlag(FlagTypes.OutputHd);
             var renderInSd = HasFlag(FlagTypes.OutputSd);
@@ -163,9 +164,9 @@ namespace Hudl.Ffmpeg.Templates
             }
 
             return new List<CommandReceipt> { receipt, receipt };
-        }  
+        }
 
-        private CommandReceipt ApplyHdResizeFilterchain(Commandv2 command, CommandReceipt receipt)
+        private CommandReceipt ApplyHdResizeFilterchain(FfmpegCommand command, CommandReceipt receipt)
         {
             const long expectedBitRate = 3000L;
             const int expectedHeight = 720;
@@ -173,7 +174,7 @@ namespace Hudl.Ffmpeg.Templates
 
             return ApplyResizeFilterchain(command, receipt, ScalePresetType.Hd720, expectedBitRate, expectedWidth, expectedHeight); 
         }
-        private CommandReceipt ApplySdResizeFilterchain(Commandv2 command, CommandReceipt receipt)
+        private CommandReceipt ApplySdResizeFilterchain(FfmpegCommand command, CommandReceipt receipt)
         {
             const long expectedBitRate = 1100L;
             const int expectedHeight = 480;
@@ -181,7 +182,7 @@ namespace Hudl.Ffmpeg.Templates
 
             return ApplyResizeFilterchain(command, receipt, ScalePresetType.Sd480, expectedBitRate, expectedWidth, expectedHeight);
         }
-        private static CommandReceipt ApplyResizeFilterchain(Commandv2 command, CommandReceipt receipt, ScalePresetType type,
+        private static CommandReceipt ApplyResizeFilterchain(FfmpegCommand command, CommandReceipt receipt, ScalePresetType type,
                                                       long expectedBitRate, int expectedWidth, int expectedHeight)
         {
             var resource = command.Resources.First().Resource;

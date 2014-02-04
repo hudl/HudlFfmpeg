@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
@@ -55,7 +54,7 @@ namespace Hudl.Ffmpeg.Command
 
         public IResource Output()
         {
-            Resource.Length = Length;
+            Resource.Info.Duration = Length; 
             return Resource;
         }
 
@@ -69,7 +68,7 @@ namespace Hudl.Ffmpeg.Command
         }
 
         #region Internals
-        internal Commandv2 Owner { get; set; }
+        internal FfmpegCommand Owner { get; set; }
         internal IResource Resource { get; set; }
         #endregion 
     }

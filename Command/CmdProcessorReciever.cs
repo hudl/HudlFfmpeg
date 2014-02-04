@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command.BaseTypes;
+using Hudl.Ffmpeg.Common;
 using log4net;
 
 namespace Hudl.Ffmpeg.Command
@@ -130,7 +131,7 @@ namespace Hudl.Ffmpeg.Command
         {
             using (var ffmpegProcess = new Process())
             {
-                ffmpegProcess.StartInfo = new ProcessStartInfo()
+                ffmpegProcess.StartInfo = new ProcessStartInfo
                 {
                     FileName = Configuration.FfmpegPath,
                     WorkingDirectory = Configuration.TempPath,

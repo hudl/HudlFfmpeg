@@ -74,7 +74,7 @@ namespace Hudl.Ffmpeg.Filters
         }
 
         #region IFilterValidator
-        public bool Validate(Commandv2 command, Filterchainv2 filterchain, List<CommandReceipt> receipts)
+        public bool Validate(FfmpegCommand command, Filterchain filterchain, List<CommandReceipt> receipts)
         {
             //concat filters should be used independently of other filters
             return filterchain.Filters.Count > 1;

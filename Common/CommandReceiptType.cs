@@ -1,5 +1,4 @@
-﻿
-namespace Hudl.Ffmpeg.Command
+﻿namespace Hudl.Ffmpeg.Common
 {
     /// <summary>
     /// A receipt indicating the resource that was added to the Command
