@@ -28,13 +28,13 @@ namespace Hudl.Ffmpeg.Sugar
         {
             var outputReceipts = stage.Command.FilterchainManager.Add(filterchain, stage.Receipts.ToArray());
 
-            return stage.Command.WithReceipts(outputReceipts); 
+            return stage.Command.WithStreams(outputReceipts); 
         }
         public static CommandStage FilterEach(this CommandStage stage, Filterchain filterchain)
         {
             var outputReceipts = stage.Command.FilterchainManager.AddToEach(filterchain, stage.Receipts.ToArray());
 
-            return stage.Command.WithReceipts(outputReceipts); 
+            return stage.Command.WithStreams(outputReceipts); 
         }
 
         public static void ValidateMapTo(FfmpegCommand command)

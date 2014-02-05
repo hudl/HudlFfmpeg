@@ -10,6 +10,8 @@ namespace Hudl.Ffmpeg.Command
             Receipts = new List<CommandReceipt>();
         }
 
+        public string LastAccessId { get; set; }
+
         public FfmpegCommand Command { get; set; }
 
         public List<CommandReceipt> Receipts { get; set; }

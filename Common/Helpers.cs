@@ -102,6 +102,23 @@ namespace Hudl.Ffmpeg.Common
             return fullName;
         }
 
+        //TODO: CB -> This is currently only called in Crossfade, since it is out of commission until used this can remain unfinished until needed
+        public static double GetLength(FfmpegCommand command, CommandReceipt receipt)
+        {
+            //if the input is a resource, use the default duration 
+            if (receipt.Type == CommandReceiptType.Input)
+            {
+                return command.ResourcesFromReceipts(receipt)
+                              .First()
+                              .Resource
+                              .Info
+                              .Duration
+                              .TotalSeconds;
+            }
+
+            return 0d; 
+        }
+
         /// <summary>
         /// calculates the real time length based on the contents
         /// </summary>

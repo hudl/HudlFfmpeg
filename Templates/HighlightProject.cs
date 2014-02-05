@@ -107,7 +107,7 @@ namespace Hudl.Ffmpeg.Templates
                     {
                         var outputSd = ApplySdResizeFilterchain(command, splits.ElementAt(0));
 
-                        outputData.SdFullName = command.WithReceipts(outputSd)
+                        outputData.SdFullName = command.WithStreams(outputSd)
                                                        .MapTo<Mp4>(stepOneOutputSettingsSd)
                                                        .First()
                                                        .Resource.FullName;
@@ -117,7 +117,7 @@ namespace Hudl.Ffmpeg.Templates
                     {
                         var outputHd = ApplyHdResizeFilterchain(command, splits.ElementAt(1));
 
-                        outputData.HdFullName = command.WithReceipts(outputHd)
+                        outputData.HdFullName = command.WithStreams(outputHd)
                                                        .MapTo<Mp4>(stepOneOutputSettingsHd)
                                                        .First()
                                                        .Resource.FullName;
@@ -147,7 +147,7 @@ namespace Hudl.Ffmpeg.Templates
 
             }
 
-            return command.WithReceipts(inputReceipt)
+            return command.WithStreams(inputReceipt)
                           .Filter(filterchain)
                           .Receipts.First(); 
         }
@@ -158,7 +158,7 @@ namespace Hudl.Ffmpeg.Templates
             var renderInSd = HasFlag(FlagTypes.OutputSd);
             if (renderInSd && renderInHd)
             {
-                return command.WithReceipts(receipt)
+                return command.WithStreams(receipt)
                               .Filter(Filterchain.FilterTo<Mp4>(1, new Split(2)))
                               .Receipts;
             }
@@ -201,7 +201,7 @@ namespace Hudl.Ffmpeg.Templates
                 new SetSar(FfmpegRatio.Create(1, 1))
             );
 
-            return command.WithReceipts(receipt)
+            return command.WithStreams(receipt)
                           .Filter(filterchain)
                           .Receipts.First(); 
         }

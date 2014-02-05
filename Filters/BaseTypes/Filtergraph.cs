@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
@@ -47,33 +46,13 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             return FilterchainList.FindIndex(f => f.Id == filterchain.Id);
         }
 
-        /// <summary>
-        /// Adds a new instance of a filterchain to the filtergraph
-        /// </summary>
-        public Filtergraph FilterTo<TResource>(int count, params IFilter[] filters)
-            where TResource : IResource, new()
-        {
-            var filterchain = Filterchain.FilterTo<TResource>(count, filters);
-
-            return Add(filterchain);
-        }
-
-        /// <summary>
-        /// Adds a new instance of a filterchain to the filtergraph
-        /// </summary>
-        public Filtergraph FilterTo(List<IResource> outputList, params IFilter[] filters)
-        {
-            var filterchain = Filterchain.FilterTo(outputList, filters);
-
-            return Add(filterchain);
-        }
-
-        /// <summary>
+       /// <summary>
         /// adds the given Filterchain to the Filtergraph
         /// </summary>
         /// <param name="filterchain">the filterchain to be added to the filtergraph</param>
         public Filtergraph Add(Filterchain filterchain)
         {
+            filterchain.Owner = this;
             FilterchainList.Add(filterchain);
             return this;
         }
@@ -89,11 +68,12 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             if (indexOfItem != -1 && optionType == FfmpegMergeOptionType.NewWins)
             {
                 FilterchainList.RemoveAt(indexOfItem);
+                filterchain.Owner = this;
                 FilterchainList.Insert(indexOfItem, filterchain);
             }
             else if (indexOfItem == -1)
             {
-                FilterchainList.Add(filterchain);       
+                Add(filterchain);       
             }
 
             return this;

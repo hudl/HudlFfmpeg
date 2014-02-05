@@ -1,4 +1,5 @@
 ﻿using System;
+using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -34,6 +35,11 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         public FilterchainOutput Copy()
         {
             return new FilterchainOutput(Owner, Output().Copy<IResource>());
+        }
+
+        public CommandReceipt GetReceipt()
+        {
+            return CommandReceipt.CreateFromOutput(Owner.Owner.Owner.Id, Owner.Id, Resource.Map);
         }
 
         #region Internals

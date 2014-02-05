@@ -23,6 +23,26 @@ namespace Hudl.Ffmpeg.Filters
         {
             TimebaseUnit = VideoUnitType.Seconds;
         }
+        public Trim(double startUnit, double endUnit, VideoUnitType timebaseUnit)
+            : this()
+        {
+            if (startUnit < 0)
+            {
+                throw new ArgumentException("Start Unit cannot be less than zero", "startUnit");
+            }
+            if (endUnit < 0)
+            {
+                throw new ArgumentException("End Unit cannot be less than zero", "endUnit");
+            }
+            if (endUnit > 0D && endUnit <= startUnit)
+            {
+                throw new ArgumentException("End Unit cannot be less than Start Unit", "endUnit");
+            }
+
+            End = endUnit;
+            Start = startUnit;
+            TimebaseUnit = timebaseUnit;
+        }
         public Trim(double startUnit, double endUnit, double duration, VideoUnitType timebaseUnit)
             : this()
         {

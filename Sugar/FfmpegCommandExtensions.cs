@@ -134,12 +134,17 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentNullException("receipts");
             }
         }
-        public static CommandStage WithReceipts(this FfmpegCommand command, params CommandReceipt[] receipts)
+        public static CommandStage WithStreamAt(this FfmpegCommand command, int index)
+        {
+            var receipt = command.ResourceReceiptAt(index);
+            return command.WithStreams(receipt); 
+        }
+        public static CommandStage WithStreams(this FfmpegCommand command, params CommandReceipt[] receipts)
         {
             var receiptList = new List<CommandReceipt>(receipts);
-            return command.WithReceipts(receiptList);
+            return command.WithStreams(receiptList);
         }
-        public static CommandStage WithReceipts(this FfmpegCommand command, List<CommandReceipt> receipts)
+        public static CommandStage WithStreams(this FfmpegCommand command, List<CommandReceipt> receipts)
         {
             ValidateRecipts(command, receipts);
 
@@ -148,23 +153,23 @@ namespace Hudl.Ffmpeg.Sugar
                 Receipts = receipts
             };
         }
-        public static CommandStage WithReceiptsFrom(this FfmpegCommand command, CommandResource resource)
+        public static CommandStage WithStreamsFrom(this FfmpegCommand command, CommandResource resource)
         {
             if (resource == null)
             {
                 throw new ArgumentNullException("resource");
             }
 
-            return command.WithReceipts(resource.GetReceipt());
+            return command.WithStreams(resource.GetReceipt());
         }
-        public static CommandStage WithReceiptsFrom(this FfmpegCommand command, Filterchain filterchain)
+        public static CommandStage WithStreamsFrom(this FfmpegCommand command, Filterchain filterchain)
         {
             if (filterchain == null)
             {
                 throw new ArgumentNullException("filterchain");
             }
 
-            return command.WithReceipts(filterchain.GetReceipts());
+            return command.WithStreams(filterchain.GetReceipts());
         }
     }
 }

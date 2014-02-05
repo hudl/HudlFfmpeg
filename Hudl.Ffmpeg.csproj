@@ -65,6 +65,7 @@
     <Compile Include="Command\CommandReceipt.cs" />
     <Compile Include="Command\CommandOutput.cs" />
     <Compile Include="Sugar\CommandFactoryExtensions.cs" />
+    <Compile Include="Sugar\FilterchainExtensions.cs" />
     <Compile Include="Sugar\FfmpegCommandExtensions.cs" />
     <Compile Include="Sugar\CommandStageExtensions.cs" />
     <Compile Include="Command\CommandConfiguration.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Settings\CodecVideo.cs" />
     <Compile Include="Settings\Dimensions.cs" />
     <Compile Include="Settings\FrameRate.cs" />
+    <Compile Include="Sugar\FiltergraphExtensions.cs" />
     <Compile Include="Sugar\ResourceExtensions.cs" />
     <Compile Include="Templates\BaseTypes\BaseCommandFactoryTemplate.cs" />
     <Compile Include="Templates\BaseTypes\BaseFilterchainTemplate.cs" />
