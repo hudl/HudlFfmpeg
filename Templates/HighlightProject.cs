@@ -26,9 +26,9 @@ namespace Hudl.Ffmpeg.Templates
         [Flags]
         public enum FlagTypes
         {
-            None = 0x0,
-            OutputHd = 0x1,
-            OutputSd = 0x2
+            None = 0,
+            OutputHd = 1,
+            OutputSd = 2
         }
 
         public FlagTypes Flags { get; set; }
@@ -44,11 +44,11 @@ namespace Hudl.Ffmpeg.Templates
 
         public void SetFlag(FlagTypes flag, bool isOn)
         {
-            if (isOn)
+            if (isOn && !HasFlag(flag))
             {
                 Flags |= flag;
             }
-            else
+            else if (!isOn && HasFlag(flag))
             {
                 Flags &= flag;
             }
