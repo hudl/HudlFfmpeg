@@ -194,9 +194,12 @@ namespace Hudl.Ffmpeg.Templates
                 return receipt;
             }
 
+            var videoWidth = (int)Math.Round(expectedHeight * resource.Info.AspectRatio);
+            videoWidth -= videoWidth % 4; 
+
             var filterchain = Filterchain.FilterTo<Mp4>(1,
+                new Scale(videoWidth, expectedHeight),
                 new Pad(Pad.ExprConvertTo169Aspect),
-                new Scale(type),
                 new SetDar(FfmpegRatio.Create(16, 9)),
                 new SetSar(FfmpegRatio.Create(1, 1))
             );
