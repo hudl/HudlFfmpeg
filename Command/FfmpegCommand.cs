@@ -127,7 +127,7 @@ namespace Hudl.Ffmpeg.Command
                             break;
                         case CommandReceiptType.Stream:
                             var filterchain = Objects.Filtergraph.FilterchainList.FirstOrDefault(f => f.GetReceipts().Any(r => r.Equals(receipt)));
-                            var filterchainOutput = filterchain.Outputs(this).FirstOrDefault(r => r.Resource.Map == receipt.Map);
+                            var filterchainOutput = filterchain.OutputList.FirstOrDefault(r => r.Resource.Map == receipt.Map);
                             resource = CommandResource.Create(filterchainOutput.Resource);
                             resource.Id = filterchainOutput.Id; 
                             resource.Owner = this;
