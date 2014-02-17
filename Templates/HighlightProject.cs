@@ -108,9 +108,9 @@ namespace Hudl.Ffmpeg.Templates
                         var outputSd = ApplySdResizeFilterchain(command, splits.ElementAt(0));
 
                         outputData.SdFullName = command.WithStreams(outputSd)
-                                                       .MapTo<Mp4>(stepOneOutputSettingsSd)
-                                                       .First()
-                                                       .Resource.FullName;
+                                                        .MapTo<Mp4>(stepOneOutputSettingsSd)
+                                                        .First()
+                                                        .Resource.FullName;
                     }
 
                     if (HasFlag(FlagTypes.OutputHd))
@@ -131,7 +131,7 @@ namespace Hudl.Ffmpeg.Templates
         {
             var inputReceipt = command.ResourceReceiptAt(0); 
 
-            if (commandData.StartPointInTicks <= 0 || commandData.StopPointInTicks <= 0)
+            if (commandData.StartPointInTicks <= 0 && commandData.StopPointInTicks <= 0)
             {
                 return inputReceipt;
             }
@@ -168,7 +168,7 @@ namespace Hudl.Ffmpeg.Templates
 
         private CommandReceipt ApplyHdResizeFilterchain(FfmpegCommand command, CommandReceipt receipt)
         {
-            const long expectedBitRate = 3000L;
+            const long expectedBitRate = 3000000L;
             const int expectedHeight = 720;
             const int expectedWidth = 1280;
 
@@ -176,7 +176,7 @@ namespace Hudl.Ffmpeg.Templates
         }
         private CommandReceipt ApplySdResizeFilterchain(FfmpegCommand command, CommandReceipt receipt)
         {
-            const long expectedBitRate = 1100L;
+            const long expectedBitRate = 1100000L;
             const int expectedHeight = 480;
             const int expectedWidth = 852;
 
@@ -187,14 +187,18 @@ namespace Hudl.Ffmpeg.Templates
         {
             var resource = command.Resources.First().Resource;
 
+            var calculatedAspectRatio = ((double)resource.Info.Dimensions.Width / (double)resource.Info.Dimensions.Height);
+            var roundedAspectRatio = Math.Round((double)calculatedAspectRatio, 2);
+
             if (resource.Info.BitRate == expectedBitRate &&
                 resource.Info.Dimensions.Width == expectedWidth &&
-                resource.Info.Dimensions.Height == expectedHeight)
+                resource.Info.Dimensions.Height == expectedHeight && 
+                !(Math.Abs(resource.Info.AspectRatio - roundedAspectRatio) > 0))
             {
                 return receipt;
             }
 
-            var videoWidth = (int)Math.Round(expectedHeight * resource.Info.AspectRatio);
+            var videoWidth = (int)Math.Round(expectedHeight * roundedAspectRatio);
             videoWidth -= videoWidth % 4; 
 
             var filterchain = Filterchain.FilterTo<Mp4>(1,

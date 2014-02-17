@@ -61,7 +61,11 @@ namespace Hudl.Ffmpeg.Sugar
                 {
                     var commandOutput = CommandOutput.Create(Resource.CreateOutput<TOutputType>(stage.Command.Owner.Configuration), settingsCopy);
 
-                    commandOutput.Settings.Merge(new Map(receipt), FfmpegMergeOptionType.NewWins); 
+                    var indexOfResource = stage.Command.Objects.Inputs.FindIndex(r => r.Resource.Map == receipt.Map);
+                    if (indexOfResource < 0)
+                    {
+                        commandOutput.Settings.Merge(new Map(receipt), FfmpegMergeOptionType.NewWins);
+                    }
 
                     stage.Command.OutputManager.Add(commandOutput);
 
