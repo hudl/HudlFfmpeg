@@ -58,6 +58,8 @@ namespace Hudl.Ffmpeg.Command
             return Resource;
         }
 
+        public string OutputName { get { return Resource.FullName; } }
+
         /// <summary>
         /// returns a receipt for the command output
         /// </summary>

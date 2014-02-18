@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Linq;
 using Hudl.Ffmpeg.BaseTypes;
@@ -25,6 +26,12 @@ namespace Hudl.Ffmpeg.Filters
         {
             Format = OverlayVideoFormatType.Yuv420; 
             Eval = OverlayVideoEvalType.Frame;
+        }
+        public Overlay(int x, int y)
+            : this()
+        {
+            X = x.ToString(CultureInfo.InvariantCulture);
+            Y = y.ToString(CultureInfo.InvariantCulture);
         }
        
         public string X { get; set; }
