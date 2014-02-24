@@ -1243,7 +1243,7 @@ namespace Hudl.Ffmpeg.Filters.Obsolete
         public bool Validate(Command<IResource> command, Filterchain<IResource> filterchain, List<CommandResourceReceipt> resources)
         {
             //concat filters should be used independently of other filters
-            return filterchain.Filters.Count > 1;
+            return filterchain.Filters.Count == 1;
         }
     }
 
