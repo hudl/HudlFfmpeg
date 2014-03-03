@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Common;
-using log4net;
+using Hudl.Ffmpeg.Logging;
+using Hudl.Ffmpeg.Sugar;
 
 namespace Hudl.Ffmpeg.Command
 {
     public class CmdProcessorReciever : ICommandProcessor
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CmdProcessorReciever).Name);
+        private static readonly LogUtility Log = LogUtility.GetLogger(typeof(CmdProcessorReciever));
+
+        private const int MaximumRetryFailures = 1; 
 
         public CmdProcessorReciever()
         {
@@ -30,12 +34,13 @@ namespace Hudl.Ffmpeg.Command
                 throw new InvalidOperationException(string.Format("Cannot open a command processor that is currently in the '{0}' state.", Status));
             }
 
-
             try
             {
-                Log.DebugFormat("Opening command processor.");
-
                 Configuration = configuration;
+
+                Log.SetAttributes(configuration.LoggingAttributes);
+
+                Log.DebugFormat("Opening command processor.");
 
                 Create();
 
@@ -47,8 +52,6 @@ namespace Hudl.Ffmpeg.Command
                 Status = CommandProcessorStatus.Faulted;
                 return false;
             }
-
-            //write the commands for preparation 
 
             return true;
         }
@@ -88,20 +91,33 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentException("Processing command cannot be null or empty.", "command");
             }
 
-            try
+            var retryCount = 0; 
+            var isSuccessful = false;
+            do
             {
-                Status = CommandProcessorStatus.Processing;
+                try
+                {
+                    Status = CommandProcessorStatus.Processing;
 
-                ProcessIt(command);
+                    ProcessIt(command);
 
-                Status = CommandProcessorStatus.Ready;
-            }
-            catch (Exception err)
-            {
-                Error = err;
-                Status = CommandProcessorStatus.Faulted;
-                return false;
-            }
+                    Status = CommandProcessorStatus.Ready;
+
+                    isSuccessful = true;
+                }
+                catch (Exception err)
+                {
+                    if (!CheckForKnownExceptions(err))
+                    {
+                        Error = err;
+                        Status = CommandProcessorStatus.Faulted;
+                        return false;
+                    }
+
+                    retryCount++; 
+                }
+            } while (!isSuccessful && retryCount <= MaximumRetryFailures);
+
             return true;
         }
 
@@ -158,5 +174,42 @@ namespace Hudl.Ffmpeg.Command
                 }
             }
         }
+
+        private bool CheckForKnownExceptions(Exception err)
+        {
+            var errorOutput = err.Data.Contains("ErrorOutput") 
+                ? err.Data["ErrorOutput"].ToString() 
+                : string.Empty; 
+
+            if (string.IsNullOrWhiteSpace(errorOutput))
+            {
+                return false; 
+            }
+            
+            //signal 15 terminating: 
+            // this happens when ffmpeg times out during the transcode, when we have encountered these in the field
+            // a reingest has fixed them. The ffmpeg error output indicates no error from the decoding the stream 
+            // ther than that which was indicated above.
+            if (Configuration.Has(CommandConfigurationFlagTypes.RetrySignal15Termination) && IsSignal15Error(errorOutput))
+            {
+                Log.Warn("Ffmpeg has encountered a Signal 15 Terminating error."); 
+                return true;
+            }
+
+            //by default we will not retry any commands. 
+            return false;
+        }
+
+#region Error Output Checks
+        private const string ErrorSignal15Terminating = "Received signal 15: terminating"; 
+
+        private static bool IsSignal15Error(string errorOutput)
+        {
+            var errorIndex = errorOutput.IndexOf(ErrorSignal15Terminating, StringComparison.InvariantCulture);
+            return errorIndex > -1; 
+        }
+
+#endregion 
+
     }
 }
