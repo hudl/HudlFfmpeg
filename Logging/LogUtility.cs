@@ -22,20 +22,11 @@ namespace Hudl.Ffmpeg.Logging
         {
             if (mergeDictionary == null || mergeDictionary.Count == 0)
             {
+                LogAttributes = new Dictionary<string, string>();
                 return;
             }
 
-            foreach (var kvPair in mergeDictionary)
-            {
-                if (LogAttributes.ContainsKey(kvPair.Key))
-                {
-                    LogAttributes[kvPair.Key] = kvPair.Value;
-                }
-                else
-                {
-                    LogAttributes.Add(kvPair.Key, kvPair.Value);
-                }
-            }
+            LogAttributes = mergeDictionary;
         }
 
         public void Debug(string message)
