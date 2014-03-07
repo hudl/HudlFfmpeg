@@ -53,6 +53,7 @@
     <Compile Include="BaseTypes\AppliesToInvalidException.cs" />
     <Compile Include="BaseTypes\FfmpegRenderingException.cs" />
     <Compile Include="BaseTypes\FfmpegProcessingException.cs" />
+    <Compile Include="Command\BaseTypes\CommandConfigurationFlagTypes.cs" />
     <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
     <Compile Include="Command\CmdProcessorReciever.cs" />
     <Compile Include="Command\CommandBuilder.cs" />
@@ -66,6 +67,8 @@
     <Compile Include="Command\CommandOutput.cs" />
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
+    <Compile Include="Logging\LogUtility.cs" />
+    <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
     <Compile Include="Sugar\CommandFactoryExtensions.cs" />
     <Compile Include="Sugar\FilterchainExtensions.cs" />
     <Compile Include="Sugar\FfmpegCommandExtensions.cs" />
