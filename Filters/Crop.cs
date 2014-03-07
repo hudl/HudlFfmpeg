@@ -11,24 +11,22 @@ namespace Hudl.Ffmpeg.Filters
     /// </summary>
     [AppliesToResource(Type = typeof(IImage))]
     [AppliesToResource(Type = typeof(IVideo))]
-    public class Pad : BaseFilter
+    public class Crop : BaseFilter
     {
         private const int FilterMaxInputs = 1;
-        private const string FilterType = "pad";
+        private const string FilterType = "crop";
 
-        public const string ExprConvertTo169Aspect = "ih*16/9:ih:(ow-iw)/2:(oh-ih)/2"; 
-
-        public Pad() 
+        public Crop() 
             : base(FilterType, FilterMaxInputs)
         {
         }
-        public Pad(Size toDimensions, Point atPosition)
+        public Crop(Size toDimensions, Point atPosition)
             : this()
         {
             To = toDimensions;
             Position = atPosition;
         }
-        public Pad(string expression)
+        public Crop(string expression)
             : this()
         {
             Expression = expression;
@@ -56,7 +54,7 @@ namespace Hudl.Ffmpeg.Filters
                 throw new InvalidOperationException("Position point cannot be null.");
             }
 
-            return string.Format("{0}=width={1}:height={2}:x={3}:y={4}", 
+            return string.Format("{0}=w={1}:h={2}:x={3}:y={4}", 
                 Type,
                 To.Width, 
                 To.Height,
