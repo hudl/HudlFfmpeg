@@ -100,6 +100,18 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command;
         }
+        public static FfmpegCommand WithInputNoLoad(this FfmpegCommand command, string fileName)
+        {
+            ValidateInput(command, fileName);
+
+            var resource = Resource.From(fileName);
+
+            var commandResource = CommandResource.Create(resource);
+
+            command.ResourceManager.Add(commandResource);
+
+            return command;
+        }
         public static FfmpegCommand WithInput(this FfmpegCommand command, List<string> files)
         {
             if (files == null || files.Count == 0)
@@ -121,6 +133,16 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command.Resources[index].GetReceipt();
         }
+        public static CommandReceipt LastInputReceipt(this FfmpegCommand command)
+        {
+            if (command.Resources.Count == 0) 
+            {
+                return null; 
+            }
+
+            return command.Resources[command.Resources.Count - 1].GetReceipt();
+        }
+
 
         public static void ValidateRecipts(FfmpegCommand command, List<CommandReceipt> receipts)
         {
@@ -138,6 +160,11 @@ namespace Hudl.Ffmpeg.Sugar
         {
             var receipt = command.ResourceReceiptAt(index);
             return command.WithStreams(receipt); 
+        }
+        public static CommandStage WithStream(this FfmpegCommand command, CommandReceipt receipt)
+        {
+            var receiptList = new List<CommandReceipt>() { receipt };
+            return command.WithStreams(receiptList);
         }
         public static CommandStage WithStreams(this FfmpegCommand command, params CommandReceipt[] receipts)
         {

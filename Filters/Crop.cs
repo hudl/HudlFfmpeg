@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -7,59 +8,82 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.Filters
 {
     /// <summary>
-    /// Filter that applies padding to input video 
+    /// crop fillter will crop the selected filter to a specific size and dimensions
     /// </summary>
-    [AppliesToResource(Type = typeof(IImage))]
     [AppliesToResource(Type = typeof(IVideo))]
+    [AppliesToResource(Type = typeof(IImage))]
     public class Crop : BaseFilter
     {
         private const int FilterMaxInputs = 1;
         private const string FilterType = "crop";
 
-        public Crop() 
+        public Crop()
             : base(FilterType, FilterMaxInputs)
         {
+            CropTo = new Size(0, 0);
+            PositionAt = new Point(0, 0);
         }
-        public Crop(Size toDimensions, Point atPosition)
+        public Crop(int width, int height)
             : this()
         {
-            To = toDimensions;
-            Position = atPosition;
+            CropTo = new Size(width, height);
         }
-        public Crop(string expression)
+        public Crop(Size cropTo, Point positionAt)
             : this()
         {
-            Expression = expression;
+            CropTo = cropTo; 
+            PositionAt = positionAt; 
+        }
+        public Crop(int width, int height, int x, int y)
+            : this()
+        {
+            PositionAt = new Point(x, y);
+            CropTo = new Size(width, height);
         }
 
-        public string Expression { get; set; }
 
-        public Size To { get; set; }
+        public Point PositionAt { get; set; }
 
-        public Point Position { get; set; }
+        public Size CropTo { get; set; }
 
-        public override string ToString() 
+        public override string ToString()
         {
-            if (!string.IsNullOrWhiteSpace(Expression))
+            if (CropTo.Width <= 0)
             {
-                return string.Concat(Type, "=", Expression); 
+                throw new InvalidOperationException("CropTo.Width must be greater than zero for cropping.");
+            }
+            if (CropTo.Height <= 0)
+            {
+                throw new InvalidOperationException("CropTo.Height must be greater than zero for cropping.");
             }
 
-            if (To == null)
+            var filter = new StringBuilder(100);
+            if (CropTo.Width != 0)
             {
-                throw new InvalidOperationException("To dimensions cannot be null.");
+                filter.AppendFormat("{1}w={0}",
+                    CropTo.Width,
+                    (filter.Length > 0) ? ":" : string.Empty);
             }
-            if (Position == null)
+            if (CropTo.Height != 0)
             {
-                throw new InvalidOperationException("Position point cannot be null.");
+                filter.AppendFormat("{1}h={0}",
+                    CropTo.Height,
+                    (filter.Length > 0) ? ":" : string.Empty);
+            }
+            if (PositionAt.X != 0)
+            {
+                filter.AppendFormat("{1}x={0}",
+                    PositionAt.X,
+                    (filter.Length > 0) ? ":" : string.Empty);
+            }
+            if (PositionAt.Y != 0)
+            {
+                filter.AppendFormat("{1}y={0}",
+                    PositionAt.Y,
+                    (filter.Length > 0) ? ":" : string.Empty);
             }
 
-            return string.Format("{0}=w={1}:h={2}:x={3}:y={4}", 
-                Type,
-                To.Width, 
-                To.Height,
-                Position.X, 
-                Position.Y);
+            return string.Concat(Type, "=", filter.ToString());
         }
     }
 }

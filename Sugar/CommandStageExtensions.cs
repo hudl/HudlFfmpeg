@@ -12,6 +12,38 @@ namespace Hudl.Ffmpeg.Sugar
 {
     public static class CommandStageExtensions
     {
+        public static void ValidateRecipts(CommandStage stage, List<CommandReceipt> receipts)
+        {
+            if (stage.Command.Owner == null)
+            {
+                throw new ArgumentException("Command must contain an owner before sugar is allowed.", "stage");
+            }
+
+            if (receipts == null)
+            {
+                throw new ArgumentNullException("receipts");
+            }
+        }
+        public static CommandStage WithStream(this CommandStage stage, CommandReceipt receipt)
+        {
+            var receiptList = new List<CommandReceipt>() { receipt };
+            return stage.WithStreams(receiptList);
+        }
+        public static CommandStage WithStreams(this CommandStage stage, params CommandReceipt[] receipts)
+        {
+            var receiptList = new List<CommandReceipt>(receipts);
+            return stage.WithStreams(receiptList);
+        }
+        public static CommandStage WithStreams(this CommandStage stage, List<CommandReceipt> receipts)
+        {
+            ValidateRecipts(stage, receipts);
+
+            stage.Receipts.AddRange(receipts);
+
+            return stage;
+        }
+        
+        
         public static void ValidateFilter(FfmpegCommand command, Filterchain filterchain)
         {
             if (command.Owner == null)
