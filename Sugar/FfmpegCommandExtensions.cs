@@ -89,12 +89,16 @@ namespace Hudl.Ffmpeg.Sugar
         }
         public static FfmpegCommand WithInput(this FfmpegCommand command, string fileName)
         {
+            return command.WithInput(fileName, SettingsCollection.ForInput());
+        }
+        public static FfmpegCommand WithInput(this FfmpegCommand command, string fileName, SettingsCollection settings)
+        {
             ValidateInput(command, fileName);
 
             var resource = Resource.From(fileName)
-                .LoadMetadata();
+                                   .LoadMetadata();
 
-            var commandResource = CommandResource.Create(resource);
+            var commandResource = CommandResource.Create(resource, settings);
 
             command.ResourceManager.Add(commandResource);
 

@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -21,47 +20,53 @@ namespace Hudl.Ffmpeg.Filters
         public Crop()
             : base(FilterType, FilterMaxInputs)
         {
-            Dimensions = new Point(0, 0);
+            Dimensions = new Size(0, 0);
             Offset = new Point(0, 0);
         }
         public Crop(int width, int height)
             : this()
         {
-            Dimensions = new Point(width, height);
+            Dimensions = new Size(width, height);
         }
         public Crop(int width, int height, int x, int y)
             : this()
         {
             Offset = new Point(x, y);
-            Dimensions = new Point(width, height);
+            Dimensions = new Size(width, height);
+        }
+        public Crop(Size dimensions, Point offset) 
+            : this()
+        {
+            Offset = offset;
+            Dimensions = dimensions; 
         }
 
         public Point Offset { get; set; }
 
-        public Point Dimensions { get; set; }
+        public Size Dimensions { get; set; }
 
         public override string ToString()
         {
-            if (Dimensions.X <= 0)
+            if (Dimensions.Width <= 0)
             {
-                throw new InvalidOperationException("Dimensions.X must be greater than zero for cropping.");
+                throw new InvalidOperationException("Dimensions.Width must be greater than zero for cropping.");
             }
-            if (Dimensions.Y <= 0)
+            if (Dimensions.Height <= 0)
             {
-                throw new InvalidOperationException("Dimensions.Y must be greater than zero for cropping.");
+                throw new InvalidOperationException("Dimensions.Height must be greater than zero for cropping.");
             }
 
             var filter = new StringBuilder(100);
-            if (Dimensions.X != 0)
+            if (Dimensions.Width != 0)
             {
                 filter.AppendFormat("{1}w={0}",
-                    Dimensions.X,
+                    Dimensions.Width,
                     (filter.Length > 0) ? ":" : string.Empty);
             }
-            if (Dimensions.Y != 0)
+            if (Dimensions.Height != 0)
             {
                 filter.AppendFormat("{1}h={0}",
-                    Dimensions.Y,
+                    Dimensions.Height,
                     (filter.Length > 0) ? ":" : string.Empty);
             }
             if (Offset.X != 0)

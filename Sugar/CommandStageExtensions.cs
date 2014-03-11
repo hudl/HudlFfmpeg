@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -24,16 +25,19 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentNullException("receipts");
             }
         }
+
         public static CommandStage WithStream(this CommandStage stage, CommandReceipt receipt)
         {
             var receiptList = new List<CommandReceipt>() { receipt };
             return stage.WithStreams(receiptList);
         }
+
         public static CommandStage WithStreams(this CommandStage stage, params CommandReceipt[] receipts)
         {
             var receiptList = new List<CommandReceipt>(receipts);
             return stage.WithStreams(receiptList);
         }
+
         public static CommandStage WithStreams(this CommandStage stage, List<CommandReceipt> receipts)
         {
             ValidateRecipts(stage, receipts);
@@ -42,8 +46,7 @@ namespace Hudl.Ffmpeg.Sugar
 
             return stage;
         }
-        
-        
+
         public static void ValidateFilter(FfmpegCommand command, Filterchain filterchain)
         {
             if (command.Owner == null)
@@ -56,17 +59,19 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentNullException("filterchain");
             }
         }
+
         public static CommandStage Filter(this CommandStage stage, Filterchain filterchain)
         {
             var outputReceipts = stage.Command.FilterchainManager.Add(filterchain, stage.Receipts.ToArray());
 
-            return stage.Command.WithStreams(outputReceipts); 
+            return stage.Command.WithStreams(outputReceipts);
         }
+
         public static CommandStage FilterEach(this CommandStage stage, Filterchain filterchain)
         {
             var outputReceipts = stage.Command.FilterchainManager.AddToEach(filterchain, stage.Receipts.ToArray());
 
-            return stage.Command.WithStreams(outputReceipts); 
+            return stage.Command.WithStreams(outputReceipts);
         }
 
         public static void ValidateMapTo(FfmpegCommand command)
@@ -76,33 +81,95 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
             }
         }
+
         public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage)
             where TOutputType : class, IResource, new()
         {
             return stage.MapTo<TOutputType>(SettingsCollection.ForOutput());
         }
+
         public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage, SettingsCollection settings)
+            where TOutputType : class, IResource, new()
+        {
+            return stage.MapTo<TOutputType>(string.Empty, settings);
+        }
+
+        public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage, string fileName, SettingsCollection settings)
             where TOutputType : class, IResource, new()
         {
             ValidateMapTo(stage.Command);
 
             var settingsCopy = settings.Copy();
             var outputObjects = new List<CommandOutput>();
+            var commandOutput = CommandOutput.Create(Resource.CreateOutput<TOutputType>(stage.Command.Owner.Configuration), settingsCopy);
 
             stage.Receipts.ForEach(receipt =>
+            {
+                var indexOfResource = stage.Command.Objects.Inputs.FindIndex(r => r.Resource.Map == receipt.Map);
+                if (indexOfResource < 0)
                 {
-                    var commandOutput = CommandOutput.Create(Resource.CreateOutput<TOutputType>(stage.Command.Owner.Configuration), settingsCopy);
+                    commandOutput.Settings.Merge(new Map(receipt), FfmpegMergeOptionType.NewWins);
+                }
+                else
+                {
+                    var isAudioResource =
+                        stage.Command.Objects.Inputs.First(r => r.Resource.Map == receipt.Map).Resource is IAudio;
+                    var mapSuffix = isAudioResource ? "a" : "v";
+                    commandOutput.Settings.Merge(new Map(string.Format("{0}:{1}", indexOfResource, mapSuffix)),
+                                                 FfmpegMergeOptionType.NewWins);
+                }
+            });
 
-                    var indexOfResource = stage.Command.Objects.Inputs.FindIndex(r => r.Resource.Map == receipt.Map);
-                    if (indexOfResource < 0)
-                    {
-                        commandOutput.Settings.Merge(new Map(receipt), FfmpegMergeOptionType.NewWins);
-                    }
+            if (!string.IsNullOrWhiteSpace(fileName))
+            {
+                commandOutput.Resource.Name = fileName;
+            }
 
-                    stage.Command.OutputManager.Add(commandOutput);
+            stage.Command.OutputManager.Add(commandOutput);
 
-                    outputObjects.Add(commandOutput);
-                });
+            outputObjects.Add(commandOutput);
+
+            return outputObjects;
+        }
+
+        public static void ValidateTo(FfmpegCommand command)
+        {
+            if (command.Owner == null)
+            {
+                throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
+            }
+        }
+        public static List<CommandOutput> To<TOutputType>(this CommandStage stage)
+            where TOutputType : class, IResource, new()
+        {
+            return stage.To<TOutputType>(SettingsCollection.ForOutput());
+        }
+
+        public static List<CommandOutput> To<TOutputType>(this CommandStage stage, SettingsCollection settings)
+            where TOutputType : class, IResource, new()
+        {
+            return stage.To<TOutputType>(string.Empty, settings);
+        }
+
+        public static List<CommandOutput> To<TOutputType>(this CommandStage stage, string fileName, SettingsCollection settings)
+            where TOutputType : class, IResource, new()
+        {
+            ValidateTo(stage.Command);
+
+            var settingsCopy = settings.Copy();
+            var outputObjects = new List<CommandOutput>();
+
+            var commandOutput =
+                CommandOutput.Create(Resource.CreateOutput<TOutputType>(stage.Command.Owner.Configuration), settingsCopy);
+
+            if (!string.IsNullOrWhiteSpace(fileName))
+            {
+                commandOutput.Resource.Name = fileName;
+            }
+
+            stage.Command.OutputManager.Add(commandOutput);
+
+            outputObjects.Add(commandOutput);
 
             return outputObjects;
         }

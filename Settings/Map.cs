@@ -30,7 +30,7 @@ namespace Hudl.Ffmpeg.Settings
                 throw new InvalidOperationException("Map setting Stream cannot be null.");
             }
 
-            return string.Concat(Type, " ", Formats.Map(Stream));
+            return string.Concat(Type, " ", Formats.Map(Stream, true));
         }
     }
 }

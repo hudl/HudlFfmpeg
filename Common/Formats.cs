@@ -28,10 +28,14 @@ namespace Hudl.Ffmpeg.Common
         {
             return Map(input.Map);
         }
-        public static string Map(string map)
+
+        public static string Map(string map, bool forSettings = false)
         {
-            return string.Format("[{0}]", map);
+            return forSettings && map.IndexOf(":", StringComparison.InvariantCulture) > -1
+                       ? map
+                       : string.Format("[{0}]", map);
         }
+
         public static string Library(string codec)
         {
             var codecString = codec.ToLower();
