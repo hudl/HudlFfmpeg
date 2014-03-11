@@ -9,6 +9,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Filter that applies padding to input video 
     /// </summary>
+    [AppliesToResource(Type = typeof(IImage))]
     [AppliesToResource(Type = typeof(IVideo))]
     public class Pad : BaseFilter
     {

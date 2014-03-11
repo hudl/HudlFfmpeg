@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Text;
+using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -42,7 +42,6 @@ namespace Hudl.Ffmpeg.Filters
         }
 
         public Point Offset { get; set; }
-
         public Size Dimensions { get; set; }
 
         public override string ToString()
