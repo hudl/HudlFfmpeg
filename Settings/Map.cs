@@ -20,6 +20,12 @@ namespace Hudl.Ffmpeg.Settings
         {
             Stream = receipt.Map;
         }
+
+        public Map(string streamId)
+            : base(SettingType)
+        {
+            Stream = streamId;
+        }
     
         public string Stream { get; set; }
 
