@@ -47,6 +47,10 @@ namespace Hudl.Ffmpeg.Common
 
             return codecString;
         }
+        public static string Library(FormatType codec)
+        {
+            return Library(codec.ToString());
+        }
         public static string Library(AudioCodecType codec)
         {
             return Library(codec.ToString());

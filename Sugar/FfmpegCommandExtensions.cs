@@ -147,7 +147,6 @@ namespace Hudl.Ffmpeg.Sugar
             return command.Resources[command.Resources.Count - 1].GetReceipt();
         }
 
-
         public static void ValidateRecipts(FfmpegCommand command, List<CommandReceipt> receipts)
         {
             if (command.Owner == null)
@@ -201,6 +200,12 @@ namespace Hudl.Ffmpeg.Sugar
             }
 
             return command.WithStreams(filterchain.GetReceipts());
+        }
+
+        public static CommandStage WithAllStreams(this FfmpegCommand command)
+        {
+            var receiptList = command.Resources.Select(r => r.GetReceipt()).ToList();
+            return command.WithStreams(receiptList);
         }
     }
 }

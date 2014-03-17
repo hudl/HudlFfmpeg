@@ -65,9 +65,14 @@
     <Compile Include="Command\CommandResource.cs" />
     <Compile Include="Command\CommandReceipt.cs" />
     <Compile Include="Command\CommandOutput.cs" />
+    <Compile Include="Common\FormatType.cs" />
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Logging\LogUtility.cs" />
+    <Compile Include="Resources\VideoTxt.cs" />
+    <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
+    <Compile Include="Settings\FormatInput.cs" />
+    <Compile Include="Settings\FormatOutput.cs" />
     <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
     <Compile Include="Sugar\CommandFactoryExtensions.cs" />
     <Compile Include="Sugar\FilterchainExtensions.cs" />
