@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -17,6 +14,7 @@ namespace Hudl.Ffmpeg.Filters
         private const int FilterMaxInputs = 1;
         private const string FilterType = "setpts";
         private const string ResetPtsExpression = "PTS-STARTPTS";
+        public const string FormatPlaybackRateExpression = "{0}*PTS"; 
 
         public SetPts() 
             : base(FilterType, FilterMaxInputs)

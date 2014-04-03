@@ -47,6 +47,13 @@ namespace Hudl.Ffmpeg.Sugar
             return stage;
         }
 
+        public static CommandStage TakeStreamAt(this CommandStage stage, int index)
+        {
+            var receipt = stage.Receipts[index];
+
+            return stage.Command.WithStreams(receipt); 
+        }
+
         public static void ValidateFilter(FfmpegCommand command, Filterchain filterchain)
         {
             if (command.Owner == null)
