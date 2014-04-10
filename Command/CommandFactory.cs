@@ -27,6 +27,11 @@ namespace Hudl.Ffmpeg.Command
             CommandList = new List<FfmpegCommand>();
         }
 
+        public static CommandFactory Create(CommandConfiguration configuration)
+        {
+            return new CommandFactory(configuration);
+        }
+
         /// <summary>
         /// Returns the count of commands that are in the factory, excluding prep commands
         /// </summary>

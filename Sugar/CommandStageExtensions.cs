@@ -81,6 +81,14 @@ namespace Hudl.Ffmpeg.Sugar
             return stage.Command.WithStreams(outputReceipts);
         }
 
+        public static CommandStage Copy(this CommandStage stage)
+        {
+            return new CommandStage(stage.Command)
+                {
+                    Receipts = stage.Receipts
+                };
+        }
+
         public static void ValidateMapTo(FfmpegCommand command)
         {
             if (command.Owner == null)

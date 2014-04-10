@@ -15,5 +15,10 @@ namespace Hudl.Ffmpeg.Command
         public FfmpegCommand Command { get; set; }
 
         public List<CommandReceipt> Receipts { get; set; }
+
+        public static CommandStage Create(FfmpegCommand stageCommand)
+        {
+            return new CommandStage(stageCommand);
+        }
     }
 }
