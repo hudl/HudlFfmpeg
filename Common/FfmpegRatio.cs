@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Hudl.Ffmpeg.Common
 {
@@ -11,9 +8,21 @@ namespace Hudl.Ffmpeg.Common
     /// </summary>
     public class FfmpegRatio
     {
+        private readonly bool _decimalSet; 
         private readonly int _numerator;
         private readonly int _denominator;
+        private readonly decimal _aspectRatio; 
 
+        public FfmpegRatio(decimal aspectRatio)
+        {
+            if (aspectRatio <= 0)
+            {
+                throw new ArgumentException("The FfmpegRatio aspectRatio must be greater than zero.", "aspectRatio");
+            }
+
+            _decimalSet = true; 
+            _aspectRatio = aspectRatio; 
+        }
         public FfmpegRatio(int numerator, int denominator) 
         {
             if (numerator <= 0)
@@ -25,18 +34,28 @@ namespace Hudl.Ffmpeg.Common
                 throw new ArgumentException("The FfmpegRatio denominator must be greater than zero.", "denominator");
             }
 
+            _decimalSet = false;
             _numerator = numerator;
             _denominator = denominator;
         }
 
         public override string ToString()
         {
-            return string.Concat(_numerator, "/", _denominator); 
+            return _decimalSet 
+                ? _aspectRatio.ToString(CultureInfo.InvariantCulture) 
+                : string.Concat(_numerator, "/", _denominator); 
         }
 
         public string ToRatio()
         {
-            return string.Concat(_numerator, ":", _denominator); 
+            return _decimalSet
+                ? _aspectRatio.ToString(CultureInfo.InvariantCulture)
+                : string.Concat(_numerator, ":", _denominator); 
+        }
+
+        public static FfmpegRatio Create(decimal aspectRatio)
+        {
+            return new FfmpegRatio(aspectRatio);
         }
 
         public static FfmpegRatio Create(int numerator, int denominator)
