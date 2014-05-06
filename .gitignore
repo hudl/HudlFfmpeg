@@ -1,23 +1,76 @@
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+*.suo
+*.user
+bin/
+obj/
+Bin/
+Obj/
+hudl-jobs/Quartz.NET-1.0.2/build/
+WebApp/WebApp.Publish.xml
+ProTools/Pro Quagic/obj/*
+ProTools/Properties/DataSources/*
+ProTools/Service References/*
+WebApp/ClientBin/*
+NativeVideo/Debug/*
+NativeVideo/Release/*
+NativeVideo/app.aps
+VideoEditor - Hudl.ncb
+_ReSharper*
+*.ReSharper
+/WebApp.sln.cache
+AutomatedTests/.idea/*
 
-# Libraries
-*.lib
-*.a
+/DumpFilter/DumpFilter.ncb
+DumpFilter/Release/*
+DumpFilter/Debug/*
+DumpFilter/DumpFilter/Release/*
+DumpFilter/DumpFilter/Debug/*
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+HudlMercury/Installer/output/*
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+*.vs10x
+*.sdf
+*.opensdf
+*.docstates
+.DS_Store
+._.DS_Store
+*.orig
+
+Soccer/Soccer/ClientBin/*
+chromedriver.log
+WebApp/Scripts/build/build/
+thumbs.db
+
+.idea/
+/WebApp/Css/Sass/fundraising/codekit-config.json
+/WebApp/codekit-config.json
+.sass-cache
+/WebApp/Scripts/manage/fundraising/app-ck.js
+/hudl-jobs/Quartz.NET-1.0.2/src/Quartz/Quartz.xml
+/WebApp/Css/Sass/codekit-config.json
+/WebApp/Css/Sass/css/public.css
+
+/WebApp/docs/
+
+# File from the Tab Studio Extension
+*.tss
+
+# JS Automated Tests
+FuncTests/captures/*
+WebApp/Js/build-output/
+WebApp/Css/Sass/css-build/
+
+#Vim buffer files
+*~
+
+# NuGet packages
+packages/*
+
+codekit-config.json
+
+/AdminWebApp/codekit-config.json
+
+goo-tests
+
+config.codekit
+
+/WebApp/Css/Sass/config.codekit

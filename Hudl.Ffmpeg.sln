@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.Ffmpeg", "Hudl.Ffmpeg\Hudl.Ffmpeg.csproj", "{A28FA3FF-8D08-4129-987B-F58AAE613A72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.Ffmpeg.Tests", "Hudl.Ffmpeg.Tests\Hudl.Ffmpeg.Tests.csproj", "{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{1F73384A-67E8-4893-B109-AD53AD82AECB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{AC459ADE-4D0F-4823-9799-F8390B40054C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A28FA3FF-8D08-4129-987B-F58AAE613A72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A28FA3FF-8D08-4129-987B-F58AAE613A72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A28FA3FF-8D08-4129-987B-F58AAE613A72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A28FA3FF-8D08-4129-987B-F58AAE613A72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A28FA3FF-8D08-4129-987B-F58AAE613A72} = {1F73384A-67E8-4893-B109-AD53AD82AECB}
+		{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3} = {AC459ADE-4D0F-4823-9799-F8390B40054C}
+	EndGlobalSection
+EndGlobal
