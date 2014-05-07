@@ -5,6 +5,7 @@
 	<version>$version$</version>
 	<authors>$author$</authors>
 	<description>$description$</description>
+	<iconUrl>http://nuget.thorhudl.com/package-icons/hudl.png</iconUrl>
   </metadata>
   <files>
     <file src="bin\Release\$id$.dll" target="lib\net40"/>        
