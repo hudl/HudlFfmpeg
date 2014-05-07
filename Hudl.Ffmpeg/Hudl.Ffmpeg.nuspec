@@ -9,6 +9,5 @@
   <files>
     <file src="bin\Release\$id$.dll" target="lib\net40"/>        
     <file src="bin\Release\$id$.pdb" target="lib\net40"/>
-	<file src="bin\Release\MediaInfo.dll" target="lib\net40"/>
   </files>
 </package>
