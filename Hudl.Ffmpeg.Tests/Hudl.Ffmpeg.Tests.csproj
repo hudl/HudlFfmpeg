@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -100,4 +102,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  
+  <UsingTask AssemblyFile="../packages/xunit.1.9.2/lib/net20/xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.xunit"/>
+
+  <Target Name="UnitTest">
+    <xunit Assembly="bin\Release\Hudl.Ffmpeg.Tests.dll"/>
+  </Target>
 </Project>
