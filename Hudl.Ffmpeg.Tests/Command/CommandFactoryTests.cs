@@ -9,7 +9,7 @@ namespace Hudl.Ffmpeg.Tests.Command
     {
         private const string Mp41Title = "c:/source/apple.mp4";
         private const string Mp42Title = "c:/source/couch.mp4";
-        private readonly CommandConfiguration _testConfiguration = new CommandConfiguration("C:/Source/Test", "C:/Source/Ffmpeg", "C:/Source/Assets"); 
+        private readonly CommandConfiguration _testConfiguration = new CommandConfiguration("C:/Source/Test", "C:/Source/Ffmpeg", "C:/Source/Assets");
 
         [Fact]
         public void Factory_AsOutput_Verify()

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+	<id>$id$</id>
+	<version>$version$</version>
+	<authors>$author$</authors>
+	<description>$description$</description>
+  </metadata>
+  <files>
+    <file src="bin\Release\$id$.dll" target="lib\net40"/>        
+    <file src="bin\Release\$id$.pdb" target="lib\net40"/>
+	<file src="bin\Release\MediaInfo.dll" target="lib\net40"/>
+  </files>
+</package>

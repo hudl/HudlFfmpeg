@@ -177,13 +177,13 @@ namespace Hudl.Ffmpeg.Tests.Filter
         [Fact]
         public void SetDar_AppliesTo_Audio()
         {
-            TestAppliesTo<SetDar>(true, false, false);
+            TestAppliesTo<SetDar>(true, false, true);
         }
 
         [Fact]
         public void SetSar_AppliesTo_Audio()
         {
-            TestAppliesTo<SetSar>(true, false, false);
+            TestAppliesTo<SetSar>(true, false, true);
         }
 
         [Fact]
