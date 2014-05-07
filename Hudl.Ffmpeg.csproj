@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A28FA3FF-8D08-4129-987B-F58AAE613A72}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Hudl.Ffmpeg</RootNamespace>
+    <AssemblyName>Hudl.Ffmpeg</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\Lifeguard\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BaseTypes\AppliesToResourceAttribute.cs" />
+    <Compile Include="BaseTypes\AppliesToCollection.cs" />
+    <Compile Include="BaseTypes\AppliesToInvalidException.cs" />
+    <Compile Include="BaseTypes\FfmpegRenderingException.cs" />
+    <Compile Include="BaseTypes\FfmpegProcessingException.cs" />
+    <Compile Include="Command\BaseTypes\CommandConfigurationFlagTypes.cs" />
+    <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
+    <Compile Include="Command\CmdProcessorReciever.cs" />
+    <Compile Include="Command\CommandBuilder.cs" />
+    <Compile Include="Command\CommandFactory.cs" />
+    <Compile Include="Command\CommandObjects.cs" />
+    <Compile Include="Command\CommandStage.cs" />
+    <Compile Include="Common\CommandProcessorStatus.cs" />
+    <Compile Include="Command\FfmpegCommand.cs" />
+    <Compile Include="Command\CommandResource.cs" />
+    <Compile Include="Command\CommandReceipt.cs" />
+    <Compile Include="Command\CommandOutput.cs" />
+    <Compile Include="Common\FormatType.cs" />
+    <Compile Include="Filters\Fps.cs" />
+    <Compile Include="Filters\Crop.cs" />
+    <Compile Include="Logging\LogUtility.cs" />
+    <Compile Include="Resources\VideoTxt.cs" />
+    <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
+    <Compile Include="Settings\FormatInput.cs" />
+    <Compile Include="Settings\FormatOutput.cs" />
+    <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
+    <Compile Include="Sugar\CommandFactoryExtensions.cs" />
+    <Compile Include="Sugar\FilterchainExtensions.cs" />
+    <Compile Include="Sugar\FfmpegCommandExtensions.cs" />
+    <Compile Include="Sugar\CommandStageExtensions.cs" />
+    <Compile Include="Command\CommandConfiguration.cs" />
+    <Compile Include="Common\CommandReceiptType.cs" />
+    <Compile Include="Command\Managers\CommandFilterchainManager.cs" />
+    <Compile Include="Command\Managers\CommandOutputManager.cs" />
+    <Compile Include="Command\Managers\CommandResourceManager.cs" />
+    <Compile Include="Common\AudioCodecType.cs" />
+    <Compile Include="Common\BlendVideoOptionType.cs" />
+    <Compile Include="Common\BlendVideoModeType.cs" />
+    <Compile Include="Common\AudioBitRateType.cs" />
+    <Compile Include="Common\VideoProfileType.cs" />
+    <Compile Include="Common\Extensions.cs" />
+    <Compile Include="Common\Helpers.cs" />
+    <Compile Include="Common\FfmpegMergeOptionType.cs" />
+    <Compile Include="Common\OverlayVideoEvalType.cs" />
+    <Compile Include="Common\OverlayVideoFormatType.cs" />
+    <Compile Include="Common\DurationType.cs" />
+    <Compile Include="Common\AudioUnitType.cs" />
+    <Compile Include="Common\VideoUnitType.cs" />
+    <Compile Include="Common\FadeTransitionType.cs" />
+    <Compile Include="Common\ScalePresetType.cs" />
+    <Compile Include="Common\PixelFormatType.cs" />
+    <Compile Include="Common\FfmpegRatio.cs" />
+    <Compile Include="Common\FfmpegScale.cs" />
+    <Compile Include="Common\FfmpegScaleRgb.cs" />
+    <Compile Include="Common\Formats.cs" />
+    <Compile Include="Common\Validate.cs" />
+    <Compile Include="Common\VideoCodecType.cs" />
+    <Compile Include="Filters\AFade.cs" />
+    <Compile Include="Filters\AMix.cs" />
+    <Compile Include="Filters\BaseTypes\BaseSplitFilter.cs" />
+    <Compile Include="Filters\BaseTypes\BaseFilter.cs" />
+    <Compile Include="Filters\BaseTypes\FilterchainOutput.cs" />
+    <Compile Include="Filters\BaseTypes\Filterchain.cs" />
+    <Compile Include="Filters\BaseTypes\IFilterMultiOutput.cs" />
+    <Compile Include="Filters\BaseTypes\IFilterValidator.cs" />
+    <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
+    <Compile Include="Filters\BaseTypes\IFilter.cs" />
+    <Compile Include="Filters\BaseTypes\IFilterProcessor.cs" />
+    <Compile Include="Filters\Blend.cs" />
+    <Compile Include="Filters\ColorBalance.cs" />
+    <Compile Include="Filters\Concat.cs" />
+    <Compile Include="Filters\AMovie.cs" />
+    <Compile Include="Filters\ASplit.cs" />
+    <Compile Include="Filters\Pad.cs" />
+    <Compile Include="Filters\Split.cs" />
+    <Compile Include="Filters\Trim.cs" />
+    <Compile Include="Filters\SetPts.cs" />
+    <Compile Include="Filters\Utilities.cs" />
+    <Compile Include="MediaInfo\MediaInfoDLL.cs" />
+    <Compile Include="MediaInfo\MediaLoader.cs" />
+    <Compile Include="Obsolete\Obsolete.cs" />
+    <Compile Include="Filters\Templates\Crossfade.cs" />
+    <Compile Include="Filters\Volume.cs" />
+    <Compile Include="Filters\SetSar.cs" />
+    <Compile Include="Filters\SetDar.cs" />
+    <Compile Include="Filters\Fade.cs" />
+    <Compile Include="Filters\Movie.cs" />
+    <Compile Include="Filters\Overlay.cs" />
+    <Compile Include="Filters\Scale.cs" />
+    <Compile Include="Resources\BaseTypes\MetadataInfo.cs" />
+    <Compile Include="Resources\Wmv.cs" />
+    <Compile Include="Resources\Jpg.cs" />
+    <Compile Include="Resources\Png.cs" />
+    <Compile Include="Resources\Resource.cs" />
+    <Compile Include="Resources\Wav.cs" />
+    <Compile Include="Resources\BaseTypes\BaseAudio.cs" />
+    <Compile Include="Resources\BaseTypes\BaseVideo.cs" />
+    <Compile Include="Resources\BaseTypes\BaseImage.cs" />
+    <Compile Include="Resources\BaseTypes\IImage.cs" />
+    <Compile Include="Resources\BaseTypes\IAudio.cs" />
+    <Compile Include="Resources\BaseTypes\IResource.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\BaseTypes\IVideo.cs" />
+    <Compile Include="Resources\BaseTypes\BaseResource.cs" />
+    <Compile Include="Resources\Mp3.cs" />
+    <Compile Include="Resources\M4A.cs" />
+    <Compile Include="Resources\Mp4.cs" />
+    <Compile Include="Settings\BaseTypes\BaseSetting.cs" />
+    <Compile Include="Settings\BaseTypes\BaseProfile.cs" />
+    <Compile Include="Settings\BaseTypes\SettingsApplicationData.cs" />
+    <Compile Include="Settings\BaseTypes\ISetting.cs" />
+    <Compile Include="Settings\BaseTypes\SettingsApplicationAttribute.cs" />
+    <Compile Include="Settings\BaseTypes\SettingsCollection.cs" />
+    <Compile Include="Common\SettingsCollectionResourceType.cs" />
+    <Compile Include="Settings\BaseTypes\BaseBitRate.cs" />
+    <Compile Include="Settings\BitRateVideo.cs" />
+    <Compile Include="Settings\BaseTypes\BaseCodec.cs" />
+    <Compile Include="Settings\BitRateAudio.cs" />
+    <Compile Include="Settings\AspectRatio.cs" />
+    <Compile Include="Settings\BitRateCompatibility.cs" />
+    <Compile Include="Settings\CodecAudio.cs" />
+    <Compile Include="Settings\Map.cs" />
+    <Compile Include="Settings\Level.cs" />
+    <Compile Include="Settings\ProfileVideo.cs" />
+    <Compile Include="Settings\Input.cs" />
+    <Compile Include="Settings\TrimShortest.cs" />
+    <Compile Include="Settings\SeekTo.cs" />
+    <Compile Include="Settings\StartAt.cs" />
+    <Compile Include="Settings\RemoveAudio.cs" />
+    <Compile Include="Settings\PixelFormat.cs" />
+    <Compile Include="Settings\OverwriteOutput.cs" />
+    <Compile Include="Settings\Duration.cs" />
+    <Compile Include="Settings\CodecVideo.cs" />
+    <Compile Include="Settings\Dimensions.cs" />
+    <Compile Include="Settings\FrameRate.cs" />
+    <Compile Include="Sugar\FiltergraphExtensions.cs" />
+    <Compile Include="Sugar\ResourceExtensions.cs" />
+    <Compile Include="Templates\BaseTypes\BaseCommandFactoryTemplate.cs" />
+    <Compile Include="Templates\BaseTypes\BaseFilterchainTemplate.cs" />
+    <Compile Include="Templates\BaseTypes\BaseSettingsTemplate.cs" />
+    <Compile Include="Templates\BaseTypes\BaseFilterchainAndSettingsTemplate.cs" />
+    <Compile Include="Templates\CampaignProject.cs" />
+    <Compile Include="Templates\VideoCutTo.cs" />
+    <Compile Include="Templates\Resolution1080P.cs" />
+    <Compile Include="Templates\Resolution240P.cs" />
+    <Compile Include="Templates\Resolution360P.cs" />
+    <Compile Include="Templates\Resolution480P.cs" />
+    <Compile Include="Templates\Resolution720P.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="MediaInfo.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\..\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\..\.nuget\NuGet.targets')" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
