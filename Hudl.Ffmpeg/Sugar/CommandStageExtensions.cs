@@ -188,5 +188,20 @@ namespace Hudl.Ffmpeg.Sugar
 
             return outputObjects;
         }
+
+        public static CommandStage BeforeRender(this CommandStage command, Action<CommandFactory, FfmpegCommand, bool> action)
+        {
+            command.Command.PreRenderAction = action;
+
+            return command; 
+        }
+        public static CommandStage AfterRender(this CommandStage command, Action<CommandFactory, FfmpegCommand, bool> action)
+        {
+            command.Command.PostRenderAction = action;
+
+            return command;
+        }
+
+
     }
 }

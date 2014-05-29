@@ -72,8 +72,10 @@
     <Compile Include="Logging\LogUtility.cs" />
     <Compile Include="Resources\VideoTxt.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
+    <Compile Include="Settings\MovFlags.cs" />
     <Compile Include="Settings\FormatInput.cs" />
     <Compile Include="Settings\FormatOutput.cs" />
+    <Compile Include="Settings\Channels.cs" />
     <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
     <Compile Include="Sugar\CommandFactoryExtensions.cs" />
     <Compile Include="Sugar\FilterchainExtensions.cs" />

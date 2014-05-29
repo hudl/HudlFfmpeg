@@ -127,6 +127,17 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command;
         }
+        public static FfmpegCommand WithInput(this FfmpegCommand command, List<CommandOutput> files)
+        {
+            if (files == null || files.Count == 0)
+            {
+                throw new ArgumentException("Files cannot be null or empty.", "files");
+            }
+
+            files.ForEach(co => command.WithInputNoLoad(co.OutputName));
+
+            return command;
+        }
 
         public static CommandReceipt ResourceReceiptAt(this FfmpegCommand command, int index)
         {
@@ -207,5 +218,6 @@ namespace Hudl.Ffmpeg.Sugar
             var receiptList = command.Resources.Select(r => r.GetReceipt()).ToList();
             return command.WithStreams(receiptList);
         }
+
     }
 }
