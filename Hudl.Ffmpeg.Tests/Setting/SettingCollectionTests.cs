@@ -197,5 +197,18 @@ namespace Hudl.Ffmpeg.Tests.Setting
             Assert.True(settingsCollectionI.Count == 0);
             Assert.True(settingsCollectionO.Count == 0);
         }
+
+        [Fact]
+        public void Settings_ConstantRateFactor()
+        {
+            var settingHigh = new ConstantRateFactor(52);
+            var settingLow = new ConstantRateFactor(-5);
+            var setting = new ConstantRateFactor(18);
+
+            Assert.Throws<InvalidOperationException>(() => { var s = settingHigh.ToString(); });
+            Assert.Throws<InvalidOperationException>(() => { var s = settingLow.ToString(); });
+            Assert.DoesNotThrow(() => { var s = setting.ToString(); });
+            Assert.Equal(setting.ToString(), "-crf 18");
+        }
     }
 }
