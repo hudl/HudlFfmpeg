@@ -210,5 +210,18 @@ namespace Hudl.Ffmpeg.Tests.Setting
             Assert.DoesNotThrow(() => { var s = setting.ToString(); });
             Assert.Equal(setting.ToString(), "-crf 18");
         }
+
+        [Fact]
+        public void Settings_MovFlags()
+        {
+            var settingWrong1 = new MovFlags(string.Empty);
+            var settingWrong2 = new MovFlags("  ");
+            var setting = new MovFlags(MovFlags.EnableFastStart);
+
+            Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.ToString(); });
+            Assert.Throws<InvalidOperationException>(() => { var s = settingWrong2.ToString(); });
+            Assert.DoesNotThrow(() => { var s = setting.ToString(); });
+            Assert.Equal(setting.ToString(), "-movflags +faststart");
+        }
     }
 }
