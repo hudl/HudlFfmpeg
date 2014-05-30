@@ -76,6 +76,7 @@
     <Compile Include="Settings\FormatInput.cs" />
     <Compile Include="Settings\FormatOutput.cs" />
     <Compile Include="Settings\Channels.cs" />
+    <Compile Include="Settings\ConstantRateFactor.cs" />
     <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
     <Compile Include="Sugar\CommandFactoryExtensions.cs" />
     <Compile Include="Sugar\FilterchainExtensions.cs" />

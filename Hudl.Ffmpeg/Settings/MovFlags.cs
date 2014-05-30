@@ -15,18 +15,18 @@ namespace Hudl.Ffmpeg.Settings
     public class MovFlags : BaseSetting
     {
         private const string SettingType = "-movflags";
-
+ 
         /// <summary>
         /// run a second pass moving the index (moov atom) to the beginning of the file
         /// </summary>
-        public const string FastStart = "faststart";
+        public const string EnableFastStart = "+faststart"; 
 
         public MovFlags(string flags)
             : base(SettingType)
         {
             Flags = flags;
         }
-
+    
         public string Flags { get; set; }
 
         public override string ToString()
