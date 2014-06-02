@@ -153,6 +153,13 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             where TSetting : ISetting
         {
             var itemType = item.GetType();
+
+            var settingData = Validate.GetSettingData(item);
+            if (settingData != null && settingData.MultipleAllowed)
+            {
+                return false; 
+            }
+            
             return SettingsList.Any(s => s.GetType().IsAssignableFrom(itemType));
         }
 

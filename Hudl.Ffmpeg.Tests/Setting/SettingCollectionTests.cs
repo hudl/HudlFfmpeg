@@ -37,6 +37,18 @@ namespace Hudl.Ffmpeg.Tests.Setting
         }
 
         [Fact]
+        public void SettingsCollection_AllowMultiple()
+        {
+            var settingsCollectionO = SettingsCollection.ForOutput();
+
+            Assert.DoesNotThrow(() => settingsCollectionO.Add(new Map("test1")));
+
+            Assert.DoesNotThrow(() => settingsCollectionO.Add(new Map("test2")));
+
+            Assert.True(settingsCollectionO.Count == 2);
+        }
+
+        [Fact]
         public void SettingsCollection_Add()
         {
             var settingsCollectionI = SettingsCollection.ForInput();
@@ -223,5 +235,19 @@ namespace Hudl.Ffmpeg.Tests.Setting
             Assert.DoesNotThrow(() => { var s = setting.ToString(); });
             Assert.Equal(setting.ToString(), "-movflags +faststart");
         }
+
+        [Fact]
+        public void Settings_Map()
+        {
+            var settingWrong1 = new Map(string.Empty);
+            var settingWrong2 = new Map("  ");
+            var setting = new Map("output1");
+
+            Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.ToString(); });
+            Assert.Throws<InvalidOperationException>(() => { var s = settingWrong2.ToString(); });
+            Assert.DoesNotThrow(() => { var s = setting.ToString(); });
+            Assert.Equal(setting.ToString(), "-map [output1]");
+        }
+
     }
 }
