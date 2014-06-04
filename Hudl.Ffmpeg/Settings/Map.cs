@@ -10,7 +10,7 @@ namespace Hudl.Ffmpeg.Settings
     [AppliesToResource(Type = typeof(IAudio))]
     [AppliesToResource(Type = typeof(IVideo))]
     [AppliesToResource(Type = typeof(IImage))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
+    [SettingsApplication(PreDeclaration = true, MultipleAllowed = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class Map : BaseSetting
     {
         private const string SettingType = "-map";

@@ -8,7 +8,9 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
     /// </summary>
     internal class SettingsApplicationData 
     {
-        public bool PreDeclaration { get; set; } 
+        public bool PreDeclaration { get; set; }
+
+        public bool MultipleAllowed { get; set; }
 
         public SettingsCollectionResourceType ResourceType { get; set; } 
     }

@@ -28,6 +28,8 @@ namespace Hudl.Ffmpeg.Command
             OutputManager = CommandOutputManager.Create(this);
             ResourceManager = CommandResourceManager.Create(this);
             FilterchainManager = CommandFilterchainManager.Create(this);
+            PreRenderAction = EmptyOperation;
+            PostRenderAction = EmptyOperation;
         }
 
         public static FfmpegCommand Create(CommandFactory owner)
@@ -36,6 +38,10 @@ namespace Hudl.Ffmpeg.Command
         }
 
         internal CommandObjects Objects { get; set; }
+
+        public Action<CommandFactory, FfmpegCommand, bool> PreRenderAction { get; set; }
+
+        public Action<CommandFactory, FfmpegCommand, bool> PostRenderAction { get; set; }
 
         public ReadOnlyCollection<CommandOutput> Outputs { get { return Objects.Outputs.AsReadOnly(); } }
 
@@ -93,13 +99,23 @@ namespace Hudl.Ffmpeg.Command
 
             var commandBuilder = new CommandBuilder();
             commandBuilder.WriteCommand(this);
+
+            PreRenderAction(Owner, this, true);
             
             if (!commandProcessor.Send(commandBuilder.ToString()))
             {
+                PostRenderAction(Owner, this, false);
+
                 throw new FfmpegRenderingException(commandProcessor.Error);
             }
 
+            PostRenderAction(Owner, this, true);
+
             return Objects.Outputs;
+        }
+
+        private void EmptyOperation(CommandFactory factory, FfmpegCommand command, bool success)
+        {
         }
 
         #region Internals
