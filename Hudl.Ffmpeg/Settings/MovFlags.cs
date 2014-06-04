@@ -7,7 +7,7 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 namespace Hudl.Ffmpeg.Settings
 {
     /// <summary>
-    /// MovFlags sets the LibAV Encoder options to enable features and options in the video
+    /// MovFlags is used to set AVOptions that tell ffmpeg how to fragment the file. 
     /// </summary>
     [AppliesToResource(Type = typeof(IAudio))]
     [AppliesToResource(Type = typeof(IVideo))]
@@ -15,6 +15,10 @@ namespace Hudl.Ffmpeg.Settings
     public class MovFlags : BaseSetting
     {
         private const string SettingType = "-movflags";
+ 
+        /// <summary>
+        /// run a second pass moving the index (moov atom) to the beginning of the file
+        /// </summary>
         public const string EnableFastStart = "+faststart"; 
 
         public MovFlags(string flags)
@@ -29,7 +33,7 @@ namespace Hudl.Ffmpeg.Settings
         {
             if (string.IsNullOrWhiteSpace(Flags))
             {
-                throw new InvalidOperationException("MovFlags cannot be null or empty.");
+                throw new InvalidOperationException("Flags cannot be null or empty.");
             }
 
             return string.Concat(Type, " ", Flags);

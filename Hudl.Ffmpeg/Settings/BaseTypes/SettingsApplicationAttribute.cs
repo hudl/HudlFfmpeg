@@ -33,6 +33,15 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         }
 
         /// <summary>
+        /// Multiple allowed indicates that the setting type does have a limit on number
+        /// </summary>
+        public bool MultipleAllowed
+        {
+            get { return Data.MultipleAllowed; }
+            set { Data.MultipleAllowed = value; }
+        }
+
+        /// <summary>
         /// internal accessor to get the data while parsing the attributes.
         /// </summary>
         internal SettingsApplicationData Data { get; set; }

@@ -168,6 +168,44 @@ namespace Hudl.Ffmpeg.Tests.Command
             Assert.DoesNotThrow(() => command.RenderWith<TestCommandProcessor>());
         }
 
+        [Fact]
+        public void Command_PreRenderAction_Verify()
+        {
+            var command = CommandHelper.CreateCommand();
+
+            var beforeRenderExecuted = false;
+
+            var stage = command.WithInput(Assets.Utilities.GetVideoFile())
+                               .WithAllStreams()
+                               .BeforeRender((c, f, b) =>
+                                   {
+                                       beforeRenderExecuted = true;
+                                   });
+
+            stage.Command.RenderWith<TestCommandProcessor>(); 
+
+            Assert.True(beforeRenderExecuted);
+        }
+
+        [Fact]
+        public void Command_PostRenderAction_Verify()
+        {
+            var command = CommandHelper.CreateCommand();
+
+            var afterRenderExecuted = false;
+
+            var stage = command.WithInput(Assets.Utilities.GetVideoFile())
+                               .WithAllStreams()
+                               .AfterRender((c, f, b) =>
+                                   {
+                                       afterRenderExecuted = true;
+                                   });
+
+            stage.Command.RenderWith<TestCommandProcessor>();
+
+            Assert.True(afterRenderExecuted);
+        }
+
         private class CommandHelper
         {
             private const string OutputVideo = "c:/source/output.mp4";
