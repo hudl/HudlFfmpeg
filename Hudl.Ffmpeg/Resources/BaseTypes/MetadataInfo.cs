@@ -24,6 +24,8 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
 
         public double AspectRatio { get; internal set; }
 
+        public string EncodedApplication { get; internal set; }
+
         public static MetadataInfo Create()
         {
             return new MetadataInfo();
@@ -37,6 +39,7 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
                     HasAudio = loader.HasAudio,
                     HasVideo = loader.HasVideo,
                     AspectRatio = loader.AspectRatio,
+                    EncodedApplication = loader.EncodedApplication,
                     Dimensions = new Size(loader.Width, loader.Height),
                 };
         }

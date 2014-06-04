@@ -1,6 +1,8 @@
 ﻿using System;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.Ffmpeg.Sugar;
+using Hudl.Ffmpeg.Tests.Assets;
 using Xunit; 
 
 namespace Hudl.Ffmpeg.Tests.Resources
@@ -139,6 +141,15 @@ namespace Hudl.Ffmpeg.Tests.Resources
 
             Assert.Throws<ArgumentException>(() => Resource.Create<Jpg>(pngPathName));
         }
+
+        [Fact]
+        public void Video_EncodedApplication_Load()
+        {
+            var resourceInfo = Resource.From(Utilities.GetVideoFile()).LoadMetadata();
+
+            Assert.NotEmpty(resourceInfo.Info.EncodedApplication);
+        }
+
 
         private class ResourceFactory
         {
