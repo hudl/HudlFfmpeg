@@ -97,9 +97,14 @@ namespace Hudl.Ffmpeg.MediaInfo
             // duration is in milliseconds
             double durms;
             if (double.TryParse(_mi.Get(StreamKind.General, 0, "Duration"), out durms)) Duration = TimeSpan.FromMilliseconds(durms);
+
+            // encoder application
+            var encodedApplication = _mi.Get(StreamKind.General, 0, "Encoded_Application");
+            if (!string.IsNullOrWhiteSpace(encodedApplication)) EncodedApplication = encodedApplication; 
         }
 
         public string FullName { get; protected set; }
+        public string EncodedApplication { get; protected set; }
         public TimeSpan Duration { get; protected set; }
         public bool HasVideo { get; protected set; }
         public bool HasAudio { get; protected set; }

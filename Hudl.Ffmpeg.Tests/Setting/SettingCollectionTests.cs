@@ -249,5 +249,13 @@ namespace Hudl.Ffmpeg.Tests.Setting
             Assert.Equal(setting.ToString(), "-map [output1]");
         }
 
+        [Fact]
+        public void Settings_AutoConvert()
+        {
+            var setting = new AutoConvert();
+
+            Assert.DoesNotThrow(() => { var s = setting.ToString(); });
+            Assert.Equal(setting.ToString(), "-auto_convert 1");
+        }
     }
 }
