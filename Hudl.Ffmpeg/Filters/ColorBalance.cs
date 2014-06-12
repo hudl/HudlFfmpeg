@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -62,7 +59,7 @@ namespace Hudl.Ffmpeg.Filters
         /// </summary>
         public FfmpegScaleRgb Highlight { get; set; }
 
-        public override string ToString() 
+        public override void Validate()
         {
             if (Shadow.Red.Value == 0 &&
                 Shadow.Green.Value == 0 &&
@@ -76,7 +73,10 @@ namespace Hudl.Ffmpeg.Filters
             {
                 throw new InvalidOperationException("At least one Color Balance ratio greater or less than 0 is required.");
             }
+        }
 
+        public override string ToString() 
+        {
             var filter = new StringBuilder(100);
             if (Shadow.Red.Value != 0)
             {

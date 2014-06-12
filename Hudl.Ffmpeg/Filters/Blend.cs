@@ -41,16 +41,19 @@ namespace Hudl.Ffmpeg.Filters
 
         public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
         {
-            return resources.Min(r => r.Resource.Length);
+            return resources.Min(r => r.Resource.Info.Duration);
         }
 
-        public override string ToString() 
+        public override void Validate()
         {
             if (Option == BlendVideoOptionType.all_expr && string.IsNullOrWhiteSpace(Expression))
             {
                 throw new InvalidOperationException("Expression cannot be empty with Blend Option 'all_expr'");
             }
+        }
 
+        public override string ToString() 
+        {
             var filter = new StringBuilder(100);
             filter.AppendFormat("{0}", Option.ToString());
             switch (Option) 

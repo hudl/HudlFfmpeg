@@ -20,7 +20,7 @@ namespace Hudl.Ffmpeg.Templates
             );
 
             BaseSettings.AddRange(SettingsCollection.ForOutput(
-                new Dimensions(ScalePresetType.Hd720),
+                new Size(ScalePresetType.Hd720),
                 new AspectRatio(new FfmpegRatio(16, 9)))
             );
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -32,7 +33,7 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource> resources)
+        public override TimeSpan? LengthFromInputs(List<Command.CommandResource> resources)
         {
             var overallLength = TimeSpan.FromSeconds(0);
             var baseCalculatedLength = base.LengthFromInputs(resources);
@@ -43,7 +44,7 @@ namespace Hudl.Ffmpeg.Settings
             return baseCalculatedLength - Length;
         }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Length == null)
             {
@@ -53,7 +54,10 @@ namespace Hudl.Ffmpeg.Settings
             {
                 throw new InvalidOperationException("SeekTo length must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Formats.Duration(Length));
         }
     }

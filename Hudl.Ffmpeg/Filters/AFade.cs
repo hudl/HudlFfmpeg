@@ -4,7 +4,6 @@ using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
 
 namespace Hudl.Ffmpeg.Filters
 {
@@ -43,13 +42,16 @@ namespace Hudl.Ffmpeg.Filters
 
         public double? OverrideStartAt { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Duration <= 0)
             {
                 throw new InvalidOperationException("Duration of the Audio Fade must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             var filter = new StringBuilder(100);
             var startAtLocation = 0d;
             if (OverrideStartAt.HasValue)
@@ -58,7 +60,7 @@ namespace Hudl.Ffmpeg.Filters
             }
             else if (Transition == FadeTransitionType.Out)
             {
-                startAtLocation = CommandResources[0].Resource.Length.TotalSeconds - Duration; 
+                startAtLocation = CommandResources[0].Resource.Info.Duration.TotalSeconds - Duration; 
             }
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit) 

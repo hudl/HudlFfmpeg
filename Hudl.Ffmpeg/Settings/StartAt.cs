@@ -44,7 +44,7 @@ namespace Hudl.Ffmpeg.Settings
             return baseCalculatedLength - Length;
         }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Length == null)
             {
@@ -54,7 +54,10 @@ namespace Hudl.Ffmpeg.Settings
             {
                 throw new InvalidOperationException("StartAt length must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Formats.Duration(Length));
         }
     }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -23,13 +21,16 @@ namespace Hudl.Ffmpeg.Settings
     
         public double Setting { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Setting <= 0)
             {
                 throw new InvalidOperationException("Setting size must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Setting);
         }
     }

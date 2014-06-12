@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Drawing;
-using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -30,13 +27,16 @@ namespace Hudl.Ffmpeg.Filters
 
         public int FrameRate { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
-            if (FrameRate <= 0) 
+            if (FrameRate <= 0)
             {
                 throw new InvalidOperationException("FrameRate must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, "=", FrameRate);
         }
     }

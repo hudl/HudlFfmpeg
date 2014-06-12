@@ -27,13 +27,16 @@ namespace Hudl.Ffmpeg.Filters
 
         public IResource File { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (File == null)
             {
                 throw new InvalidOperationException("Movie input cannot be nothing");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, "=", File.Path);
         }
     }

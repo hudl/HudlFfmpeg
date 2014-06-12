@@ -42,18 +42,21 @@ namespace Hudl.Ffmpeg.Filters
 
         public FadeTransitionType Transition { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Duration <= 0)
             {
                 throw new InvalidOperationException("Duration of the Video Fade cannot be zero.");
             }
+        }
 
+        public override string ToString()
+        {
             var filter = new StringBuilder(100);
             var startAtLocation = 0d;
             if (Transition == FadeTransitionType.Out)
             {
-                startAtLocation = CommandResources[0].Resource.Length.TotalSeconds - Duration;
+                startAtLocation = CommandResources[0].Resource.Info.Duration.TotalSeconds - Duration;
             }
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit)

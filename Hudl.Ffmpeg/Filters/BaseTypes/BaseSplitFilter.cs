@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
@@ -25,14 +24,17 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         }
 
         public int NumberOfStreams { get; set; }
-        
-        public override string ToString()
+
+        public override void Validate()
         {
             if (NumberOfStreams <= 1)
             {
                 throw new InvalidOperationException("NumberOfStreams must be greater than one for a split.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, "=", NumberOfStreams.ToString(CultureInfo.InvariantCulture));
         }
 

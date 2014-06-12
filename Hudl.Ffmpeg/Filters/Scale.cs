@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing; 
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
@@ -20,7 +19,7 @@ namespace Hudl.Ffmpeg.Filters
         public Scale()
             : base(FilterType, FilterMaxInputs)
         {
-            Dimensions = new Point(0, 0);
+            Dimensions = new Size(0, 0);
         }
         public Scale(ScalePresetType preset)
             : this()
@@ -45,23 +44,26 @@ namespace Hudl.Ffmpeg.Filters
                 throw new ArgumentException("Y must be greater than zero for scaling.");
             }
 
-            Dimensions = new Point(x, y);
+            Dimensions = new Size(x, y);
         }
 
-        public Point Dimensions { get; set; }
+        public Size Dimensions { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
-            if (Dimensions.X <= 0)
+            if (Dimensions.Width <= 0)
             {
                 throw new InvalidOperationException("Dimensions.X must be greater than zero for scaling.");
             }
-            if (Dimensions.Y <= 0)
+            if (Dimensions.Height <= 0)
             {
                 throw new InvalidOperationException("Dimensions.Y must be greater than zero for scaling.");
             }
+        }
 
-            return string.Concat(Type, "=w=", Dimensions.X, ":h=", Dimensions.Y, ":flags=lanczos");
+        public override string ToString()
+        {
+            return string.Concat(Type, "=w=", Dimensions.Width, ":h=", Dimensions.Height, ":flags=lanczos");
         }
     }
 }

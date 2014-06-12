@@ -26,9 +26,14 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         TimeSpan? LengthFromInputs(List<CommandResource> resources);
 
         /// <summary>
+        /// A filter must contain a validation system for stringification
+        /// </summary>
+        void Validate();
+        
+        /// <summary>
         /// builds the command necessary to complete the effect
         /// </summary>
-        string ToString();
+        string Stringify(); 
 
         /// <summary>
         /// sets up the filter based on the settings in the filterchain

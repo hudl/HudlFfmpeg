@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -28,15 +27,18 @@ namespace Hudl.Ffmpeg.Settings
             Ratio = ratio;
         }
 
-        public FfmpegRatio Ratio { get; set; } 
-               
-        public override string ToString()  
+        public FfmpegRatio Ratio { get; set; }
+
+        public override void Validate()
         {
             if (Ratio == null)
             {
                 throw new InvalidOperationException("Ratio cannot be null.");
             }
+        }
 
+        public override string ToString()  
+        {
             return string.Concat(Type, " ", Ratio.ToRatio());
         }
     }

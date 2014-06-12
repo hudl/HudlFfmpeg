@@ -59,7 +59,7 @@ namespace Hudl.Ffmpeg.Command
                 if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
 
                 _builderBase.Append(" ");
-                _builderBase.Append(setting);
+                _builderBase.Append(setting.Stringify());
             });
         }
         private void WriteResourcePostSettings(CommandResource resource, Dictionary<Type, SettingsApplicationData> settingsData)
@@ -77,7 +77,7 @@ namespace Hudl.Ffmpeg.Command
                 if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
 
                 _builderBase.Append(" ");
-                _builderBase.Append(setting);
+                _builderBase.Append(setting.Stringify());
             });
 
         }
@@ -190,7 +190,7 @@ namespace Hudl.Ffmpeg.Command
                 if (settingInfoData.ResourceType != SettingsCollectionResourceType.Output) return;
 
                 _builderBase.Append(" ");
-                _builderBase.Append(setting);
+                _builderBase.Append(setting.Stringify());
             });
         }
 
@@ -206,7 +206,7 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("filter");
             }
 
-            _builderBase.Append(filter.ToString());
+            _builderBase.Append(filter.Stringify());
         }
 
         public override string ToString()

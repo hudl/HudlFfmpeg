@@ -1,6 +1,5 @@
 ﻿using System;
 using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
@@ -18,14 +17,17 @@ namespace Hudl.Ffmpeg.Settings
         }
 
         public IResource Resource { get; protected set; }
-        
-        public override string ToString()
+
+        public override void Validate()
         {
             if (Resource == null)
             {
                 throw new InvalidOperationException("Resource cannot be empty.");
             }
+        }
 
+        public override string ToString()
+        {
             var escapedPath = Resource.FullName.Replace('\\', '/');
             return string.Concat(Type, " \"", escapedPath, "\"");
         }

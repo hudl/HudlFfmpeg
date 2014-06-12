@@ -26,10 +26,21 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// </summary>
         public virtual TimeSpan? LengthFromInputs(List<CommandResource> resources)
         {
-            var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);
+            var totalSeconds = resources.Sum(r => r.Resource.Info.Duration.TotalSeconds);
             return totalSeconds > 0d
                        ? (TimeSpan?)TimeSpan.FromSeconds(totalSeconds)
                        : null;
+        }
+
+        public virtual void Validate()
+        {
+        }
+
+        public string Stringify()
+        {
+            Validate();
+
+            return ToString(); 
         }
     }
 }

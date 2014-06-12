@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Hudl.Ffmpeg.Command;
@@ -16,8 +15,7 @@ namespace Hudl.Ffmpeg.Resources
         private static List<Type> _videoTypes = new List<Type>();
         private static List<Type> _audioTypes = new List<Type>();
         private static List<Type> _imageTypes = new List<Type>();
-        private static List<Type> _allTypes = new List<Type>();
-
+        private static readonly List<Type> AllTypes = new List<Type>();
 
         /// <summary>
         /// Creates a new resource with the full path name provided.
@@ -74,12 +72,13 @@ namespace Hudl.Ffmpeg.Resources
         public static TResource Create<TResource>(string filePath, string fileName, TimeSpan length)
             where TResource : class, IResource, new()
         {
-            return new TResource
+            var resource = new TResource
                 {
-                    Name = fileName, 
-                    Path = filePath, 
-                    Length = length
+                    Name = fileName,
+                    Path = filePath,
+                    Info = {Duration = length},
                 };
+            return resource; 
         }
 
 
@@ -101,20 +100,20 @@ namespace Hudl.Ffmpeg.Resources
             if (_imageTypes.Count == 0)
             {
                 _imageTypes = GetTypes<IImage>();
-                _allTypes.AddRange(_imageTypes);
+                AllTypes.AddRange(_imageTypes);
             }
             if (_audioTypes.Count == 0)
             {
                 _audioTypes = GetTypes<IAudio>();
-                _allTypes.AddRange(_audioTypes);
+                AllTypes.AddRange(_audioTypes);
             }
             if (_videoTypes.Count == 0)
             {
                 _videoTypes = GetTypes<IVideo>();
-                _allTypes.AddRange(_videoTypes);
+                AllTypes.AddRange(_videoTypes);
             }
 
-            var correctResource = _allTypes.FirstOrDefault(t => t.Name.ToUpper() == fileExtension.ToUpper());
+            var correctResource = AllTypes.FirstOrDefault(t => t.Name.ToUpper() == fileExtension.ToUpper());
             if (correctResource == null)
             {
                 throw new InvalidOperationException("Cannot derive resource type from path provided.");
@@ -238,7 +237,7 @@ namespace Hudl.Ffmpeg.Resources
             var newInstance = (TResource)Activator.CreateInstance(correctResource);
             newInstance.Path = filePath;
             newInstance.Name = fileName;
-            newInstance.Length = length;
+            newInstance.Info.Duration = length;
             return newInstance;
         }
 

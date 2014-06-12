@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Hudl.Ffmpeg.Command.Managers
 {
+    /// <summary>
+    /// A manager that controls the addition of new outputs to an Ffmpeg command.
+    /// </summary>
     public class CommandOutputManager
     {
         private CommandOutputManager(FfmpegCommand owner)

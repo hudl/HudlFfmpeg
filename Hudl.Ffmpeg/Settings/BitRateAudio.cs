@@ -1,5 +1,4 @@
-﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
+﻿using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;

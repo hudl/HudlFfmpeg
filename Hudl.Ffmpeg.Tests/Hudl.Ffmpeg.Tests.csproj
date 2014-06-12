@@ -51,21 +51,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Utilities.cs" />
+    <Compile Include="BaseTypes\BaseTypeTests.cs" />
     <Compile Include="Command\CommandTests.cs" />
     <Compile Include="Command\CommandFactoryTests.cs" />
+    <Compile Include="Command\Managers\ManagersTests.cs" />
     <Compile Include="Command\TestCommandProcessor.cs" />
     <Compile Include="Filter\FilterchainTests.cs" />
     <Compile Include="Filter\FiltergraphTests.cs" />
     <Compile Include="Filter\FilterTests.cs" />
-    <Compile Include="Obsolete\Filter\FiltergraphTests.cs" />
-    <Compile Include="Obsolete\Filter\FilterchainTests.cs" />
-    <Compile Include="Obsolete\Filter\FilterTests.cs" />
-    <Compile Include="Obsolete\Command\CommandFactoryTests.cs" />
-    <Compile Include="Obsolete\Command\CommandTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ResourceTests.cs" />
-    <Compile Include="Obsolete\Setting\SettingCollectionTests.cs" />
     <Compile Include="Setting\SettingCollectionTests.cs" />
+    <Compile Include="Setting\SettingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Hudl.Ffmpeg\Hudl.Ffmpeg.csproj">
@@ -101,10 +98,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  
-  <UsingTask AssemblyFile="../packages/xunit.1.9.2/lib/net20/xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.xunit"/>
-
+  <UsingTask AssemblyFile="../packages/xunit.1.9.2/lib/net20/xunit.runner.msbuild.dll" TaskName="Xunit.Runner.MSBuild.xunit" />
   <Target Name="UnitTest">
-    <xunit Assembly="bin\Release\Hudl.Ffmpeg.Tests.dll"/>
+    <xunit Assembly="bin\Release\Hudl.Ffmpeg.Tests.dll" />
   </Target>
 </Project>

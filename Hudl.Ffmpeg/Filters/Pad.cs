@@ -40,20 +40,26 @@ namespace Hudl.Ffmpeg.Filters
 
         public Point Position { get; set; }
 
+        public override void Validate()
+        {
+            if (string.IsNullOrWhiteSpace(Expression))
+            {
+                if (To.IsEmpty)
+                {
+                    throw new InvalidOperationException("To dimensions cannot be null.");
+                }
+                if (Position.IsEmpty)
+                {
+                    throw new InvalidOperationException("Position point cannot be null.");
+                }
+            }
+        }
+
         public override string ToString() 
         {
             if (!string.IsNullOrWhiteSpace(Expression))
             {
-                return string.Concat(Type, "=", Expression); 
-            }
-
-            if (To == null)
-            {
-                throw new InvalidOperationException("To dimensions cannot be null.");
-            }
-            if (Position == null)
-            {
-                throw new InvalidOperationException("Position point cannot be null.");
+                return string.Concat(Type, "=", Expression);
             }
 
             return string.Format("{0}=width={1}:height={2}:x={3}:y={4}", 

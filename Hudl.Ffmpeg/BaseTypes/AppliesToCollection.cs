@@ -3,13 +3,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.BaseTypes
 {
     /// <summary>
-    /// a collecton of <see cref="TCollection"/>, that will be validated to only include those that are applicable to the RestrictionType
+    /// a collecton of <see cref="TCollection"/>, that will be validated to only include objects which contain an AppliesToResource attribute that is a type of this.
     /// </summary>
     /// <typeparam name="TCollection">the type of the collection</typeparam>
     public class AppliesToCollection<TCollection>

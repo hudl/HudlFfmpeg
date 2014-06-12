@@ -26,13 +26,16 @@ namespace Hudl.Ffmpeg.Filters
 
         public IAudio File { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (File == null)
             {
                 throw new InvalidOperationException("AMovie input cannot be nothing");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, "=", File.Path);
         }
     }

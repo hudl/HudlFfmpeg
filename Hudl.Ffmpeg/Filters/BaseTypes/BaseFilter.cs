@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 
 //TODO:CB --> figure out what to do with additional calls here, they are far from optimal 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
@@ -58,10 +57,21 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// </summary>
         public virtual TimeSpan? LengthFromInputs(List<CommandResource> resources)
         {
-            var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);
+            var totalSeconds = resources.Sum(r => r.Resource.Info.Duration.TotalSeconds);
             return totalSeconds > 0d
                        ? (TimeSpan?)TimeSpan.FromSeconds(totalSeconds)
                        : null;
+        }
+
+        public virtual void Validate()
+        {
+        }
+
+        public string Stringify()
+        {
+            Validate();
+
+            return ToString();
         }
     }
 }

@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Hudl.Ffmpeg.Command.Managers
 {
+    /// <summary>
+    /// A manager that will manage the resource for an ffmpeg command
+    /// </summary>
     public class CommandResourceManager
     {
         private CommandResourceManager(FfmpegCommand owner)

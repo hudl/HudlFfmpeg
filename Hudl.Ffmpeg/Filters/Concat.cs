@@ -38,17 +38,22 @@ namespace Hudl.Ffmpeg.Filters
         
         public int NumberOfAudioOut { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
-            var numberOfResources = CommandResources.Count; 
+            var numberOfResources = CommandResources.Count;
             if (NumberOfVideoOut > numberOfResources)
             {
                 throw new InvalidOperationException("Number of Videos out cannot be greater than Resources in.");
             }
-            if (NumberOfAudioOut > numberOfResources) 
+            if (NumberOfAudioOut > numberOfResources)
             {
                 throw new InvalidOperationException("Number of Audios out cannot be greater than Resources in.");
             }
+        }
+
+        public override string ToString()
+        {
+            var numberOfResources = CommandResources.Count;
             
             var filter = new StringBuilder(100);
             if (numberOfResources > FilterMinInputs)

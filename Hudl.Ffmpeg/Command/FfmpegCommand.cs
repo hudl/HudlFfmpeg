@@ -7,14 +7,11 @@ using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Command.Managers;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
-using log4net;
 
 namespace Hudl.Ffmpeg.Command
 {
     public class FfmpegCommand
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FfmpegCommand).Name);
-
         private FfmpegCommand(CommandFactory owner)
         {
             if (owner == null)
@@ -67,7 +64,7 @@ namespace Hudl.Ffmpeg.Command
         /// Renders the command stream with a new command processor
         /// </summary>
         public List<CommandOutput> RenderWith<TProcessor>()
-            where TProcessor : ICommandProcessor, new()
+            where TProcessor : class, ICommandProcessor, new()
         {
             var commandProcessor = new TProcessor();
 
@@ -90,7 +87,7 @@ namespace Hudl.Ffmpeg.Command
         /// Renders the command stream with an existing command processor
         /// </summary>
         public List<CommandOutput> RenderWith<TProcessor>(TProcessor commandProcessor)
-            where TProcessor : ICommandProcessor
+            where TProcessor : class, ICommandProcessor
         {
             if (commandProcessor == null)
             {

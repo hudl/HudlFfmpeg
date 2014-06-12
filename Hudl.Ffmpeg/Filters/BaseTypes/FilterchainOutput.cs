@@ -28,7 +28,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
 
         public IResource Output()
         {
-            Resource.Length = Length;
+            Resource.Info.Duration = Length;
             return Resource;
         }
 

@@ -36,7 +36,7 @@ namespace Hudl.Ffmpeg.Settings
             return Length; 
         }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Length == null)
             {
@@ -46,7 +46,10 @@ namespace Hudl.Ffmpeg.Settings
             {
                 throw new InvalidOperationException("Duration length must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Formats.Duration(Length));
         }
     }

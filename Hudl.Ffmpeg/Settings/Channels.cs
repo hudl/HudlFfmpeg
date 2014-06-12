@@ -23,13 +23,16 @@ namespace Hudl.Ffmpeg.Settings
 
         public int NumberOfChannels { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (NumberOfChannels <= 0)
             {
                 throw new InvalidOperationException("NumberOfChannels must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", NumberOfChannels);
         }
     }

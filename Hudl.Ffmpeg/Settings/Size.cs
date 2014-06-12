@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
@@ -10,16 +9,16 @@ namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class Dimensions : BaseSetting
+    public class Size : BaseSetting
     {
         private const string SettingType = "-s";
 
-        public Dimensions()
+        public Size()
             : base(SettingType)
         {
-            Size = new Point(1, 1);
+            Dimensions = new System.Drawing.Size(0, 0);
         }
-        public Dimensions(ScalePresetType preset)
+        public Size(ScalePresetType preset)
             : this()
         {
             var scalingPresets = Helpers.ScalingPresets;
@@ -28,9 +27,9 @@ namespace Hudl.Ffmpeg.Settings
                 throw new ArgumentException("The preset does not currently exist.", "preset");
             }
 
-            Size = scalingPresets[preset];
+            Dimensions = scalingPresets[preset];
         }
-        public Dimensions(int x, int y)
+        public Size(int x, int y)
             : this()
         {
             if (x <= 0)
@@ -42,27 +41,30 @@ namespace Hudl.Ffmpeg.Settings
                 throw new ArgumentException("Dimensions Y must be greater than zero.");
             }
 
-            Size = new Point(x, y);
+            Dimensions = new System.Drawing.Size(x, y);
         }
 
-        public Point Size { get; set; }
+        public System.Drawing.Size Dimensions { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
-            if (Size == null)
+            if (Dimensions == null)
             {
                 throw new InvalidOperationException("Dimensions size cannot be null.");
             }
-            if (Size.X <= 0)
+            if (Dimensions.Width <= 0)
             {
                 throw new InvalidOperationException("Dimensions width must be greater than zero.");
             }
-            if (Size.Y <= 0)
+            if (Dimensions.Height <= 0)
             {
                 throw new InvalidOperationException("Dimensions height must be greater than zero.");
             }
+        }
 
-            return string.Concat(Type, " ", Size.X, "x", Size.Y);
+        public override string ToString()
+        {
+            return string.Concat(Type, " ", Dimensions.Width, "x", Dimensions.Height);
         }
     }
 }

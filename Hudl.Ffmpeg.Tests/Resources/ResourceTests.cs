@@ -98,7 +98,7 @@ namespace Hudl.Ffmpeg.Tests.Resources
             Assert.Equal(resource.Name, name);
             Assert.Equal(resource.Path, path);
             Assert.Equal(resource.FullName, fullName);
-            Assert.Equal(resource.Length, mp4Length);
+            Assert.Equal(resource.Info.Duration, mp4Length);
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Hudl.Ffmpeg.Tests.Resources
             Assert.Equal(resource.Name, name);
             Assert.Equal(resource.Path, path);
             Assert.Equal(resource.FullName, fullName);
-            Assert.Equal(resource.Length, mp3Length);
+            Assert.Equal(resource.Info.Duration, mp3Length);
         }
 
         [Fact]

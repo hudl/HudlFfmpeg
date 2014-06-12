@@ -10,11 +10,6 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         protected BaseFormat(string format)
             : base(SettingType)
         {
-            if (string.IsNullOrWhiteSpace(format))
-            {
-                throw new ArgumentNullException("format");
-            }
-
             Format = format;
         }
 
@@ -25,13 +20,16 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
 
         public string Format { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Format))
             {
                 throw new InvalidOperationException("Format cannot be empty for this setting.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Format);
         }
     }

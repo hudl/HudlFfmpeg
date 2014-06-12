@@ -24,13 +24,16 @@ namespace Hudl.Ffmpeg.Settings
     
         public double QuantizerScale { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (QuantizerScale < 0 || QuantizerScale > 51)
             {
                 throw new InvalidOperationException("QuantizerScale size must be between 0 - 51.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", QuantizerScale);
         }
     }

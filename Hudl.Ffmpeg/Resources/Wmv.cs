@@ -1,5 +1,4 @@
-﻿using System;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Resources
 {
@@ -17,7 +16,7 @@ namespace Hudl.Ffmpeg.Resources
             return new Wmv
             {
                 Id = Id,
-                Length = Length,
+                Info = Info,
                 Name = Name,
                 Path = Path
             };

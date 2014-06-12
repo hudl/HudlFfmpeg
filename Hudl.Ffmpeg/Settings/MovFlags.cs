@@ -29,13 +29,16 @@ namespace Hudl.Ffmpeg.Settings
     
         public string Flags { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Flags))
             {
                 throw new InvalidOperationException("Flags cannot be null or empty.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Flags);
         }
     }

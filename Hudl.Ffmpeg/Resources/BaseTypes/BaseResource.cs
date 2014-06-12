@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Hudl.Ffmpeg.Common;
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
@@ -28,7 +27,7 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         protected BaseResource(string format, string resourceIndicator, string name, TimeSpan length) 
             : this(format, resourceIndicator, name)
         {
-            Length = length; 
+            Info.Duration = length; 
         }
         protected BaseResource(string format, string resourceIndicator, string name, string path, TimeSpan length)
             : this(format, resourceIndicator, name, length)
@@ -89,12 +88,6 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// the ffmpeg resource indicator
         /// </summary>
         public string ResourceIndicator { get; private set; }
-
-        /// <summary>
-        /// the duration of the input video, this is used in the processing of time
-        /// </summary>
-        [Obsolete("Length is obsolete, use Info.Duration instead.", false)]
-        public TimeSpan Length { get { return Info.Duration; } set { Info.Duration = value; } }
 
         /// <summary>
         /// the metadata information surrounding the resource

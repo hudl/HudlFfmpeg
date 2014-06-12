@@ -172,7 +172,7 @@
     <Compile Include="Settings\BaseTypes\BaseCodec.cs" />
     <Compile Include="Settings\BitRateAudio.cs" />
     <Compile Include="Settings\AspectRatio.cs" />
-    <Compile Include="Settings\BitRateCompatibility.cs" />
+    <Compile Include="Settings\BitRateTolerance.cs" />
     <Compile Include="Settings\CodecAudio.cs" />
     <Compile Include="Settings\Map.cs" />
     <Compile Include="Settings\Level.cs" />
@@ -186,7 +186,7 @@
     <Compile Include="Settings\OverwriteOutput.cs" />
     <Compile Include="Settings\Duration.cs" />
     <Compile Include="Settings\CodecVideo.cs" />
-    <Compile Include="Settings\Dimensions.cs" />
+    <Compile Include="Settings\Size.cs" />
     <Compile Include="Settings\FrameRate.cs" />
     <Compile Include="Sugar\FiltergraphExtensions.cs" />
     <Compile Include="Sugar\ResourceExtensions.cs" />
@@ -194,7 +194,6 @@
     <Compile Include="Templates\BaseTypes\BaseFilterchainTemplate.cs" />
     <Compile Include="Templates\BaseTypes\BaseSettingsTemplate.cs" />
     <Compile Include="Templates\BaseTypes\BaseFilterchainAndSettingsTemplate.cs" />
-    <Compile Include="Templates\CampaignProject.cs" />
     <Compile Include="Templates\VideoCutTo.cs" />
     <Compile Include="Templates\Resolution1080P.cs" />
     <Compile Include="Templates\Resolution240P.cs" />

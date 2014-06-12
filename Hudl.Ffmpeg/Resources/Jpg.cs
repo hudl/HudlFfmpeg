@@ -1,6 +1,4 @@
-﻿using System;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Resources
 {
@@ -18,7 +16,7 @@ namespace Hudl.Ffmpeg.Resources
             return new Jpg
                 {
                     Id = Id, 
-                    Length = Length,
+                    Info = Info,
                     Name = Name,
                     Path = Path
                 };

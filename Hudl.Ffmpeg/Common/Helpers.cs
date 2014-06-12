@@ -11,25 +11,25 @@ namespace Hudl.Ffmpeg.Common
     /// <summary>
     /// helper class that helps with validation of objects in a ffmpeg project
     /// </summary>
-    internal partial class Helpers
+    internal class Helpers
     {
         /// <summary>
         /// returns a list of scaling presets for ffmpeg.
         /// </summary>
-        public static Dictionary<ScalePresetType, Point> ScalingPresets
+        public static Dictionary<ScalePresetType, Size> ScalingPresets
         {
             get
             {
-                return new Dictionary<ScalePresetType, Point>
+                return new Dictionary<ScalePresetType, Size>
                 {
-                    { ScalePresetType.Svga, new Point(800, 600) }, 
-                    { ScalePresetType.Xga, new Point(1024, 768) }, 
-                    { ScalePresetType.Ega, new Point(640, 350) }, 
-                    { ScalePresetType.Sd240, new Point(432, 240) }, 
-                    { ScalePresetType.Sd360, new Point(640, 360) }, 
-                    { ScalePresetType.Sd480, new Point(852, 480) }, 
-                    { ScalePresetType.Hd720, new Point(1280, 720) },
-                    { ScalePresetType.Hd1080, new Point(1920, 1080) }
+                    { ScalePresetType.Svga, new Size(800, 600) }, 
+                    { ScalePresetType.Xga, new Size(1024, 768) }, 
+                    { ScalePresetType.Ega, new Size(640, 350) }, 
+                    { ScalePresetType.Sd240, new Size(432, 240) }, 
+                    { ScalePresetType.Sd360, new Size(640, 360) }, 
+                    { ScalePresetType.Sd480, new Size(852, 480) }, 
+                    { ScalePresetType.Hd720, new Size(1280, 720) },
+                    { ScalePresetType.Hd1080, new Size(1920, 1080) }
                 };
             }
         } 
@@ -54,7 +54,7 @@ namespace Hudl.Ffmpeg.Common
             }
 
             var fullNameNormalized = fullName.Replace("\\", "/");
-            var fullNameFinalIndexOf = fullNameNormalized.LastIndexOf("/", System.StringComparison.Ordinal);
+            var fullNameFinalIndexOf = fullNameNormalized.LastIndexOf("/", StringComparison.Ordinal);
             return fullNameFinalIndexOf == -1 
                 ? string.Empty 
                 : fullNameNormalized.Substring(0, fullNameFinalIndexOf + 1);
@@ -71,7 +71,7 @@ namespace Hudl.Ffmpeg.Common
             }
 
             var fullNameNormalized = fullName.Replace("\\", "/");
-            var fullNameFinalIndexOf = fullNameNormalized.LastIndexOf("/", System.StringComparison.Ordinal);
+            var fullNameFinalIndexOf = fullNameNormalized.LastIndexOf("/", StringComparison.Ordinal);
             return fullNameFinalIndexOf == -1 
                 ? string.Empty 
                 : fullNameNormalized.Substring(fullNameFinalIndexOf + 1);
@@ -129,7 +129,7 @@ namespace Hudl.Ffmpeg.Common
                 throw new ArgumentNullException("commandResource");
             }
 
-            var resourceDefaultLength = commandResource.Resource.Length.TotalSeconds;
+            var resourceDefaultLength = commandResource.Resource.Info.Duration.TotalSeconds;
             var resourceSettingsLength = 0d;
             if (commandResource.Settings.Count > 0)
             {
@@ -166,16 +166,11 @@ namespace Hudl.Ffmpeg.Common
                 throw new ArgumentNullException("command");
             }
 
-            if (command.Objects.Filtergraph.FilterchainList.Count > 0)
-            {
-                return GetLength(command, command.Objects.Filtergraph.FilterchainList.Last());
-            }
-            else
-            {
-                return command.Objects.Inputs.Sum(r => GetLength(r));
-            }
+            return command.Objects.Filtergraph.FilterchainList.Count > 0 
+                ? GetLength(command, command.Objects.Filtergraph.FilterchainList.Last()) 
+                : command.Objects.Inputs.Sum(r => GetLength(r));
         }
-        
+
         /// <summary>
         /// calculates the real time length based on the contents
         /// </summary>
@@ -205,7 +200,7 @@ namespace Hudl.Ffmpeg.Common
                     {
                         var newLength = GetLength(r);
                         var newResource = r.Resource.Copy<IResource>();
-                        newResource.Length = TimeSpan.FromSeconds(newLength);
+                        newResource.Info.Duration = TimeSpan.FromSeconds(newLength);
                         var newCommandResourceTemp = CommandResource.Create(newResource);
                         newCommandResourceTemp.Owner = r.Owner;
                         return newCommandResourceTemp;

@@ -16,7 +16,7 @@ namespace Hudl.Ffmpeg.Resources
             return new Png
             {
                 Id = Id,
-                Length = Length,
+                Info = Info,
                 Name = Name,
                 Path = Path
             };

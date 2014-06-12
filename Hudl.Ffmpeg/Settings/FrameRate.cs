@@ -12,6 +12,10 @@ namespace Hudl.Ffmpeg.Settings
     {
         private const string SettingType = "-r";
 
+        public FrameRate()
+            : base(SettingType)
+        {
+        }
         public FrameRate(double rate)
             : base(SettingType)
         {
@@ -25,13 +29,16 @@ namespace Hudl.Ffmpeg.Settings
 
         public double Rate { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Rate <= 0)
             {
                 throw new InvalidOperationException("Frame rate must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Rate);
         }
     }

@@ -3,7 +3,7 @@
 namespace Hudl.Ffmpeg.BaseTypes
 {
     /// <summary>
-    /// exception that is thrown when Ffmpeg encounters a processing exception.
+    /// exception that is thrown when Ffmpeg returns an exit code other than 0.
     /// </summary>
     public class FfmpegProcessingException: Exception
     {
@@ -13,6 +13,13 @@ namespace Hudl.Ffmpeg.BaseTypes
         {
             base.Data["ExitCode"] = exitCode;
             base.Data["ErrorOutput"] = errorOutput;
+
+            ExitCode = exitCode;
+            ErrorOutput = errorOutput; 
         }
+
+        public int ExitCode { get; private set; }
+
+        public string ErrorOutput { get; private set; }
     }
 }

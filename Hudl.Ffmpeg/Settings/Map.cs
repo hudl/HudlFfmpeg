@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
@@ -29,13 +30,16 @@ namespace Hudl.Ffmpeg.Settings
     
         public string Stream { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Stream))
             {
                 throw new InvalidOperationException("Map setting Stream cannot be null.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Formats.Map(Stream, true));
         }
     }

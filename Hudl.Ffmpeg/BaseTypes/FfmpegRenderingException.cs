@@ -3,7 +3,7 @@
 namespace Hudl.Ffmpeg.BaseTypes
 {
     /// <summary>
-    /// exception that is thrown when Ffmpeg encounters a rendering exception.
+    /// exception that is thrown when Hudl.Ffmpeg encounters a rendering exception.
     /// </summary>
     public class FfmpegRenderingException: Exception
     {

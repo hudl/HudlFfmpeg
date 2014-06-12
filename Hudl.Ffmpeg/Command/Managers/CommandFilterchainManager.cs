@@ -6,6 +6,9 @@ using Hudl.Ffmpeg.Filters.BaseTypes;
 
 namespace Hudl.Ffmpeg.Command.Managers
 {
+    /// <summary>
+    /// A manager that controls the list of filterchains for a filtergraph.
+    /// </summary>
     public class CommandFilterchainManager
     {
         private CommandFilterchainManager(FfmpegCommand owner)

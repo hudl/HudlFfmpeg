@@ -26,8 +26,12 @@ namespace Hudl.Ffmpeg.Filters
             Expression = expression;
         }
         public SetPts(bool resetTimestamp)
-            : this(ResetPtsExpression)
+            : this()
         {
+            if (resetTimestamp)
+            {
+                Expression = ResetPtsExpression;
+            }
         }
 
         /// <summary>
@@ -35,13 +39,16 @@ namespace Hudl.Ffmpeg.Filters
         /// </summary>
         public string Expression { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Expression))
             {
                 throw new InvalidOperationException("Expression cannot be empty with a set PTS filter");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, "=", Expression);
         }
     }

@@ -1,5 +1,5 @@
 ﻿using System;
-using Hudl.Ffmpeg.Common;
+using System.Globalization;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -28,14 +28,17 @@ namespace Hudl.Ffmpeg.Filters
 
         public decimal Scale { get; set; }
 
-        public override string ToString() 
+        public override void Validate()
         {
             if (Scale == 1m)
             {
                 throw new InvalidOperationException("Scale has no effect at 100% of the current volume.");
             }
+        }
 
-            return string.Concat(Type, "=volume=", Scale.ToString());
+        public override string ToString() 
+        {
+            return string.Concat(Type, "=volume=", Scale.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

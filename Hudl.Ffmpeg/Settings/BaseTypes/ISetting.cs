@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings.BaseTypes
 {
@@ -22,8 +21,13 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         TimeSpan? LengthFromInputs(List<CommandResource> resources);
 
         /// <summary>
+        /// A setting must contain a validation system for stringification
+        /// </summary>
+        void Validate();
+        
+        /// <summary>
         /// builds the command necessary to complete the effect
         /// </summary>
-        string ToString();
+        string Stringify(); 
     }
 }

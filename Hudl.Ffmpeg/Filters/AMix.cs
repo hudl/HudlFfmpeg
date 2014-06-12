@@ -46,15 +46,15 @@ namespace Hudl.Ffmpeg.Filters
             switch (DurationType)
             {
                 case DurationType.First:
-                    return resources.First().Resource.Length;
+                    return resources.First().Resource.Info.Duration;
                 case DurationType.Shortest:
-                    return resources.Min(r => r.Resource.Length);
+                    return resources.Min(r => r.Resource.Info.Duration);
                 default:
-                    return resources.Max(r => r.Resource.Length);
+                    return resources.Max(r => r.Resource.Info.Duration);
             }
         }
 
-        public override string ToString() 
+        public override void Validate()
         {
             if (CommandResources.Count < 2)
             {
@@ -64,7 +64,10 @@ namespace Hudl.Ffmpeg.Filters
             {
                 throw new InvalidOperationException("Dropout transition cannot be less than default of 2");
             }
+        }
 
+        public override string ToString() 
+        {
             //build the filter string 
             var filter = new StringBuilder(100);
             if (CommandResources.Count > 2)

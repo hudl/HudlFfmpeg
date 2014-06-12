@@ -15,11 +15,6 @@ namespace Hudl.Ffmpeg.Settings
         public PixelFormat(string library)
             : base(SettingType)
         {
-            if (string.IsNullOrWhiteSpace(library))
-            {
-                throw new ArgumentNullException("library");
-            }
-
             Library = library;
         }
         public PixelFormat(PixelFormatType library)
@@ -29,13 +24,16 @@ namespace Hudl.Ffmpeg.Settings
 
         public string Library { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Library))
             {
                 throw new InvalidOperationException("Library cannot be empty for this setting.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Library);
         }
     }

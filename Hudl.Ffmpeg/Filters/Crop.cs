@@ -44,7 +44,7 @@ namespace Hudl.Ffmpeg.Filters
         public Point Offset { get; set; }
         public Size Dimensions { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Dimensions.Width <= 0)
             {
@@ -54,7 +54,10 @@ namespace Hudl.Ffmpeg.Filters
             {
                 throw new InvalidOperationException("Dimensions.Height must be greater than zero for cropping.");
             }
+        }
 
+        public override string ToString()
+        {
             var filter = new StringBuilder(100);
             if (Dimensions.Width != 0)
             {
