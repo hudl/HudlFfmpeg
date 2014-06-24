@@ -8,7 +8,7 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.Filters
 {
     /// <summary>
-    /// Audio filter that applies a fade in or out effect.
+    /// Audio filter that applies a fade in or out effect to the audio stream
     /// </summary>
     [AppliesToResource(Type=typeof(IAudio))]
     public class AFade : BaseFilter
@@ -19,32 +19,65 @@ namespace Hudl.Ffmpeg.Filters
         public AFade()
             : base(FilterType, FilterMaxInputs)
         {
-            Transition = FadeTransitionType.In;
-            Unit = AudioUnitType.Seconds;
         }
-        public AFade(FadeTransitionType transition, double duration)
+
+        public AFade(double? startUnit, double? lengthInUnits, AudioUnitType unitType)
             : this()
         {
-            Transition = transition;
-            Duration = duration;
+            if (unitType == AudioUnitType.Sample)
+            {
+                StartSample = startUnit;
+                NumberOfSamples = lengthInUnits;
+            }
+            else
+            {
+                StartTime = startUnit;
+                Duration = lengthInUnits; 
+            }
         }
-        public AFade(FadeTransitionType transition, double duration, double overrideStartAt)
-            : this(transition, duration)
+
+        public AFade(double? startUnit, double? lengthInUnits, AudioUnitType unitType, FadeTransitionType transitionType)
+            : this(startUnit, lengthInUnits, unitType)
         {
-            OverrideStartAt = overrideStartAt;
+            TransitionType = transitionType;
         }
 
-        public FadeTransitionType Transition { get; set; } 
+        public AFade(double? startUnit, double? lengthInUnits, AudioUnitType unitType, FadeTransitionType transitionType, FadeCurveType curveType)
+            : this(startUnit, lengthInUnits, unitType, transitionType)
+        {
+            CurveType = curveType; 
+        }
 
-        public AudioUnitType Unit { get; set; }
-        
-        public double Duration { get; set; }
+        public FadeTransitionType TransitionType { get; set; }
 
-        public double? OverrideStartAt { get; set; }
+        public FadeCurveType CurveType { get; set; }
+
+        public double? StartSample { get; set; }
+
+        public double? NumberOfSamples { get; set; }
+
+        public double? StartTime { get; set; }
+
+        public double? Duration { get; set; }
 
         public override void Validate()
         {
-            if (Duration <= 0)
+            if (StartSample.HasValue && StartSample <= 0)
+            {
+                throw new InvalidOperationException("Start Sample of the Audio Fade must be greater than zero.");
+            }
+
+            if (NumberOfSamples.HasValue && NumberOfSamples <= 0)
+            {
+                throw new InvalidOperationException("Number Of Samples of the Audio Fade must be greater than zero.");
+            }
+
+            if (StartTime.HasValue && StartTime <= 0)
+            {
+                throw new InvalidOperationException("StartTime of the Audio Fade must be greater than zero.");
+            }
+
+            if (Duration.HasValue && Duration <= 0)
             {
                 throw new InvalidOperationException("Duration of the Audio Fade must be greater than zero.");
             }
@@ -52,32 +85,34 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString()
         {
-            var filter = new StringBuilder(100);
-            var startAtLocation = 0d;
-            if (OverrideStartAt.HasValue)
+            var filterParameters = new StringBuilder(100);
+
+            if (TransitionType != FadeTransitionType.In)
             {
-                startAtLocation = OverrideStartAt.Value;
+                FilterUtility.ConcatenateParameter(filterParameters, "t", Formats.EnumValue(TransitionType));
             }
-            else if (Transition == FadeTransitionType.Out)
+
+            if (StartSample.HasValue)
             {
-                startAtLocation = CommandResources[0].Resource.Info.Duration.TotalSeconds - Duration; 
+                FilterUtility.ConcatenateParameter(filterParameters, "ss", StartSample.GetValueOrDefault());
             }
-            filter.AppendFormat("t={0}", Transition.ToString().ToLower());
-            switch (Unit) 
+
+            if (NumberOfSamples.HasValue)
             {
-                case AudioUnitType.Sample:
-                    filter.AppendFormat(":ss={0}:ns={1}",
-                        startAtLocation, 
-                        Duration);
-                    break;
-                default : //seconds 
-                    filter.AppendFormat(":st={0}:d={1}",
-                        startAtLocation, 
-                        Duration);
-                    break;
+                FilterUtility.ConcatenateParameter(filterParameters, "ns", NumberOfSamples.GetValueOrDefault());
             }
- 
-            return string.Concat(Type, "=", filter.ToString());
+
+            if (StartTime.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "st", StartTime.GetValueOrDefault());
+            }
+
+            if (Duration.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "d", Duration.GetValueOrDefault());
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

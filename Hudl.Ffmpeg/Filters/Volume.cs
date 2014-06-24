@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -18,27 +20,61 @@ namespace Hudl.Ffmpeg.Filters
         public Volume()
             : base(FilterType, FilterMaxInputs)
         {
-            Scale = 1m;
         }
         public Volume(decimal scale)
             : this()
         {
-            Scale = scale;
+            Expression = scale.ToString(CultureInfo.InvariantCulture);
         }
 
-        public decimal Scale { get; set; }
+        public string Expression { get; set; }
+
+        public double? ReplayGainPreamp { get; set; }
+
+        public VolumePrecisionType Precision { get; set; }
+
+        public VolumeReplayGainType ReplayGain { get; set; }
+
+        public VolumeExpressionEvalType Eval { get; set; }
 
         public override void Validate()
         {
-            if (Scale == 1m)
+            if (string.IsNullOrWhiteSpace(Expression))
             {
-                throw new InvalidOperationException("Scale has no effect at 100% of the current volume.");
+                throw new InvalidOperationException("Expression for a volume command must be specified.");
+            }
+            if (ReplayGainPreamp.HasValue && ReplayGainPreamp <= 0)
+            {
+                throw new InvalidOperationException("Replay Gain Preamp must be greater than zero.");
             }
         }
 
         public override string ToString() 
         {
-            return string.Concat(Type, "=volume=", Scale.ToString(CultureInfo.InvariantCulture));
+            var filterParameters = new StringBuilder(100);
+
+            if (!string.IsNullOrWhiteSpace(Expression))
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "volume", Expression);
+            }
+            if (Precision != VolumePrecisionType.Float)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "precision", Formats.EnumValue(Precision));
+            }
+            if (ReplayGain != VolumeReplayGainType.Drop)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "replaygain", Formats.EnumValue(ReplayGain));
+            }
+            if (ReplayGainPreamp.HasValue && ReplayGainPreamp.Value > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "replaygain_preamp", ReplayGainPreamp);
+            }
+            if (Eval != VolumeExpressionEvalType.Once)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "eval", Formats.EnumValue(Eval));
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

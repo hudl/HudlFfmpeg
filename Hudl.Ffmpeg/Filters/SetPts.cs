@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -13,7 +15,7 @@ namespace Hudl.Ffmpeg.Filters
     {
         private const int FilterMaxInputs = 1;
         private const string FilterType = "setpts";
-        private const string ResetPtsExpression = "PTS-STARTPTS";
+        public const string ResetPtsExpression = "PTS-STARTPTS";
         public const string FormatPlaybackRateExpression = "{0}*PTS"; 
 
         public SetPts() 
@@ -25,10 +27,10 @@ namespace Hudl.Ffmpeg.Filters
         {
             Expression = expression;
         }
-        public SetPts(bool resetTimestamp)
+        public SetPts(SetPtsExpressionType expressionType)
             : this()
         {
-            if (resetTimestamp)
+            if (expressionType == SetPtsExpressionType.ResetTimestamp)
             {
                 Expression = ResetPtsExpression;
             }
@@ -49,7 +51,14 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString()
         {
-            return string.Concat(Type, "=", Expression);
+            var filterParameters = new StringBuilder(100);
+
+            if (!string.IsNullOrWhiteSpace(Expression))
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "expr", Expression);
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

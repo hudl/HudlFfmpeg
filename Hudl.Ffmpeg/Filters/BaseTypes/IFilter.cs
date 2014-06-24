@@ -33,7 +33,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// builds the command necessary to complete the effect
         /// </summary>
-        string Stringify(); 
+        string GetAndValidateString(); 
 
         /// <summary>
         /// sets up the filter based on the settings in the filterchain

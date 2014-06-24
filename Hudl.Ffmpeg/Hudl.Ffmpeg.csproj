@@ -66,7 +66,18 @@
     <Compile Include="Command\CommandResource.cs" />
     <Compile Include="Command\CommandReceipt.cs" />
     <Compile Include="Command\CommandOutput.cs" />
+    <Compile Include="Common\FadeCurveType.cs" />
     <Compile Include="Common\FormatType.cs" />
+    <Compile Include="Common\OverlayEofActionType.cs" />
+    <Compile Include="Common\SetPtsExpressionType.cs" />
+    <Compile Include="Common\VideoScalingAspectRatioType.cs" />
+    <Compile Include="Common\VideoScalingColorMatrixType.cs" />
+    <Compile Include="Common\VideoScalingRangeType.cs" />
+    <Compile Include="Common\VolumeExpressionEvalType.cs" />
+    <Compile Include="Common\VolumePrecisionType.cs" />
+    <Compile Include="Common\VolumeReplayGainType.cs" />
+    <Compile Include="Filters\BaseTypes\BaseMovie.cs" />
+    <Compile Include="Filters\BaseTypes\FilterUtility.cs" />
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Logging\LogUtility.cs" />
@@ -112,7 +123,7 @@
     <Compile Include="Common\VideoCodecType.cs" />
     <Compile Include="Filters\AFade.cs" />
     <Compile Include="Filters\AMix.cs" />
-    <Compile Include="Filters\BaseTypes\BaseSplitFilter.cs" />
+    <Compile Include="Filters\BaseTypes\BaseSplit.cs" />
     <Compile Include="Filters\BaseTypes\BaseFilter.cs" />
     <Compile Include="Filters\BaseTypes\FilterchainOutput.cs" />
     <Compile Include="Filters\BaseTypes\Filterchain.cs" />

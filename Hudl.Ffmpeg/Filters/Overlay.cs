@@ -36,64 +36,60 @@ namespace Hudl.Ffmpeg.Filters
        
         public string X { get; set; }
         
-        public string Y { get; set; } 
-        
+        public string Y { get; set; }
+
         public bool Shortest { get; set; } 
         
         public bool RepeatLast { get; set; }
 
         public OverlayVideoEvalType Eval { get; set; }
+
+        public OverlayEofActionType EofAction { get; set; }
         
         public OverlayVideoFormatType Format { get; set; }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
-        {
-            return Shortest
-                ? resources.Min(r => r.Resource.Info.Duration) 
-                : resources.Max(r => r.Resource.Info.Duration);
-        }
-
         public override string ToString() 
         {
-            var filter = new StringBuilder(100);
+            var filterParameters = new StringBuilder(100);
+
             if (!string.IsNullOrWhiteSpace(X))
             {
-                filter.AppendFormat("{1}x={0}", 
-                    X, 
-                    (filter.Length > 0) ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "x", X);
             }
             if (!string.IsNullOrWhiteSpace(Y))
             {
-                filter.AppendFormat("{1}y={0}", 
-                    Y,
-                    (filter.Length > 0) ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "y", Y);
             }
             if (Eval != OverlayVideoEvalType.Frame)  
             {
-                filter.AppendFormat("{1}eval={0}", 
-                    Eval.ToString().ToLower(),
-                    (filter.Length > 0) ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "eval", Formats.EnumValue(Eval));
             }
             if (Format != OverlayVideoFormatType.Yuv420)  
             {
-                filter.AppendFormat("{1}format={0}", 
-                    Format.ToString().ToLower(),
-                    (filter.Length > 0) ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "format", Formats.EnumValue(Format));
             }
-            if (Shortest)  
+            if (EofAction != OverlayEofActionType.Repeat)
             {
-                filter.AppendFormat("{1}shortest={0}", 
-                    Convert.ToInt32(Shortest),
-                    (filter.Length > 0) ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "eof_action", Formats.EnumValue(EofAction));
+            }
+            if (Shortest)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "shortest", 1);
             }
             if (RepeatLast)  
             {
-                filter.AppendFormat("{1}repeatlast={0}", 
-                    Convert.ToInt32(RepeatLast),
-                    (filter.Length > 0) ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "repeatlast", 1);
             }
 
-            return string.Concat(Type, filter.ToString());
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
+        }
+
+        //TODO: legacy
+        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
+        {
+            return Shortest
+                ? resources.Min(r => r.Resource.Info.Duration)
+                : resources.Max(r => r.Resource.Info.Duration);
         }
     }
 }

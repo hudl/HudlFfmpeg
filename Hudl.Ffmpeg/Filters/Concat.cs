@@ -15,7 +15,7 @@ namespace Hudl.Ffmpeg.Filters
     [AppliesToResource(Type=typeof(IVideo))]
     public class Concat : BaseFilter, IFilterValidator
     {
-        private const int FilterMinInputs = 2;
+        //private const int FilterMinInputs = 2;
         private const int FilterMaxInputs = 4;
         private const string FilterType = "concat";
         private const int DefaultVideoOut = 1;
@@ -27,25 +27,27 @@ namespace Hudl.Ffmpeg.Filters
             NumberOfVideoOut = DefaultVideoOut;
             NumberOfAudioOut = DefaultAudioOut;
         }
-        public Concat(int numberOfAudioOut, int numberOfVideoOut)
+        public Concat(int? numberOfAudioOut, int? numberOfVideoOut)
             : base(FilterType, FilterMaxInputs)
         {
             NumberOfAudioOut = numberOfAudioOut;
             NumberOfVideoOut = numberOfVideoOut;
         }
 
-        public int NumberOfVideoOut { get; set; }
+        public int? NumberOfVideoOut { get; set; }
         
-        public int NumberOfAudioOut { get; set; }
+        public int? NumberOfAudioOut { get; set; }
+
+        public bool UnsafeMode { get; set; }
 
         public override void Validate()
         {
             var numberOfResources = CommandResources.Count;
-            if (NumberOfVideoOut > numberOfResources)
+            if (NumberOfVideoOut.HasValue && NumberOfVideoOut > numberOfResources)
             {
                 throw new InvalidOperationException("Number of Videos out cannot be greater than Resources in.");
             }
-            if (NumberOfAudioOut > numberOfResources)
+            if (NumberOfAudioOut.HasValue && NumberOfAudioOut > numberOfResources)
             {
                 throw new InvalidOperationException("Number of Audios out cannot be greater than Resources in.");
             }
@@ -54,28 +56,27 @@ namespace Hudl.Ffmpeg.Filters
         public override string ToString()
         {
             var numberOfResources = CommandResources.Count;
-            
-            var filter = new StringBuilder(100);
-            if (numberOfResources > FilterMinInputs)
+
+            var filterParameters = new StringBuilder(100);
+
+            if (numberOfResources > 0)
             {
-                filter.AppendFormat("{1}n={0}", 
-                    numberOfResources, 
-                    (filter.Length > 0) ?  ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "n", numberOfResources);
             }
-            if (NumberOfVideoOut != DefaultVideoOut) 
+            if (NumberOfVideoOut.HasValue) 
             {
-                filter.AppendFormat("{1}v={0}", 
-                    NumberOfVideoOut,
-                    (filter.Length > 0) ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "v", NumberOfVideoOut.GetValueOrDefault());
             }
             if (NumberOfAudioOut != DefaultAudioOut)
             {
-                filter.AppendFormat("{1}a={0}", 
-                    NumberOfAudioOut,
-                    (filter.Length > 0) ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "a", NumberOfAudioOut.GetValueOrDefault());
+            }
+            if (UnsafeMode)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "unsafe");
             }
 
-            return string.Concat(Type, filter.ToString());
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
 
         #region IFilterValidator

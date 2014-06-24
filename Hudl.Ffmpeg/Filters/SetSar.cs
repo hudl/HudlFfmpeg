@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -43,7 +44,14 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString() 
         {
-            return string.Concat(Type, "=sar=", Ratio);
+            var filterParameters = new StringBuilder(100);
+
+            if (Ratio != null)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "sar", Ratio);
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

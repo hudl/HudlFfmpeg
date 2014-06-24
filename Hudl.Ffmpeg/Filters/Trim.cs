@@ -20,122 +20,118 @@ namespace Hudl.Ffmpeg.Filters
         public Trim() 
             : base(FilterType, FilterMaxInputs)
         {
-            TimebaseUnit = VideoUnitType.Seconds;
         }
-        public Trim(double startUnit, double endUnit, VideoUnitType timebaseUnit)
+        public Trim(double? startUnit, double? endUnit, VideoUnitType timebaseUnit)
             : this()
         {
-            if (startUnit < 0)
+            switch (timebaseUnit)
             {
-                throw new ArgumentException("Start Unit cannot be less than zero", "startUnit");
+                case VideoUnitType.Frames:
+                    EndFrame = endUnit;
+                    StartFrame = startUnit;
+                    break;
+                case VideoUnitType.Seconds:
+                    End = endUnit;
+                    Start = startUnit;
+                    break;
+                case VideoUnitType.Timebase:
+                    EndPts = endUnit;
+                    StartPts = startUnit;
+                    break;
             }
-            if (endUnit < 0)
-            {
-                throw new ArgumentException("End Unit cannot be less than zero", "endUnit");
-            }
-            if (endUnit > 0D && endUnit <= startUnit)
-            {
-                throw new ArgumentException("End Unit cannot be less than Start Unit", "endUnit");
-            }
-
-            End = endUnit;
-            Start = startUnit;
-            TimebaseUnit = timebaseUnit;
         }
-        public Trim(double startUnit, double endUnit, double duration, VideoUnitType timebaseUnit)
-            : this()
+        public Trim(double? startUnit, double? endUnit, double? duration, VideoUnitType timebaseUnit)
+            : this(startUnit, endUnit, timebaseUnit)
         {
-            if (startUnit < 0)
-            {
-                throw new ArgumentException("Start Unit cannot be less than zero", "startUnit"); 
-            }
-            if (endUnit < 0)
-            {
-                throw new ArgumentException("End Unit cannot be less than zero", "endUnit");
-            }
-            if (endUnit > 0D && endUnit <= startUnit)
-            {
-                throw new ArgumentException("End Unit cannot be less than Start Unit", "endUnit");
-            }
-            if (duration <= 0)
-            {
-                throw new ArgumentException("Duration of trimmed video must be greater than zero", "duration");
-            }
-
-            End = endUnit;
-            Start = startUnit;
             Duration = duration;
-            TimebaseUnit = timebaseUnit;
         }
 
-        /// <summary>
-        /// the start measure of where the video is to be trimmed to
-        /// </summary>
-        public double Start { get; set; }
+        public double? Start { get; set; }
 
-        /// <summary>
-        /// the end measure of where the video is to be trimmed too
-        /// </summary>
-        public double End { get; set; }
+        public double? End { get; set; }
 
-        /// <summary>
-        /// the maximum duration of the output (required)
-        /// </summary>
-        public double Duration { get; set; }
+        public double? StartPts { get; set; }
 
-        /// <summary>
-        /// the base unit of measure for the trim command
-        /// </summary>
-        public VideoUnitType TimebaseUnit { get; set; }
+        public double? EndPts { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
+        public double? StartFrame { get; set; }
+
+        public double? EndFrame { get; set; }
+
+        public double? Duration { get; set; }
+
+        public override void Validate()
         {
-            return TimeSpan.FromSeconds(Duration);
+            if (Start.HasValue && Start <= 0)
+            {
+                throw new InvalidOperationException("Start must be a value greater than zero.");
+            }
+            if (End.HasValue && End <= 0)
+            {
+                throw new InvalidOperationException("End must be a value greater than zero.");
+            }
+            if (StartPts.HasValue && StartPts <= 0)
+            {
+                throw new InvalidOperationException("StartPts must be a value greater than zero.");
+            }
+            if (EndPts.HasValue && EndPts <= 0)
+            {
+                throw new InvalidOperationException("EndPts must be a value greater than zero.");
+            }
+            if (StartFrame.HasValue && StartFrame <= 0)
+            {
+                throw new InvalidOperationException("StartFrame must be a value greater than zero.");
+            }
+            if (EndFrame.HasValue && EndFrame <= 0)
+            {
+                throw new InvalidOperationException("EndFrame must be a value greater than zero.");
+            }
+            if (Duration.HasValue && Duration <= 0)
+            {
+                throw new InvalidOperationException("Duration must be a value greater than zero.");
+            }
         }
 
         public override string ToString() 
         {
-            var filter = new StringBuilder(100);
-            switch (TimebaseUnit)
+            var filterParameters = new StringBuilder(100);
+
+            if (Start.HasValue && Start > 0)
             {
-                case VideoUnitType.Frames:
-                    if (Start > 0)
-                    {
-                        filter.AppendFormat("{1}start_frame={0}",
-                                Start,
-                                (filter.Length > 0) ? ":" : "=");
-                    }
-                    if (End > 0)
-                    {
-                        filter.AppendFormat("{1}end_frame={0}",
-                                End,
-                                (filter.Length > 0) ? ":" : "=");
-                    }
-                    break;
-                default:
-                    if (Start > 0)
-                    {
-                        filter.AppendFormat("{1}start={0}",
-                                Start,
-                                (filter.Length > 0) ? ":" : "=");
-                    }
-                    if (End > 0)
-                    {
-                        filter.AppendFormat("{1}end={0}",
-                                End,
-                                (filter.Length > 0) ? ":" : "=");
-                    }
-                    break;
+                FilterUtility.ConcatenateParameter(filterParameters, "start", Start);
+            }
+            if (End.HasValue && End > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "end", End);
+            }
+            if (StartPts.HasValue && StartPts > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "start_pts", StartPts);
+            }
+            if (EndPts.HasValue && EndPts > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "end_pts", EndPts);
+            }
+            if (StartFrame.HasValue && StartFrame > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "start_frame", StartFrame);
+            }
+            if (EndFrame.HasValue && EndFrame > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "end_frame", EndFrame);
+            }
+            if (Duration.HasValue && Duration > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "duration", Duration);
             }
 
-            if (Duration > 0)
-            {
-                filter.AppendFormat("{1}duration={0}", 
-                    Duration, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
-            }
-
-            return string.Concat(Type, filter.ToString());
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
+        }
+        
+        //TODO: legacy 
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
+        {
+            return TimeSpan.FromSeconds(Duration ?? 0D);
         }
     }
 }

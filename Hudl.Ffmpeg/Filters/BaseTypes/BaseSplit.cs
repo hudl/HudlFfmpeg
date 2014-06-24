@@ -1,47 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using System.Text;
 using Hudl.Ffmpeg.Command;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
-    public abstract class BaseSplitFilter : 
+    public abstract class BaseSplit : 
         BaseFilter,
         IFilterProcessor,
         IFilterValidator, 
         IFilterMultiOutput
     {
+        private const int FilterMaxInputs = 1;
+        private const string FilterType = "split";
 
-        protected BaseSplitFilter(string type, int maxInputs)
-            : base(type, maxInputs)
+        protected BaseSplit(string filterPrefix)
+            : base(string.Concat(filterPrefix, FilterType), FilterMaxInputs)
         {
         }
-        protected BaseSplitFilter(string type, int maxInputs, int numberOfStreams)
-            : this(type, maxInputs)
-        {
-            NumberOfStreams = numberOfStreams;
-        }
 
-        public int NumberOfStreams { get; set; }
+        public int? NumberOfStreams { get; set; }
 
         public override void Validate()
         {
-            if (NumberOfStreams <= 1)
+            if (NumberOfStreams.HasValue && NumberOfStreams < 2)
             {
-                throw new InvalidOperationException("NumberOfStreams must be greater than one for a split.");
+                throw new InvalidOperationException("Number Of Streams must be greater or equal to 2 for a split filter.");
             }
         }
 
         public override string ToString()
         {
-            return string.Concat(Type, "=", NumberOfStreams.ToString(CultureInfo.InvariantCulture));
+            var filterParameters = new StringBuilder(100);
+
+            if (NumberOfStreams.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, NumberOfStreams.GetValueOrDefault());
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
 
         #region IFilterMultiOutput
         public int OutputCount()
         {
-            return NumberOfStreams;
+            return NumberOfStreams ?? 2;
         }
         #endregion
 

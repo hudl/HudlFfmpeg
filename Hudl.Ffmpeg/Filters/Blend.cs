@@ -39,11 +39,6 @@ namespace Hudl.Ffmpeg.Filters
         /// </summary>
         public string Expression { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
-        {
-            return resources.Min(r => r.Resource.Info.Duration);
-        }
-
         public override void Validate()
         {
             if (Option == BlendVideoOptionType.all_expr && string.IsNullOrWhiteSpace(Expression))
@@ -54,19 +49,25 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString() 
         {
-            var filter = new StringBuilder(100);
-            filter.AppendFormat("{0}", Option.ToString());
+            var filterParameters = new StringBuilder(100);
+
             switch (Option) 
             {
                 case BlendVideoOptionType.all_expr:
-                    filter.AppendFormat("='{0}'", Expression);
+                    FilterUtility.ConcatenateParameter(filterParameters, Formats.EnumValue(Option), Formats.EscapeString(Expression));
                     break;
-                default: 
-                    filter.AppendFormat("={0}", Mode);
+                default:
+                    FilterUtility.ConcatenateParameter(filterParameters, Formats.EnumValue(Option));
                     break;
             }
 
-            return string.Concat(Type, "=", filter.ToString());
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
+        }
+
+        //TODO: legacy
+        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
+        {
+            return resources.Min(r => r.Resource.Info.Duration);
         }
     }
 }

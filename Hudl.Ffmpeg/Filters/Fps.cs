@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
@@ -19,17 +20,17 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
         }
-        public Fps(int frameRate)
+        public Fps(int? frameRate)
             : this()
         {
             FrameRate = frameRate;
         }
 
-        public int FrameRate { get; set; }
+        public double? FrameRate { get; set; }
 
         public override void Validate()
         {
-            if (FrameRate <= 0)
+            if (FrameRate.HasValue && FrameRate <= 0)
             {
                 throw new InvalidOperationException("FrameRate must be greater than zero.");
             }
@@ -37,7 +38,14 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString()
         {
-            return string.Concat(Type, "=", FrameRate);
+            var filterParameters = new StringBuilder(100);
+
+            if (FrameRate.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, FrameRate);
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

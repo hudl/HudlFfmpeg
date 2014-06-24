@@ -1,5 +1,4 @@
-﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
+﻿using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -9,34 +8,17 @@ namespace Hudl.Ffmpeg.Filters
     /// AMovie Audio filter declares a filter resource that can be given a specific map. This resource can then be used as an input stream in any subsequent filterchains.
     /// </summary>
     [AppliesToResource(Type=typeof(IAudio))]
-    public class AMovie : BaseFilter
+    public class AMovie : BaseMovie
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "amovie";
-
+        private const string FilterTypePrefix = "a";
         public AMovie()
-            : base(FilterType, FilterMaxInputs)
+            : base(FilterTypePrefix)
         {
         }
         public AMovie(IAudio file)
             : this()
         {
-            File = file;
-        }
-
-        public IAudio File { get; set; }
-
-        public override void Validate()
-        {
-            if (File == null)
-            {
-                throw new InvalidOperationException("AMovie input cannot be nothing");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, "=", File.Path);
+            Resource = file;
         }
     }
 }

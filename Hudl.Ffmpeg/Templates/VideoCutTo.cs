@@ -38,7 +38,7 @@ namespace Hudl.Ffmpeg.Templates
         {
             Base.Filters.AddRange(
                 new Trim(Start, End, Duration, TimebaseUnit),
-                new SetPts(true)
+                new SetPts(SetPtsExpressionType.ResetTimestamp)
             );
         }
 

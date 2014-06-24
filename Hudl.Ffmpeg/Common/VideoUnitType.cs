@@ -6,12 +6,16 @@
     public enum VideoUnitType
     {
         /// <summary>
-        /// indicates in a Video Fade filter the unit of measure is in seconds.
+        /// indicates in a Video unit of measure is in seconds.
         /// </summary>
         Seconds = 0,
         /// <summary>
-        /// indicates in a Video Fade filter the unit of measure is in frames.
+        /// indicates in a Video unit of measure is in frames.
         /// </summary>
-        Frames = 1 
+        Frames = 1,
+        /// <summary>
+        /// indicates in a Video unit of measure is in timbase units.
+        /// </summary>
+        Timebase = 2,
     }
 }

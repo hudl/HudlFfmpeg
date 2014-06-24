@@ -5,22 +5,19 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.Filters
 {
     /// <summary>
-    /// Split Filter copys the input stream into multiple outputs
+    /// Split Filter copys an input video stream into multiple outputs
     /// </summary>
     [AppliesToResource(Type=typeof(IVideo))]
-    public class Split : BaseSplitFilter
+    public class Split : BaseSplit
     {
-        private const string FilterType = "split";
-        private const int DefaultVideoOut = 2;
-        private const int FilterMaxInputs = 1;
-
         public Split() 
-            : base(FilterType, FilterMaxInputs, DefaultVideoOut)
+            : base(string.Empty) 
         {
         }
-        public Split(int numberOfStreams)
-            : base(FilterType, FilterMaxInputs, numberOfStreams)
+        public Split(int? numberOfStreams)
+            : this()
         {
+            NumberOfStreams = numberOfStreams;
         }
     }
 }

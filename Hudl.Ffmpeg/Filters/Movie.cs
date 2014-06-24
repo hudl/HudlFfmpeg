@@ -1,5 +1,4 @@
-﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
+﻿using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
@@ -10,34 +9,16 @@ namespace Hudl.Ffmpeg.Filters
     /// </summary>
     [AppliesToResource(Type=typeof(IVideo))]
     [AppliesToResource(Type=typeof(IImage))]
-    public class Movie : BaseFilter
+    public class Movie : BaseMovie
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "movie";
-
         public Movie()
-            : base(FilterType, FilterMaxInputs)
+            : base(string.Empty) 
         {
         }
-        public Movie(IResource file)
+        public Movie(IVideo resource)
             : this()
         {
-            File = file;
-        }
-
-        public IResource File { get; set; }
-
-        public override void Validate()
-        {
-            if (File == null)
-            {
-                throw new InvalidOperationException("Movie input cannot be nothing");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, "=", File.Path);
+            Resource = resource; 
         }
     }
 }

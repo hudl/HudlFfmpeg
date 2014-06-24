@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 using Hudl.Ffmpeg.Command;
 
 //TODO:CB --> figure out what to do with additional calls here, they are far from optimal 
@@ -67,7 +68,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
         }
 
-        public string Stringify()
+        public string GetAndValidateString()
         {
             Validate();
 

@@ -206,7 +206,7 @@ namespace Hudl.Ffmpeg.Command
                 throw new ArgumentNullException("filter");
             }
 
-            _builderBase.Append(filter.Stringify());
+            _builderBase.Append(filter.GetAndValidateString());
         }
 
         public override string ToString()

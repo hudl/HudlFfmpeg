@@ -11,39 +11,70 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.Filters
 {
     /// <summary>
-    /// Filter that applies mixes to audio resources together into a single resource 
+    /// Filter that mixes multiple audio signals into a single audio source 
     /// </summary>
     [AppliesToResource(Type = typeof(IAudio))]
     public class AMix : BaseFilter
     {
         private const int FilterMaxInputs = 4;
         private const string FilterType = "amix";
-        private const int AMixDropoutTransitionDefault = 2;
 
         public AMix() 
             : base(FilterType, FilterMaxInputs)
         {
-            DropoutTransition = AMixDropoutTransitionDefault;
-            DurationType = DurationType.Longest;
         }
-        public AMix(DurationType duration)
+        public AMix(int? inputs, double? dropoutTransition, DurationType duration)
             : this()
         {
-            DurationType = duration;
-        }
-        public AMix(DurationType duration, int dropoutTransition)
-            : this(duration)
-        {
+            Inputs = inputs;
+            Duration = duration; 
             DropoutTransition = dropoutTransition;
         }
 
-        public int DropoutTransition { get; set; }
+        public int? Inputs { get; set; }
 
-        public DurationType DurationType { get; set; }
+        public double? DropoutTransition { get; set; }
 
+        public DurationType Duration { get; set; }
+
+        public override void Validate()
+        {
+            if (Inputs.HasValue && Inputs < 2)
+            {
+                throw new InvalidOperationException("Number of inputs cannot be less than defualt of 2");
+            }
+            if (DropoutTransition.HasValue && DropoutTransition <= 0)
+            {
+                throw new InvalidOperationException("Dropout transition cannot be less than 0");
+            }
+        }
+
+        public override string ToString() 
+        {
+            var filterParameters = new StringBuilder(100);
+
+            if (Inputs.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "inputs", Inputs.GetValueOrDefault());
+            }
+
+            if (Duration != DurationType.Longest)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "duration", Formats.EnumValue(Duration));
+            }
+
+            if (DropoutTransition.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "dropout_transition", DropoutTransition.GetValueOrDefault());
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
+        }
+
+        //TODO: legacy
         public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
         {
-            switch (DurationType)
+            switch (Duration)
             {
                 case DurationType.First:
                     return resources.First().Resource.Info.Duration;
@@ -52,45 +83,6 @@ namespace Hudl.Ffmpeg.Filters
                 default:
                     return resources.Max(r => r.Resource.Info.Duration);
             }
-        }
-
-        public override void Validate()
-        {
-            if (CommandResources.Count < 2)
-            {
-                throw new InvalidOperationException("Number of inputs cannot be less than defualt of 2");
-            }
-            if (DropoutTransition < 2)
-            {
-                throw new InvalidOperationException("Dropout transition cannot be less than default of 2");
-            }
-        }
-
-        public override string ToString() 
-        {
-            //build the filter string 
-            var filter = new StringBuilder(100);
-            if (CommandResources.Count > 2)
-            {
-                filter.AppendFormat("{1}inputs={0}",
-                    CommandResources.Count, 
-                    filter.Length > 0 ? ":" : "=");
-            }
-            if (DurationType != DurationType.Longest)  
-            {
-                filter.AppendFormat("{1}duration={0}", 
-                    DurationType.ToString().ToLower(), 
-                    filter.Length > 0 ? ":" : "=");
-            }
-            if (DropoutTransition > 2)
-            {
-                filter.AppendFormat("{1}dropout_transition={0}", 
-                    DropoutTransition, 
-                    filter.Length > 0 ? ":" : "=");
-            }
-
-            //return the filter string information 
-            return string.Concat(Type, filter.ToString());
         }
     }
 }

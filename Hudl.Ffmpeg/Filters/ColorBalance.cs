@@ -8,7 +8,7 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.Filters
 {
     /// <summary>
-    /// ColorBalance filter adjusts the color balance on the output video by intensifying the colors in each frame.
+    /// ColorBalance filter adjusts the color balance on the output video by intensifying the colors in each frame of video.
     /// </summary>
     [AppliesToResource(Type=typeof(IVideo))]
     public class ColorBalance : BaseFilter
@@ -77,63 +77,46 @@ namespace Hudl.Ffmpeg.Filters
 
         public override string ToString() 
         {
-            var filter = new StringBuilder(100);
+            var filterParameters = new StringBuilder(100);
+
             if (Shadow.Red.Value != 0)
             {
-                filter.AppendFormat("{1}rs={0}", 
-                    Shadow.Red, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "rs", Shadow.Red);
             }
             if (Shadow.Green.Value != 0) 
             {
-                filter.AppendFormat("{1}gs={0}", 
-                    Shadow.Green, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "gs", Shadow.Green);
             }
             if (Shadow.Blue.Value != 0) 
             {
-                filter.AppendFormat("{1}bs={0}", 
-                    Shadow.Blue, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "bs", Shadow.Blue);
             }
             if (Midtone.Red.Value != 0) 
             {
-                filter.AppendFormat("{1}rm={0}",
-                    Midtone.Red, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
-            }
-            if (Midtone.Blue.Value != 0) 
-            {
-                filter.AppendFormat("{1}bm={0}",
-                    Midtone.Blue, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "rm", Midtone.Red);
             }
             if (Midtone.Green.Value != 0)
             {
-                filter.AppendFormat("{1}gm={0}",
-                    Midtone.Green,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "gm", Midtone.Green);
             }
-            if (Highlight.Red.Value != 0) 
+            if (Midtone.Blue.Value != 0) 
             {
-                filter.AppendFormat("{1}rh={0}",
-                    Highlight.Red, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "bm", Midtone.Blue);
+            }
+            if (Highlight.Red.Value != 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "rh", Highlight.Red);
             }
             if (Highlight.Green.Value != 0) 
             {
-                filter.AppendFormat("{1}gh={0}",
-                    Highlight.Green, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "gh", Highlight.Green);
             }
             if (Highlight.Blue.Value != 0)
             {
-                filter.AppendFormat("{1}bh={0}",
-                    Highlight.Blue, 
-                    (filter.Length > 0) ?  ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "bh", Highlight.Blue);
             }
 
-            return string.Concat(Type, "=", filter.ToString());
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

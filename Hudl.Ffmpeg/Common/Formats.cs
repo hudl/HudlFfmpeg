@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Hudl.Ffmpeg.Resources.BaseTypes;
+using Microsoft.SqlServer.Server;
 
 namespace Hudl.Ffmpeg.Common
 {
@@ -8,6 +9,9 @@ namespace Hudl.Ffmpeg.Common
     {
         private const string ExperimentalIndentifier = "experimental";
         private const string ExperimentalQualifier = " -strict experimental";
+
+        private const string EnumSlashIdentifier = "_";
+        private const string EnumSlashQualifier = "/";
 
         public static string Duration(int seconds)
         {
@@ -62,6 +66,22 @@ namespace Hudl.Ffmpeg.Common
         public static string Library(PixelFormatType library)
         {
             return Library(library.ToString());
+        }
+
+        public static string EnumValue<TValue>(TValue enumValue, bool convertIdentifiers = false)
+        {
+            var enumString = enumValue.ToString().ToLower();
+            if (convertIdentifiers && enumString.IndexOf(EnumSlashIdentifier, StringComparison.Ordinal) != -1)
+            {
+                enumString = enumString.Replace(EnumSlashIdentifier, EnumSlashQualifier);
+            }
+
+            return enumString;
+        }
+
+        public static string EscapeString(string value)
+        {
+            return string.Format("'{0}'", value);
         }
     }
 }

@@ -42,6 +42,7 @@ namespace Hudl.Ffmpeg.Filters
         }
 
         public Point Offset { get; set; }
+
         public Size Dimensions { get; set; }
 
         public override void Validate()
@@ -54,37 +55,38 @@ namespace Hudl.Ffmpeg.Filters
             {
                 throw new InvalidOperationException("Dimensions.Height must be greater than zero for cropping.");
             }
+            if (Offset.X < 0)
+            {
+                throw new InvalidOperationException("Offset.X must be greater than or equal to zero for cropping.");
+            }
+            if (Offset.Y < 0)
+            {
+                throw new InvalidOperationException("Offset.Y must be greater than or equal to zero for cropping.");
+            }
         }
 
         public override string ToString()
         {
-            var filter = new StringBuilder(100);
+            var filterParameters = new StringBuilder(100);
+
             if (Dimensions.Width != 0)
             {
-                filter.AppendFormat("{1}w={0}",
-                    Dimensions.Width,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "w", Dimensions.Width);
             }
             if (Dimensions.Height != 0)
             {
-                filter.AppendFormat("{1}h={0}",
-                    Dimensions.Height,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "h", Dimensions.Height);
             }
             if (Offset.X != 0)
             {
-                filter.AppendFormat("{1}x={0}",
-                    Offset.X,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "x", Offset.X);
             }
             if (Offset.Y != 0)
             {
-                filter.AppendFormat("{1}y={0}",
-                    Offset.Y,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "y", Offset.Y);
             }
 
-            return string.Concat(Type, "=", filter.ToString());
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Drawing; 
+using System.Drawing;
+using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -47,23 +48,80 @@ namespace Hudl.Ffmpeg.Filters
             Dimensions = new Size(x, y);
         }
 
-        public Size Dimensions { get; set; }
+        public Size? Dimensions { get; set; }
+
+        public int? Interlacing { get; set; }
+
+        public string Flags { get; set; }
+
+        public VideoScalingColorMatrixType InColorMatrix { get; set; }
+
+        public VideoScalingColorMatrixType OutColorMatrix { get; set; }
+
+        public VideoScalingRangeType InRange { get; set; }
+
+        public VideoScalingRangeType OutRange { get; set; }
+
+        public VideoScalingAspectRatioType ForceAspectRatio { get; set; }
 
         public override void Validate()
         {
-            if (Dimensions.Width <= 0)
+            if (Dimensions.HasValue && Dimensions.Value.Width <= 0)
             {
                 throw new InvalidOperationException("Dimensions.X must be greater than zero for scaling.");
             }
-            if (Dimensions.Height <= 0)
+            if (Dimensions.HasValue && Dimensions.Value.Height <= 0)
             {
                 throw new InvalidOperationException("Dimensions.Y must be greater than zero for scaling.");
+            }
+            if (Interlacing.HasValue && (Interlacing >= 1 || Interlacing <= -1))
+            {
+                throw new InvalidOperationException("Interlacing flag must be a value of 1, 0, or -1 for scaling.");
             }
         }
 
         public override string ToString()
         {
-            return string.Concat(Type, "=w=", Dimensions.Width, ":h=", Dimensions.Height, ":flags=lanczos");
+            var filterParameters = new StringBuilder(100);
+
+            if (Dimensions.HasValue && Dimensions.Value.Width > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "w", Dimensions.GetValueOrDefault().Width);
+            }
+            if (Dimensions.HasValue && Dimensions.Value.Height > 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "h", Dimensions.GetValueOrDefault().Height);
+            }
+            if (Interlacing.HasValue && Interlacing != 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "interl", Interlacing); 
+            }
+            if (!string.IsNullOrWhiteSpace(Flags))
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "flags", Flags); 
+            }
+            if (InColorMatrix != VideoScalingColorMatrixType.Auto)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "in_color_matrix", Formats.EnumValue(InColorMatrix));
+            }
+            if (OutColorMatrix != VideoScalingColorMatrixType.Auto)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "out_color_matrix", Formats.EnumValue(OutColorMatrix));
+            }
+            if (InRange != VideoScalingRangeType.Auto)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "in_range", Formats.EnumValue(InRange, true));
+            }
+            if (OutRange != VideoScalingRangeType.Auto)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "out_range", Formats.EnumValue(OutRange, true));
+            }
+            if (ForceAspectRatio != VideoScalingAspectRatioType.Disable)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "force_original_aspect_ratio", Formats.EnumValue(ForceAspectRatio));
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

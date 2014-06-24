@@ -16,64 +16,109 @@ namespace Hudl.Ffmpeg.Filters
         private const int FilterMaxInputs = 1;
         private const string FilterType = "fade";
 
-        public Fade()
+         public Fade()
             : base(FilterType, FilterMaxInputs)
         {
-            Transition = FadeTransitionType.In;
-            Unit = VideoUnitType.Seconds;
         }
-        public Fade(FadeTransitionType transition, double duration)
-            : this() 
+
+        public Fade(double? startUnit, double? lengthInUnits, VideoUnitType unitType)
+            : this()
         {
-            Transition = transition;
-            Duration = duration;
+            if (unitType == VideoUnitType.Frames)
+            {
+                StartFrame = startUnit;
+                NumberOfFrames = lengthInUnits;
+            }
+            else
+            {
+                StartTime = startUnit;
+                Duration = lengthInUnits; 
+            }
         }
-        public Fade(FadeTransitionType transition, double duration, double overrideStartAt)
-            : this(transition, duration)
+
+        public Fade(double? startUnit, double? lengthInUnits, VideoUnitType unitType, FadeTransitionType transitionType)
+            : this(startUnit, lengthInUnits, unitType)
         {
-            OverrideStartAt = overrideStartAt;
+            TransitionType = transitionType;
         }
 
-        public double Duration { get; set; }
+        public FadeTransitionType TransitionType { get; set; }
 
-        public double? OverrideStartAt { get; set; }
+        public double? StartFrame { get; set; }
 
-        public VideoUnitType Unit { get; set; }
+        public double? NumberOfFrames { get; set; }
 
-        public FadeTransitionType Transition { get; set; }
+        public double? StartTime { get; set; }
+
+        public double? Duration { get; set; }
+
+        public bool Alpha { get; set; }
+
+        public string Color { get; set; }
 
         public override void Validate()
         {
-            if (Duration <= 0)
+            if (StartFrame.HasValue && StartFrame <= 0)
             {
-                throw new InvalidOperationException("Duration of the Video Fade cannot be zero.");
+                throw new InvalidOperationException("Start Frame of the Fade must be greater than zero.");
+            }
+
+            if (NumberOfFrames.HasValue && NumberOfFrames <= 0)
+            {
+                throw new InvalidOperationException("Number Of Frames of the Fade must be greater than zero.");
+            }
+
+            if (StartTime.HasValue && StartTime <= 0)
+            {
+                throw new InvalidOperationException("StartTime of the Fade must be greater than zero.");
+            }
+
+            if (Duration.HasValue && Duration <= 0)
+            {
+                throw new InvalidOperationException("Duration of the Fade must be greater than zero.");
             }
         }
 
         public override string ToString()
         {
-            var filter = new StringBuilder(100);
-            var startAtLocation = 0d;
-            if (Transition == FadeTransitionType.Out)
+            var filterParameters = new StringBuilder(100);
+
+            if (TransitionType != FadeTransitionType.In)
             {
-                startAtLocation = CommandResources[0].Resource.Info.Duration.TotalSeconds - Duration;
-            }
-            filter.AppendFormat("t={0}", Transition.ToString().ToLower());
-            switch (Unit)
-            {
-                case VideoUnitType.Frames:
-                    filter.AppendFormat(":s={0}:n={1}",
-                        startAtLocation,
-                        Duration);
-                    break;
-                default: //seconds 
-                    filter.AppendFormat(":st={0}:d={1}",
-                        startAtLocation,
-                        Duration);
-                    break;
+                FilterUtility.ConcatenateParameter(filterParameters, "t", Formats.EnumValue(TransitionType));
             }
 
-            return string.Concat(Type, "=", filter.ToString());
+            if (StartFrame.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "s", StartFrame.GetValueOrDefault());
+            }
+
+            if (NumberOfFrames.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "n", NumberOfFrames.GetValueOrDefault());
+            }
+
+            if (StartTime.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "st", StartTime.GetValueOrDefault());
+            }
+
+            if (Duration.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "d", Duration.GetValueOrDefault());
+            }
+
+            if (Alpha)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "alpha", 1);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Color))
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "c", Color);
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

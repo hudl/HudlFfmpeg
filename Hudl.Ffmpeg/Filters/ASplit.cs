@@ -5,22 +5,21 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 namespace Hudl.Ffmpeg.Filters
 {
     /// <summary>
-    /// ASplit Filter copys the input stream into multiple outputs
+    /// ASplit Filter copys the input audio stream into multiple outputs
     /// </summary>
     [AppliesToResource(Type=typeof(IAudio))]
-    public class ASplit : BaseSplitFilter
+    public class ASplit : BaseSplit
     {
-        private const string FilterType = "asplit";
-        private const int DefaultVideoOut = 2;
-        private const int FilterMaxInputs = 1;
+        private const string FilterTypePrefix = "a";
 
-        public ASplit() 
-            : base(FilterType, FilterMaxInputs, DefaultVideoOut)
+        public ASplit()
+            : base(FilterTypePrefix)
         {
         }
-        public ASplit(int numberOfStreams)
-            : base(FilterType, FilterMaxInputs, numberOfStreams)
+        public ASplit(int? numberOfStreams)
+            : this()
         {
+            NumberOfStreams = numberOfStreams;
         }
     }
 }

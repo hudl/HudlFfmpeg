@@ -12,6 +12,13 @@
             Blue = new FfmpegScale();
         }
 
+        public FfmpegScaleRgb(FfmpegScale red, FfmpegScale green, FfmpegScale blue)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
+        }
+
         /// <summary>
         /// property containing the double value of ratios to the Red color intensity
         /// </summary>
