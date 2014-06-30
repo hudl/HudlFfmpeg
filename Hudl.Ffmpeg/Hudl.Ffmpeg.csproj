@@ -70,6 +70,8 @@
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Logging\LogUtility.cs" />
+    <Compile Include="Resources\Ismv.cs" />
+    <Compile Include="Resources\Ts.cs" />
     <Compile Include="Resources\VideoTxt.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
     <Compile Include="Settings\AutoConvert.cs" />

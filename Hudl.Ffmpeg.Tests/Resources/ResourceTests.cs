@@ -150,6 +150,22 @@ namespace Hudl.Ffmpeg.Tests.Resources
             Assert.NotEmpty(resourceInfo.Info.EncodedApplication);
         }
 
+        [Fact]
+        public void Ts_FileLoad()
+        {
+            IResource resourceInfo = null; 
+            
+            Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.ts"));
+        }
+        
+        [Fact]
+        public void Ismv_FileLoad()
+        {
+            IResource resourceInfo = null;
+
+            Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.ismv"));
+        }
+
 
         private class ResourceFactory
         {
