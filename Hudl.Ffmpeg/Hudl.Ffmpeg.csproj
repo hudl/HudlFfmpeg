@@ -73,8 +73,11 @@
     <Compile Include="Resources\Ismv.cs" />
     <Compile Include="Resources\Ts.cs" />
     <Compile Include="Resources\VideoTxt.cs" />
+    <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
+    <Compile Include="Settings\BitStreamFilterAudio.cs" />
+    <Compile Include="Settings\BitStreamFilterVideo.cs" />
     <Compile Include="Settings\MovFlags.cs" />
     <Compile Include="Settings\FormatInput.cs" />
     <Compile Include="Settings\FormatOutput.cs" />
