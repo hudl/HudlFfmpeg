@@ -169,7 +169,16 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         public TSetting Item<TSetting>()
             where TSetting : class, ISetting
         {
-            return SettingsList.FirstOrDefault(s => s is TSetting) as TSetting;
+            return SettingsList.OfType<TSetting>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// will return the List of ISetting that match the type provided
+        /// </summary>
+        public List<TSetting> OfType<TSetting>()
+            where TSetting : class, ISetting
+        {
+            return SettingsList.OfType<TSetting>().ToList();
         }
 
         /// <summary>

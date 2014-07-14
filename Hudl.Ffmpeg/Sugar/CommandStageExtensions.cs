@@ -13,6 +13,55 @@ namespace Hudl.Ffmpeg.Sugar
 {
     public static class CommandStageExtensions
     {
+        public static CommandStage WithInput(this CommandStage command, string fileName)
+        {
+            return command.WithInput(fileName, SettingsCollection.ForInput());
+        }
+        public static CommandStage WithInput(this CommandStage command, string fileName, SettingsCollection settings)
+        {
+            command.Command.AddInput(fileName, settings);
+
+            return command.WithStreams(command.Command.LastInputReceipt());
+        }
+        public static CommandStage WithInput(this CommandStage command, List<string> files)
+        {
+            if (files == null || files.Count == 0)
+            {
+                throw new ArgumentException("Files cannot be null or empty.", "files");
+            }
+
+            var receipts = files.Select(fileName =>
+            {
+                command.Command.AddInput(fileName);
+
+                return command.Command.LastInputReceipt();
+            }).ToList();
+
+            return command.WithStreams(receipts);
+        }
+        public static CommandStage WithInput(this CommandStage command, List<CommandOutput> files)
+        {
+            if (files == null || files.Count == 0)
+            {
+                throw new ArgumentException("Files cannot be null or empty.", "files");
+            }
+
+            var receipts = files.Select(co =>
+            {
+                command.Command.AddInputNoLoad(co.OutputName);
+
+                return command.Command.LastInputReceipt();
+            }).ToList();
+
+            return command.WithStreams(receipts);
+        }
+        public static CommandStage WithInputNoLoad(this CommandStage command, string fileName)
+        {
+            command.Command.AddInputNoLoad(fileName);
+
+            return command.WithStreams(command.Command.LastInputReceipt());
+        }
+
         public static void ValidateRecipts(CommandStage stage, List<CommandReceipt> receipts)
         {
             if (stage.Command.Owner == null)
@@ -25,19 +74,16 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentNullException("receipts");
             }
         }
-
         public static CommandStage WithStream(this CommandStage stage, CommandReceipt receipt)
         {
-            var receiptList = new List<CommandReceipt>() { receipt };
+            var receiptList = new List<CommandReceipt> { receipt };
             return stage.WithStreams(receiptList);
         }
-
         public static CommandStage WithStreams(this CommandStage stage, params CommandReceipt[] receipts)
         {
             var receiptList = new List<CommandReceipt>(receipts);
             return stage.WithStreams(receiptList);
         }
-
         public static CommandStage WithStreams(this CommandStage stage, List<CommandReceipt> receipts)
         {
             ValidateRecipts(stage, receipts);
@@ -46,7 +92,6 @@ namespace Hudl.Ffmpeg.Sugar
 
             return stage;
         }
-
         public static CommandStage TakeStreamAt(this CommandStage stage, int index)
         {
             var receipt = stage.Receipts[index];
@@ -66,14 +111,18 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentNullException("filterchain");
             }
         }
-
         public static CommandStage Filter(this CommandStage stage, Filterchain filterchain)
         {
             var outputReceipts = stage.Command.FilterchainManager.Add(filterchain, stage.Receipts.ToArray());
 
             return stage.Command.WithStreams(outputReceipts);
         }
+        public static CommandStage Filter(this CommandStage stage, FilterchainTemplate filterchainTemplate)
+        {
+            var outputReceipts = filterchainTemplate.SetupTemplate(stage.Command, stage.Receipts);
 
+            return stage.Command.WithStreams(outputReceipts); 
+        }
         public static CommandStage FilterEach(this CommandStage stage, Filterchain filterchain)
         {
             var outputReceipts = stage.Command.FilterchainManager.AddToEach(filterchain, stage.Receipts.ToArray());
@@ -96,19 +145,16 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
             }
         }
-
         public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage)
             where TOutputType : class, IResource, new()
         {
             return stage.MapTo<TOutputType>(SettingsCollection.ForOutput());
         }
-
         public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage, SettingsCollection settings)
             where TOutputType : class, IResource, new()
         {
             return stage.MapTo<TOutputType>(string.Empty, settings);
         }
-
         public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage, string fileName, SettingsCollection settings)
             where TOutputType : class, IResource, new()
         {
@@ -116,7 +162,7 @@ namespace Hudl.Ffmpeg.Sugar
 
             var settingsCopy = settings.Copy();
             var outputObjects = new List<CommandOutput>();
-            var commandOutput = CommandOutput.Create(Resource.CreateOutput<TOutputType>(stage.Command.Owner.Configuration), settingsCopy);
+            var commandOutput = CommandOutput.Create(Resource.CreateOutput<TOutputType>(), settingsCopy);
 
             stage.Receipts.ForEach(receipt =>
             {
@@ -146,7 +192,6 @@ namespace Hudl.Ffmpeg.Sugar
 
             return outputObjects;
         }
-
         public static void ValidateTo(FfmpegCommand command)
         {
             if (command.Owner == null)
@@ -154,18 +199,17 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
             }
         }
+        
         public static List<CommandOutput> To<TOutputType>(this CommandStage stage)
             where TOutputType : class, IResource, new()
         {
             return stage.To<TOutputType>(SettingsCollection.ForOutput());
         }
-
         public static List<CommandOutput> To<TOutputType>(this CommandStage stage, SettingsCollection settings)
             where TOutputType : class, IResource, new()
         {
             return stage.To<TOutputType>(string.Empty, settings);
         }
-
         public static List<CommandOutput> To<TOutputType>(this CommandStage stage, string fileName, SettingsCollection settings)
             where TOutputType : class, IResource, new()
         {
@@ -175,7 +219,7 @@ namespace Hudl.Ffmpeg.Sugar
             var outputObjects = new List<CommandOutput>();
 
             var commandOutput =
-                CommandOutput.Create(Resource.CreateOutput<TOutputType>(stage.Command.Owner.Configuration), settingsCopy);
+                CommandOutput.Create(Resource.CreateOutput<TOutputType>(), settingsCopy);
 
             if (!string.IsNullOrWhiteSpace(fileName))
             {
@@ -201,7 +245,5 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command;
         }
-
-
     }
 }

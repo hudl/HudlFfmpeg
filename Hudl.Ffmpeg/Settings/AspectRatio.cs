@@ -6,6 +6,9 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// set the video display aspect ratio specified by aspect.
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class AspectRatio : BaseSetting

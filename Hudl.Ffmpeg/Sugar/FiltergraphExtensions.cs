@@ -21,7 +21,7 @@ namespace Hudl.Ffmpeg.Sugar
 
         public static Filtergraph FilterTo(this Filtergraph filtergraph, IResource output, params IFilter[] filters)
         {
-            return filtergraph.FilterTo(new List<IResource>() {output}, filters);
+            return filtergraph.FilterTo(new List<IResource> {output}, filters);
         }
         public static Filtergraph FilterTo(this Filtergraph filtergraph, List<IResource> outputList, params IFilter[] filters)
         {

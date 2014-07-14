@@ -72,7 +72,7 @@ namespace Hudl.Ffmpeg.Tests.Setting
         {
             var settingsCollectionI = SettingsCollection.ForInput();
             var settingsCollectionO = SettingsCollection.ForOutput();
-            var settingsCollectionAddI = SettingsCollection.ForInput(new StartAt(1), new Duration(1));
+            var settingsCollectionAddI = SettingsCollection.ForInput(new StartAt(1), new DurationInput(1));
             var settingsCollectionAddO = SettingsCollection.ForOutput(new OverwriteOutput(), new RemoveAudio());
             
             Assert.Throws<ArgumentNullException>(() => settingsCollectionI.AddRange(null)); 
@@ -163,7 +163,7 @@ namespace Hudl.Ffmpeg.Tests.Setting
         [Fact]
         public void SettingsCollection_Remove()
         {
-            var settingsCollectionI = SettingsCollection.ForInput(new StartAt(1), new Duration(2));
+            var settingsCollectionI = SettingsCollection.ForInput(new StartAt(1), new DurationInput(2));
             var settingsCollectionO = SettingsCollection.ForOutput(new RemoveAudio(), new OverwriteOutput());
 
             Assert.True(settingsCollectionI.Count == 2);
@@ -181,7 +181,7 @@ namespace Hudl.Ffmpeg.Tests.Setting
         [Fact]
         public void SettingsCollection_RemoveAt()
         {
-            var settingsCollectionI = SettingsCollection.ForInput(new StartAt(1), new Duration(2));
+            var settingsCollectionI = SettingsCollection.ForInput(new StartAt(1), new DurationInput(2));
             var settingsCollectionO = SettingsCollection.ForOutput(new RemoveAudio(), new OverwriteOutput());
 
             Assert.True(settingsCollectionI.Count == 2);
@@ -197,7 +197,7 @@ namespace Hudl.Ffmpeg.Tests.Setting
         [Fact]
         public void SettingsCollection_RemoveAll()
         {
-            var settingsCollectionI = SettingsCollection.ForInput(new StartAt(1), new Duration(2));
+            var settingsCollectionI = SettingsCollection.ForInput(new StartAt(1), new DurationInput(2));
             var settingsCollectionO = SettingsCollection.ForOutput(new RemoveAudio(), new OverwriteOutput());
 
             Assert.True(settingsCollectionI.Count == 2);

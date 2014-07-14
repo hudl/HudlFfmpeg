@@ -44,7 +44,6 @@ namespace Hudl.Ffmpeg.Command
                    && FactoryId == receipt.FactoryId;
         }
 
-
         #region Internals 
         internal static CommandReceipt CreateFromInput(string factoryId, string commandId, string map)
         {

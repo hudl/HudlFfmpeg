@@ -3,12 +3,18 @@ using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Sugar;
+using Hudl.Ffmpeg.Tests.Assets;
 using Xunit; 
 
 namespace Hudl.Ffmpeg.Tests.Filter
 {
     public class FiltergraphTests
     {
+        public FiltergraphTests()
+        {
+            Utilities.SetGlobalAssets();
+        }
+
         [Fact]
         public void Filtergraph_EmptyToString_ThrowsException()
         {
@@ -81,23 +87,14 @@ namespace Hudl.Ffmpeg.Tests.Filter
         private class CommandHelper
         {
             private const string OutputVideo = "c:/source/output.mp4";
-            private static readonly CommandConfiguration _testConfiguration = new CommandConfiguration("C:/Source/Test", "C:/Source/Ffmpeg", "C:/Source/Assets");
 
             public static FfmpegCommand CreateCommand()
             {
-                var factory = new CommandFactory(_testConfiguration);
+                var factory = CommandFactory.Create();
 
-                return factory.AsOutput()
+                return factory.CreateOutputCommand()
                               .WithOutput(OutputVideo);
             }
-
-            public static FfmpegCommand CreateCommandNoOut()
-            {
-                var factory = new CommandFactory(_testConfiguration);
-
-                return factory.AsOutput();
-            }
-
         }
     }
 }

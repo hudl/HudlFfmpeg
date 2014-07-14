@@ -1,5 +1,6 @@
 ﻿using System;
 using Hudl.Ffmpeg.Common;
+using Hudl.Ffmpeg.Metadata;
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
@@ -17,6 +18,22 @@ namespace Hudl.Ffmpeg.Command
             _builderBase = new StringBuilder(100);            
         }
 
+        //ffprobe
+        public void WriteCommand(FfprobeCommand command)
+        {
+            var inputResource = new Input(command.Resource);
+            _builderBase.Append(" ");
+            _builderBase.Append(inputResource);
+
+            command.Serializers.ForEach(WriteSerializerSpecifier);
+        }
+        public void WriteSerializerSpecifier(IFfprobeSerializer serializer)
+        {
+            _builderBase.Append(" ");
+            _builderBase.Append(serializer.Setting);   
+        }
+
+        //ffmpeg
         public void WriteCommand(FfmpegCommand command)
         {
             command.Objects.Inputs.ForEach(WriteResource);
@@ -27,7 +44,7 @@ namespace Hudl.Ffmpeg.Command
 
             WriteFinish();
         }
-        private void WriteResource(CommandResource resource)
+        private void WriteResource(CommandInput resource)
         {
             if (resource == null)
             {
@@ -44,7 +61,7 @@ namespace Hudl.Ffmpeg.Command
 
             WriteResourcePostSettings(resource, settingsData);
         }
-        private void WriteResourcePreSettings(CommandResource resource, Dictionary<Type, SettingsApplicationData> settingsData)
+        private void WriteResourcePreSettings(CommandInput resource, Dictionary<Type, SettingsApplicationData> settingsData)
         {
             if (resource == null)
             {
@@ -59,10 +76,10 @@ namespace Hudl.Ffmpeg.Command
                 if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
 
                 _builderBase.Append(" ");
-                _builderBase.Append(setting.Stringify());
+                _builderBase.Append(setting.GetAndValidateString());
             });
         }
-        private void WriteResourcePostSettings(CommandResource resource, Dictionary<Type, SettingsApplicationData> settingsData)
+        private void WriteResourcePostSettings(CommandInput resource, Dictionary<Type, SettingsApplicationData> settingsData)
         {
             if (resource == null)
             {
@@ -77,7 +94,7 @@ namespace Hudl.Ffmpeg.Command
                 if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
 
                 _builderBase.Append(" ");
-                _builderBase.Append(setting.Stringify());
+                _builderBase.Append(setting.GetAndValidateString());
             });
 
         }
@@ -190,7 +207,7 @@ namespace Hudl.Ffmpeg.Command
                 if (settingInfoData.ResourceType != SettingsCollectionResourceType.Output) return;
 
                 _builderBase.Append(" ");
-                _builderBase.Append(setting.Stringify());
+                _builderBase.Append(setting.GetAndValidateString());
             });
         }
 

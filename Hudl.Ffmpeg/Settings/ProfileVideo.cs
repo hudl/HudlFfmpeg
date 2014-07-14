@@ -5,6 +5,9 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// set the video target encoding profile
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class ProfileVideo : BaseProfile

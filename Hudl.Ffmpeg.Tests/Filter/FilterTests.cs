@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security.AccessControl;
+﻿using System.Drawing;
 using System.Text;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources;
@@ -10,10 +6,7 @@ using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Filters;
 using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Filters.Templates;
-using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Sugar;
-using Hudl.Ffmpeg.Templates;
 using Xunit;
 
 namespace Hudl.Ffmpeg.Tests.Filter
@@ -565,22 +558,5 @@ namespace Hudl.Ffmpeg.Tests.Filter
             }
         }
 
-        private class CommandBuilder
-        {
-            private static readonly CommandConfiguration TestConfiguration = new CommandConfiguration("C:/Source/Test", "C:/Source/Ffmpeg", "C:/Source/Assets"); 
-
-            internal static FfmpegCommand CreateNewWithXVideos(int x)
-            {
-                var newFactory = new CommandFactory(TestConfiguration);
-                var newCommand = newFactory.AsOutput();
-                
-                for (var i = 0; i < x; i++)
-                {
-                    newCommand.WithInput(Assets.Utilities.GetVideoFile()); 
-                }
-
-                return newCommand;
-            }
-        }
     }
 }

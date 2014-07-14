@@ -5,6 +5,9 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// sets the audio bit rate for the output stream 
+    /// </summary>
     [AppliesToResource(Type = typeof(IAudio))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class BitRateAudio : BaseBitRate

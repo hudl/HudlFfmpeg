@@ -43,27 +43,11 @@ namespace Hudl.Ffmpeg.Command
         public bool IsExported { get; set; }
         
         public SettingsCollection Settings { get; set; }
-        
-        public TimeSpan Length
-        {
-            get
-            {
-                return TimeSpan.FromSeconds(Helpers.GetLength(Owner));
-            }
-        }
 
-        public IResource Output()
-        {
-            Resource.Info.Duration = Length; 
-            return Resource;
-        }
+        public IResource Resource { get; internal set; }
 
         public string OutputName { get { return Resource.FullName; } }
 
-        /// <summary>
-        /// returns a receipt for the command output
-        /// </summary>
-        /// <returns></returns>
         public CommandReceipt GetReceipt()
         {
             return CommandReceipt.CreateFromOutput(Owner.Owner.Id, Owner.Id, Resource.Map);
@@ -71,7 +55,6 @@ namespace Hudl.Ffmpeg.Command
 
         #region Internals
         internal FfmpegCommand Owner { get; set; }
-        internal IResource Resource { get; set; }
         #endregion 
     }
 }

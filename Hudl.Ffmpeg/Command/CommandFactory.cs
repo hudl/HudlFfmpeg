@@ -15,21 +15,20 @@ namespace Hudl.Ffmpeg.Command
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CommandFactory).Name);
 
-        public CommandFactory(CommandConfiguration configuration)
+        private CommandFactory()
         {
-            if (configuration == null)
-            {
-                throw new ArgumentNullException("configuration");
-            }
-
             Id = Guid.NewGuid().ToString();
-            Configuration = configuration;
             CommandList = new List<FfmpegCommand>();
         }
 
-        public static CommandFactory Create(CommandConfiguration configuration)
+        public static CommandFactory Create()
         {
-            return new CommandFactory(configuration);
+            if (ResourceManagement.CommandConfiguration == null)
+            {
+                throw new InvalidOperationException("A command factory cannot be created without a global configuration set Hudl.Ffmpeg.ResourceManagement.CommandConfiguration");   
+            }
+
+            return new CommandFactory();
         }
 
         /// <summary>
@@ -38,32 +37,29 @@ namespace Hudl.Ffmpeg.Command
         public int Count { get { return CommandList.Count; } }
 
         /// <summary>
-        /// Returns the path location for the command factory to store the output files.
-        /// </summary>
-        public CommandConfiguration Configuration { get; private set; }
-
-        /// <summary>
         /// Adds a new command and marks the output to be exported.
         /// </summary>
-        public CommandFactory AddToOutput(FfmpegCommand command)
+        public CommandFactory AddCommandAsOutput(FfmpegCommand command)
         {
-            command.Objects.Outputs.ForEach(output => output.Resource.Path = Configuration.OutputPath);
+            command.Objects.Outputs.ForEach(output => output.Resource.Path = ResourceManagement.CommandConfiguration.OutputPath);
+
             return Add(command, true);
         }
 
         /// <summary>
         /// Adds a new command and marks the output to be exported.
         /// </summary>
-        public CommandFactory AddToResources(FfmpegCommand command)
+        public CommandFactory AddCommandAsResource(FfmpegCommand command)
         {
-            command.Objects.Outputs.ForEach(output => output.Resource.Path = Configuration.TempPath);
+            command.Objects.Outputs.ForEach(output => output.Resource.Path = ResourceManagement.CommandConfiguration.TempPath);
+
             return Add(command, false);
         }
 
         /// <summary>
-        /// Select the output resources for the current command factory 
+        /// Select the all IResources marked as an exported output.
         /// </summary>
-        public List<IResource> GetOutput()
+        public List<IResource> GetOutputs()
         {
             return CommandList.Where(c => c.Outputs.Any(cr => cr.IsExported))
                               .SelectMany(c =>
@@ -72,6 +68,21 @@ namespace Hudl.Ffmpeg.Command
                                       outputTempList.AddRange(c.Outputs.Where(cr => cr.IsExported).Select(cr => cr.Resource));
                                       return outputTempList;
                                   })
+                              .ToList();
+        }
+
+        /// <summary>
+        /// Select the all IResources not marked as an exported output.
+        /// </summary>
+        public List<IResource> GetResources()
+        {
+            return CommandList.Where(c => c.Outputs.Any(cr => !cr.IsExported))
+                              .SelectMany(c =>
+                              {
+                                  var outputTempList = new List<IResource>();
+                                  outputTempList.AddRange(c.Outputs.Where(cr => !cr.IsExported).Select(cr => cr.Resource));
+                                  return outputTempList;
+                              })
                               .ToList();
         }
 
@@ -97,60 +108,9 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public List<IResource> Render()
         {
-            return RenderWith<CmdProcessorReciever>();
+            return RenderWith<FfmpegProcessorReciever>();
         }
 
-        /// <summary>
-        /// Renders the command stream with a new command processor
-        /// </summary>
-        public List<IResource> RenderWith<TProcessor>()
-            where TProcessor : class, ICommandProcessor, new()
-        {
-            var commandProcessor = new TProcessor();
-
-            if (!commandProcessor.Open(Configuration))
-            {
-                throw new FfmpegRenderingException(commandProcessor.Error);
-            }
-
-            var returnType = RenderWith(commandProcessor);
-
-            if (!commandProcessor.Close())
-            {
-                throw new FfmpegRenderingException(commandProcessor.Error);
-            }
-
-            return returnType;
-        }
-
-        /// <summary>
-        /// Renders the command stream with an existing command processor
-        /// </summary>
-        public List<IResource> RenderWith<TProcessor>(TProcessor processor)
-            where TProcessor : class, ICommandProcessor
-        {
-            if (processor == null)
-            {
-                throw new ArgumentNullException("processor");
-            }
-
-            var outputList = GetOutput();
-
-            Log.InfoFormat("Rendering command factory Outputs={0} Commands={1}", 
-                outputList.Count,
-                CommandList.Count);
-
-            CommandList.ForEach(command => command.RenderWith(processor));
-
-            return outputList;
-        }
-
-        #region Internals
-        internal string Id { get; set; }
-        internal List<FfmpegCommand> CommandList { get; set; }
-        #endregion
-
-        #region Utility
         private CommandFactory Add(FfmpegCommand command, bool export)
         {
             if (command == null)
@@ -172,6 +132,50 @@ namespace Hudl.Ffmpeg.Command
 
             return this;
         }
-        #endregion 
+
+        #region Internals
+        internal string Id { get; set; }
+
+        internal List<FfmpegCommand> CommandList { get; set; }
+
+        internal List<IResource> RenderWith<TProcessor>()
+            where TProcessor : class, ICommandProcessor, new()
+        {
+            var commandProcessor = new TProcessor();
+
+            if (!commandProcessor.Open())
+            {
+                throw new FfmpegRenderingException(commandProcessor.Error);
+            }
+
+            var returnType = RenderWith(commandProcessor);
+
+            if (!commandProcessor.Close())
+            {
+                throw new FfmpegRenderingException(commandProcessor.Error);
+            }
+
+            return returnType;
+        }
+
+        internal List<IResource> RenderWith<TProcessor>(TProcessor processor)
+            where TProcessor : class, ICommandProcessor
+        {
+            if (processor == null)
+            {
+                throw new ArgumentNullException("processor");
+            }
+
+            var outputList = GetOutputs();
+
+            Log.InfoFormat("Rendering command factory Outputs={0} Commands={1}",
+                outputList.Count,
+                CommandList.Count);
+
+            CommandList.ForEach(command => command.RenderWith(processor));
+
+            return outputList;
+        }
+        #endregion
     }
 }

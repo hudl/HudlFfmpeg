@@ -5,6 +5,9 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// sets the bitrate tolerance for the output stream 
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class BitRateTolerance : BaseBitRate

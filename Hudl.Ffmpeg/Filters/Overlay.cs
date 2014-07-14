@@ -7,6 +7,8 @@ using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.Ffmpeg.Metadata;
+using Hudl.Ffmpeg.Metadata.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters
@@ -16,7 +18,7 @@ namespace Hudl.Ffmpeg.Filters
     /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
     [AppliesToResource(Type = typeof(IImage))]
-    public class Overlay : BaseFilter
+    public class Overlay : BaseFilter, IMetadataManipulation
     {
         private const int FilterMaxInputs = 2;
         private const string FilterType = "overlay";
@@ -84,12 +86,19 @@ namespace Hudl.Ffmpeg.Filters
             return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
 
-        //TODO: legacy
-        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
+        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
         {
-            return Shortest
-                ? resources.Min(r => r.Resource.Info.Duration)
-                : resources.Max(r => r.Resource.Info.Duration);
+            if (Shortest)
+            {
+                return suppliedInfo.OrderBy(r => r.Duration).FirstOrDefault();
+            }
+
+            var mainMetadataInfo = suppliedInfo.ElementAt(0);
+            var overlayMetadataInfo = suppliedInfo.ElementAt(1);
+
+            return EofAction == OverlayEofActionType.EndAll 
+                ? overlayMetadataInfo 
+                : mainMetadataInfo;
         }
     }
 }

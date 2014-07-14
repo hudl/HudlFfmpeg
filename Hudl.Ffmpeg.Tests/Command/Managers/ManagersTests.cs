@@ -12,20 +12,21 @@ namespace Hudl.Ffmpeg.Tests.Command.Managers
 {
     public class ManagersTests
     {
-
-        private readonly CommandConfiguration _testConfiguration = new CommandConfiguration("C:/Source/Test", "C:/Source/Ffmpeg", "C:/Source/Assets");
-
+        public ManagersTests()
+        {
+            Assets.Utilities.SetGlobalAssets();
+        }
+        
         [Fact]
         public void CommandFilterchainManager_Verify()
         {
-            var factory = CommandFactory.Create(_testConfiguration);
+            var factory = CommandFactory.Create();
 
-            var command = factory.AsOutput()
+            var command = factory.CreateOutputCommand()
                                  .WithInput(Assets.Utilities.GetVideoFile())
-                                 .WithInput(Assets.Utilities.GetVideoFile())
-                                 .WithAllStreams(); 
+                                 .WithInput(Assets.Utilities.GetVideoFile());
 
-            var commandFilterchainManager = CommandFilterchainManager.Create(command.Command);
+            var commandFilterchainManager = CommandFiltergraphManager.Create(command.Command);
 
             var filterchain = Filterchain.FilterTo<Mp4>(new Fps());
             var filterchain2 = Filterchain.FilterTo<Mp4>(new Concat());
@@ -41,12 +42,11 @@ namespace Hudl.Ffmpeg.Tests.Command.Managers
         [Fact]
         public void CommandOutputManager_Verify()
         {
-            var factory = CommandFactory.Create(_testConfiguration);
+            var factory = CommandFactory.Create();
 
-            var command = factory.AsOutput()
+            var command = factory.CreateOutputCommand()
                                  .WithInput(Assets.Utilities.GetVideoFile())
-                                 .WithInput(Assets.Utilities.GetVideoFile())
-                                 .WithAllStreams(); 
+                                 .WithInput(Assets.Utilities.GetVideoFile());
 
             var commandOutputManager = CommandOutputManager.Create(command.Command);
 
@@ -60,26 +60,26 @@ namespace Hudl.Ffmpeg.Tests.Command.Managers
         [Fact]
         public void CommandResource_Verify()
         {
-            var factory = CommandFactory.Create(_testConfiguration);
+            var factory = CommandFactory.Create();
 
-            var command = factory.AsOutput();
+            var command = factory.CreateOutputCommand();
 
-            var resourceOne = CommandResource.Create(Resource.From(Assets.Utilities.GetVideoFile()));
-            var resourceTwo = CommandResource.Create(Resource.From(Assets.Utilities.GetVideoFile()));
-            var resourceList = new List<CommandResource>
+            var resourceOne = CommandInput.Create(Resource.From(Assets.Utilities.GetVideoFile()));
+            var resourceTwo = CommandInput.Create(Resource.From(Assets.Utilities.GetVideoFile()));
+            var resourceList = new List<CommandInput>
                 {
-                    CommandResource.Create(Resource.From(Assets.Utilities.GetVideoFile())),
-                    CommandResource.Create(Resource.From(Assets.Utilities.GetVideoFile()))
+                    CommandInput.Create(Resource.From(Assets.Utilities.GetVideoFile())),
+                    CommandInput.Create(Resource.From(Assets.Utilities.GetVideoFile()))
                 }; 
 
-            var commandResourceManager = CommandResourceManager.Create(command);
+            var commandResourceManager = CommandInputManager.Create(command);
 
             CommandReceipt receipt = null; 
             Assert.DoesNotThrow(() => receipt = commandResourceManager.Add(resourceOne));
             Assert.DoesNotThrow(() => commandResourceManager.AddRange(resourceList));
             Assert.DoesNotThrow(() => commandResourceManager.Replace(receipt, resourceTwo));
             Assert.DoesNotThrow(() => commandResourceManager.Insert(0, resourceOne));
-            Assert.True(command.Resources.Count == 4);
+            Assert.True(command.Inputs.Count == 4);
         }
     }
 }

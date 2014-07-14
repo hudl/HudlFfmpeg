@@ -1,9 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
+using Hudl.Ffmpeg.Metadata;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
@@ -24,14 +23,14 @@ namespace Hudl.Ffmpeg.Settings
         {
         }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
-        {
-            return resources.Min(r => r.Resource.Info.Duration);
-        }
-
         public override string ToString()
         {
             return Type;
+        }
+
+        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        {
+            return suppliedInfo.OrderBy(r => r.Duration).FirstOrDefault();
         }
     }
 }

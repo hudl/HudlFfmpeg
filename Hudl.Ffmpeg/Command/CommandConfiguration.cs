@@ -14,6 +14,10 @@ namespace Hudl.Ffmpeg.Command
         {
         }
         public CommandConfiguration(string outputPath, string ffmpegPath, string assetsPath)
+            : this(outputPath, ffmpegPath, string.Empty, assetsPath)
+        {
+        }
+        public CommandConfiguration(string outputPath, string ffmpegPath, string ffprobePath, string assetsPath)
         {
             if (string.IsNullOrWhiteSpace(outputPath))
             {
@@ -30,11 +34,13 @@ namespace Hudl.Ffmpeg.Command
 
             TempPath = outputPath;
             OutputPath = outputPath;
-            FfmpegPath = ffmpegPath;
             AssetsPath = assetsPath;
+            FfmpegPath = ffmpegPath;
+            FfprobePath = ffprobePath;
             LoggingAttributes = new Dictionary<string, string>();
             EnvironmentVariables = new Dictionary<string, string>();
         }
+
 
         /// <summary>
         /// declares some environmental settings for the command
@@ -62,19 +68,14 @@ namespace Hudl.Ffmpeg.Command
         public string FfmpegPath { get; private set; }
 
         /// <summary>
+        /// declares the Ffprobe path for the command factory, this is where the ffprobe executable is.
+        /// </summary>
+        public string FfprobePath { get; private set; }
+
+        /// <summary>
         /// declares the static resource files path for the command factory, this is where all static resource files will reside.
         /// </summary>
         public string AssetsPath { get; private set; }
-
-        /// <summary>
-        /// tells ffmpeg framework whether it should run clean up or not
-        /// </summary>
-        public bool RunSetup { get; set; }
-
-        /// <summary>
-        /// tells ffmpeg framework whether it should run clean up or not
-        /// </summary>
-        public bool RunCleanup { get; set; }
 
         /// <summary>
         /// flags that will change the render process behavior
@@ -89,6 +90,11 @@ namespace Hudl.Ffmpeg.Command
         public static CommandConfiguration Create(string outputPath, string ffmpegPath, string assetsPath)
         {
             return new CommandConfiguration(outputPath, ffmpegPath, assetsPath);
+        }
+
+        public static CommandConfiguration Create(string outputPath, string ffmpegPath, string ffprobePath, string assetsPath)
+        {
+            return new CommandConfiguration(outputPath, ffprobePath, ffprobePath, assetsPath);
         }
     }
 }

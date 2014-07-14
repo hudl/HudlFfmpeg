@@ -6,6 +6,9 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// Set frame rate (Hz value, fraction or abbreviation).
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class FrameRate : BaseSetting

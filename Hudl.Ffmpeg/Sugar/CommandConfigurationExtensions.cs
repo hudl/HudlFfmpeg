@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Hudl.Ffmpeg.Command;
+﻿using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Command.BaseTypes;
 
 namespace Hudl.Ffmpeg.Sugar
 {
     public static class CommandConfigurationExtensions
     {
-        public static CommandConfiguration Set(this CommandConfiguration configuration, CommandConfigurationFlagTypes flag, bool isOn)
+        public static CommandConfiguration SetFlag(this CommandConfiguration configuration, CommandConfigurationFlagTypes flag, bool isOn)
         {
-            var hasFlag = configuration.Has(flag);
+            var hasFlag = configuration.HasFlag(flag);
             if (isOn && !hasFlag)
             {
                 configuration.Flags |= flag;
@@ -24,10 +20,9 @@ namespace Hudl.Ffmpeg.Sugar
             return configuration;
         }
 
-        public static bool Has(this CommandConfiguration configuration, CommandConfigurationFlagTypes flag)
+        public static bool HasFlag(this CommandConfiguration configuration, CommandConfigurationFlagTypes flag)
         {
             return (configuration.Flags & flag) == flag;
         }
     }
-
 }

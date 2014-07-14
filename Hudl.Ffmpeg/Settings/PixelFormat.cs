@@ -6,7 +6,11 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// sets the output pix format type.
+    /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
+    [AppliesToResource(Type = typeof(IImage))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class PixelFormat : BaseSetting
     {

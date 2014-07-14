@@ -76,15 +76,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             return FilterTo(clonedResources.ToList(), Filters.List.ToArray());
         }
 
-        public List<FilterchainOutput> Outputs(FfmpegCommand command)
-        {
-            return OutputList.Select(output =>
-                {
-                    output.Length = TimeSpan.FromSeconds(Helpers.GetLength(command, this));
-                    return output;
-                }).ToList();
-        }
-
         public List<CommandReceipt> GetReceipts()
         {
             return OutputList.Select(output => 

@@ -13,11 +13,6 @@ namespace Hudl.Ffmpeg.Command.Managers
             Owner = owner;
         }    
 
-        public static CommandOutputManager Create(FfmpegCommand owner)
-        {
-            return new CommandOutputManager(owner);
-        }
-
         private FfmpegCommand Owner { get; set; }
 
         public void Add(CommandOutput output)
@@ -46,5 +41,11 @@ namespace Hudl.Ffmpeg.Command.Managers
 
             outputList.ForEach(Add);
         }
+
+        internal static CommandOutputManager Create(FfmpegCommand owner)
+        {
+            return new CommandOutputManager(owner);
+        }
+
     }
 }

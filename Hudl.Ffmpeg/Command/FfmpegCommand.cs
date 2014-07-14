@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Deployment.Internal;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.Ffmpeg.BaseTypes;
@@ -23,8 +24,8 @@ namespace Hudl.Ffmpeg.Command
             Id = Guid.NewGuid().ToString();
             Objects = CommandObjects.Create(this);
             OutputManager = CommandOutputManager.Create(this);
-            ResourceManager = CommandResourceManager.Create(this);
-            FilterchainManager = CommandFilterchainManager.Create(this);
+            InputManager = CommandInputManager.Create(this);
+            FilterchainManager = CommandFiltergraphManager.Create(this);
             PreRenderAction = EmptyOperation;
             PostRenderAction = EmptyOperation;
         }
@@ -34,124 +35,55 @@ namespace Hudl.Ffmpeg.Command
             return new FfmpegCommand(owner);    
         }
 
-        internal CommandObjects Objects { get; set; }
-
         public Action<CommandFactory, FfmpegCommand, bool> PreRenderAction { get; set; }
 
         public Action<CommandFactory, FfmpegCommand, bool> PostRenderAction { get; set; }
 
         public ReadOnlyCollection<CommandOutput> Outputs { get { return Objects.Outputs.AsReadOnly(); } }
 
-        public ReadOnlyCollection<CommandResource> Resources { get { return Objects.Inputs.AsReadOnly(); } }
+        public ReadOnlyCollection<CommandInput> Inputs { get { return Objects.Inputs.AsReadOnly(); } }
 
         public ReadOnlyCollection<Filterchain> Filtergraph { get { return Objects.Filtergraph.FilterchainList.AsReadOnly(); } }
 
         public CommandOutputManager OutputManager { get; set; }
 
-        public CommandResourceManager ResourceManager { get; set; }
+        public CommandInputManager InputManager { get; set; }
 
-        public CommandFilterchainManager FilterchainManager { get; set; }
+        public CommandFiltergraphManager FilterchainManager { get; set; }
 
         /// <summary>
         /// Renders the command stream with the defualt command processor
         /// </summary>
         public List<CommandOutput> Render()
         {
-            return RenderWith<CmdProcessorReciever>();
-        }
-
-        /// <summary>
-        /// Renders the command stream with a new command processor
-        /// </summary>
-        public List<CommandOutput> RenderWith<TProcessor>()
-            where TProcessor : class, ICommandProcessor, new()
-        {
-            var commandProcessor = new TProcessor();
-
-            if (!commandProcessor.Open(Owner.Configuration))
-            {
-                throw new FfmpegRenderingException(commandProcessor.Error);
-            }
-
-            var returnType = RenderWith(commandProcessor);
-
-            if (!commandProcessor.Close())
-            {
-                throw new FfmpegRenderingException(commandProcessor.Error);
-            }
-
-            return returnType;
-        }
-
-        /// <summary>
-        /// Renders the command stream with an existing command processor
-        /// </summary>
-        public List<CommandOutput> RenderWith<TProcessor>(TProcessor commandProcessor)
-            where TProcessor : class, ICommandProcessor
-        {
-            if (commandProcessor == null)
-            {
-                throw new ArgumentNullException("commandProcessor");
-            }
-
-            var commandBuilder = new CommandBuilder();
-            commandBuilder.WriteCommand(this);
-
-            PreRenderAction(Owner, this, true);
-            
-            if (!commandProcessor.Send(commandBuilder.ToString()))
-            {
-                PostRenderAction(Owner, this, false);
-
-                throw new FfmpegRenderingException(commandProcessor.Error);
-            }
-
-            PostRenderAction(Owner, this, true);
-
-            return Objects.Outputs;
-        }
-
-        private void EmptyOperation(CommandFactory factory, FfmpegCommand command, bool success)
-        {
+            return RenderWith<FfmpegProcessorReciever>();
         }
 
         #region Internals
         internal string Id { get; set; }
+
+        internal CommandObjects Objects { get; set; }
+
         internal CommandFactory Owner { get; set; }
 
-        internal List<CommandResource> ResourcesFromReceipts(params CommandReceipt[] receipts)
+        internal CommandInput ResourceFromReceipt(CommandReceipt receipt)
         {
-            return ResourcesFromReceipts(new List<CommandReceipt>(receipts));
-        }
-        internal List<CommandResource> ResourcesFromReceipts(List<CommandReceipt> receipts)
-        {
-            if (receipts == null || receipts.Count == 0)
+            if (receipt == null)
             {
-                throw new ArgumentException("Receipts cannot be null or empty for a retrieve.", "receipts");
+                throw new ArgumentNullException("receipt");
             }
 
-            return receipts.Select(receipt =>
-                {
-                    CommandResource resource = null;
-                    switch (receipt.Type)
-                    {
-                        case CommandReceiptType.Input:
-                            resource = Objects.Inputs.FirstOrDefault(r => r.Resource.Map == receipt.Map);
-                            break;
-                        case CommandReceiptType.Stream:
-                            var filterchain = Objects.Filtergraph.FilterchainList.FirstOrDefault(f => f.GetReceipts().Any(r => r.Equals(receipt)));
-                            var filterchainOutput = filterchain.OutputList.FirstOrDefault(r => r.Resource.Map == receipt.Map);
-                            resource = CommandResource.Create(filterchainOutput.Resource);
-                            resource.Id = filterchainOutput.Id; 
-                            resource.Owner = this;
-                            break;
-                    }
-                    if (resource == null)
-                    {
-                        throw new KeyNotFoundException("Resource was not found in the command list.");
-                    }
-                    return resource; 
-                }).ToList();
+            return Objects.Inputs.FirstOrDefault(i => i.GetReceipt().Map == receipt.Map); 
+        }
+
+        internal CommandOutput OutputFromReceipt(CommandReceipt receipt)
+        {
+            if (receipt == null)
+            {
+                throw new ArgumentNullException("receipt");
+            }
+
+            return Objects.Outputs.FirstOrDefault(i => i.GetReceipt().Map == receipt.Map); 
         }
 
         internal Filterchain FilterchainFromReceipt(CommandReceipt receipt)
@@ -181,6 +113,61 @@ namespace Hudl.Ffmpeg.Command
             resource.Resource.Map = Helpers.NewMap();
 
             return resource.GetReceipt();
+        }
+
+        /// <summary>
+        /// Renders the command stream with a new command processor
+        /// </summary>
+        internal List<CommandOutput> RenderWith<TProcessor>()
+            where TProcessor : class, ICommandProcessor, new()
+        {
+            var commandProcessor = new TProcessor();
+
+            if (!commandProcessor.Open())
+            {
+                throw new FfmpegRenderingException(commandProcessor.Error);
+            }
+
+            var returnType = RenderWith(commandProcessor);
+
+            if (!commandProcessor.Close())
+            {
+                throw new FfmpegRenderingException(commandProcessor.Error);
+            }
+
+            return returnType;
+        }
+
+        /// <summary>
+        /// Renders the command stream with an existing command processor
+        /// </summary>
+        internal List<CommandOutput> RenderWith<TProcessor>(TProcessor commandProcessor)
+            where TProcessor : class, ICommandProcessor
+        {
+            if (commandProcessor == null)
+            {
+                throw new ArgumentNullException("commandProcessor");
+            }
+
+            var commandBuilder = new CommandBuilder();
+            commandBuilder.WriteCommand(this);
+
+            PreRenderAction(Owner, this, true);
+
+            if (!commandProcessor.Send(commandBuilder.ToString()))
+            {
+                PostRenderAction(Owner, this, false);
+
+                throw new FfmpegRenderingException(commandProcessor.Error);
+            }
+
+            PostRenderAction(Owner, this, true);
+
+            return Objects.Outputs;
+        }
+
+        internal void EmptyOperation(CommandFactory factory, FfmpegCommand command, bool success)
+        {
         }
         #endregion
     }

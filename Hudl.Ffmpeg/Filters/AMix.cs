@@ -6,6 +6,8 @@ using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.Ffmpeg.Metadata;
+using Hudl.Ffmpeg.Metadata.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters
@@ -14,7 +16,7 @@ namespace Hudl.Ffmpeg.Filters
     /// Filter that mixes multiple audio signals into a single audio source 
     /// </summary>
     [AppliesToResource(Type = typeof(IAudio))]
-    public class AMix : BaseFilter
+    public class AMix : BaseFilter, IMetadataManipulation
     {
         private const int FilterMaxInputs = 4;
         private const string FilterType = "amix";
@@ -32,7 +34,7 @@ namespace Hudl.Ffmpeg.Filters
         }
 
         public int? Inputs { get; set; }
-
+        
         public double? DropoutTransition { get; set; }
 
         public DurationType Duration { get; set; }
@@ -71,17 +73,16 @@ namespace Hudl.Ffmpeg.Filters
             return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
 
-        //TODO: legacy
-        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
+        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
         {
             switch (Duration)
             {
                 case DurationType.First:
-                    return resources.First().Resource.Info.Duration;
+                    return suppliedInfo.FirstOrDefault();
                 case DurationType.Shortest:
-                    return resources.Min(r => r.Resource.Info.Duration);
+                    return suppliedInfo.OrderBy(r => r.Duration).FirstOrDefault();
                 default:
-                    return resources.Max(r => r.Resource.Info.Duration);
+                    return suppliedInfo.OrderByDescending(r => r.Duration).FirstOrDefault();
             }
         }
     }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.Ffmpeg.Metadata;
+using Hudl.Ffmpeg.Metadata.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters
@@ -13,7 +15,7 @@ namespace Hudl.Ffmpeg.Filters
     /// Blend Video filter combines two input resources into a single Video output.
     /// </summary>
     [AppliesToResource(Type=typeof(IVideo))]
-    public class Blend : BaseFilter
+    public class Blend : BaseFilter, IMetadataManipulation
     {
         private const int FilterMaxInputs = 2;
         private const string FilterType = "blend";
@@ -64,10 +66,11 @@ namespace Hudl.Ffmpeg.Filters
             return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
 
-        //TODO: legacy
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
+        public virtual MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
         {
-            return resources.Min(r => r.Resource.Info.Duration);
+            infoToUpdate.Duration = suppliedInfo.Min(r => r.Duration);
+
+            return infoToUpdate;
         }
     }
 }

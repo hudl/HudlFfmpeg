@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
@@ -8,9 +7,10 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    /// <summary>
+    /// Designate one or more input streams as a source for the output file.
+    /// </summary>
+    [AppliesToResource(Type = typeof(IResource))]
     [SettingsApplication(PreDeclaration = true, MultipleAllowed = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class Map : BaseSetting
     {

@@ -20,12 +20,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         int MaxInputs { get; }
 
         /// <summary>
-        /// the length override function, overrided when a fitler requires a length change of output calculated from the resources.
-        /// </summary>
-        /// <returns>Null indicates that the length difference does not apply</returns>
-        TimeSpan? LengthFromInputs(List<CommandResource> resources);
-
-        /// <summary>
         /// A filter must contain a validation system for stringification
         /// </summary>
         void Validate();

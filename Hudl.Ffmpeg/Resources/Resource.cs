@@ -20,21 +20,21 @@ namespace Hudl.Ffmpeg.Resources
         /// <summary>
         /// Creates a new resource with the full path name provided.
         /// </summary>
-        public static TResource CreateOutput<TResource>(CommandConfiguration configuration)
+        public static TResource CreateOutput<TResource>()
             where TResource : class, IResource, new()
         {
             var temporaryResource = new TResource();
-            return Create<TResource>(configuration.OutputPath, temporaryResource.Name, TimeSpan.FromSeconds(0));
+            return Create<TResource>(ResourceManagement.CommandConfiguration.OutputPath, temporaryResource.Name, TimeSpan.FromSeconds(0));
         }
 
         /// <summary>
         /// Creates a new resource with the full path name provided.
         /// </summary>
-        public static TResource Create<TResource>(CommandConfiguration configuration)
+        public static TResource Create<TResource>()
             where TResource : class, IResource, new()
         {
             var temporaryResource = new TResource();
-            return Create<TResource>(configuration.TempPath, temporaryResource.FullName, TimeSpan.FromSeconds(0));
+            return Create<TResource>(ResourceManagement.CommandConfiguration.TempPath, temporaryResource.FullName, TimeSpan.FromSeconds(0));
         }
 
         /// <summary>

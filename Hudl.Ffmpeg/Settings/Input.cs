@@ -5,6 +5,9 @@ using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings
 {
+    /// <summary>
+    /// input file name
+    /// </summary>
     [AppliesToResource(Type = typeof(IResource))]
     internal class Input : BaseSetting
     {

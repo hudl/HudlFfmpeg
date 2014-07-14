@@ -5,12 +5,12 @@ using Hudl.Ffmpeg.Filters.BaseTypes;
 
 namespace Hudl.Ffmpeg.Command
 {
-    public class CommandObjects
+    internal class CommandObjects
     {
         private CommandObjects(FfmpegCommand owner)
         {
             Outputs = new List<CommandOutput>();
-            Inputs = new List<CommandResource>();
+            Inputs = new List<CommandInput>();
             Filtergraph = Filtergraph.Create(owner);
         }
 
@@ -23,7 +23,7 @@ namespace Hudl.Ffmpeg.Command
 
         public List<CommandOutput> Outputs { get; internal set; }
         
-        public List<CommandResource> Inputs { get; internal set; }
+        public List<CommandInput> Inputs { get; internal set; }
 
         public bool ContainsInput(CommandReceipt receipt)
         {

@@ -4,14 +4,16 @@ namespace Hudl.Ffmpeg.Sugar
 {
     public static class CommandFactoryExtensions
     {
-        public static FfmpegCommand AsOutput(this CommandFactory factory)
+        public static FfmpegCommand CreateOutputCommand(this CommandFactory factory)
         {
-            factory.AddToOutput(FfmpegCommand.Create(factory));
+            factory.AddCommandAsOutput(FfmpegCommand.Create(factory));
+
             return factory.CommandList[factory.CommandList.Count - 1];
         }
-        public static FfmpegCommand AsResource(this CommandFactory factory)
+        public static FfmpegCommand CreateResourceCommand(this CommandFactory factory)
         {
-            factory.AddToResources(FfmpegCommand.Create(factory));
+            factory.AddCommandAsResource(FfmpegCommand.Create(factory));
+
             return factory.CommandList[factory.CommandList.Count - 1];
         }
     }

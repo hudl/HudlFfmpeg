@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
+using Hudl.Ffmpeg.Metadata;
+using Hudl.Ffmpeg.Metadata.BaseTypes;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
@@ -12,7 +14,7 @@ namespace Hudl.Ffmpeg.Settings
     /// </summary>
     [AppliesToResource(Type = typeof(IVideo))]
     [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
-    public class SeekTo : BaseSetting
+    public class SeekTo : BaseSetting, IMetadataManipulation
     {
         private const string SettingType = "-ss";
         
@@ -33,17 +35,6 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public override TimeSpan? LengthFromInputs(List<Command.CommandResource> resources)
-        {
-            var overallLength = TimeSpan.FromSeconds(0);
-            var baseCalculatedLength = base.LengthFromInputs(resources);
-            if (baseCalculatedLength == null)
-            {
-                return overallLength;
-            }
-            return baseCalculatedLength - Length;
-        }
-
         public override void Validate()
         {
             if (Length == null)
@@ -59,6 +50,13 @@ namespace Hudl.Ffmpeg.Settings
         public override string ToString()
         {
             return string.Concat(Type, " ", Formats.Duration(Length));
+        }
+
+        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        {
+            infoToUpdate.Duration = infoToUpdate.Duration - Length;
+
+            return infoToUpdate; 
         }
     }
 }

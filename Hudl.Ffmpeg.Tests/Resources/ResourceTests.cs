@@ -9,6 +9,11 @@ namespace Hudl.Ffmpeg.Tests.Resources
 {
     public class ResourceTests
     {
+        public ResourceTests()
+        {
+            Utilities.SetGlobalAssets();
+        }
+
         [Fact]
         public void IVideo_CreateEmpty_SettingsSet()
         {
