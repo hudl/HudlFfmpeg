@@ -85,6 +85,7 @@
     <Compile Include="Settings\ConstantRateFactor.cs" />
     <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
     <Compile Include="Sugar\CommandFactoryExtensions.cs" />
+    <Compile Include="Sugar\CommandOutputExtensions.cs" />
     <Compile Include="Sugar\FilterchainExtensions.cs" />
     <Compile Include="Sugar\FfmpegCommandExtensions.cs" />
     <Compile Include="Sugar\CommandStageExtensions.cs" />

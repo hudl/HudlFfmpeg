@@ -102,13 +102,11 @@ namespace Hudl.Ffmpeg.Sugar
         {
             return stage.MapTo<TOutputType>(SettingsCollection.ForOutput());
         }
-
         public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage, SettingsCollection settings)
             where TOutputType : class, IResource, new()
         {
             return stage.MapTo<TOutputType>(string.Empty, settings);
         }
-
         public static List<CommandOutput> MapTo<TOutputType>(this CommandStage stage, string fileName, SettingsCollection settings)
             where TOutputType : class, IResource, new()
         {
