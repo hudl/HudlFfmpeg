@@ -76,6 +76,7 @@
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
+    <Compile Include="Settings\SampleRate.cs" />
     <Compile Include="Settings\BitStreamFilterAudio.cs" />
     <Compile Include="Settings\BitStreamFilterVideo.cs" />
     <Compile Include="Settings\MovFlags.cs" />
