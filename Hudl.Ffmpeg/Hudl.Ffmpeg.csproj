@@ -76,6 +76,7 @@
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
+    <Compile Include="Settings\SampleRate.cs" />
     <Compile Include="Settings\BitStreamFilterAudio.cs" />
     <Compile Include="Settings\BitStreamFilterVideo.cs" />
     <Compile Include="Settings\MovFlags.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Settings\ConstantRateFactor.cs" />
     <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
     <Compile Include="Sugar\CommandFactoryExtensions.cs" />
+    <Compile Include="Sugar\CommandOutputExtensions.cs" />
     <Compile Include="Sugar\FilterchainExtensions.cs" />
     <Compile Include="Sugar\FfmpegCommandExtensions.cs" />
     <Compile Include="Sugar\CommandStageExtensions.cs" />
