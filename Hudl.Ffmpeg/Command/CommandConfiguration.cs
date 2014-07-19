@@ -87,14 +87,10 @@ namespace Hudl.Ffmpeg.Command
             return new CommandConfiguration(outputPath, ffmpegPath);   
         }
 
-        public static CommandConfiguration Create(string outputPath, string ffmpegPath, string assetsPath)
+        public static CommandConfiguration Create(string outputPath, string ffmpegPath, string ffprobePath)
         {
-            return new CommandConfiguration(outputPath, ffmpegPath, assetsPath);
+            return new CommandConfiguration(outputPath, ffmpegPath, ffprobePath, outputPath);
         }
 
-        public static CommandConfiguration Create(string outputPath, string ffmpegPath, string ffprobePath, string assetsPath)
-        {
-            return new CommandConfiguration(outputPath, ffprobePath, ffprobePath, assetsPath);
-        }
     }
 }

@@ -28,7 +28,7 @@ namespace Hudl.Ffmpeg.Tests.Assets
             const string ffmpegPath = "c:/source/ffmpeg/bin/ffmpeg.exe";
             const string ffprobePath = "c:/source/ffmpeg/bin/ffprobe.exe";
 
-            ResourceManagement.CommandConfiguration = CommandConfiguration.Create(outputPath, ffmpegPath, ffprobePath, outputPath);
+            ResourceManagement.CommandConfiguration = CommandConfiguration.Create(outputPath, ffmpegPath, ffprobePath);
         }
 
     }
