@@ -49,15 +49,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseTypes\AppliesToResourceAttribute.cs" />
-    <Compile Include="BaseTypes\AppliesToCollection.cs" />
-    <Compile Include="BaseTypes\AppliesToInvalidException.cs" />
+    <Compile Include="BaseTypes\ContainsStreamAttribute.cs" />
+    <Compile Include="BaseTypes\ForStreamAttribute.cs" />
+    <Compile Include="BaseTypes\ForStreamCollection.cs" />
+    <Compile Include="BaseTypes\StreamNotFoundException.cs" />
+    <Compile Include="BaseTypes\ForStreamInvalidException.cs" />
     <Compile Include="BaseTypes\FfmpegRenderingException.cs" />
     <Compile Include="BaseTypes\FfmpegProcessingException.cs" />
+    <Compile Include="Command\CommandHelper.cs" />
     <Compile Include="Command\FfprobeCommand.cs" />
     <Compile Include="Common\FfmpegFraction.cs" />
+    <Compile Include="Common\FfmpegStreamTypes.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FfprobeCodecTypes.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FfprobeObject.cs" />
+    <Compile Include="Metadata\Ffprobe\FfprobeVideoStream.cs" />
+    <Compile Include="Metadata\Ffprobe\FfprobeAudioStream.cs" />
     <Compile Include="Metadata\Ffprobe\Serializers\FfprobeGeneralSerializer.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FfprobeFraction.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FfprobeKeyValuePair.cs" />
@@ -68,6 +74,7 @@
     <Compile Include="Metadata\Ffprobe\Serializers\FfprobeSerialzier.cs" />
     <Compile Include="Metadata\Ffprobe\Serializers\FfprobeFormatSerializer.cs" />
     <Compile Include="Metadata\Ffprobe\Serializers\FfprobeStreamSerializer.cs" />
+    <Compile Include="Metadata\MetadataInfoTreeContainer.cs" />
     <Compile Include="ResourceManagement.cs" />
     <Compile Include="Command\BaseTypes\CommandConfigurationFlagTypes.cs" />
     <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
@@ -80,7 +87,7 @@
     <Compile Include="Common\CommandProcessorStatus.cs" />
     <Compile Include="Command\FfmpegCommand.cs" />
     <Compile Include="Command\CommandInput.cs" />
-    <Compile Include="Command\CommandReceipt.cs" />
+    <Compile Include="Command\StreamIdentifier.cs" />
     <Compile Include="Command\CommandOutput.cs" />
     <Compile Include="Common\FadeCurveType.cs" />
     <Compile Include="Common\FormatType.cs" />
@@ -102,12 +109,15 @@
     <Compile Include="Metadata\MetadataHelpers.cs" />
     <Compile Include="Metadata\MetadataInfoStreamCalculator.cs" />
     <Compile Include="Metadata\BaseTypes\IMetadataManipulation.cs" />
+    <Compile Include="Resources\BaseTypes\AudioStream.cs" />
+    <Compile Include="Resources\BaseTypes\IStream.cs" />
+    <Compile Include="Resources\BaseTypes\VideoStream.cs" />
     <Compile Include="Resources\Ismv.cs" />
     <Compile Include="Metadata\MetadataInfoTreeGroup.cs" />
     <Compile Include="Metadata\MetadataInfoTreeItem.cs" />
     <Compile Include="Metadata\MetadataInfoTreeSource.cs" />
     <Compile Include="Resources\Ts.cs" />
-    <Compile Include="Resources\VideoTxt.cs" />
+    <Compile Include="Resources\Txt.cs" />
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
     <Compile Include="Settings\BaseTypes\BaseDuration.cs" />
     <Compile Include="Settings\BaseTypes\BaseChannel.cs" />
@@ -126,7 +136,6 @@
     <Compile Include="Settings\RemoveVideo.cs" />
     <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
     <Compile Include="Sugar\CommandFactoryExtensions.cs" />
-    <Compile Include="Sugar\FilterchainExtensions.cs" />
     <Compile Include="Sugar\FfmpegCommandExtensions.cs" />
     <Compile Include="Sugar\CommandStageExtensions.cs" />
     <Compile Include="Command\CommandConfiguration.cs" />
@@ -177,8 +186,6 @@
     <Compile Include="Filters\Trim.cs" />
     <Compile Include="Filters\SetPts.cs" />
     <Compile Include="Filters\Utilities.cs" />
-    <Compile Include="Metadata\MediaInfo\MediaInfoDLL.cs" />
-    <Compile Include="Metadata\MediaInfo\MediaLoader.cs" />
     <Compile Include="Obsolete\Obsolete.cs" />
     <Compile Include="Filters\Volume.cs" />
     <Compile Include="Filters\SetSar.cs" />
@@ -193,15 +200,9 @@
     <Compile Include="Resources\Png.cs" />
     <Compile Include="Resources\Resource.cs" />
     <Compile Include="Resources\Wav.cs" />
-    <Compile Include="Resources\BaseTypes\BaseAudio.cs" />
-    <Compile Include="Resources\BaseTypes\BaseVideo.cs" />
-    <Compile Include="Resources\BaseTypes\BaseImage.cs" />
-    <Compile Include="Resources\BaseTypes\IImage.cs" />
-    <Compile Include="Resources\BaseTypes\IAudio.cs" />
-    <Compile Include="Resources\BaseTypes\IResource.cs" />
+    <Compile Include="Resources\BaseTypes\IContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\BaseTypes\IVideo.cs" />
-    <Compile Include="Resources\BaseTypes\BaseResource.cs" />
+    <Compile Include="Resources\BaseTypes\BaseContainer.cs" />
     <Compile Include="Resources\Mp3.cs" />
     <Compile Include="Resources\M4A.cs" />
     <Compile Include="Resources\Mp4.cs" />
@@ -237,11 +238,6 @@
     <Compile Include="Sugar\ResourceExtensions.cs" />
     <Compile Include="Filters\BaseTypes\FilterchainTemplate.cs" />
     <Compile Include="Filters\Templates\CrossfadeConcatenate.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MediaInfo.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

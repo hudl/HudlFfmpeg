@@ -8,7 +8,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// set bitstream filters for matching audio streams. bitstream_filters is a comma-separated list of bitstream filters. 
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
+    [ForStream(Type = typeof(AudioStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class BitStreamFilterAudio : BaseBitStreamFilter
     {

@@ -10,7 +10,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// ColorBalance filter adjusts the color balance on the output video by intensifying the colors in each frame of video.
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
+    [ForStream(Type=typeof(VideoStream))]
     public class ColorBalance : BaseFilter
     {
         private const int FilterMaxInputs = 2;

@@ -6,6 +6,7 @@ using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Filters.Templates;
 using Hudl.Ffmpeg.Metadata;
 using Hudl.Ffmpeg.Resources;
+using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 using Hudl.Ffmpeg.Sugar;
@@ -24,17 +25,21 @@ namespace Hudl.Ffmpeg.Tests.Resources
         [Fact]
         public void InputToOutput_Verify()
         {
-            var baseline = Resource.From(Utilities.GetVideoFile()).LoadMetadata().Info;
+            var baseline = Resource.From(Utilities.GetVideoFile())
+                                   .LoadMetadata()
+                                   .Streams
+                                   .OfType<VideoStream>()
+                                   .First();
 
             var output = CommandFactory.Create()
                                        .CreateOutputCommand()
-                                       .WithInput(Utilities.GetVideoFile())
+                                       .WithInput<VideoStream>(Utilities.GetVideoFile())
                                        .To<Mp4>()
                                        .First();
 
-            var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetReceipt());
+            var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo.Duration == baseline.Duration);
+            Assert.True(metadataInfo.VideoStream.Duration == baseline.Info.Duration);
 
         }
 
@@ -47,13 +52,13 @@ namespace Hudl.Ffmpeg.Tests.Resources
 
             var output = CommandFactory.Create()
                                        .CreateOutputCommand()
-                                       .WithInput(Utilities.GetVideoFile(), inputSettings)
+                                       .WithInput<VideoStream>(Utilities.GetVideoFile(), inputSettings)
                                        .To<Mp4>()
                                        .First();
 
-            var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetReceipt());
+            var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo.Duration == TimeSpan.FromSeconds(3));
+            Assert.True(metadataInfo.VideoStream.Duration == TimeSpan.FromSeconds(3));
         }
 
         [Fact]
@@ -66,52 +71,60 @@ namespace Hudl.Ffmpeg.Tests.Resources
 
             var output = CommandFactory.Create()
                                        .CreateOutputCommand()
-                                       .WithInput(Utilities.GetVideoFile(), inputSettings)
+                                       .WithInput<VideoStream>(Utilities.GetVideoFile(), inputSettings)
                                        .To<Mp4>(outputSettings)
                                        .First();
 
-            var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetReceipt());
+            var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo.Duration == TimeSpan.FromSeconds(3)); // this is because the input is only 4 seconds, we start at 1
-            Assert.True(metadataInfo.BitRate == 3000000L);
+            Assert.True(metadataInfo.VideoStream.Duration == TimeSpan.FromSeconds(3)); // this is because the input is only 4 seconds, we start at 1
+            Assert.True(metadataInfo.VideoStream.BitRate == 3000000L);
         }
 
         [Fact]
         public void InputToFilterToOutput_Verify()
         {
-            var baseline = Resource.From(Utilities.GetVideoFile()).LoadMetadata().Info;
-            var calculatedSeconds = (baseline.Duration.TotalSeconds * 3d) - 2d;
+            var baseline = Resource.From(Utilities.GetVideoFile())
+                                   .LoadMetadata()
+                                   .Streams
+                                   .OfType<VideoStream>()
+                                   .First();
+            var calculatedSeconds = (baseline.Info.Duration.TotalSeconds * 3d) - 2d;
             var calculatedDuration = TimeSpan.FromSeconds(calculatedSeconds);
 
-            var filterchain = Filterchain.FilterTo<Mp4>(new Split(3));
+            var filterchain = Filterchain.FilterTo<VideoStream>(new Split(3));
 
             var split = CommandFactory.Create()
                                       .CreateOutputCommand()
-                                      .WithInput(Utilities.GetVideoFile())
+                                      .WithInput<VideoStream>(Utilities.GetVideoFile())
                                       .Filter(filterchain);
 
             var concat1 = split.Command
-                               .WithStreams(split.Receipts[1])
-                               .WithStreams(split.Receipts[1])
-                               .Filter(new CrossfadeConcatenate<Mp4>(1d));
+                               .Select(split.StreamIdentifiers[1])
+                               .Select(split.StreamIdentifiers[1])
+                               .Filter(new CrossfadeConcatenate(1d));
 
-            var concat2 = concat1.WithStreams(split.Receipts[2])
-                                 .Filter(new CrossfadeConcatenate<Mp4>(1d));
+            var concat2 = concat1.Select(split.StreamIdentifiers[2])
+                                 .Filter(new CrossfadeConcatenate(1d));
 
             var output = concat2.MapTo<Mp4>().First(); 
 
-            var metadataInfo1 = MetadataHelpers.GetMetadataInfo(concat2.Command, concat2.Receipts.FirstOrDefault());
-            var metadataInfo2 = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetReceipt());
+            var metadataInfo1 = MetadataHelpers.GetMetadataInfo(concat2.Command, concat2.StreamIdentifiers.FirstOrDefault());
+            var metadataInfo2 = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo1.Duration == calculatedDuration);
-            Assert.True(metadataInfo2.Duration == calculatedDuration);
+            Assert.True(metadataInfo1.VideoStream.Duration == calculatedDuration);
+            Assert.True(metadataInfo2.VideoStream.Duration == calculatedDuration);
         }
 
         [Fact]
         public void InputSettingsToFilterToOutputSettings_Verify()
         {
-            var baseline = Resource.From(Utilities.GetVideoFile()).LoadMetadata().Info;
-            var calculatedSeconds = ((baseline.Duration.TotalSeconds - 1) * 3d) - 2d;
+            var baseline = Resource.From(Utilities.GetVideoFile())
+                                   .LoadMetadata()
+                                   .Streams
+                                   .OfType<VideoStream>()
+                                   .First();
+            var calculatedSeconds = ((baseline.Info.Duration.TotalSeconds - 1) * 3d) - 2d;
             var calculatedDuration = TimeSpan.FromSeconds(calculatedSeconds);
 
             var inputSettings = SettingsCollection.ForInput(new StartAt(1d));
@@ -119,29 +132,29 @@ namespace Hudl.Ffmpeg.Tests.Resources
                 new BitRateVideo(3000),
                 new DurationOutput(5d)); 
 
-            var filterchain = Filterchain.FilterTo<Mp4>(new Split(3));
+            var filterchain = Filterchain.FilterTo<VideoStream>(new Split(3));
 
             var split = CommandFactory.Create()
                                       .CreateOutputCommand()
-                                      .WithInput(Utilities.GetVideoFile(), inputSettings)
+                                      .WithInput<VideoStream>(Utilities.GetVideoFile(), inputSettings)
                                       .Filter(filterchain);
 
             var concat1 = split.Command
-                               .WithStreams(split.Receipts[0])
-                               .WithStreams(split.Receipts[1])
-                               .Filter(new CrossfadeConcatenate<Mp4>(1d));
+                               .Select(split.StreamIdentifiers[0])
+                               .Select(split.StreamIdentifiers[1])
+                               .Filter(new CrossfadeConcatenate(1d));
 
-            var concat2 = concat1.WithStreams(split.Receipts[2])
-                                 .Filter(new CrossfadeConcatenate<Mp4>(1d));
+            var concat2 = concat1.Select(split.StreamIdentifiers[2])
+                                 .Filter(new CrossfadeConcatenate(1d));
 
             var output = concat2.MapTo<Mp4>(outputSettings).First();
 
-            var metadataInfo1 = MetadataHelpers.GetMetadataInfo(concat2.Command, concat2.Receipts.FirstOrDefault());
-            var metadataInfo2 = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetReceipt());
+            var metadataInfo1 = MetadataHelpers.GetMetadataInfo(concat2.Command, concat2.StreamIdentifiers.FirstOrDefault());
+            var metadataInfo2 = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo1.Duration == calculatedDuration);
-            Assert.True(metadataInfo2.Duration == TimeSpan.FromSeconds(5));
-            Assert.True(metadataInfo2.BitRate == 3000000L);
+            Assert.True(metadataInfo1.VideoStream.Duration == calculatedDuration);
+            Assert.True(metadataInfo2.VideoStream.Duration == TimeSpan.FromSeconds(5));
+            Assert.True(metadataInfo2.VideoStream.BitRate == 3000000L);
         }
     }
 }

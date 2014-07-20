@@ -2,7 +2,7 @@
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Filters;
 using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources;
+using Hudl.Ffmpeg.Resources.BaseTypes;
 using Xunit; 
 
 namespace Hudl.Ffmpeg.Tests.Filter
@@ -12,31 +12,23 @@ namespace Hudl.Ffmpeg.Tests.Filter
         [Fact]
         public void FilterchainIVideo_Add_Restriction()
         {
-            var filterchain = Filterchain.FilterTo<Mp4>();
+            var filterchain = Filterchain.FilterTo<VideoStream>();
             Assert.DoesNotThrow(() => filterchain.Filters.Add(new Concat()));
-            Assert.Throws<AppliesToInvalidException>(() => filterchain.Filters.Add(new AMix()));
+            Assert.Throws<ForStreamInvalidException>(() => filterchain.Filters.Add(new AMix()));
         }
 
         [Fact]
         public void FilterchainIAudio_Add_Restriction()
         {
-            var filterchain = Filterchain.FilterTo<Mp3>();
+            var filterchain = Filterchain.FilterTo<AudioStream>();
             Assert.DoesNotThrow(() => filterchain.Filters.Add(new Concat()));
-            Assert.Throws<AppliesToInvalidException>(() => filterchain.Filters.Add(new Fade()));
-        }
-
-        [Fact]
-        public void FilterchainIImage_Add_Restriction()
-        {
-            var filterchain = Filterchain.FilterTo<Png>();
-            Assert.DoesNotThrow(() => filterchain.Filters.Add(new Overlay()));
-            Assert.Throws<AppliesToInvalidException>(() => filterchain.Filters.Add(new Fade()));
+            Assert.Throws<ForStreamInvalidException>(() => filterchain.Filters.Add(new Fade()));
         }
 
         [Fact]
         public void Filterchain_Add_Duplicate()
         {
-            var filterchain = Filterchain.FilterTo<Png>();
+            var filterchain = Filterchain.FilterTo<VideoStream>();
             Assert.DoesNotThrow(() => filterchain.Filters.Add(new Overlay()));
             Assert.Throws<InvalidOperationException>(() => filterchain.Filters.Add(new Overlay()));
         }
@@ -44,7 +36,7 @@ namespace Hudl.Ffmpeg.Tests.Filter
         [Fact]
         public void FilterchainIVideo_RemoveAt()
         {
-            var filterchain = Filterchain.FilterTo<Mp4>(
+            var filterchain = Filterchain.FilterTo<VideoStream>(
                 new Fade(), 
                 new ColorBalance());
 
@@ -58,7 +50,7 @@ namespace Hudl.Ffmpeg.Tests.Filter
         [Fact]
         public void FilterchainIVideo_RemoveType()
         {
-            var filterchain = Filterchain.FilterTo<Mp4>(
+            var filterchain = Filterchain.FilterTo<VideoStream>(
                 new Fade(),
                 new ColorBalance());
 
@@ -72,7 +64,7 @@ namespace Hudl.Ffmpeg.Tests.Filter
         [Fact]
         public void FilterchainIVideo_RemoveAll()
         {
-            var filterchain = Filterchain.FilterTo<Mp4>(
+            var filterchain = Filterchain.FilterTo<VideoStream>(
                 new Fade(),
                 new ColorBalance());
 

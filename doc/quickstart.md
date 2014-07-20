@@ -1,4 +1,4 @@
-[<-- Home](https://github.com/hudl/HudlFfmpeg/README.md)
+[<-- Home](https://github.com/hudl/HudlFfmpeg)
 
 ## Installation & Setup
 
@@ -67,8 +67,10 @@ To learn more about these resource types, view the full [API Documentation](doc/
 Adding inputs to your command is also easy with Hudl.Ffmpeg. Using the ```.WithInput``` construct you can add your files just by specifying the path. 
 
 ```csharp
-var foo = command.WithInput("C:\foo\bar-1.mp4")
-                 .WithInput("C:\foo\bar-2.mp4");
+//It is important to specify a VideoStream or AudioStream when using the WithInput contstruct
+//this tells Hudl.Ffmpeg which stream you are wanting to work with up front.
+var foo = command.WithInput<VideoStream>("C:\foo\bar-1.mp4")
+                 .WithInput<VideoStream>("C:\foo\bar-2.mp4");
 ```
 
 To learn more about adding inputs to ffmpeg commands, view the full [API Documentation](doc/api.md).
@@ -79,7 +81,7 @@ Hudl.Ffmpeg Sugar uses a chain builder based approach to contructing commands. E
 
 For example, in the above example we added two inputs *bar-1.mp4* and *bar-2.mp4*. The resulting stage command would contain a reference to both streams. If we were then to concatenate these files (like in the example below) the stage command would contain a reference to the concatenated stream. 
 
-Each ffmpeg command has a Filtergraph, which is made up of filterchains. So to create a filterchain we can use the ```Filterchain.FilterTo<TResourceType>()``` construct. 
+Each ffmpeg command has a Filtergraph, which is made up of filterchains. So to create a filterchain we can use the ```Filterchain.FilterTo<TStreamType>()``` construct. 
 
 ```csharp
 using Hudl.Ffmpeg.Sugar; 
@@ -88,9 +90,9 @@ using Hudl.Ffmpeg.Filters;
 ...
 
 //Filterchain construct accepts the following arguments: 
-// - type constructor:     a Resource type class, required to classify the output stream as video or audio.
+// - type constructor:     a Stream type class, required to classify the output stream as video or audio.
 // - param IFilter[]:      a list of IFilter objects, these objects are named after the available ffmpeg filters. 
-var filterchain = Filterchain.FilterTo<Mp4>(new Concat());
+var filterchain = Filterchain.FilterTo<VideoStream>(new Concat());
 
 var bar = foo.Filter(filterchain);
 ```
@@ -138,15 +140,15 @@ using Hudl.Ffmpeg.Settings;
 
 ...
 
-var filterchain = Filterchain.FilterTo<Mp4>(new Concat());
+var filterchain = Filterchain.FilterTo<VideoStream>(new Concat());
 
 var outputSettings = SettingsCollection.ForOutput(new CodecVideo("libx264")); 
 
 var commandFactory = CommandFactory.Create(); 
 
 commandFactory.CreateOutputCommand()
-              .WithInput("c:\foo\bar-1.mp4")
-              .WithInput("c:\foo\bar-2.mp4")
+              .WithInput<VideoStream>("c:\foo\bar-1.mp4")
+              .WithInput<VideoStream>("c:\foo\bar-2.mp4")
               .Filter(filterchain)
               .MapTo<Mp4>("c:\foo\bar-3.mp4"); 
 

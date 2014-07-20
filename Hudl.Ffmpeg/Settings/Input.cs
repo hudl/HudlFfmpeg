@@ -8,18 +8,18 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// input file name
     /// </summary>
-    [AppliesToResource(Type = typeof(IResource))]
+    [ForStream(Type = typeof(IContainer))]
     internal class Input : BaseSetting
     {
         private const string SettingType = "-i";
 
-        public Input(IResource resource)
+        public Input(IContainer resource)
             : base(SettingType)
         {
             Resource = resource; 
         }
 
-        public IResource Resource { get; protected set; }
+        public IContainer Resource { get; protected set; }
 
         public override void Validate()
         {

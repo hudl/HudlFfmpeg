@@ -59,12 +59,12 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Select the all IResources marked as an exported output.
         /// </summary>
-        public List<IResource> GetOutputs()
+        public List<IContainer> GetOutputs()
         {
             return CommandList.Where(c => c.Outputs.Any(cr => cr.IsExported))
                               .SelectMany(c =>
                                   {
-                                      var outputTempList = new List<IResource>();
+                                      var outputTempList = new List<IContainer>();
                                       outputTempList.AddRange(c.Outputs.Where(cr => cr.IsExported).Select(cr => cr.Resource));
                                       return outputTempList;
                                   })
@@ -74,12 +74,12 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Select the all IResources not marked as an exported output.
         /// </summary>
-        public List<IResource> GetResources()
+        public List<IContainer> GetResources()
         {
             return CommandList.Where(c => c.Outputs.Any(cr => !cr.IsExported))
                               .SelectMany(c =>
                               {
-                                  var outputTempList = new List<IResource>();
+                                  var outputTempList = new List<IContainer>();
                                   outputTempList.AddRange(c.Outputs.Where(cr => !cr.IsExported).Select(cr => cr.Resource));
                                   return outputTempList;
                               })
@@ -89,7 +89,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Select the output and temp resources for the current command factory 
         /// </summary>
-        public List<IResource> GetAllOutput()
+        public List<IContainer> GetAllOutput()
         {
             return CommandList.SelectMany(c => c.Outputs.Select(cr => cr.Resource))
                               .ToList();
@@ -106,7 +106,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Renders the command stream with the defualt command processor
         /// </summary>
-        public List<IResource> Render()
+        public List<IContainer> Render()
         {
             return RenderWith<FfmpegProcessorReciever>();
         }
@@ -138,7 +138,7 @@ namespace Hudl.Ffmpeg.Command
 
         internal List<FfmpegCommand> CommandList { get; set; }
 
-        internal List<IResource> RenderWith<TProcessor>()
+        internal List<IContainer> RenderWith<TProcessor>()
             where TProcessor : class, ICommandProcessor, new()
         {
             var commandProcessor = new TProcessor();
@@ -158,7 +158,7 @@ namespace Hudl.Ffmpeg.Command
             return returnType;
         }
 
-        internal List<IResource> RenderWith<TProcessor>(TProcessor processor)
+        internal List<IContainer> RenderWith<TProcessor>(TProcessor processor)
             where TProcessor : class, ICommandProcessor
         {
             if (processor == null)

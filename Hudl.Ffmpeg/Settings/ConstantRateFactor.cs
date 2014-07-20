@@ -9,8 +9,8 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// Sets the quantizer scale for the encoder on a scale between 0-51: where 0 is lossless and 51 is the worst possible. 18 is visually lossless quality
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(AudioStream))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class ConstantRateFactor : BaseSetting
     {

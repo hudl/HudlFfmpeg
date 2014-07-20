@@ -5,7 +5,7 @@ namespace Hudl.Ffmpeg.Sugar
 {
     public static class ResourceExtensions
     {
-        public static IResource LoadMetadata(this IResource resource)
+        public static IContainer LoadMetadata(this IContainer resource)
         {
             if (ResourceManagement.CommandConfiguration != null &&
                 !string.IsNullOrWhiteSpace(ResourceManagement.CommandConfiguration.FfprobePath))
@@ -13,23 +13,26 @@ namespace Hudl.Ffmpeg.Sugar
                 return resource.LoadMetadataFromFfprobe();
             }
 
-            return resource.LoadMetadataFromMediaInfo();
+            return resource; 
         }
 
-        private static IResource LoadMetadataFromMediaInfo(this IResource resource)
-        {
-            var mediaLoader = new Metadata.MediaInfo.MediaLoader(resource.FullName);
-
-            resource.Info = MetadataInfo.Create(mediaLoader);
-
-            return resource;
-        }
-
-        private static IResource LoadMetadataFromFfprobe(this IResource resource)
+        private static IContainer LoadMetadataFromFfprobe(this IContainer resource)
         {
             var mediaLoader = new Metadata.Ffprobe.MediaLoader(resource);
 
-            resource.Info = MetadataInfo.Create(mediaLoader);
+            if (mediaLoader.HasAudio)
+            {
+                var audioStreamMetadata = MetadataInfo.Create(mediaLoader.AudioStream);
+
+                resource.Streams.Add(AudioStream.Create(audioStreamMetadata));
+            }
+
+            if (mediaLoader.HasVideo)
+            {
+                var videoStreamMetadata = MetadataInfo.Create(mediaLoader.VideoStream);
+
+                resource.Streams.Add(VideoStream.Create(videoStreamMetadata));
+            }
 
             return resource;
         }

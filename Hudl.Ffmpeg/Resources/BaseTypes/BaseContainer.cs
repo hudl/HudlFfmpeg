@@ -1,37 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Metadata;
 
 namespace Hudl.Ffmpeg.Resources.BaseTypes
 {
-    public abstract class BaseResource : IResource
+    public abstract class BaseContainer : IContainer
     {
-        protected BaseResource(string format, string resourceIndicator)
+        protected BaseContainer(string format)
         {
             Format = format;
+            Streams = new List<IStream>();
             Id = Guid.NewGuid().ToString();
-            Map = Helpers.NewMap();
-            ResourceIndicator = resourceIndicator;
             Name = string.Concat(Guid.NewGuid(), format);
-            Info = MetadataInfo.Create();
         }
-        protected BaseResource(string format, string resourceIndicator, string name) 
-            : this(format, resourceIndicator)
+        protected BaseContainer(string format, string name) 
+            : this(format)
         {
             Name = name; 
         }
-        protected BaseResource(string format, string resourceIndicator, string name, string path)
-            : this(format, resourceIndicator, name)
-        {
-            Path = path;
-        }
-        protected BaseResource(string format, string resourceIndicator, string name, TimeSpan length) 
-            : this(format, resourceIndicator, name)
-        {
-            Info.Duration = length; 
-        }
-        protected BaseResource(string format, string resourceIndicator, string name, string path, TimeSpan length)
-            : this(format, resourceIndicator, name, length)
+        protected BaseContainer(string format, string name, string path)
+            : this(format, name)
         {
             Path = path;
         }
@@ -40,11 +28,6 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         /// the truly unique id per resource file
         /// </summary>
         public string Id { get; set; }
-
-        /// <summary>
-        /// an ffmpeg representation of the input stream, used in identifying the stream further
-        /// </summary>
-        public string Map { get; set; }
         
         /// <summary>
         /// the file name of the resource that is used
@@ -86,35 +69,33 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
         public string Format { get; protected set; }
 
         /// <summary>
-        /// the ffmpeg resource indicator
+        /// list of streams in the container
         /// </summary>
-        public string ResourceIndicator { get; private set; }
+        public List<IStream> Streams { get; set; }
 
-        /// <summary>
-        /// the metadata information surrounding the resource
-        /// </summary>
-        public MetadataInfo Info { get; set; }
+        protected abstract IContainer Clone();
 
-        /// <summary>
-        /// method for copying a resource.
-        /// </summary>
-        public TResource Copy<TResource>()
-            where TResource : IResource
+        public IContainer Copy()
         {
-            var instanceNew = InstanceOfMe();
-            instanceNew.Map = Helpers.NewMap();
-            return (TResource)instanceNew; 
+            var newInstance = Clone();
+
+            newInstance.Id = Id;
+            newInstance.Name = Name;
+            newInstance.Path = Path;
+            newInstance.Streams = new List<IStream>(Streams);
+            newInstance.Streams.ForEach(s => s.Map = Helpers.NewMap());
+
+            return newInstance; 
         }
 
-        public TResource CreateFrom<TResource>() 
-            where TResource : IResource
+        public IContainer CreateFrom()
         {
-            var instanceNew = Copy<TResource>();
+            var instanceNew = Copy();
+
             Name = string.Concat(Guid.NewGuid(), Format);
+
             return instanceNew; 
         }
-
-        protected abstract IResource InstanceOfMe();
 
         private bool ValidateFormat(string path)
         {
@@ -132,11 +113,5 @@ namespace Hudl.Ffmpeg.Resources.BaseTypes
             }
             return upperPath.EndsWith(upperFormat);
         }
-
-
-
-
-
-       
     }
 }

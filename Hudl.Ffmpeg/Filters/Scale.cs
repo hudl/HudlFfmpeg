@@ -11,7 +11,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Scale Filter, scales the output stream to match the filter settings.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     public class Scale : BaseFilter
     {
         private const int FilterMaxInputs = 1;

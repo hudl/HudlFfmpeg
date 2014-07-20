@@ -9,7 +9,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// set the video display aspect ratio specified by aspect.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class AspectRatio : BaseSetting
     {

@@ -10,9 +10,8 @@ namespace Hudl.Ffmpeg.Settings
     /// specific settings for this and FFmpeg states that it is good practice to include 
     /// as some files need this setting.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
+    [ForStream(Type = typeof(AudioStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
     public class AutoConvert : BaseSetting
     {

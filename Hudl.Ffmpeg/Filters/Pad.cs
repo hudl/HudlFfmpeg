@@ -10,8 +10,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Filter that applies padding to input video 
     /// </summary>
-    [AppliesToResource(Type = typeof(IImage))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     public class Pad : BaseFilter
     {
         private const int FilterMaxInputs = 1;

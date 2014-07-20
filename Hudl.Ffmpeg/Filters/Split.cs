@@ -7,7 +7,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Split Filter copys an input video stream into multiple outputs
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
+    [ForStream(Type=typeof(VideoStream))]
     public class Split : BaseSplit
     {
         public Split() 

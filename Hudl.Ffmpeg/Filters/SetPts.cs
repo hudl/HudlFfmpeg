@@ -10,7 +10,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Changes the PTS (presentation timestamp of the input frames)
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
+    [ForStream(Type=typeof(VideoStream))]
     public class SetPts : BaseFilter
     {
         private const int FilterMaxInputs = 1;

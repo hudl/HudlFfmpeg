@@ -8,7 +8,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// sets the bitrate tolerance for the output stream 
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class BitRateTolerance : BaseBitRate
     {

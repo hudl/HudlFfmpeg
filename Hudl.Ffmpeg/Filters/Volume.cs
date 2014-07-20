@@ -11,7 +11,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Volume Filter, overrides the volume of an audio resource by scaling it up and down.
     /// </summary>
-    [AppliesToResource(Type=typeof(IAudio))]
+    [ForStream(Type=typeof(AudioStream))]
     public class Volume : BaseFilter
     {
         private const int FilterMaxInputs = 1;

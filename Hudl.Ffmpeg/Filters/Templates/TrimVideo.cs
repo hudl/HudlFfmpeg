@@ -8,8 +8,7 @@ using Hudl.Ffmpeg.Sugar;
 
 namespace Hudl.Ffmpeg.Filters.Templates
 {
-    public class TrimVideo<TResource> : FilterchainTemplate
-        where TResource : IResource, new()
+    public class TrimVideo : FilterchainTemplate
     {
         public TrimVideo(double? startUnit, double? endUnit, VideoUnitType timebaseUnit)
         {
@@ -22,9 +21,9 @@ namespace Hudl.Ffmpeg.Filters.Templates
 
         private Trim TrimFilter { get; set; }
 
-        public override List<CommandReceipt> SetupTemplate(FfmpegCommand command, List<CommandReceipt> receiptList)
+        public override List<StreamIdentifier> SetupTemplate(FfmpegCommand command, List<StreamIdentifier> streamIdList)
         {
-            if (receiptList.Count != 1)
+            if (streamIdList.Count != 1)
             {
                 throw new InvalidOperationException("Crossfade Concatenate requires two input video streams.");
             }
@@ -33,10 +32,10 @@ namespace Hudl.Ffmpeg.Filters.Templates
             // - trim filter
             // - reset PTS filter
 
-            var result = command.WithStreams(receiptList)
-                                .Filter(Filterchain.FilterTo<TResource>(TrimFilter, new SetPts(SetPtsExpressionType.ResetTimestamp)));
+            var result = command.Select(streamIdList)
+                                .Filter(Filterchain.FilterTo<VideoStream>(TrimFilter, new SetPts(SetPtsExpressionType.ResetTimestamp)));
 
-            return result.Receipts;
+            return result.StreamIdentifiers;
         }
     }
 }

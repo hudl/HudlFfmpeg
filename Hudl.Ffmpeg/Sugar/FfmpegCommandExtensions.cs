@@ -1,75 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources;
+using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
 
 namespace Hudl.Ffmpeg.Sugar
 {
     public static class FfmpegCommandExtensions
     {
-        public static void ValidateOutput(FfmpegCommand command, string fileName, SettingsCollection collection)
-        {
-            if (command.Owner == null)
-            {
-                throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
-            }
-
-            if (collection == null)
-            {
-                throw new ArgumentNullException("collection");
-            }
-
-            if (collection.Type != SettingsCollectionResourceType.Output)
-            {
-                throw new ArgumentException("Command output settings collection must be a type of Output.", "collection");
-            }
-
-            if (string.IsNullOrWhiteSpace(fileName))
-            {
-                throw new ArgumentException("Command fileName cannot be null or empty.", "fileName");
-            }
-
-            if (command.Owner.CommandList.All(c => c.Id != command.Id))
-            {
-                throw new ArgumentException("Command must be added via CreateOutput or CreateResource first.", "command");
-            }
-        }
-        public static FfmpegCommand WithOutput(this FfmpegCommand command, string fileName)
-        {
-            return command.WithOutput(fileName, SettingsCollection.ForOutput());
-        }
-        public static FfmpegCommand WithOutput(this FfmpegCommand command, List<string> files)
-        {
-            return command.WithOutput(files, SettingsCollection.ForOutput());
-        }
-        public static FfmpegCommand WithOutput(this FfmpegCommand command, string fileName, SettingsCollection collection)
-        {
-            ValidateOutput(command, fileName, collection);
-
-            var resource = Resource.From(fileName);
-
-            var commandOutput = CommandOutput.Create(resource);
-
-            command.OutputManager.Add(commandOutput);
-
-            return command;
-        }
-        public static FfmpegCommand WithOutput(this FfmpegCommand command, List<string> files, SettingsCollection collection)
-        {
-            if (files == null || files.Count == 0)
-            {
-                throw new ArgumentException("Files cannot be null or empty.", "files");
-            }
-
-            files.ForEach(fileName => command.WithOutput(fileName, collection));
-
-            return command;
-        }
-
         public static void ValidateInput(FfmpegCommand command, string fileName)
         {
             if (command.Owner == null)
@@ -115,17 +58,6 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command;
         }
-        public static FfmpegCommand AddInput(this FfmpegCommand command, List<CommandOutput> files)
-        {
-            if (files == null || files.Count == 0)
-            {
-                throw new ArgumentException("Files cannot be null or empty.", "files");
-            }
-
-            files.ForEach(co => command.AddInputNoLoad(co.OutputName));
-
-            return command;
-        }
         public static FfmpegCommand AddInputNoLoad(this FfmpegCommand command, string fileName)
         {
             ValidateInput(command, fileName);
@@ -139,132 +71,189 @@ namespace Hudl.Ffmpeg.Sugar
             return command;
         }
 
-        public static CommandStage WithInput(this FfmpegCommand command, string fileName)
-        {
-            return command.WithInput(fileName, SettingsCollection.ForInput());
-        }
-        public static CommandStage WithInput(this FfmpegCommand command, string fileName, SettingsCollection settings)
-        {
-            command.AddInput(fileName, settings); 
-
-            return command.WithStreams(command.LastInputReceipt());
-        }
-        public static CommandStage WithInput(this FfmpegCommand command, List<string> files)
-        {
-            if (files == null || files.Count == 0)
-            {
-                throw new ArgumentException("Files cannot be null or empty.", "files");
-            }
-
-            var receipts = files.Select(fileName =>
-                {
-                    command.AddInput(fileName);
-
-                    return command.LastInputReceipt();
-                }).ToList();
-
-            return command.WithStreams(receipts);
-        }
-        public static CommandStage WithInput(this FfmpegCommand command, List<CommandOutput> files)
-        {
-            if (files == null || files.Count == 0)
-            {
-                throw new ArgumentException("Files cannot be null or empty.", "files");
-            }
-
-            var receipts = files.Select(co =>
-                {
-                    command.AddInputNoLoad(co.OutputName);
-
-                    return command.LastInputReceipt();
-                }).ToList();
-
-            return command.WithStreams(receipts);
-        }
-        public static CommandStage WithInputNoLoad(this FfmpegCommand command, string fileName)
-        {
-            command.AddInputNoLoad(fileName);
-
-            return command.WithStreams(command.LastInputReceipt());
-        }
-
-        public static CommandReceipt ResourceReceiptAt(this FfmpegCommand command, int index)
+        //stream ids
+        public static StreamIdentifier StreamIdentifier(this FfmpegCommand command, int index)
         {
             if (index < 0 || index >= command.Inputs.Count)
             {
                 throw new IndexOutOfRangeException();
             }
 
-            return command.Inputs[index].GetReceipt();
+            return command.Inputs[index].GetStreamIdentifier();
         }
-        public static CommandReceipt LastInputReceipt(this FfmpegCommand command)
+        public static StreamIdentifier StreamIdentifier<TStreamType>(this FfmpegCommand command, int index)
+            where TStreamType : class, IStream
         {
-            if (command.Inputs.Count == 0) 
+            if (index < 0 || index >= command.Inputs.Count)
             {
-                return null; 
+                throw new IndexOutOfRangeException();
             }
 
-            return command.Inputs[command.Inputs.Count - 1].GetReceipt();
+            return command.Inputs[index].GetStreamIdentifier<TStreamType>();
         }
 
-        public static void ValidateRecipts(FfmpegCommand command, List<CommandReceipt> receipts)
+        public static StreamIdentifier LastInputStream(this FfmpegCommand command)
+        {
+            if (command.Inputs.Count == 0)
+            {
+                return null;
+            }
+
+            return command.Inputs[command.Inputs.Count - 1].GetStreamIdentifier();
+        }
+        public static StreamIdentifier LastInputStream<TStreamType>(this FfmpegCommand command)
+            where TStreamType : class, IStream
+        {
+            if (command.Inputs.Count == 0)
+            {
+                return null;
+            }
+
+            return command.Inputs[command.Inputs.Count - 1].GetStreamIdentifier<TStreamType>();
+        }
+
+        //command output lists
+        private static void ValidateTo(FfmpegCommand command)
+        {
+            if (command.Owner == null)
+            {
+                throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
+            }
+        }
+        public static List<CommandOutput> To<TOutputType>(this FfmpegCommand command)
+           where TOutputType : class, IContainer, new()
+        {
+            return command.To<TOutputType>(SettingsCollection.ForOutput());
+        }
+        public static List<CommandOutput> To<TOutputType>(this FfmpegCommand command, SettingsCollection settings)
+            where TOutputType : class, IContainer, new()
+        {
+            return command.To<TOutputType>(string.Empty, settings);
+        }
+        public static List<CommandOutput> To<TOutputType>(this FfmpegCommand command, string fileName, SettingsCollection settings)
+            where TOutputType : class, IContainer, new()
+        {
+            ValidateTo(command);
+
+            var commandOutput = CommandHelper.SetupCommandOutput<TOutputType>(command, settings, fileName);
+
+            command.OutputManager.Add(commandOutput);
+
+            return new List<CommandOutput>
+                {
+                    commandOutput
+                };
+        }
+
+        //command stage 
+        public static CommandStage WithInput<TStreamType>(this FfmpegCommand command, string fileName)
+            where TStreamType : class, IStream
+        {
+            var commandStage = CommandStage.Create(command);
+
+            return commandStage.WithInput<TStreamType>(fileName); 
+        }
+        public static CommandStage WithInput<TStreamType>(this FfmpegCommand command, string fileName, SettingsCollection settings)
+            where TStreamType : class, IStream
+        {
+            command.AddInput(fileName, settings);
+
+            return command.Select(command.LastInputStream<TStreamType>());
+        }
+        public static CommandStage WithInput<TStreamType>(this FfmpegCommand command, List<string> files)
+            where TStreamType : class, IStream
+        {
+            if (files == null || files.Count == 0)
+            {
+                throw new ArgumentException("Files cannot be null or empty.", "files");
+            }
+
+            var streamIds = files.Select(fileName =>
+                {
+                    command.AddInput(fileName);
+
+                    return command.LastInputStream<TStreamType>();
+                }).ToList();
+
+            return command.Select(streamIds);
+        }
+        public static CommandStage WithInputNoLoad(this FfmpegCommand command, string fileName)
+        {
+            command.AddInputNoLoad(fileName);
+
+            return command.Select(command.LastInputStream());
+        }
+        
+        private static void ValidateStreams(FfmpegCommand command, List<StreamIdentifier> streamIds)
         {
             if (command.Owner == null)
             {
                 throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
             }
 
-            if (receipts == null)
+            if (streamIds == null)
             {
-                throw new ArgumentNullException("receipts");
+                throw new ArgumentNullException("streamIds");
             }
         }
-        public static CommandStage WithStreamAt(this FfmpegCommand command, int index)
+        public static CommandStage Select(this FfmpegCommand command, int index)
         {
-            var receipt = command.ResourceReceiptAt(index);
-            return command.WithStreams(receipt); 
-        }
-        public static CommandStage WithStream(this FfmpegCommand command, CommandReceipt receipt)
-        {
-            var receiptList = new List<CommandReceipt>() { receipt };
-            return command.WithStreams(receiptList);
-        }
-        public static CommandStage WithStreams(this FfmpegCommand command, params CommandReceipt[] receipts)
-        {
-            var receiptList = new List<CommandReceipt>(receipts);
-            return command.WithStreams(receiptList);
-        }
-        public static CommandStage WithStreams(this FfmpegCommand command, List<CommandReceipt> receipts)
-        {
-            ValidateRecipts(command, receipts);
+            var streamId = command.StreamIdentifier(index);
 
-            return new CommandStage(command)
-            {
-                Receipts = receipts
-            };
+            return command.Select(streamId);
         }
-        public static CommandStage WithStreamsFrom(this FfmpegCommand command, CommandInput resource)
+        public static CommandStage Select<TStreamType>(this FfmpegCommand command, int index)
+            where TStreamType : class, IStream
+        {
+            var streamId = command.StreamIdentifier<TStreamType>(index);
+
+            return command.Select(streamId); 
+        }
+        public static CommandStage Select(this FfmpegCommand command, CommandInput resource)
         {
             if (resource == null)
             {
                 throw new ArgumentNullException("resource");
             }
 
-            return command.WithStreams(resource.GetReceipt());
+            return command.Select(resource.GetStreamIdentifier());
         }
-        public static CommandStage WithStreamsFrom(this FfmpegCommand command, Filterchain filterchain)
+        public static CommandStage Select<TStreamType>(this FfmpegCommand command, CommandInput resource)
+            where TStreamType : class, IStream
         {
-            if (filterchain == null)
+            if (resource == null)
             {
-                throw new ArgumentNullException("filterchain");
+                throw new ArgumentNullException("resource");
             }
 
-            return command.WithStreams(filterchain.GetReceipts());
+            return command.Select(resource.GetStreamIdentifier<TStreamType>());
         }
-        public static CommandStage WithAllStreams(this FfmpegCommand command)
+        public static CommandStage Select(this FfmpegCommand command, StreamIdentifier streamId)
         {
-            var receiptList = command.Inputs.Select(r => r.GetReceipt()).ToList();
-            return command.WithStreams(receiptList);
+            var streamIdList = new List<StreamIdentifier>() { streamId };
+            
+            return command.Select(streamIdList);
+        }
+        public static CommandStage Select(this FfmpegCommand command, params StreamIdentifier[] streamIds)
+        {
+            var streamIdList = new List<StreamIdentifier>(streamIds);
+            
+            return command.Select(streamIdList);
+        }
+        public static CommandStage Select(this FfmpegCommand command, List<StreamIdentifier> streamIds)
+        {
+            ValidateStreams(command, streamIds);
+
+            return new CommandStage(command)
+            {
+                StreamIdentifiers = streamIds
+            };
+        }
+        public static CommandStage SelectAll(this FfmpegCommand command)
+        {
+            var streamIdList = command.Inputs.SelectMany(r => r.GetStreamIdentifiers()).ToList();
+
+            return command.Select(streamIdList);
         }
     }
 }

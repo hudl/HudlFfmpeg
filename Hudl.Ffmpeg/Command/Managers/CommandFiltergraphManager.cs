@@ -18,21 +18,21 @@ namespace Hudl.Ffmpeg.Command.Managers
 
         private FfmpegCommand Owner { get; set; }
 
-        public List<CommandReceipt> Add(Filterchain filterchain, params CommandReceipt[] receipts)
+        public List<StreamIdentifier> Add(Filterchain filterchain, params StreamIdentifier[] streamIds)
         {
             if (filterchain == null)
             {
                 throw new ArgumentNullException("filterchain");
             }
-            if (receipts == null || receipts.Length == 0)
+            if (streamIds == null || streamIds.Length == 0)
             {
-                throw new ArgumentException("Cannot apply filters to null or empty objects.", "receipts");
+                throw new ArgumentException("Cannot apply filters to null or empty objects.", "streamIds");
             }
 
-            var receiptList = new List<CommandReceipt>(receipts);
-            if (!receiptList.TrueForAll(receipt => Owner.Objects.ContainsInput(receipt) || Owner.Objects.ContainsStream(receipt)))
+            var streamIdList = new List<StreamIdentifier>(streamIds);
+            if (!streamIdList.TrueForAll(streamId => Owner.Objects.ContainsInput(streamId) || Owner.Objects.ContainsStream(streamId)))
             {
-                throw new ArgumentException("Cannot apply filters to inputs or streams that do not exist in the command.", "receipts");
+                throw new ArgumentException("Cannot apply filters to inputs or streams that do not exist in the command.", "streamIds");
             }
 
             var finalFilter = filterchain.Filters.LastOrDefault();
@@ -41,13 +41,13 @@ namespace Hudl.Ffmpeg.Command.Managers
                 throw new ArgumentException("Filterchain must contain at least one filter.", "filterchain");
             }
 
-            if (!Filters.Utilities.ValidateFiltersMax(filterchain, receiptList))
+            if (!Filters.Utilities.ValidateFiltersMax(filterchain, streamIdList))
             {
                 throw new InvalidOperationException(
                     "Filterchain is invalid, exceeds maximum calculated allowable resources.");
             }
 
-            if (!Filters.Utilities.ValidateFilters(Owner, filterchain, receiptList))
+            if (!Filters.Utilities.ValidateFilters(Owner, filterchain, streamIdList))
             {
                 throw new InvalidOperationException(
                     "Filterchain is invalid, failed to comply with child filter requirements.");
@@ -56,13 +56,13 @@ namespace Hudl.Ffmpeg.Command.Managers
             var maximumInputs = Filters.Utilities.GetFilterInputMax(filterchain);
 
             Filterchain finalFilterchain = null;
-            var segmentsList = Helpers.BreakReceipts(maximumInputs, receipts);
+            var segmentsList = Helpers.BreakStreamIdentifiers(maximumInputs, streamIds);
             segmentsList.ForEach(segment =>
                 {
-                    var segmentList = new List<CommandReceipt>(segment);
+                    var segmentList = new List<StreamIdentifier>(segment);
                     if (finalFilterchain != null)
                     {
-                        finalFilterchain.GetReceipts().ForEach(r => segmentList.Insert(0, r));
+                        finalFilterchain.GetStreamIdentifiers().ForEach(r => segmentList.Insert(0, r));
                     }
 
                     finalFilterchain = filterchain.Copy();
@@ -82,21 +82,21 @@ namespace Hudl.Ffmpeg.Command.Managers
                     "Filterchain is invalid, segemented filters caused an unrecoverable issue.");
             }
 
-            return finalFilterchain.GetReceipts(); 
+            return finalFilterchain.GetStreamIdentifiers(); 
         }
 
-        public List<CommandReceipt> AddToEach(Filterchain filterchain, params CommandReceipt[] receipts)
+        public List<StreamIdentifier> AddToEach(Filterchain filterchain, params StreamIdentifier[] streamIds)
         {
             if (filterchain == null)
             {
                 throw new ArgumentNullException("filterchain");
             }
-            if (receipts == null || receipts.Length == 0)
+            if (streamIds == null || streamIds.Length == 0)
             {
-                throw new ArgumentException("Cannot apply filters to null or empty objects.", "receipts");
+                throw new ArgumentException("Cannot apply filters to null or empty objects.", "streamIds");
             }
 
-            var resourceList = new List<CommandReceipt>(receipts);
+            var resourceList = new List<StreamIdentifier>(streamIds);
 
             return resourceList.SelectMany(r => Add(filterchain, r)).ToList();
         }

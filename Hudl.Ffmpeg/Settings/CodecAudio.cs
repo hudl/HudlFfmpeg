@@ -8,8 +8,8 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// Audio Codec for an audio resource file. applies to both audio files, and videos with audio tracks
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(AudioStream))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class CodecAudio : BaseCodec
     {

@@ -9,7 +9,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// Set frame rate (Hz value, fraction or abbreviation).
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class FrameRate : BaseSetting
     {

@@ -6,13 +6,13 @@ namespace Hudl.Ffmpeg.Metadata
 {
     internal class MetadataInfoTreeSource : MetadataInfoTreeItem
     {
-        private MetadataInfoTreeSource(IResource resource, SettingsCollection settings)
+        private MetadataInfoTreeSource(IContainer resource, SettingsCollection settings)
         {
-            Resource = resource;
             Settings = settings;
+            Resource = MetadataInfoTreeContainer.Create(resource);
         }
 
-        public IResource Resource { get; private set; }
+        public MetadataInfoTreeContainer Resource { get; private set; }
 
         public SettingsCollection Settings { get; set; }
 

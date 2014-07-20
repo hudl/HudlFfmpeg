@@ -9,17 +9,17 @@ namespace Hudl.Ffmpeg.Command
 {
     internal class FfprobeCommand
     {
-        private FfprobeCommand(IResource resource)
+        private FfprobeCommand(IContainer resource)
         {
             Resource = resource;
             Serializers = new List<IFfprobeSerializer>();
         }
 
-        public IResource Resource { get; set; }
+        public IContainer Resource { get; set; }
 
         public List<IFfprobeSerializer> Serializers { get; set; }
 
-        public static FfprobeCommand Create(IResource resource)
+        public static FfprobeCommand Create(IContainer resource)
         {
             return new FfprobeCommand(resource);    
         }

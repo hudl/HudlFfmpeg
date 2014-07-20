@@ -10,8 +10,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// crop fillter will crop the selected filter to a specific size and dimensions
     /// </summary>
-    [AppliesToResource(Type = typeof(IImage))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     public class Crop : BaseFilter
     {
         private const int FilterMaxInputs = 1;

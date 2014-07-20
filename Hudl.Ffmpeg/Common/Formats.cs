@@ -24,15 +24,15 @@ namespace Hudl.Ffmpeg.Common
                                  timespan.Minutes.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'),
                                  timespan.Seconds.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'));
         }
-        public static string Map(IResource input, int index)
-        {
-            return Map(string.Concat(index, ":", input.ResourceIndicator));
-        }
-        public static string Map(IResource input)
-        {
-            return Map(input.Map);
-        }
 
+        public static string Map(IStream stream, int index)
+        {
+            return Map(string.Concat(index, ":", stream.ResourceIndicator));
+        }
+        public static string Map(IStream stream)
+        {
+            return Map(stream.Map);
+        }
         public static string Map(string map, bool forSettings = false)
         {
             return forSettings && map.IndexOf(":", StringComparison.InvariantCulture) > -1

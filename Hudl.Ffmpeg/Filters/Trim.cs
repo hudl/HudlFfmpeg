@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.IsolatedStorage;
 using System.Text;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
@@ -14,7 +13,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Trim Video filter trims down the length of a video to within the constraints provided.
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
+    [ForStream(Type=typeof(VideoStream))]
     public class Trim : BaseFilter, IMetadataManipulation
     {
         private const int FilterMaxInputs = 1;
@@ -130,11 +129,11 @@ namespace Hudl.Ffmpeg.Filters
 
             return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
-        
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
             var startTimeInSeconds = 0D;
-            var endTimeInSeconds = infoToUpdate.Duration.TotalSeconds;
+            var endTimeInSeconds = infoToUpdate.VideoStream.Duration.TotalSeconds;
 
             if (End.HasValue)
             {
@@ -142,11 +141,11 @@ namespace Hudl.Ffmpeg.Filters
             } 
             else if (EndFrame.HasValue)
             {
-                endTimeInSeconds = (double) EndFrame.Value / (double) infoToUpdate.FrameRate.ToDouble();
+                endTimeInSeconds = (double)EndFrame.Value / (double)infoToUpdate.VideoStream.FrameRate.ToDouble();
             }
             else if (EndPts.HasValue)
             {
-                endTimeInSeconds = (double) EndPts.Value /(double) infoToUpdate.Timebase.ToDouble();
+                endTimeInSeconds = (double)EndPts.Value / (double)infoToUpdate.VideoStream.Timebase.ToDouble();
             }
 
             if (Start.HasValue)
@@ -155,11 +154,11 @@ namespace Hudl.Ffmpeg.Filters
             }
             else if (StartFrame.HasValue)
             {
-                startTimeInSeconds = (double)StartFrame.Value / (double)infoToUpdate.FrameRate.ToDouble();
+                startTimeInSeconds = (double)StartFrame.Value / (double)infoToUpdate.VideoStream.FrameRate.ToDouble();
             }
             else if (StartPts.HasValue)
             {
-                startTimeInSeconds = (double)StartPts.Value / (double)infoToUpdate.Timebase.ToDouble();
+                startTimeInSeconds = (double)StartPts.Value / (double)infoToUpdate.VideoStream.Timebase.ToDouble();
             }
 
             var timeInSecondsAfterTrim = endTimeInSeconds - startTimeInSeconds;
@@ -168,7 +167,7 @@ namespace Hudl.Ffmpeg.Filters
                 timeInSecondsAfterTrim = 0;
             }
 
-            infoToUpdate.Duration = TimeSpan.FromSeconds(timeInSecondsAfterTrim);
+            infoToUpdate.VideoStream.Duration = TimeSpan.FromSeconds(timeInSecondsAfterTrim);
 
             return infoToUpdate;
         }

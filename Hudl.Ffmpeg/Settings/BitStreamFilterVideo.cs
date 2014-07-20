@@ -8,7 +8,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// set bitstream filters for matching video streams. bitstream_filters is a comma-separated list of bitstream filters. 
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class BitStreamFilterVideo : BaseBitStreamFilter
     {

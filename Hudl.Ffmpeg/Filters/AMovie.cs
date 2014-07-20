@@ -7,7 +7,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// AMovie Audio filter declares a filter resource that can be given a specific map. This resource can then be used as an input stream in any subsequent filterchains.
     /// </summary>
-    [AppliesToResource(Type=typeof(IAudio))]
+    [ForStream(Type = typeof(AudioStream))]
     public class AMovie : BaseMovie
     {
         private const string FilterTypePrefix = "a";
@@ -15,7 +15,7 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterTypePrefix)
         {
         }
-        public AMovie(IAudio file)
+        public AMovie(IContainer file)
             : this()
         {
             Resource = file;

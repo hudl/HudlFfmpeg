@@ -4,14 +4,13 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Filters.BaseTypes
 {
     public class Filterchain
     {
-        private Filterchain(List<IResource> outputsToUse) 
+        private Filterchain(List<IStream> outputsToUse) 
         {
             if (outputsToUse == null || outputsToUse.Count == 0)
             {
@@ -19,12 +18,12 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             }
 
             Id = Guid.NewGuid().ToString();
-            ReceiptList = new List<CommandReceipt>();
+            ReceiptList = new List<StreamIdentifier>();
             OutputList = new List<FilterchainOutput>(); 
-            Filters = new AppliesToCollection<IFilter>(outputsToUse.First().GetType());
+            Filters = new ForStreamCollection<IFilter>(outputsToUse.First().GetType());
             OutputList.AddRange(outputsToUse.Select(output => new FilterchainOutput(this, output)));
         }
-        private Filterchain(List<IResource> outputsToUse, params IFilter[] filters)
+        private Filterchain(List<IStream> outputsToUse, params IFilter[] filters)
             : this(outputsToUse)
         {
             if (filters.Length > 0)
@@ -33,87 +32,85 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             }
         }
 
-        public static Filterchain Create(List<IResource> outputsToUse, params IFilter[] filters)
+        public ForStreamCollection<IFilter> Filters { get; protected set; }
+
+        public ReadOnlyCollection<StreamIdentifier> Resources { get { return ReceiptList.AsReadOnly(); } }
+
+        public void SetResources(params StreamIdentifier[] streamIds)
         {
-            return new Filterchain(outputsToUse, filters);
-        }
-
-        public AppliesToCollection<IFilter> Filters { get; protected set; }
-
-        public ReadOnlyCollection<CommandReceipt> Resources { get { return ReceiptList.AsReadOnly(); } }
-
-        public void SetResources(params CommandReceipt[] receipts)
-        {
-            if (receipts == null)
+            if (streamIds == null)
             {
-                throw new ArgumentNullException("receipts");
+                throw new ArgumentNullException("streamIds");
             }
-            if (receipts.Length == 0)
+            if (streamIds.Length == 0)
             {
                 throw new ArgumentException("Filterchain must contain at least one resource.");
             }
 
-            SetResources(new List<CommandReceipt>(receipts));
+            SetResources(new List<StreamIdentifier>(streamIds));
         }
 
-        public void SetResources(List<CommandReceipt> receipts)
+        public void SetResources(List<StreamIdentifier> streamIds)
         {
-            if (receipts == null)
+            if (streamIds == null)
             {
-                throw new ArgumentNullException("receipts");
+                throw new ArgumentNullException("streamIds");
             }
-            if (receipts.Count == 0)
+            if (streamIds.Count == 0)
             {
                 throw new ArgumentException("Filterchain must contain at least one resource.");
             }
 
-            ReceiptList = receipts;
+            ReceiptList = streamIds;
         }
 
         public Filterchain Copy()
         {
-            var clonedResources = OutputList.Select(output => output.Resource.Copy<IResource>());
+            var clonedResources = OutputList.Select(output => output.Stream.Copy());
+
             return FilterTo(clonedResources.ToList(), Filters.List.ToArray());
         }
 
-        public List<CommandReceipt> GetReceipts()
+        public List<StreamIdentifier> GetStreamIdentifiers()
         {
             return OutputList.Select(output => 
-                    CommandReceipt.CreateFromStream(Owner.Owner.Owner.Id, Owner.Owner.Id, output.Resource.Map))
+                    StreamIdentifier.Create(Owner.Owner.Owner.Id, Owner.Owner.Id, output.Stream.Map))
                     .ToList();
         }
 
-        public static Filterchain FilterTo<TResource>(params IFilter[] filters)
-            where TResource : IResource, new()
+        public static Filterchain FilterTo<TStreamType>(params IFilter[] filters)
+            where TStreamType : class, IStream, new()
         {
-            return FilterTo<TResource>(1, filters);
+            return FilterTo<TStreamType>(1, filters);
         }
 
-        public static Filterchain FilterTo<TResource>(int count, params IFilter[] filters)
-            where TResource : IResource, new()
+        public static Filterchain FilterTo<TStreamType>(int count, params IFilter[] filters)
+            where TStreamType : class, IStream, new()
         {
-            var outputList = new List<IResource>();
+            var outputList = new List<IStream>();
+
             for (var i = 0; i < count; i++)
             {
-                outputList.Add(new TResource());
+                outputList.Add(new TStreamType());
             }
+
             return FilterTo(outputList, filters);
         }
 
-        public static Filterchain FilterTo(List<IResource> outputsToUse, params IFilter[] filters)
+        private static Filterchain FilterTo(List<IStream> outputsToUse, params IFilter[] filters)
         {
             if (outputsToUse == null || outputsToUse.Count == 0)
             {
                 throw new ArgumentException("Outputs specified cannot be null or empty.", "outputsToUse");
             }
 
-            return Create(outputsToUse, filters);
+            return new Filterchain(outputsToUse, filters);
         }
 
         #region Internals
         internal string Id { get; set; }
         internal Filtergraph Owner { get; set; }
-        internal List<CommandReceipt> ReceiptList { get; set; }
+        internal List<StreamIdentifier> ReceiptList { get; set; }
         internal List<FilterchainOutput> OutputList { get; set; }
         #endregion
     }

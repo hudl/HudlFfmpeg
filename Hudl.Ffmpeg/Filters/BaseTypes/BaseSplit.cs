@@ -50,7 +50,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         #endregion
 
         #region IFilterProcessor
-        public bool Validate(FfmpegCommand command, Filterchain filterchain, List<CommandReceipt> receipts)
+        public bool Validate(FfmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds)
         {
             return filterchain.Filters.Count == 1;
         }

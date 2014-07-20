@@ -14,8 +14,8 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Concat Filter concatenates multiple resource streams into a collection of output streams
     /// </summary>
-    [AppliesToResource(Type=typeof(IAudio))]
-    [AppliesToResource(Type=typeof(IVideo))]
+    [ForStream(Type=typeof(AudioStream))]
+    [ForStream(Type=typeof(VideoStream))]
     public class Concat : BaseFilter, IFilterValidator, IMetadataManipulation
     {
         private const int FilterMaxInputs = 4;
@@ -82,16 +82,24 @@ namespace Hudl.Ffmpeg.Filters
         }
 
         #region IFilterValidator
-        public bool Validate(FfmpegCommand command, Filterchain filterchain, List<CommandReceipt> receipts)
+        public bool Validate(FfmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds)
         {
             //concat filters should be used independently of other filters
             return filterchain.Filters.Count == 1;
         }
         #endregion
 
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.Duration = TimeSpan.FromSeconds(suppliedInfo.Sum(i => i.Duration.TotalSeconds));
+            if (NumberOfAudioOut > 0)
+            {
+                infoToUpdate.AudioStream.Duration = TimeSpan.FromSeconds(suppliedInfo.Sum(i => i.AudioStream.Duration.TotalSeconds));
+            }
+
+            if (NumberOfVideoOut > 0)
+            {
+                infoToUpdate.VideoStream.Duration = TimeSpan.FromSeconds(suppliedInfo.Sum(i => i.VideoStream.Duration.TotalSeconds));
+            }
 
             return infoToUpdate; 
         }

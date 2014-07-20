@@ -9,8 +9,7 @@ using Hudl.Ffmpeg.Sugar;
 
 namespace Hudl.Ffmpeg.Filters.Templates
 {
-    public class CrossfadeConcatenate<TResource> : FilterchainTemplate
-        where TResource : IResource, new()
+    public class CrossfadeConcatenate : FilterchainTemplate
     {
         private const string CrossfadeAlgorithm = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
 
@@ -25,17 +24,17 @@ namespace Hudl.Ffmpeg.Filters.Templates
 
         private TimeSpan Duration { get; set; }
 
-        public override List<CommandReceipt> SetupTemplate(FfmpegCommand command, List<CommandReceipt> receiptList)
+        public override List<StreamIdentifier> SetupTemplate(FfmpegCommand command, List<StreamIdentifier> streamIdList)
         {
-            if (receiptList.Count != 2)
+            if (streamIdList.Count != 2)
             {
                 throw new InvalidOperationException("Crossfade Concatenate requires two input video streams.");
             }
 
-            var streamTo = receiptList[1];
-            var streamFrom = receiptList[0];
+            var streamTo = streamIdList[1];
+            var streamFrom = streamIdList[0];
 
-            //grab the current length of the receipt specified 
+            //grab the current length of the streamId specified 
             var streamFromMetadata = MetadataHelpers.GetMetadataInfo(command, streamFrom);
 
             //from == 
@@ -54,36 +53,36 @@ namespace Hudl.Ffmpeg.Filters.Templates
             //output ==
             // - (from:1, blend, to:2)
 
-            var endMinusDuration = streamFromMetadata.Duration - Duration;
+            var endMinusDuration = streamFromMetadata.VideoStream.Duration - Duration;
 
-            var fromSplit = command.WithStreams(streamFrom)
-                                   .Filter(Filterchain.FilterTo<TResource>(new Split(2)));
+            var fromSplit = command.Select(streamFrom)
+                                   .Filter(Filterchain.FilterTo<VideoStream>(new Split(2)));
 
-            var fromMain = fromSplit.TakeStreamAt(0)
-                                    .Filter(new TrimVideo<TResource>(null, endMinusDuration.TotalSeconds, VideoUnitType.Seconds));
+            var fromMain = fromSplit.Take(0)
+                                    .Filter(new TrimVideo(null, endMinusDuration.TotalSeconds, VideoUnitType.Seconds));
 
-            var fromBlend = fromSplit.TakeStreamAt(1)
-                                     .Filter(new TrimVideo<TResource>(endMinusDuration.TotalSeconds, null, VideoUnitType.Seconds));
+            var fromBlend = fromSplit.Take(1)
+                                     .Filter(new TrimVideo(endMinusDuration.TotalSeconds, null, VideoUnitType.Seconds));
 
-            var toSplit = command.WithStreams(streamTo)
-                                 .Filter(Filterchain.FilterTo<TResource>(new Split(2)));
+            var toSplit = command.Select(streamTo)
+                                 .Filter(Filterchain.FilterTo<VideoStream>(new Split(2)));
 
-            var toBlend = toSplit.TakeStreamAt(0)
-                                 .Filter(new TrimVideo<TResource>(null, Duration.TotalSeconds, VideoUnitType.Seconds));
+            var toBlend = toSplit.Take(0)
+                                 .Filter(new TrimVideo(null, Duration.TotalSeconds, VideoUnitType.Seconds));
 
-            var toMain = toSplit.TakeStreamAt(1)
-                                .Filter(new TrimVideo<TResource>(Duration.TotalSeconds, null, VideoUnitType.Seconds));
+            var toMain = toSplit.Take(1)
+                                .Filter(new TrimVideo(Duration.TotalSeconds, null, VideoUnitType.Seconds));
 
-            var blendOut = command.WithStreams(fromBlend.Receipts)
-                                  .WithStreams(toBlend.Receipts)
-                                  .Filter(Filterchain.FilterTo<TResource>(new Blend(CrossfadeAlgorithm)));
+            var blendOut = command.Select(fromBlend.StreamIdentifiers)
+                                  .Select(toBlend.StreamIdentifiers)
+                                  .Filter(Filterchain.FilterTo<VideoStream>(new Blend(CrossfadeAlgorithm)));
 
-            var result = command.WithStreams(fromMain.Receipts)
-                                .WithStreams(blendOut.Receipts)
-                                .WithStreams(toMain.Receipts)
-                                .Filter(Filterchain.FilterTo<TResource>(new Concat()));
+            var result = command.Select(fromMain.StreamIdentifiers)
+                                .Select(blendOut.StreamIdentifiers)
+                                .Select(toMain.StreamIdentifiers)
+                                .Filter(Filterchain.FilterTo<VideoStream>(new Concat()));
 
-            return result.Receipts;
+            return result.StreamIdentifiers;
         }
     }
 }

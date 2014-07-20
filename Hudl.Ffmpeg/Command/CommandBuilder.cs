@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
@@ -156,28 +157,29 @@ namespace Hudl.Ffmpeg.Command
         }
         private void WriteFilterchainIn(FfmpegCommand command, Filterchain filterchain)
         {
-            filterchain.ReceiptList.ForEach(receipt =>
+            filterchain.ReceiptList.ForEach(streamId =>
             {
                 _builderBase.Append(" ");
-                var indexOfResource = command.Objects.Inputs.FindIndex(r => r.Resource.Map == receipt.Map);
+                var indexOfResource = command.Objects.Inputs.FindIndex(inputs => inputs.GetStreamIdentifiers().Any(s => s.Map == streamId.Map));
                 if (indexOfResource >= 0)
                 {
                     var commandResource = command.Objects.Inputs[indexOfResource];
-                    _builderBase.Append(Formats.Map(commandResource.Resource, indexOfResource));
+                    var commandStream = commandResource.Resource.Streams.First(s => s.Map == streamId.Map);
+                    _builderBase.Append(Formats.Map(commandStream, indexOfResource));
                 }
                 else
                 {
-                    _builderBase.Append(Formats.Map(receipt.Map));
+                    _builderBase.Append(Formats.Map(streamId.Map));
                 }
             });
         }
         private void WriteFilterchainOut(Filterchain filterchain)
         {
-            var filterchainOutputs = filterchain.GetReceipts(); 
-            filterchainOutputs.ForEach(receipt =>
+            var filterchainOutputs = filterchain.GetStreamIdentifiers(); 
+            filterchainOutputs.ForEach(streamId =>
                 {
                     _builderBase.Append(" ");
-                    _builderBase.Append(Formats.Map(receipt.Map));
+                    _builderBase.Append(Formats.Map(streamId.Map));
                 });
         }
         private void WriteOutput(CommandOutput output)

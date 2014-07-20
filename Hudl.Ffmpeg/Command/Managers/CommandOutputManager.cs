@@ -24,7 +24,7 @@ namespace Hudl.Ffmpeg.Command.Managers
 
             output.Owner = Owner; 
 
-            if (Owner.Objects.ContainsOutput(output.GetReceipt()))
+            if (Owner.Objects.ContainsOutput(output))
             {
                 throw new ArgumentException("Cannot add the same command output twice to command.", "output");
             }

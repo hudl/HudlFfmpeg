@@ -7,6 +7,7 @@ using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Filters;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Sugar;
+using Hudl.Ffmpeg.Tests.Filter.Identify;
 using Xunit;
 
 namespace Hudl.Ffmpeg.Tests.Filter
@@ -17,88 +18,87 @@ namespace Hudl.Ffmpeg.Tests.Filter
         [Fact]
         public void AFade_AppliesTo()
         {
-            TestAppliesTo<AFade>(false, true, false);
+            TestAppliesTo<AFade>(false, true);
         }
 
         [Fact]
         public void AAMix_AppliesTo()
         {
-            TestAppliesTo<AMix>(false, true, false);
+            TestAppliesTo<AMix>(false, true);
         }
 
         [Fact]
         public void AMovie_AppliesTo_Audio()
         {
-            TestAppliesTo<AMovie>(false, true, false);
+            TestAppliesTo<AMovie>(false, true);
         }
 
         [Fact]
         public void Blend_AppliesTo_Audio()
         {
-            TestAppliesTo<Blend>(true, false, false);
+            TestAppliesTo<Blend>(true, false);
         }
 
         [Fact]
         public void ColorBalance_AppliesTo_Audio()
         {
-            TestAppliesTo<ColorBalance>(true, false, false);
+            TestAppliesTo<ColorBalance>(true, false);
         }
 
         [Fact]
         public void Concat_AppliesTo_Audio()
         {
-            TestAppliesTo<Concat>(true, true, false);
+            TestAppliesTo<Concat>(true, true);
         }
 
         [Fact]
         public void Fade_AppliesTo_Audio()
         {
-            TestAppliesTo<Fade>(true, false, false);
+            TestAppliesTo<Fade>(true, false);
         }
 
         [Fact]
         public void Movie_AppliesTo_Audio()
         {
-            TestAppliesTo<Movie>(true, false, true);
+            TestAppliesTo<Movie>(true, false);
         }
 
         [Fact]
         public void Overlay_AppliesTo_Audio()
         {
-            TestAppliesTo<Overlay>(true, false, true);
+            TestAppliesTo<Overlay>(true, false);
         }
 
         [Fact]
         public void Scale_AppliesTo_Audio()
         {
-            TestAppliesTo<Scale>(true, false, false);
+            TestAppliesTo<Scale>(true, false);
         }
 
         [Fact]
         public void SetDar_AppliesTo_Audio()
         {
-            TestAppliesTo<SetDar>(true, false, true);
+            TestAppliesTo<SetDar>(true, false);
         }
 
         [Fact]
         public void SetSar_AppliesTo_Audio()
         {
-            TestAppliesTo<SetSar>(true, false, true);
+            TestAppliesTo<SetSar>(true, false);
         }
 
         [Fact]
         public void Volume_AppliesTo_Audio()
         {
-            TestAppliesTo<Volume>(false, true, false);
+            TestAppliesTo<Volume>(false, true);
         }
 
 
-        private void TestAppliesTo<TFilter>(bool iVideo, bool iAudio, bool iImage)
+        private void TestAppliesTo<TFilter>(bool iVideo, bool iAudio)
             where TFilter : IFilter
         {
-            Assert.True(iVideo == Validate.AppliesTo<TFilter, IVideo>());
-            Assert.True(iAudio == Validate.AppliesTo<TFilter, IAudio>());
-            Assert.True(iImage == Validate.AppliesTo<TFilter, IImage>());
+            Assert.True(iVideo == Validate.AppliesTo<TFilter, VideoStream>());
+            Assert.True(iAudio == Validate.AppliesTo<TFilter, AudioStream>());
         }
         #endregion
 
@@ -548,6 +548,16 @@ namespace Hudl.Ffmpeg.Tests.Filter
             Assert.Equal(filter.ToString(), filterValue.ToString());
         }
 
+        [Fact]
+        public void Custom_Verify()
+        {
+            var filter = FilterFactory.CreateEmpty<Yadif>();
+            var filterValue = new StringBuilder(100);
+            Assert.DoesNotThrow(() => { var s = filter.ToString(); });
+
+            filterValue.Append("yadif=1");
+            Assert.Equal(filter.ToString(), filterValue.ToString());
+        }
 
         private class FilterFactory
         {

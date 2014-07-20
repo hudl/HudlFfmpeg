@@ -10,7 +10,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Video filter that applies a fade in or out effect.
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
+    [ForStream(Type=typeof(VideoStream))]
     public class Fade : BaseFilter
     {
         private const int FilterMaxInputs = 1;

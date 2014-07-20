@@ -8,6 +8,7 @@ using Hudl.Ffmpeg.Command.BaseTypes;
 using Hudl.Ffmpeg.Command.Managers;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Command
 {
@@ -66,54 +67,7 @@ namespace Hudl.Ffmpeg.Command
 
         internal CommandFactory Owner { get; set; }
 
-        internal CommandInput ResourceFromReceipt(CommandReceipt receipt)
-        {
-            if (receipt == null)
-            {
-                throw new ArgumentNullException("receipt");
-            }
-
-            return Objects.Inputs.FirstOrDefault(i => i.GetReceipt().Map == receipt.Map); 
-        }
-
-        internal CommandOutput OutputFromReceipt(CommandReceipt receipt)
-        {
-            if (receipt == null)
-            {
-                throw new ArgumentNullException("receipt");
-            }
-
-            return Objects.Outputs.FirstOrDefault(i => i.GetReceipt().Map == receipt.Map); 
-        }
-
-        internal Filterchain FilterchainFromReceipt(CommandReceipt receipt)
-        {
-            if (receipt == null)
-            {
-                throw new ArgumentNullException("receipt");
-            }
-
-            return Objects.Filtergraph.FilterchainList.FirstOrDefault(f => f.GetReceipts().Any(r => r.Equals(receipt)));
-        }
-
-        internal CommandReceipt RegenerateResourceMap(CommandReceipt receipt)
-        {
-            if (receipt.FactoryId != Owner.Id ||
-                receipt.CommandId != Id)
-            {
-                throw new InvalidOperationException("Receipt is not a part of this command.");
-            }
-
-            var resource =  Objects.Inputs.FirstOrDefault(r => r.Resource.Map == receipt.Map);
-            if (resource == null)
-            {
-                throw new InvalidOperationException("Receipt is not a part of this command.");
-            }
-
-            resource.Resource.Map = Helpers.NewMap();
-
-            return resource.GetReceipt();
-        }
+        
 
         /// <summary>
         /// Renders the command stream with a new command processor

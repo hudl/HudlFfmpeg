@@ -1,8 +1,10 @@
-﻿using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Resources
 {
-    public class Mp3 : BaseAudio
+    [ContainsStream(Type = typeof(AudioStream))]
+    public class Mp3 : BaseContainer
     {
         private const string FileFormat = ".mp3";
 
@@ -11,15 +13,9 @@ namespace Hudl.Ffmpeg.Resources
         {
         }
 
-        protected override IResource InstanceOfMe()
+        protected override IContainer Clone()
         {
-            return new Mp3
-            {
-                Id = Id,
-                Info = Info,
-                Name = Name,
-                Path = Path
-            };
+            return new Mp3(); 
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Blend Video filter combines two input resources into a single Video output.
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
+    [ForStream(Type=typeof(VideoStream))]
     public class Blend : BaseFilter, IMetadataManipulation
     {
         private const int FilterMaxInputs = 2;
@@ -66,9 +66,9 @@ namespace Hudl.Ffmpeg.Filters
             return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
 
-        public virtual MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        public virtual MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.Duration = suppliedInfo.Min(r => r.Duration);
+            infoToUpdate.VideoStream.Duration = suppliedInfo.Min(r => r.VideoStream.Duration);
 
             return infoToUpdate;
         }

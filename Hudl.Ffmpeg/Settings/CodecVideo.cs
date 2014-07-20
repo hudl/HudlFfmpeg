@@ -8,7 +8,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// Video codec for a video resource file.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class CodecVideo : BaseCodec
     {

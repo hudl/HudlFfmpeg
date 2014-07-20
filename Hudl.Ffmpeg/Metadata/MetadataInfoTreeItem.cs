@@ -2,7 +2,7 @@
 {
     internal abstract class MetadataInfoTreeItem
     {
-        public MetadataInfo ResultMetadataInfo { get; set; }
+        public MetadataInfoTreeContainer ResultMetadataInfo { get; set; }
     }
 
 }

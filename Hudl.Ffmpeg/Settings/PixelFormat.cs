@@ -9,8 +9,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// sets the output pix format type.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class PixelFormat : BaseSetting
     {

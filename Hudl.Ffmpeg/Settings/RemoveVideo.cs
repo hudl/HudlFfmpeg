@@ -11,7 +11,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// removes the video stream from the output file
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class RemoveVideo : BaseSetting, IMetadataManipulation
     {
@@ -26,10 +26,12 @@ namespace Hudl.Ffmpeg.Settings
         {
             return Type;
         }
-       
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
             infoToUpdate.HasVideo = false;
+            
+            infoToUpdate.VideoStream = null;
 
             return infoToUpdate;
         }

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Hudl.Ffmpeg.BaseTypes;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Settings.BaseTypes;
@@ -10,7 +14,7 @@ namespace Hudl.Ffmpeg.Command
     /// </summary>
     public class CommandInput
     {
-        private CommandInput(IResource resource, SettingsCollection settings)
+        private CommandInput(IContainer resource, SettingsCollection settings)
         {
             if (settings == null)
             {
@@ -30,12 +34,12 @@ namespace Hudl.Ffmpeg.Command
             Id = Guid.NewGuid().ToString();
         }
         
-        public static CommandInput Create(IResource resource)
+        public static CommandInput Create(IContainer resource)
         {
             return Create(resource, SettingsCollection.ForInput());
         }
 
-        public static CommandInput Create(IResource resource, SettingsCollection settings)
+        public static CommandInput Create(IContainer resource, SettingsCollection settings)
         {
             return new CommandInput(resource, settings);
         }
@@ -43,21 +47,47 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// the resource input file that is part of the command.
         /// </summary>
-        public IResource Resource { get; set; }
+        public IContainer Resource { get; set; }
 
         /// <summary>
         /// the collection of settings that apply to this input
         /// </summary>
         public SettingsCollection Settings { get; set; }
 
-        /// <summary>
-        /// returns a receipt for the command resource
-        /// </summary>
-        /// <returns></returns>
-        public CommandReceipt GetReceipt()
+        public StreamIdentifier GetStreamIdentifier()
         {
-            return CommandReceipt.CreateFromInput(Owner.Owner.Id, Owner.Id, Resource.Map);
+            if (Resource.Streams.OfType<VideoStream>().Any())
+            {
+                return GetStreamIdentifier<VideoStream>();
+            }
+
+            if (Resource.Streams.OfType<AudioStream>().Any())
+            {
+                return GetStreamIdentifier<AudioStream>();
+            }
+
+            throw new StreamNotFoundException();
         }
+
+        public StreamIdentifier GetStreamIdentifier<TStreamType>()
+            where TStreamType : class, IStream
+        {
+            var streamInReference = Resource.Streams.OfType<TStreamType>().FirstOrDefault();
+
+            if (streamInReference == null)
+            {
+                throw new StreamNotFoundException(typeof(TStreamType));
+            }
+
+            return StreamIdentifier.Create(Owner.Owner.Id, Owner.Id, streamInReference.Map);
+        }
+
+        public List<StreamIdentifier> GetStreamIdentifiers()
+        {
+            return Resource.Streams
+                           .Select(s => StreamIdentifier.Create(Owner.Owner.Id, Owner.Id, s.Map))
+                           .ToList();
+        } 
 
         #region Internals
         internal string Id { get; set; }

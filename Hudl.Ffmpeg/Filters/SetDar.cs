@@ -10,8 +10,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// SetDar Filter, sets the Dynamic Aspect Ratio for the video resource.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
     public class SetDar : BaseFilter
     {
         private const int FilterMaxInputs = 1;

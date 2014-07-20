@@ -12,8 +12,10 @@ Hudl.Ffmpeg is built to work as a compliment to Ffmpeg for all .NET applications
 
 [Getting Started](doc/quickstart.md)
 
-[Using Hudl.Ffmpeg Sugar](doc/sugar.md)
+[Hudl.Ffmpeg Architecture](doc/architecture.md)
+
+[Hudl.Ffmpeg Sugar Syntax](doc/sugar.md)
 
 [API Documentation](doc/api.md)
 
-[Creating Custom Templates](doc/custom.md)
+[Extending Hudl.Ffmpeg](doc/custom.md)

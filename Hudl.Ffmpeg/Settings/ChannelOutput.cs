@@ -8,7 +8,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// Set the number of audio channels. For output streams it is set by default to the number of input audio channels.
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
+    [ForStream(Type = typeof(AudioStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class ChannelOutput : BaseChannel
     {

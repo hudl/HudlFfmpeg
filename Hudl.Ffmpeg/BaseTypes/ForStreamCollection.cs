@@ -10,11 +10,11 @@ namespace Hudl.Ffmpeg.BaseTypes
     /// a collecton of <see cref="TCollection"/>, that will be validated to only include objects which contain an AppliesToResource attribute that is a type of this.
     /// </summary>
     /// <typeparam name="TCollection">the type of the collection</typeparam>
-    public class AppliesToCollection<TCollection>
+    public class ForStreamCollection<TCollection>
     {
         private readonly Type _restrictedType;
 
-        public AppliesToCollection(Type restrictedType)
+        public ForStreamCollection(Type restrictedType)
         {
             if (restrictedType == null)
             {
@@ -67,14 +67,15 @@ namespace Hudl.Ffmpeg.BaseTypes
             return List.FindIndex(f => f.GetType().IsAssignableFrom(itemType));
         }
 
-        public AppliesToCollection<TCollection> Merge<TItem>(TItem item, FfmpegMergeOptionType optionType)
+        public ForStreamCollection<TCollection> Merge<TItem>(TItem item, FfmpegMergeOptionType optionType)
             where TItem : TCollection
         {
             var applierType = item.GetType();
             if (!Validate.AppliesTo(applierType, _restrictedType))
             {
-                throw new AppliesToInvalidException(applierType, _restrictedType); 
+                throw new ForStreamInvalidException(applierType, _restrictedType); 
             }
+
             var indexOfItem = IndexOf(item); 
             if (indexOfItem != -1 && optionType == FfmpegMergeOptionType.NewWins)
             {
@@ -89,14 +90,15 @@ namespace Hudl.Ffmpeg.BaseTypes
             return this;
         }
 
-        public AppliesToCollection<TCollection> Add<TItem>(TItem item)
+        public ForStreamCollection<TCollection> Add<TItem>(TItem item)
             where TItem : TCollection
         {
             var applierType = item.GetType();
             if (!Validate.AppliesTo(applierType, _restrictedType))
             {
-                throw new AppliesToInvalidException(applierType, _restrictedType); 
+                throw new ForStreamInvalidException(applierType, _restrictedType); 
             }
+
             if (Contains(item))
             {
                 throw new InvalidOperationException(string.Format("A member '{0}' already exists in the collection.", applierType.Name));
@@ -107,7 +109,7 @@ namespace Hudl.Ffmpeg.BaseTypes
             return this;
         }
 
-        public AppliesToCollection<TCollection> AddRange(params TCollection[] list)
+        public ForStreamCollection<TCollection> AddRange(params TCollection[] list)
         {
             foreach (var item in list)
             {
@@ -117,7 +119,7 @@ namespace Hudl.Ffmpeg.BaseTypes
             return this;
         }
 
-        public AppliesToCollection<TCollection> Remove<TItem>()
+        public ForStreamCollection<TCollection> Remove<TItem>()
             where TItem : TCollection
         {
             if (Contains<TItem>())
@@ -133,14 +135,14 @@ namespace Hudl.Ffmpeg.BaseTypes
             return List.First(f => f is TItem) as TItem;
         }
 
-        public AppliesToCollection<TCollection> RemoveAt(int index)
+        public ForStreamCollection<TCollection> RemoveAt(int index)
         {
             List.RemoveAt(index);
 
             return this;
         }
 
-        public AppliesToCollection<TCollection> RemoveAll(Predicate<TCollection> pred)
+        public ForStreamCollection<TCollection> RemoveAll(Predicate<TCollection> pred)
         {
             List.RemoveAll(pred);
 

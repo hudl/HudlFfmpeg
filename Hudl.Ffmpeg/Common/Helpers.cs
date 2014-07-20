@@ -110,7 +110,7 @@ namespace Hudl.Ffmpeg.Common
         /// <summary>
         /// escapes the path of the provided resource.
         /// </summary>
-        public static string EscapePath(IResource resource)
+        public static string EscapePath(IContainer resource)
         {
             if (resource == null)
             {
@@ -122,23 +122,23 @@ namespace Hudl.Ffmpeg.Common
         }
        
         /// <summary>
-        /// Breaks does command receipts into divisable subsets that then can be used to apply filters in chunks that ffmpeg will accept. while still abstracting from the user.
+        /// Breaks does command streamIds into divisable subsets that then can be used to apply filters in chunks that ffmpeg will accept. while still abstracting from the user.
         /// </summary>
-        public static List<CommandReceipt[]> BreakReceipts(int division, params CommandReceipt[] receipts)
+        public static List<StreamIdentifier[]> BreakStreamIdentifiers(int division, params StreamIdentifier[] streamIds)
         {
-            if (receipts == null)
+            if (streamIds == null)
             {
-                throw new ArgumentNullException("receipts");
+                throw new ArgumentNullException("streamIds");
             }
 
             var index = 0;
             var subDivision = division - 1;
-            var breakouts = new List<CommandReceipt[]>();
-            var resourcesRemainderCount = receipts.Length;
+            var breakouts = new List<StreamIdentifier[]>();
+            var resourcesRemainderCount = streamIds.Length;
             resourcesRemainderCount -= (resourcesRemainderCount > division)
                                             ? division
-                                            : receipts.Length;
-            breakouts.Add(receipts.SubArray(0, division));
+                                            : streamIds.Length;
+            breakouts.Add(streamIds.SubArray(0, division));
             while (resourcesRemainderCount > 0)
             {
                 index++;
@@ -146,7 +146,7 @@ namespace Hudl.Ffmpeg.Common
                                     ? subDivision
                                     : resourcesRemainderCount;
                 resourcesRemainderCount -= length;
-                breakouts.Add(receipts.SubArray(1 + (index * subDivision), length));
+                breakouts.Add(streamIds.SubArray(1 + (index * subDivision), length));
             }
 
             return breakouts;

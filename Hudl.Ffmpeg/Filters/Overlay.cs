@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Linq;
 using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Metadata;
@@ -16,8 +14,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Overlay Filter that will overlay a video or image on another video or image.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
     public class Overlay : BaseFilter, IMetadataManipulation
     {
         private const int FilterMaxInputs = 2;
@@ -86,11 +83,11 @@ namespace Hudl.Ffmpeg.Filters
             return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
 
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
             if (Shortest)
             {
-                return suppliedInfo.OrderBy(r => r.Duration).FirstOrDefault();
+                return suppliedInfo.OrderBy(r => r.VideoStream.Duration).FirstOrDefault();
             }
 
             var mainMetadataInfo = suppliedInfo.ElementAt(0);

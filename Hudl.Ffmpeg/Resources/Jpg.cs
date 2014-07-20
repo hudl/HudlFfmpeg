@@ -1,8 +1,10 @@
-﻿using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.Ffmpeg.BaseTypes;
+using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Resources
 {
-    public class Jpg : BaseImage
+    [ContainsStream(Type = typeof(VideoStream))]
+    public class Jpg : BaseContainer
     {
         private const string FileFormat = ".jpg";
 
@@ -11,15 +13,9 @@ namespace Hudl.Ffmpeg.Resources
         {
         }
 
-        protected override IResource InstanceOfMe()
+        protected override IContainer Clone()
         {
-            return new Jpg
-                {
-                    Id = Id, 
-                    Info = Info,
-                    Name = Name,
-                    Path = Path
-                };
+            return new Jpg();
         }
     }
 }

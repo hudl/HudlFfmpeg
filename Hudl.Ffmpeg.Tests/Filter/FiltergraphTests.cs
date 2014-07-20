@@ -2,6 +2,7 @@
 using Hudl.Ffmpeg.Command;
 using Hudl.Ffmpeg.Filters.BaseTypes;
 using Hudl.Ffmpeg.Resources;
+using Hudl.Ffmpeg.Resources.BaseTypes;
 using Hudl.Ffmpeg.Sugar;
 using Hudl.Ffmpeg.Tests.Assets;
 using Xunit; 
@@ -18,7 +19,6 @@ namespace Hudl.Ffmpeg.Tests.Filter
         [Fact]
         public void Filtergraph_EmptyToString_ThrowsException()
         {
-
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand()); 
 
             Assert.Throws<InvalidOperationException>(() => filtergraph.ToString());
@@ -28,8 +28,8 @@ namespace Hudl.Ffmpeg.Tests.Filter
         public void Filtergraph_Add()
         {
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand());
-            var filterchain1 = Filterchain.FilterTo<Mp4>();
-            var filterchain2 = Filterchain.FilterTo<Mp4>();
+            var filterchain1 = Filterchain.FilterTo<AudioStream>();
+            var filterchain2 = Filterchain.FilterTo<VideoStream>();
 
             filtergraph.Add(filterchain1);
 
@@ -45,12 +45,11 @@ namespace Hudl.Ffmpeg.Tests.Filter
         {
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand());
 
-            filtergraph.FilterTo<Mp4>();
+            filtergraph.FilterTo<VideoStream>();
 
             Assert.True(filtergraph.Count == 1);
 
-            var outputMp4 = new Mp4();
-            filtergraph.FilterTo(outputMp4);
+            filtergraph.FilterTo<AudioStream>();
 
             Assert.True(filtergraph.Count == 2);
         }
@@ -59,9 +58,9 @@ namespace Hudl.Ffmpeg.Tests.Filter
         public void Filtergraph_RemoveAt()
         {
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand());
-            filtergraph.FilterTo<Mp4>();
-            filtergraph.FilterTo<Mp4>();
-            filtergraph.FilterTo<Mp4>();
+            filtergraph.FilterTo<VideoStream>();
+            filtergraph.FilterTo<VideoStream>();
+            filtergraph.FilterTo<VideoStream>();
 
             Assert.True(filtergraph.Count == 3);
 
@@ -74,8 +73,8 @@ namespace Hudl.Ffmpeg.Tests.Filter
         public void Filtergraph_RemoveAll()
         {
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand());
-            filtergraph.FilterTo<Mp4>();
-            filtergraph.FilterTo<Mp4>();
+            filtergraph.FilterTo<VideoStream>();
+            filtergraph.FilterTo<VideoStream>();
 
             Assert.True(filtergraph.Count == 2);
 
@@ -92,8 +91,7 @@ namespace Hudl.Ffmpeg.Tests.Filter
             {
                 var factory = CommandFactory.Create();
 
-                return factory.CreateOutputCommand()
-                              .WithOutput(OutputVideo);
+                return factory.CreateOutputCommand();
             }
         }
     }

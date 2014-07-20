@@ -12,7 +12,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// Seek to should be used when StartAt cannot be used, Ffmpeg will process the video up to the timestamp provided, but discard it. 
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
     public class SeekTo : BaseSetting, IMetadataManipulation
     {
@@ -52,9 +52,9 @@ namespace Hudl.Ffmpeg.Settings
             return string.Concat(Type, " ", Formats.Duration(Length));
         }
 
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.Duration = infoToUpdate.Duration - Length;
+            infoToUpdate.VideoStream.Duration = infoToUpdate.VideoStream.Duration - Length;
 
             return infoToUpdate; 
         }

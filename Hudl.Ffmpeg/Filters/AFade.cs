@@ -10,7 +10,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// Audio filter that applies a fade in or out effect to the audio stream
     /// </summary>
-    [AppliesToResource(Type=typeof(IAudio))]
+    [ForStream(Type=typeof(AudioStream))]
     public class AFade : BaseFilter
     {
         private const int FilterMaxInputs = 1;

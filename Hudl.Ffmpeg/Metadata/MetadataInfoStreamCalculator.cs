@@ -45,9 +45,9 @@ namespace Hudl.Ffmpeg.Metadata
         {
             var metadataManipulators = metadataInfoTreeSource.Settings.SettingsList.OfType<IMetadataManipulation>().ToList();
 
-            var metadataInfoResult = metadataInfoTreeSource.Resource.Info.Copy();
+            var metadataInfoResult = metadataInfoTreeSource.Resource.Copy();
 
-            metadataManipulators.ForEach(mm => metadataInfoResult = mm.EditInfo(metadataInfoResult, new List<MetadataInfo> { metadataInfoTreeSource.ResultMetadataInfo }));
+            metadataManipulators.ForEach(mm => metadataInfoResult = mm.EditInfo(metadataInfoResult, new List<MetadataInfoTreeContainer> { metadataInfoTreeSource.ResultMetadataInfo }));
 
             metadataInfoTreeSource.ResultMetadataInfo = metadataInfoResult;
         }

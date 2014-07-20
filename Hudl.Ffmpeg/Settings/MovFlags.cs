@@ -9,8 +9,8 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// MovFlags is used to set AVOptions that tell ffmpeg how to fragment the file. 
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(AudioStream))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class MovFlags : BaseSetting
     {

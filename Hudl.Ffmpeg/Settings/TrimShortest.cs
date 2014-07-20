@@ -11,8 +11,8 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// The trim shortest setting will trim the output resource to the shortest input resource setting.
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(AudioStream))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class TrimShortest : BaseSetting
     {

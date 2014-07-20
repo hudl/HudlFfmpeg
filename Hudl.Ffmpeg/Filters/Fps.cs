@@ -9,8 +9,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// fps filter will set a frames per second on the stream, can be used on images as well
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
     public class Fps : BaseFilter
     {
         private const int FilterMaxInputs = 1;

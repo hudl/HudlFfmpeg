@@ -60,7 +60,9 @@
     <Compile Include="Filter\FilterchainTests.cs" />
     <Compile Include="Filter\FiltergraphTests.cs" />
     <Compile Include="Filter\FilterTests.cs" />
+    <Compile Include="Filter\Identify\Yadif.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Identify\Mkv.cs" />
     <Compile Include="Resources\MetadataCalculationTests.cs" />
     <Compile Include="Resources\ResourceTests.cs" />
     <Compile Include="Setting\SettingCollectionTests.cs" />

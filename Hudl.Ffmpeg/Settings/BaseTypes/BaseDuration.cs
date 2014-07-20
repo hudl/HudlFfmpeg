@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Hudl.Ffmpeg.Common;
 using Hudl.Ffmpeg.Metadata;
 using Hudl.Ffmpeg.Metadata.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings.BaseTypes
 {
@@ -45,11 +44,11 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             return string.Concat(Type, " ", Formats.Duration(Length));
         }
 
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            if (infoToUpdate.Duration > Length)
+            if (infoToUpdate.VideoStream.Duration > Length)
             {
-                infoToUpdate.Duration = Length;
+                infoToUpdate.VideoStream.Duration = Length;
             }
 
             return infoToUpdate; 

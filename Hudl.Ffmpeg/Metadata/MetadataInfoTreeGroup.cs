@@ -47,15 +47,15 @@ namespace Hudl.Ffmpeg.Metadata
 
         private void Fill(FfmpegCommand command, Filterchain filterchain)
         {
-            filterchain.ReceiptList.ForEach(receipt =>
+            filterchain.ReceiptList.ForEach(streamId =>
             {
-                var resourceIndexOf = MetadataHelpers.IndexOfResource(command, receipt);
+                var resourceIndexOf = CommandHelper.IndexOfResource(command, streamId);
                 if (resourceIndexOf > -1)
                 {
                     DependecyTree.Add(MetadataInfoTreeSource.Create(command.Inputs[resourceIndexOf]));
                 }
 
-                var filterchainIndexOf = MetadataHelpers.IndexOfFilterchain(command, receipt);
+                var filterchainIndexOf = CommandHelper.IndexOfFilterchain(command, streamId);
                 if (filterchainIndexOf > -1)
                 {
                     DependecyTree.Add(Create(command, command.Filtergraph[filterchainIndexOf]));
@@ -70,9 +70,9 @@ namespace Hudl.Ffmpeg.Metadata
             var allSettingMaps = commandOutput.Settings.OfType<Map>();
             if (allSettingMaps.Any())
             {
-                var receiptListFromMaps = allSettingMaps.Select(map => CommandReceipt.CreateFromStream(command.Owner.Id, command.Id, map.Stream)).ToList();
+                var streamIdListFromMaps = allSettingMaps.Select(map => StreamIdentifier.Create(command.Owner.Id, command.Id, map.Stream)).ToList();
 
-                Fill(command, receiptListFromMaps);
+                Fill(command, streamIdListFromMaps);
 
                 return;
             }
@@ -82,11 +82,11 @@ namespace Hudl.Ffmpeg.Metadata
             command.Objects.Inputs.ForEach(commandResource => DependecyTree.Add(MetadataInfoTreeSource.Create(commandResource)));
         }
 
-        private void Fill(FfmpegCommand command, List<CommandReceipt> receiptList)
+        private void Fill(FfmpegCommand command, List<StreamIdentifier> streamIdList)
         {
-            receiptList.ForEach(receipt =>
+            streamIdList.ForEach(streamId =>
             {
-                var resourceIndexOf = MetadataHelpers.IndexOfResource(command, receipt);
+                var resourceIndexOf = CommandHelper.IndexOfResource(command, streamId);
                 if (resourceIndexOf > -1)
                 {
                     DependecyTree.Add(MetadataInfoTreeSource.Create(command.Inputs[resourceIndexOf]));
@@ -94,7 +94,7 @@ namespace Hudl.Ffmpeg.Metadata
                     return;
                 }
 
-                var filterchainIndexOf = MetadataHelpers.IndexOfFilterchain(command, receipt);
+                var filterchainIndexOf = CommandHelper.IndexOfFilterchain(command, streamId);
                 if (filterchainIndexOf > -1)
                 {
                     DependecyTree.Add(Create(command, command.Filtergraph[filterchainIndexOf]));

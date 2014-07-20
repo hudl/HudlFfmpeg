@@ -9,8 +9,8 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// When used as an output option (before an output filename), stop writing the output after its duration reaches duration.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IAudio))]
+    [ForStream(Type = typeof(VideoStream))]
+    [ForStream(Type = typeof(AudioStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class DurationOutput : BaseDuration
     {

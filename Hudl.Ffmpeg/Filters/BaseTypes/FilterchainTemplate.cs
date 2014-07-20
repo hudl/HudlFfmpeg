@@ -8,6 +8,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
     /// </summary>
     public abstract class FilterchainTemplate
     {
-        public abstract List<CommandReceipt> SetupTemplate(FfmpegCommand command, List<CommandReceipt> receiptList);
+        public abstract List<StreamIdentifier> SetupTemplate(FfmpegCommand command, List<StreamIdentifier> streamIdList);
     }
 }

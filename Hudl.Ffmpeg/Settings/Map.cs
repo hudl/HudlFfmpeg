@@ -10,16 +10,16 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// Designate one or more input streams as a source for the output file.
     /// </summary>
-    [AppliesToResource(Type = typeof(IResource))]
+    [ForStream(Type = typeof(IContainer))]
     [SettingsApplication(PreDeclaration = true, MultipleAllowed = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class Map : BaseSetting
     {
         private const string SettingType = "-map";
 
-        public Map(CommandReceipt receipt)
+        public Map(StreamIdentifier streamId)
             : base(SettingType)
         {
-            Stream = receipt.Map;
+            Stream = streamId.Map;
         }
 
         public Map(string streamId)

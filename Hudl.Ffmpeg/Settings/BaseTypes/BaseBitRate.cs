@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using Hudl.Ffmpeg.Metadata;
-using Hudl.Ffmpeg.Metadata.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
 
 namespace Hudl.Ffmpeg.Settings.BaseTypes
 {
-    public abstract class BaseBitRate : BaseSetting, IMetadataManipulation
+    public abstract class BaseBitRate : BaseSetting
     {
         private const string SettingType = "-b";
 
@@ -29,13 +25,6 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         public override string ToString()
         {
             return string.Concat(Type, " ", Rate, "k");
-        }
-
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
-        {
-            infoToUpdate.BitRate = Rate * 1000;
-
-            return infoToUpdate;
         }
     }
 }

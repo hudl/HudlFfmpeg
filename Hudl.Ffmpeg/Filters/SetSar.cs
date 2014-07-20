@@ -10,8 +10,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// SetSar Filter, sets the Sample Aspect Ratio for the video resource.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
     public class SetSar : BaseFilter
     {
         private const int FilterMaxInputs = 1;

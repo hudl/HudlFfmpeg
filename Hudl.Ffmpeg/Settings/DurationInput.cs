@@ -9,8 +9,8 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// when used as an input option (before -i), limit the duration of data read from the input file.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IAudio))]
+    [ForStream(Type = typeof(VideoStream))]
+    [ForStream(Type = typeof(AudioStream))]
     [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
     public class DurationInput : BaseDuration
     {

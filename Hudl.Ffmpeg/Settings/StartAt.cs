@@ -12,7 +12,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// Start At can only be used on the first input resource stream. Ffmpeg will not process the video until the starting point provided.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
     public class StartAt : BaseSetting, IMetadataManipulation
     {
@@ -52,9 +52,9 @@ namespace Hudl.Ffmpeg.Settings
             return string.Concat(Type, " ", Formats.Duration(Length));
         }
 
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.Duration = infoToUpdate.Duration - Length;
+            infoToUpdate.VideoStream.Duration = infoToUpdate.VideoStream.Duration - Length;
 
             return infoToUpdate;
         }

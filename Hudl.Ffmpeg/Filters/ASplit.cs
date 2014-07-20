@@ -7,7 +7,7 @@ namespace Hudl.Ffmpeg.Filters
     /// <summary>
     /// ASplit Filter copys the input audio stream into multiple outputs
     /// </summary>
-    [AppliesToResource(Type=typeof(IAudio))]
+    [ForStream(Type=typeof(AudioStream))]
     public class ASplit : BaseSplit
     {
         private const string FilterTypePrefix = "a";

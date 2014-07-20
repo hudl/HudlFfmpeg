@@ -15,7 +15,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
         }
 
-        public IResource Resource { get; set; }
+        public IContainer Resource { get; set; }
 
         public string FormatName { get; set; }
 

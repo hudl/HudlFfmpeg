@@ -12,7 +12,7 @@ namespace Hudl.Ffmpeg.Settings
     /// <summary>
     /// sets the outpout container size.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class Size : BaseSetting, IMetadataManipulation
     {
@@ -72,9 +72,9 @@ namespace Hudl.Ffmpeg.Settings
             return string.Concat(Type, " ", Dimensions.Width, "x", Dimensions.Height);
         }
 
-        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.Dimensions = Dimensions;
+            infoToUpdate.VideoStream.Dimensions = Dimensions;
 
             return infoToUpdate;
         }

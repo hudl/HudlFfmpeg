@@ -25,45 +25,60 @@ namespace Hudl.Ffmpeg.Tests.Command
         }
 
         [Fact]
-        public void Command_WithInput_Verify()
+        public void Command_AddInput_Verify()
         {
             var command = CommandHelper.CreateCommand();
 
-            Assert.Throws<ArgumentException>(() => command.WithInput(string.Empty));
+            Assert.Throws<ArgumentException>(() => command.AddInput(string.Empty));
 
-            Assert.DoesNotThrow(() => command.WithInput(Assets.Utilities.GetVideoFile()));
+            Assert.DoesNotThrow(() => command.AddInput(Assets.Utilities.GetVideoFile()));
 
             Assert.True(command.Inputs.Count == 1);
         }
 
         [Fact]
-        public void Command_WithOutput_Verify()
-        {
-            var command = CommandHelper.CreateCommandNoOut();
-
-            Assert.Throws<ArgumentException>(() => command.WithOutput(string.Empty));
-
-            Assert.Throws<ArgumentNullException>(() => command.WithOutput(AssetPath, null));
-
-            Assert.Throws<ArgumentException>(() => command.WithOutput(AssetPath, SettingsCollection.ForInput()));
-
-            Assert.DoesNotThrow(() => command.WithOutput(AssetPath, CommandSettingsO));
-
-            Assert.True(command.Outputs.Count == 1);
-        }
-
-        [Fact]
-        public void Command_ResourceReceiptAt_Verify()
+        public void Command_WithInput_Verify()
         {
             var command = CommandHelper.CreateCommand();
 
-            command.WithInput(Assets.Utilities.GetVideoFile());
+            Assert.Throws<ArgumentException>(() => command.WithInput<VideoStream>(string.Empty));
 
-            Assert.Throws<IndexOutOfRangeException>(() => command.ResourceReceiptAt(-1));
+            Assert.DoesNotThrow(() => command.WithInput<VideoStream>(Assets.Utilities.GetVideoFile()));
 
-            Assert.Throws<IndexOutOfRangeException>(() => command.ResourceReceiptAt(1));
+            Assert.True(command.Inputs.Count == 1);
+        }
 
-            Assert.DoesNotThrow(() => command.ResourceReceiptAt(0));
+        [Fact]
+        public void Command_Select_Verify()
+        {
+            var command = CommandHelper.CreateCommand()
+                                       .AddInput(Assets.Utilities.GetVideoFile())
+                                       .AddInput(Assets.Utilities.GetVideoFile());
+
+            Assert.Throws<IndexOutOfRangeException>(() => command.Select<VideoStream>(5));
+
+            Assert.DoesNotThrow(() => command.Select(1));
+
+            Assert.DoesNotThrow(() => command.Select(0));
+
+            var stage = command.Select(0)
+                               .Select(1);
+
+            Assert.True(stage.StreamIdentifiers.Count == 2);
+        }
+
+        [Fact]
+        public void Command_StreamIdentifier_Verify()
+        {
+            var command = CommandHelper.CreateCommand();
+
+            command.AddInput(Assets.Utilities.GetVideoFile());
+
+            Assert.Throws<IndexOutOfRangeException>(() => command.StreamIdentifier(-1));
+
+            Assert.Throws<IndexOutOfRangeException>(() => command.StreamIdentifier(1));
+
+            Assert.DoesNotThrow(() => command.StreamIdentifier(0));
         }
 
         [Fact]
@@ -77,14 +92,12 @@ namespace Hudl.Ffmpeg.Tests.Command
 
             Assert.Throws<ArgumentNullException>(() => command.InputManager.Insert(0, null));
 
-            Assert.Throws<ArgumentNullException>(() => command.InputManager.Replace(null, null));
+            Assert.DoesNotThrow(() => command.InputManager.Add(CommandInput.Create(Resource.From(Assets.Utilities.GetVideoFile()))));
 
-            Assert.DoesNotThrow(() => command.InputManager.Add(CommandInput.Create(Resource.VideoFrom(Assets.Utilities.GetVideoFile()))));
-
-            var assetsList = new List<IResource>
+            var assetsList = new List<IContainer>
                 {
-                    Resource.VideoFrom(Assets.Utilities.GetVideoFile()),
-                    Resource.VideoFrom(Assets.Utilities.GetVideoFile())
+                    Resource.From(Assets.Utilities.GetVideoFile()),
+                    Resource.From(Assets.Utilities.GetVideoFile())
                 };
             var commandList = new List<CommandInput>
                 {
@@ -94,30 +107,26 @@ namespace Hudl.Ffmpeg.Tests.Command
 
             Assert.DoesNotThrow(() => command.InputManager.AddRange(commandList));
 
-            Assert.DoesNotThrow(() => command.InputManager.Insert(0, CommandInput.Create(Resource.VideoFrom(Assets.Utilities.GetVideoFile()))));
+            Assert.DoesNotThrow(() => command.InputManager.Insert(0, CommandInput.Create(Resource.From(Assets.Utilities.GetVideoFile()))));
 
-            var receipt = command.InputManager.Add(CommandInput.Create(Resource.VideoFrom(Assets.Utilities.GetVideoFile())));
-            var replaceWith = CommandInput.Create(Resource.VideoFrom(Assets.Utilities.GetVideoFile()));
-            Assert.DoesNotThrow(() => command.InputManager.Replace(receipt, replaceWith));
-
-            Assert.True(command.Inputs.Count == 5);
+            Assert.True(command.Inputs.Count == 4);
         }
 
         [Fact]
         public void Command_OutputManager_Verify()
         {
-            var command = CommandHelper.CreateCommandNoOut();
+            var command = CommandHelper.CreateCommand();
 
             Assert.Throws<ArgumentNullException>(() => command.OutputManager.Add(null));
 
             Assert.Throws<ArgumentException>(() => command.OutputManager.AddRange(null));
 
-            Assert.DoesNotThrow(() => command.OutputManager.Add(CommandOutput.Create(Resource.VideoFrom(AssetPath))));
+            Assert.DoesNotThrow(() => command.OutputManager.Add(CommandOutput.Create(Resource.From(AssetPath))));
 
-            var assetsList = new List<IResource>
+            var assetsList = new List<IContainer>
                 {
-                    Resource.VideoFrom(AssetPath),
-                    Resource.VideoFrom(AssetPath)
+                    Resource.From(AssetPath),
+                    Resource.From(AssetPath)
                 };
             var commandList = new List<CommandOutput>
                 {
@@ -135,17 +144,17 @@ namespace Hudl.Ffmpeg.Tests.Command
         {
             var command = CommandHelper.CreateCommand();
 
-            command.WithInput(Assets.Utilities.GetVideoFile())
-                   .WithInput(Assets.Utilities.GetVideoFile())
-                   .WithInput(Assets.Utilities.GetVideoFile())
-                   .WithInput(Assets.Utilities.GetVideoFile());
+            command.AddInput(Assets.Utilities.GetVideoFile())
+                   .AddInput(Assets.Utilities.GetVideoFile())
+                   .AddInput(Assets.Utilities.GetVideoFile())
+                   .AddInput(Assets.Utilities.GetVideoFile());
 
-            var receipt1 = command.ResourceReceiptAt(0);
-            var receipt2 = command.ResourceReceiptAt(1);
-            var receipt3 = command.ResourceReceiptAt(2);
-            var receipt4 = command.ResourceReceiptAt(3);
+            var streamId1 = command.StreamIdentifier(0);
+            var streamId2 = command.StreamIdentifier(1);
+            var streamId3 = command.StreamIdentifier(2);
+            var streamId4 = command.StreamIdentifier(3);
 
-            var filterchain = Filterchain.FilterTo<Mp4>(new Trim(1, 2, VideoUnitType.Seconds));
+            var filterchain = Filterchain.FilterTo<VideoStream>(new Trim(1, 2, VideoUnitType.Seconds));
 
             Assert.Throws<ArgumentNullException>(() => command.FilterchainManager.Add(null));
 
@@ -155,9 +164,9 @@ namespace Hudl.Ffmpeg.Tests.Command
             
             Assert.Throws<ArgumentException>(() => command.FilterchainManager.AddToEach(filterchain, null));
 
-            Assert.DoesNotThrow(() => command.FilterchainManager.Add(filterchain, receipt1));
+            Assert.DoesNotThrow(() => command.FilterchainManager.Add(filterchain, streamId1));
             
-            Assert.DoesNotThrow(() => command.FilterchainManager.AddToEach(filterchain, receipt2, receipt3, receipt4));
+            Assert.DoesNotThrow(() => command.FilterchainManager.AddToEach(filterchain, streamId2, streamId3, streamId4));
 
             Assert.True(command.Filtergraph.Count == 4);
         }
@@ -167,7 +176,7 @@ namespace Hudl.Ffmpeg.Tests.Command
         {
             var command = CommandHelper.CreateCommand();
 
-            command.WithInput(Assets.Utilities.GetVideoFile()); 
+            command.AddInput(Assets.Utilities.GetVideoFile()); 
 
             Assert.DoesNotThrow(() => command.RenderWith<TestCommandProcessor>());
         }
@@ -179,7 +188,7 @@ namespace Hudl.Ffmpeg.Tests.Command
 
             var beforeRenderExecuted = false;
 
-            var stage = command.WithInput(Assets.Utilities.GetVideoFile())
+            var stage = command.WithInput<VideoStream>(Assets.Utilities.GetVideoFile())
                                .BeforeRender((c, f, b) =>
                                    {
                                        beforeRenderExecuted = true;
@@ -197,7 +206,7 @@ namespace Hudl.Ffmpeg.Tests.Command
 
             var afterRenderExecuted = false;
 
-            var stage = command.WithInput(Assets.Utilities.GetVideoFile())
+            var stage = command.WithInput<VideoStream>(Assets.Utilities.GetVideoFile())
                                .AfterRender((c, f, b) =>
                                    {
                                        afterRenderExecuted = true;
@@ -213,34 +222,24 @@ namespace Hudl.Ffmpeg.Tests.Command
         {
             var command = CommandHelper.CreateCommand();
 
-            Assert.Throws<ArgumentException>(() => command.WithInput(string.Empty));
             Assert.Throws<ArgumentException>(() => command.AddInput(string.Empty));
+            Assert.Throws<ArgumentException>(() => command.WithInput<VideoStream>(string.Empty));
 
             var stage = new CommandStage(command);
 
             Assert.DoesNotThrow(() =>
                 {
                     stage = command.AddInput(Assets.Utilities.GetVideoFile())
-                                   .WithInput(Assets.Utilities.GetVideoFile());
+                                   .WithInput<VideoStream>(Assets.Utilities.GetVideoFile());
                 });
 
             Assert.True(command.Inputs.Count == 2);
-            Assert.True(stage.Receipts.Count == 1);
+            Assert.True(stage.StreamIdentifiers.Count == 1);
         }
 
         private static class CommandHelper
         {
-            private const string OutputVideo = "c:/source/output.mp4";
-
             public static FfmpegCommand CreateCommand()
-            {
-                var factory = CommandFactory.Create();
-
-                return factory.CreateOutputCommand()
-                              .WithOutput(OutputVideo); 
-            }
-
-            public static FfmpegCommand CreateCommandNoOut()
             {
                 var factory = CommandFactory.Create();
 
