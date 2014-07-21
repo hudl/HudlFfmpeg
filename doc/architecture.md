@@ -44,7 +44,7 @@ Hudl.Ffmpeg Input heirarchy:
  * IContainer
   * List<IStream>
    * VideoStream 
-     - OR -
+        OR
    * AudioStream
 
 For more information on creating custom containers, view our [Extending Hudl.Ffmpeg](doc/custom.md) documentation.
@@ -61,7 +61,7 @@ Hudl.Ffmpeg Output heirarchy:
  * IContainer
   * List<IStream>
    * VideoStream 
-     - OR -
+        OR 
    * AudioStream
 
 For more information on outputs and containers, view the full [API Documentation](doc/api.md).

@@ -58,6 +58,12 @@ var command = commandFactory.CreateOutputCommand();
 
 If is important to know that Hudl.Ffmpeg input resources work on static file classes. We do this so that we can restrict and manage the correct settings and filters to use by stream types (video, image, audio). So each file extension would equate to a object type. The *.mp4* file extension, when specified, would be loaded into an ```Mp4``` object. 
 
+Hudl.Ffmpeg loads its resource types by searching for all instances of ```IContainer``` implementations. It is also smart enough to search your applications for any custom ```IContainer```s that you have created. Creating these objects are done for you automatically everytime that you specify a file type string. For example, one way to load a resource in Hudl.Ffmpeg is 
+
+```csharp
+var foo = Resource.From("c:\foo\bar.mp4");
+```
+
 To learn more about these resource types, view the full [API Documentation](doc/api.md).
 
 ### Adding Inputs
