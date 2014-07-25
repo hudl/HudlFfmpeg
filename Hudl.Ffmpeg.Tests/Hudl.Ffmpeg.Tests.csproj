@@ -69,12 +69,6 @@
     <Compile Include="Setting\SettingTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Hudl.Ffmpeg\Hudl.Ffmpeg.csproj">
-      <Project>{a28fa3ff-8d08-4129-987b-f58aae613a72}</Project>
-      <Name>Hudl.Ffmpeg</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Assets\video.mp4">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -92,6 +86,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hudl.Ffmpeg\Hudl.Ffmpeg.csproj">
+      <Project>{a28fa3ff-8d08-4129-987b-f58aae613a72}</Project>
+      <Name>Hudl.Ffmpeg</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

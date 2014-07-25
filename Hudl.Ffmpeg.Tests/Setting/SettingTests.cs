@@ -158,7 +158,7 @@ namespace Hudl.Ffmpeg.Tests.Setting
 
             Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.GetAndValidateString(); });
             Assert.DoesNotThrow(() => { var s = setting.GetAndValidateString(); });
-            Assert.Equal(setting.GetAndValidateString(), "-t 00:00:02");
+            Assert.Equal(setting.GetAndValidateString(), "-t 00:00:02.0");
         }
 
         [Fact]
@@ -274,7 +274,7 @@ namespace Hudl.Ffmpeg.Tests.Setting
             Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.GetAndValidateString(); });
             Assert.Throws<InvalidOperationException>(() => { var s = settingWrong2.GetAndValidateString(); });
             Assert.DoesNotThrow(() => { var s = setting.GetAndValidateString(); });
-            Assert.Equal(setting.GetAndValidateString(), "-ss 00:02:00");
+            Assert.Equal(setting.GetAndValidateString(), "-ss 00:02:00.0");
         }
 
         [Fact]
@@ -287,7 +287,7 @@ namespace Hudl.Ffmpeg.Tests.Setting
             Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.GetAndValidateString(); });
             Assert.Throws<InvalidOperationException>(() => { var s = settingWrong2.GetAndValidateString(); });
             Assert.DoesNotThrow(() => { var s = setting.GetAndValidateString(); });
-            Assert.Equal(setting.GetAndValidateString(), "-ss 00:02:00");
+            Assert.Equal(setting.GetAndValidateString(), "-ss 00:02:00.0");
         }
 
         [Fact]

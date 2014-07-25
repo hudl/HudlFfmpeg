@@ -56,38 +56,10 @@ namespace Hudl.Ffmpeg.Tests.Command
             factory.CreateOutputCommand()
                    .WithInput<VideoStream>(Utilities.GetVideoFile())
                    .To<Mp4>();
-            
+
             var result = factory.RenderWith<TestCommandProcessor>();
 
             Assert.True(result.Count == 1);
-        }
-
-        [Fact]
-        public void Factory_GetOutputs_Verify()
-        {
-            var factory = CommandFactory.Create();
-
-            factory.CreateResourceCommand();
-
-            Assert.True(factory.GetOutputs().Count == 0);
-
-            factory.CreateOutputCommand();
-
-            Assert.True(factory.GetOutputs().Count == 1);
-        }
-
-        [Fact]
-        public void Factory_GetResources_Verify()
-        {
-            var factory = CommandFactory.Create();
-
-            factory.CreateResourceCommand();
-
-            Assert.True(factory.GetResources().Count == 1);
-
-            factory.CreateOutputCommand();
-
-            Assert.True(factory.GetResources().Count == 1);
         }
     }
 }

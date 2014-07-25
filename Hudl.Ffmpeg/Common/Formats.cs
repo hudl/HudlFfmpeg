@@ -19,10 +19,11 @@ namespace Hudl.Ffmpeg.Common
         }
         public static string Duration(TimeSpan timespan)
         {
-            return string.Format("{0}:{1}:{2}",
+            return string.Format("{0}:{1}:{2}.{3}",
                                  timespan.Hours.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'),
                                  timespan.Minutes.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'),
-                                 timespan.Seconds.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'));
+                                 timespan.Seconds.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'), 
+                                 timespan.Milliseconds.ToString(CultureInfo.InvariantCulture));
         }
 
         public static string Map(IStream stream, int index)

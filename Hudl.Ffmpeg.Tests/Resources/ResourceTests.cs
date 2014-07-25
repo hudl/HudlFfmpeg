@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Xml.Serialization;
 using Hudl.Ffmpeg.Resources;
 using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Sugar;
 using Hudl.Ffmpeg.Tests.Assets;
-using Xunit; 
+using Xunit;
 
 namespace Hudl.Ffmpeg.Tests.Resources
 {
@@ -120,6 +118,23 @@ namespace Hudl.Ffmpeg.Tests.Resources
             const string mkvPathName = "c:/source/apples.mkv";
 
             Assert.DoesNotThrow(() => Resource.From(mkvPathName));
+        }
+
+
+        [Fact]
+        public void Ts_FileLoad()
+        {
+            IContainer resourceInfo = null; 
+            
+            Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.ts"));
+        }
+        
+        [Fact]
+        public void Ismv_FileLoad()
+        {
+            IContainer resourceInfo = null;
+
+            Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.ismv"));
         }
 
         private class ResourceFactory
