@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
-    internal class FfprobeCommand
+    internal class FFprobeCommand
     {
-        private FfprobeCommand(IContainer resource)
+        private FFprobeCommand(IContainer resource)
         {
             Resource = resource;
-            Serializers = new List<IFfprobeSerializer>();
+            Serializers = new List<IFFprobeSerializer>();
         }
 
         public IContainer Resource { get; set; }
 
-        public List<IFfprobeSerializer> Serializers { get; set; }
+        public List<IFFprobeSerializer> Serializers { get; set; }
 
-        public static FfprobeCommand Create(IContainer resource)
+        public static FFprobeCommand Create(IContainer resource)
         {
-            return new FfprobeCommand(resource);    
+            return new FFprobeCommand(resource);    
         }
 
-        public FfprobeCommand Register(IFfprobeSerializer serializer)
+        public FFprobeCommand Register(IFFprobeSerializer serializer)
         {
             if (serializer == null)
             {
@@ -38,7 +38,7 @@ namespace Hudl.Ffmpeg.Command
 
         public ICommandProcessor Execute()
         {
-            return ExecuteWith<FfprobeProcessorReceiver>();
+            return ExecuteWith<FFprobeProcessorReceiver>();
         }
 
         public ICommandProcessor ExecuteWith<TProcessor>()
@@ -48,14 +48,14 @@ namespace Hudl.Ffmpeg.Command
 
             if (!commandProcessor.Open())
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             var returnType = ExecuteWith(commandProcessor);
 
             if (!commandProcessor.Close())
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             return returnType;
@@ -74,7 +74,7 @@ namespace Hudl.Ffmpeg.Command
 
             if (!commandProcessor.Send(commandBuilder.ToString()))
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             return commandProcessor;

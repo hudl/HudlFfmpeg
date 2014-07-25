@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Metadata.Ffprobe;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata.FFprobe;
 
-namespace Hudl.Ffmpeg.Metadata
+namespace Hudl.FFmpeg.Metadata
 {
     public class MetadataInfo
     {
@@ -23,10 +23,10 @@ namespace Hudl.Ffmpeg.Metadata
 
         public bool HasVideo { get; internal set; }
 
-        public FfmpegFraction Timebase { get; internal set; }
+        public FFmpegFraction Timebase { get; internal set; }
 
 
-        public FfmpegFraction FrameRate { get; internal set; }
+        public FFmpegFraction FrameRate { get; internal set; }
 
 
         public MetadataInfo Copy()
@@ -48,7 +48,7 @@ namespace Hudl.Ffmpeg.Metadata
             return new MetadataInfo();
         }
 
-        internal static MetadataInfo Create(FfprobeAudioStream loader)
+        internal static MetadataInfo Create(FFprobeAudioStream loader)
         {
             return new MetadataInfo
             {
@@ -56,11 +56,11 @@ namespace Hudl.Ffmpeg.Metadata
                 HasVideo = false,
                 BitRate = loader.BitRate,
                 Duration = loader.Duration,
-                Timebase = FfmpegFraction.Create(loader.TimeBase),
+                Timebase = FFmpegFraction.Create(loader.TimeBase),
             };
         }
 
-        internal static MetadataInfo Create(FfprobeVideoStream loader)
+        internal static MetadataInfo Create(FFprobeVideoStream loader)
         {
             return new MetadataInfo
             {
@@ -68,8 +68,8 @@ namespace Hudl.Ffmpeg.Metadata
                 HasAudio = false,
                 BitRate = loader.BitRate,
                 Duration = loader.Duration,
-                Timebase = FfmpegFraction.Create(loader.TimeBase),
-                FrameRate = FfmpegFraction.Create(loader.FrameRate),
+                Timebase = FFmpegFraction.Create(loader.TimeBase),
+                FrameRate = FFmpegFraction.Create(loader.FrameRate),
                 Dimensions = new Size(loader.Width, loader.Height),
             };
         }

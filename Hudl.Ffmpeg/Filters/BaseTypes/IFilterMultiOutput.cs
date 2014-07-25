@@ -1,4 +1,4 @@
-﻿namespace Hudl.Ffmpeg.Filters.BaseTypes
+﻿namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     interface IFilterMultiOutput
     {

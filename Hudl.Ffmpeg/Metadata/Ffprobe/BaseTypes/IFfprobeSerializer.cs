@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes
+namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
 {
-    internal interface IFfprobeSerializer
+    internal interface IFFprobeSerializer
     {
         string Tag { get; }
 
         string Setting { get; }
 
-        List<FfprobeKeyValuePair> Serialize(List<FfprobeKeyValuePair> rawSerializedValues);
+        List<FFprobeKeyValuePair> Serialize(List<FFprobeKeyValuePair> rawSerializedValues);
     }
 }

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Logging;
-using Hudl.Ffmpeg.Sugar;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Logging;
+using Hudl.FFmpeg.Sugar;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
-    internal class FfmpegProcessorReciever : ICommandProcessor
+    internal class FFmpegProcessorReciever : ICommandProcessor
     {
-        private static readonly LogUtility Log = LogUtility.GetLogger(typeof(FfmpegProcessorReciever));
+        private static readonly LogUtility Log = LogUtility.GetLogger(typeof(FFmpegProcessorReciever));
 
         private const int MaximumRetryFailures = 1; 
 
-        public FfmpegProcessorReciever()
+        public FFmpegProcessorReciever()
         {
             Status = CommandProcessorStatus.Closed;
         }
@@ -146,7 +146,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 ffmpegProcess.StartInfo = new ProcessStartInfo
                 {
-                    FileName = ResourceManagement.CommandConfiguration.FfmpegPath,
+                    FileName = ResourceManagement.CommandConfiguration.FFmpegPath,
                     WorkingDirectory = ResourceManagement.CommandConfiguration.TempPath,
                     Arguments = command.Trim(),
                     CreateNoWindow = true,
@@ -167,7 +167,7 @@ namespace Hudl.Ffmpeg.Command
                 var exitCode = ffmpegProcess.ExitCode;
                 if (exitCode != 0)
                 {
-                    throw new FfmpegProcessingException(exitCode, StdOut);
+                    throw new FFmpegProcessingException(exitCode, StdOut);
                 }
             }
         }
@@ -189,7 +189,7 @@ namespace Hudl.Ffmpeg.Command
             // ther than that which was indicated above.
             if (ResourceManagement.CommandConfiguration.HasFlag(CommandConfigurationFlagTypes.RetrySignal15Termination) && IsSignal15Error(errorOutput))
             {
-                Log.Warn("Ffmpeg has encountered a Signal 15 Terminating error."); 
+                Log.Warn("FFmpeg has encountered a Signal 15 Terminating error."); 
                 return true;
             }
 

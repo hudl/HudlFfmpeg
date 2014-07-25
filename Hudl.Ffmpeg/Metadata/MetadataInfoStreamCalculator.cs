@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Metadata.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata
+namespace Hudl.FFmpeg.Metadata
 {
     internal class MetadataInfoStreamCalculator
     {
@@ -15,14 +15,14 @@ namespace Hudl.Ffmpeg.Metadata
 
         public MetadataInfoTreeItem InfoStream { get; private set; }
 
-        public static MetadataInfoStreamCalculator Create(FfmpegCommand command, Filterchain filterchain)
+        public static MetadataInfoStreamCalculator Create(FFmpegCommand command, Filterchain filterchain)
         {
             var infoStreamItem = MetadataInfoTreeGroup.Create(command, filterchain);
 
             return new MetadataInfoStreamCalculator(infoStreamItem);
         }
 
-        public static MetadataInfoStreamCalculator Create(FfmpegCommand command, CommandOutput commandOutput)
+        public static MetadataInfoStreamCalculator Create(FFmpegCommand command, CommandOutput commandOutput)
         {
             var infoStreamItem = MetadataInfoTreeGroup.Create(command, commandOutput);
 

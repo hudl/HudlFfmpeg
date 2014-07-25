@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
+namespace Hudl.FFmpeg.Metadata.FFprobe.Serializers
 {
-    internal class FfprobeSerializer 
+    internal class FFprobeSerializer 
     {
-        public static FfprobeSerializerResult Serialize(ICommandProcessor processor)
+        public static FFprobeSerializerResult Serialize(ICommandProcessor processor)
         {
             if (processor.Status == CommandProcessorStatus.Faulted)
             {
@@ -16,12 +16,12 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
             }
 
             var standardOutputString = processor.StdOut;
-            var serializerResult = FfprobeSerializerResult.Create();
+            var serializerResult = FFprobeSerializerResult.Create();
 
-            var serializers = new List<IFfprobeSerializer>
+            var serializers = new List<IFFprobeSerializer>
                 {
-                    new FfprobeStreamSerializer(), 
-                    new FfprobeFormatSerializer()
+                    new FFprobeStreamSerializer(), 
+                    new FFprobeFormatSerializer()
                 };
 
             serializers.ForEach(serializer =>
@@ -49,13 +49,13 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                         var lengthOf = endTagIndex - startAt;
                         var unserializedValueString = standardOutputString.Substring(startAt, lengthOf);
 
-                        var rawSerializedValues = FfprobeGeneralSerializer.Serialize(unserializedValueString);
+                        var rawSerializedValues = FFprobeGeneralSerializer.Serialize(unserializedValueString);
 
                         var serializedValues = serializer.Serialize(rawSerializedValues);
 
                         if (serializedValues != null)
                         {
-                            var serializerResultItem = FfprobeSerializerResultItem.Create(serializer.Tag, serializedValues);
+                            var serializerResultItem = FFprobeSerializerResultItem.Create(serializer.Tag, serializedValues);
                         
                             serializerResult.Results.Add(serializerResultItem);
                         }

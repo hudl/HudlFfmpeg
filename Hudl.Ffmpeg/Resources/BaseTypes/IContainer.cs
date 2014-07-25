@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Hudl.Ffmpeg.Resources.BaseTypes
+namespace Hudl.FFmpeg.Resources.BaseTypes
 {
     /// <summary>
     /// defines a base implmentation for an input/output file for ffmpege

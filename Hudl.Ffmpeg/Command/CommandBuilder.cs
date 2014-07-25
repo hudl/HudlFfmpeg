@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
+using Hudl.FFmpeg.Settings;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     internal class CommandBuilder
     {
@@ -20,7 +20,7 @@ namespace Hudl.Ffmpeg.Command
         }
 
         //ffprobe
-        public void WriteCommand(FfprobeCommand command)
+        public void WriteCommand(FFprobeCommand command)
         {
             var inputResource = new Input(command.Resource);
             _builderBase.Append(" ");
@@ -28,14 +28,14 @@ namespace Hudl.Ffmpeg.Command
 
             command.Serializers.ForEach(WriteSerializerSpecifier);
         }
-        public void WriteSerializerSpecifier(IFfprobeSerializer serializer)
+        public void WriteSerializerSpecifier(IFFprobeSerializer serializer)
         {
             _builderBase.Append(" ");
             _builderBase.Append(serializer.Setting);   
         }
 
         //ffmpeg
-        public void WriteCommand(FfmpegCommand command)
+        public void WriteCommand(FFmpegCommand command)
         {
             command.Objects.Inputs.ForEach(WriteResource);
 
@@ -99,7 +99,7 @@ namespace Hudl.Ffmpeg.Command
             });
 
         }
-        private void WriteFiltergraph(FfmpegCommand command, Filtergraph filtergraph)
+        private void WriteFiltergraph(FFmpegCommand command, Filtergraph filtergraph)
         {
             if (filtergraph == null)
             {
@@ -127,7 +127,7 @@ namespace Hudl.Ffmpeg.Command
                 _builderBase.Append("\"");
             }
         }
-        private void WriteFilterchain(FfmpegCommand command, Filterchain filterchain)
+        private void WriteFilterchain(FFmpegCommand command, Filterchain filterchain)
         {
             if (filterchain == null)
             {
@@ -155,7 +155,7 @@ namespace Hudl.Ffmpeg.Command
 
             WriteFilterchainOut(filterchain);
         }
-        private void WriteFilterchainIn(FfmpegCommand command, Filterchain filterchain)
+        private void WriteFilterchainIn(FFmpegCommand command, Filterchain filterchain)
         {
             filterchain.ReceiptList.ForEach(streamId =>
             {

@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Hudl.Ffmpeg.Command.Managers
+namespace Hudl.FFmpeg.Command.Managers
 {
     /// <summary>
     /// A manager that will manage the resource for an ffmpeg command
     /// </summary>
     public class CommandInputManager
     {
-        private CommandInputManager(FfmpegCommand owner)
+        private CommandInputManager(FFmpegCommand owner)
         {
             Owner = owner;
         }
 
-        private FfmpegCommand Owner { get; set; }
+        private FFmpegCommand Owner { get; set; }
 
         public List<StreamIdentifier> Add(CommandInput resource)
         {
@@ -66,7 +66,7 @@ namespace Hudl.Ffmpeg.Command.Managers
             return resource.GetStreamIdentifiers();
         }
 
-        internal static CommandInputManager Create(FfmpegCommand owner)
+        internal static CommandInputManager Create(FFmpegCommand owner)
         {
             return new CommandInputManager(owner);
         }

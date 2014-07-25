@@ -1,11 +1,11 @@
 ﻿using System;
-using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
+using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata.Ffprobe
+namespace Hudl.FFmpeg.Metadata.FFprobe
 {
-    internal class FfprobeVideoStream
+    internal class FFprobeVideoStream
     {
-        private FfprobeVideoStream()
+        private FFprobeVideoStream()
         {
         }
 
@@ -17,13 +17,13 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe
         
         public TimeSpan Duration { get; set; }
         
-        public FfprobeFraction TimeBase { get; set; }
+        public FFprobeFraction TimeBase { get; set; }
         
-        public FfprobeFraction FrameRate { get; set; }
+        public FFprobeFraction FrameRate { get; set; }
 
-        public static FfprobeVideoStream Create()
+        public static FFprobeVideoStream Create()
         {
-            return new FfprobeVideoStream();
+            return new FFprobeVideoStream();
         }
     }
 }

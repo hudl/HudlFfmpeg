@@ -1,7 +1,7 @@
 ﻿using System;
-using Hudl.Ffmpeg.Command;
+using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     /// <summary>
     /// The base implementation of Filter's, will store the basic information on setup, and makes it accessible to parents.
@@ -34,7 +34,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// </summary>
         /// <param name="command">The command chain the current filter belongs to.</param>
         /// <param name="filterchain">The filterchain that the filter belongs to</param>
-        public void Setup(FfmpegCommand command, Filterchain filterchain)
+        public void Setup(FFmpegCommand command, Filterchain filterchain)
         {
             InputCount = filterchain.Resources.Count;
 

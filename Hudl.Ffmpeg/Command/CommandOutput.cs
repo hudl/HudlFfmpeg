@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
-using IContainer = Hudl.Ffmpeg.Resources.BaseTypes.IContainer;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
+using IContainer = Hudl.FFmpeg.Resources.BaseTypes.IContainer;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     public class CommandOutput
     {
@@ -91,7 +91,7 @@ namespace Hudl.Ffmpeg.Command
 
         #region Internals
         internal string Id { get; set; }
-        internal FfmpegCommand Owner { get; set; }
+        internal FFmpegCommand Owner { get; set; }
         #endregion 
     }
 }

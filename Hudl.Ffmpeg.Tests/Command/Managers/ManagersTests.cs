@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Command.Managers;
-using Hudl.Ffmpeg.Filters;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Sugar;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Command.Managers;
+using Hudl.FFmpeg.Filters;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Sugar;
 using Xunit;
 
-namespace Hudl.Ffmpeg.Tests.Command.Managers
+namespace Hudl.FFmpeg.Tests.Command.Managers
 {
     public class ManagersTests
     {

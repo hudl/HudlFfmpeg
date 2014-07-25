@@ -1,4 +1,4 @@
-﻿namespace Hudl.Ffmpeg.Settings.BaseTypes
+﻿namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     /// <summary>
     /// The base implementation of Setting's, will store the basic information on setup, and makes it accessible to parents.

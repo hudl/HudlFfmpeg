@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     internal class CommandObjects
     {
-        private CommandObjects(FfmpegCommand owner)
+        private CommandObjects(FFmpegCommand owner)
         {
             Outputs = new List<CommandOutput>();
             Inputs = new List<CommandInput>();
             Filtergraph = Filtergraph.Create(owner);
         }
 
-        public static CommandObjects Create(FfmpegCommand owner)
+        public static CommandObjects Create(FFmpegCommand owner)
         {
             return new CommandObjects(owner);
         }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     public class CommandStage
     {
-        internal CommandStage(FfmpegCommand stageCommand)
+        internal CommandStage(FFmpegCommand stageCommand)
         {
             Command = stageCommand;
             StreamIdentifiers = new List<StreamIdentifier>();
@@ -12,7 +12,7 @@ namespace Hudl.Ffmpeg.Command
 
         public string LastAccessId { get; set; }
 
-        public FfmpegCommand Command { get; set; }
+        public FFmpegCommand Command { get; set; }
 
         public List<StreamIdentifier> StreamIdentifiers { get; set; }
 
@@ -24,7 +24,7 @@ namespace Hudl.Ffmpeg.Command
                 };
         }
 
-        internal static CommandStage Create(FfmpegCommand stageCommand)
+        internal static CommandStage Create(FFmpegCommand stageCommand)
         {
             return new CommandStage(stageCommand);
         }

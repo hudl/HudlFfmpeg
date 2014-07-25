@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// ColorBalance filter adjusts the color balance on the output video by intensifying the colors in each frame of video.
@@ -19,11 +19,11 @@ namespace Hudl.Ffmpeg.Filters
         public ColorBalance()
             : base(FilterType, FilterMaxInputs)
         {
-            Shadow = new FfmpegScaleRgb();
-            Midtone = new FfmpegScaleRgb();
-            Highlight = new FfmpegScaleRgb();
+            Shadow = new FFmpegScaleRgb();
+            Midtone = new FFmpegScaleRgb();
+            Highlight = new FFmpegScaleRgb();
         }
-        public ColorBalance(FfmpegScaleRgb shadows, FfmpegScaleRgb midtones, FfmpegScaleRgb highlights)
+        public ColorBalance(FFmpegScaleRgb shadows, FFmpegScaleRgb midtones, FFmpegScaleRgb highlights)
             : base(FilterType, FilterMaxInputs)
         {
             if (shadows == null)
@@ -47,17 +47,17 @@ namespace Hudl.Ffmpeg.Filters
         /// <summary>
         /// property to the RGB shadow color balancing
         /// </summary>
-        public FfmpegScaleRgb Shadow { get; set; }
+        public FFmpegScaleRgb Shadow { get; set; }
         
         /// <summary>
         /// property to the RGB midtone color balancing
         /// </summary>
-        public FfmpegScaleRgb Midtone { get; set; }
+        public FFmpegScaleRgb Midtone { get; set; }
         
         /// <summary>
         /// property to the RGB highlight color balancing
         /// </summary>
-        public FfmpegScaleRgb Highlight { get; set; }
+        public FFmpegScaleRgb Highlight { get; set; }
 
         public override void Validate()
         {

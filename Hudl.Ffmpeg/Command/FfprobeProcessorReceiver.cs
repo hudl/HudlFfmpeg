@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Logging;
-using Hudl.Ffmpeg.Sugar;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Logging;
+using Hudl.FFmpeg.Sugar;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
-    internal class FfprobeProcessorReceiver : ICommandProcessor
+    internal class FFprobeProcessorReceiver : ICommandProcessor
     {
-        private static readonly LogUtility Log = LogUtility.GetLogger(typeof(FfprobeProcessorReceiver));
+        private static readonly LogUtility Log = LogUtility.GetLogger(typeof(FFprobeProcessorReceiver));
 
-        public FfprobeProcessorReceiver()
+        public FFprobeProcessorReceiver()
         {
             Status = CommandProcessorStatus.Closed;
         }
@@ -132,7 +132,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 ffprobeProcess.StartInfo = new ProcessStartInfo
                 {
-                    FileName = ResourceManagement.CommandConfiguration.FfprobePath,
+                    FileName = ResourceManagement.CommandConfiguration.FFprobePath,
                     WorkingDirectory = ResourceManagement.CommandConfiguration.TempPath,
                     Arguments = command.Trim(),
                     CreateNoWindow = true,
@@ -153,7 +153,7 @@ namespace Hudl.Ffmpeg.Command
                 var exitCode = ffprobeProcess.ExitCode;
                 if (exitCode != 0)
                 {
-                    throw new FfmpegProcessingException(exitCode, StdOut);
+                    throw new FFmpegProcessingException(exitCode, StdOut);
                 }
             }
         }

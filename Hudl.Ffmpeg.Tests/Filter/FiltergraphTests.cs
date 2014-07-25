@@ -1,13 +1,13 @@
 ﻿using System;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Sugar;
-using Hudl.Ffmpeg.Tests.Assets;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Sugar;
+using Hudl.FFmpeg.Tests.Assets;
 using Xunit; 
 
-namespace Hudl.Ffmpeg.Tests.Filter
+namespace Hudl.FFmpeg.Tests.Filter
 {
     public class FiltergraphTests
     {
@@ -87,7 +87,7 @@ namespace Hudl.Ffmpeg.Tests.Filter
         {
             private const string OutputVideo = "c:/source/output.mp4";
 
-            public static FfmpegCommand CreateCommand()
+            public static FFmpegCommand CreateCommand()
             {
                 var factory = CommandFactory.Create();
 

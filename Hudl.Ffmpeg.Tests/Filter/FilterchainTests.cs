@@ -1,11 +1,11 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 using Xunit; 
 
-namespace Hudl.Ffmpeg.Tests.Filter
+namespace Hudl.FFmpeg.Tests.Filter
 {
     public class FilterchainTests
     {

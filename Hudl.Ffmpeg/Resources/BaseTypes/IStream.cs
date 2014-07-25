@@ -1,6 +1,6 @@
-﻿using Hudl.Ffmpeg.Metadata;
+﻿using Hudl.FFmpeg.Metadata;
 
-namespace Hudl.Ffmpeg.Resources.BaseTypes
+namespace Hudl.FFmpeg.Resources.BaseTypes
 {
     public interface IStream
     {

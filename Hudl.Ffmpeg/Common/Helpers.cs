@@ -3,15 +3,15 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Xml.Serialization;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings;
+using Hudl.FFmpeg.Settings.BaseTypes;
 using Size = System.Drawing.Size;
 
-namespace Hudl.Ffmpeg.Common
+namespace Hudl.FFmpeg.Common
 {
     /// <summary>
     /// helper class that helps with validation of objects in a ffmpeg project

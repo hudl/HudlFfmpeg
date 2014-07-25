@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes
+namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
 {
-    internal class FfprobeFraction : IFfprobeValue
+    internal class FFprobeFraction : IFFprobeValue
     {
-        private FfprobeFraction(int numerator, int denominator)
+        private FFprobeFraction(int numerator, int denominator)
         {
             Numerator = numerator;
             Denominator = denominator;
@@ -21,7 +21,7 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes
 
         public override bool Equals(object obj)
         {
-            var ffprobeFraction = obj as FfprobeFraction;
+            var ffprobeFraction = obj as FFprobeFraction;
             if (ffprobeFraction == null)
             {
                 return false;
@@ -31,7 +31,7 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes
                    ffprobeFraction.Denominator == Denominator;
         }
 
-        public static bool TryParse(FfprobeObject rawValue, out FfprobeFraction value)
+        public static bool TryParse(FFprobeObject rawValue, out FFprobeFraction value)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes
                     return false;
                 }
 
-                value = new FfprobeFraction(numerator, denominator);
+                value = new FFprobeFraction(numerator, denominator);
 
                 return true;
             }

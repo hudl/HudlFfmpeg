@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Metadata;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
-using Hudl.Ffmpeg.Resources;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings;
+using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Resources;
 
-namespace Hudl.Ffmpeg.Sugar
+namespace Hudl.FFmpeg.Sugar
 {
     public static class CommandStageExtensions
     {
@@ -124,7 +124,7 @@ namespace Hudl.Ffmpeg.Sugar
             return stage.Command.Select(streamId);
         }
 
-        public static void ValidateFilter(FfmpegCommand command, Filterchain filterchain)
+        public static void ValidateFilter(FFmpegCommand command, Filterchain filterchain)
         {
             if (command.Owner == null)
             {
@@ -155,7 +155,7 @@ namespace Hudl.Ffmpeg.Sugar
             return stage.Command.Select(outputStreamIdentifiers);
         }
 
-        public static void ValidateMapTo(FfmpegCommand command)
+        public static void ValidateMapTo(FFmpegCommand command)
         {
             if (command.Owner == null)
             {
@@ -187,7 +187,7 @@ namespace Hudl.Ffmpeg.Sugar
                 };
         }
 
-        private static void ValidateTo(FfmpegCommand command)
+        private static void ValidateTo(FFmpegCommand command)
         {
             if (command.Owner == null)
             {
@@ -219,13 +219,13 @@ namespace Hudl.Ffmpeg.Sugar
                 };    
         }
         
-        public static CommandStage BeforeRender(this CommandStage command, Action<CommandFactory, FfmpegCommand, bool> action)
+        public static CommandStage BeforeRender(this CommandStage command, Action<CommandFactory, FFmpegCommand, bool> action)
         {
             command.Command.PreRenderAction = action;
 
             return command; 
         }
-        public static CommandStage AfterRender(this CommandStage command, Action<CommandFactory, FfmpegCommand, bool> action)
+        public static CommandStage AfterRender(this CommandStage command, Action<CommandFactory, FFmpegCommand, bool> action)
         {
             command.Command.PostRenderAction = action;
 

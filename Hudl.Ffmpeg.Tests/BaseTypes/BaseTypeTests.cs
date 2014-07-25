@@ -1,11 +1,11 @@
-﻿using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 using Xunit;
 
-namespace Hudl.Ffmpeg.Tests.BaseTypes
+namespace Hudl.FFmpeg.Tests.BaseTypes
 {
     public class BaseTypeTests
     {
@@ -23,8 +23,8 @@ namespace Hudl.Ffmpeg.Tests.BaseTypes
 
             Assert.True(appliesToCollection.IndexOf<SetDar>() == 1);
 
-            appliesToCollection.Merge(new SetDar(), FfmpegMergeOptionType.NewWins);
-            appliesToCollection.Merge(new Overlay(), FfmpegMergeOptionType.OldWins); 
+            appliesToCollection.Merge(new SetDar(), FFmpegMergeOptionType.NewWins);
+            appliesToCollection.Merge(new Overlay(), FFmpegMergeOptionType.OldWins); 
 
             Assert.True(appliesToCollection.Count == 3);
         }

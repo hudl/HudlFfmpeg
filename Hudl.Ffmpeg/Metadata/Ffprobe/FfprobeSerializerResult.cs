@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
+using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata.Ffprobe
+namespace Hudl.FFmpeg.Metadata.FFprobe
 {
-    internal class FfprobeSerializerResult 
+    internal class FFprobeSerializerResult 
     {
-        private FfprobeSerializerResult()
+        private FFprobeSerializerResult()
         {
-            Results = new List<FfprobeSerializerResultItem>();
+            Results = new List<FFprobeSerializerResultItem>();
         }
 
-        public List<FfprobeSerializerResultItem> Results { get; set; }
+        public List<FFprobeSerializerResultItem> Results { get; set; }
 
-        public static FfprobeSerializerResult Create()
+        public static FFprobeSerializerResult Create()
         {
-            return new FfprobeSerializerResult();
+            return new FFprobeSerializerResult();
         }
 
-        public int GetCount(FfprobeCodecTypes ffprobeCodecType)
+        public int GetCount(FFprobeCodecTypes ffprobeCodecType)
         {
             var streamResultItems = Results.Where(r => r.Type == "STREAM").ToList();
             if (!streamResultItems.Any())
@@ -26,12 +26,12 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe
                 return 0;
             }
 
-            var codecTypeObject = FfprobeObject.Create(ffprobeCodecType.ToString().ToLower());
+            var codecTypeObject = FFprobeObject.Create(ffprobeCodecType.ToString().ToLower());
             var codecResultItems = Results.Where(r => r.ValuePairs.Any(vp => vp.Key == "codec_type" && vp.Value.Equals(codecTypeObject))).ToList();
             return codecResultItems.Count;
         }
 
-        public IFfprobeValue Get(FfprobeCodecTypes ffprobeCodecType, int streamIndex, string key)
+        public IFFprobeValue Get(FFprobeCodecTypes ffprobeCodecType, int streamIndex, string key)
         {
             var streamResultItems = Results.Where(r => r.Type == "STREAM").ToList();
             if (!streamResultItems.Any())
@@ -39,7 +39,7 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe
                 return null;
             }
 
-            var codecTypeObject = FfprobeObject.Create(ffprobeCodecType.ToString().ToLower());
+            var codecTypeObject = FFprobeObject.Create(ffprobeCodecType.ToString().ToLower());
             var codecResultItems = Results.Where(r => r.ValuePairs.Any(vp => vp.Key == "codec_type" && vp.Value.Equals(codecTypeObject))).ToList(); 
             if (!codecResultItems.Any())
             {
@@ -57,7 +57,7 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe
             return streamDataValue == null ? null : streamDataValue.Value;
         }
 
-        public IFfprobeValue GetFormat(string key)
+        public IFFprobeValue GetFormat(string key)
         {
             var streamResultItems = Results.Where(r => r.Type == "FORMAT").ToList();
             if (!streamResultItems.Any())

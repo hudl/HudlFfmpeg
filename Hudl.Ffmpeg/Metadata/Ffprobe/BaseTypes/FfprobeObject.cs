@@ -1,8 +1,8 @@
-﻿namespace Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes
+﻿namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
 {
-    internal class FfprobeObject : IFfprobeValue
+    internal class FFprobeObject : IFFprobeValue
     {
-        private FfprobeObject(object value)
+        private FFprobeObject(object value)
         {
             Value = value;
         }
@@ -11,7 +11,7 @@
 
         public override bool Equals(object obj)
         {
-            var ffprobeObject = obj as FfprobeObject;
+            var ffprobeObject = obj as FFprobeObject;
             if (ffprobeObject == null)
             {
                 return false;
@@ -20,9 +20,9 @@
             return ffprobeObject.Value.Equals(Value); 
         }
 
-        public static FfprobeObject Create(object value)
+        public static FFprobeObject Create(object value)
         {
-            return new FfprobeObject(value);
+            return new FFprobeObject(value);
         }
     }
 }

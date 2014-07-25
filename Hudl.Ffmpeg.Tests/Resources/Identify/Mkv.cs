@@ -1,6 +1,6 @@
-﻿using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Tests.Resources.Identify
+namespace Hudl.FFmpeg.Tests.Resources.Identify
 {
     public class Mkv : BaseContainer
     {

@@ -1,20 +1,20 @@
-[<-- Home](https://github.com/hudl/HudlFfmpeg)
+[<-- Home](https://github.com/hudl/HudlFFmpeg)
 
 ## Full API Documentation
 
-Below is a list of the important objects and types that developers will interact with while working with Hudl.Ffmpeg.
+Below is a list of the important objects and types that developers will interact with while working with Hudl.FFmpeg.
 
-* Hudl.Ffmpeg
+* Hudl.FFmpeg
  * [ResourceManagement]()
-* Hudl.Ffmpeg.Command
+* Hudl.FFmpeg.Command
  * [CommandFactory]()
- * [FfmpegCommand]()
+ * [FFmpegCommand]()
  * [CommandStage]()
  * [CommandInput]()
  * [CommandOutput]()
  * [CommandConfiguration]()
  * [StreamIdentifier]()
-* Hudl.Ffmpeg.Filters
+* Hudl.FFmpeg.Filters
  * BaseTypes
   * [IFilter]()
   * [IFilterMultiOutput]()
@@ -23,16 +23,16 @@ Below is a list of the important objects and types that developers will interact
  * [Filtergraph]()
  * [Filterchain]()
  * [FilterchainTemplate]()
-* Hudl.Ffmpeg.Metadata
+* Hudl.FFmpeg.Metadata
  * [MetadataHelpers]()
  * [MetadataInfoTreeContainer]()
-* Hudl.Ffmpeg.Resources
+* Hudl.FFmpeg.Resources
  * BaseTypes
   * [IContainer]()
   * [VideoStream]()
   * [AudioStream]()
  * [Resource]()
-* Hudl.Ffmpeg.Settings
+* Hudl.FFmpeg.Settings
  * BaseTypes
   * [ISetting](); 
   * [SettingsCollection]()

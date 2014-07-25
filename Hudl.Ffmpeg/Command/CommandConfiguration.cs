@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     /// <summary>
     /// Represents a configuration for the command factory
@@ -25,7 +25,7 @@ namespace Hudl.Ffmpeg.Command
             }
             if (string.IsNullOrWhiteSpace(ffmpegPath))
             {
-                throw new ArgumentException("Ffmpeg path path cannot be empty.", "ffmpegPath");
+                throw new ArgumentException("FFmpeg path path cannot be empty.", "ffmpegPath");
             }
             if (string.IsNullOrWhiteSpace(assetsPath))
             {
@@ -35,8 +35,8 @@ namespace Hudl.Ffmpeg.Command
             TempPath = outputPath;
             OutputPath = outputPath;
             AssetsPath = assetsPath;
-            FfmpegPath = ffmpegPath;
-            FfprobePath = ffprobePath;
+            FFmpegPath = ffmpegPath;
+            FFprobePath = ffprobePath;
             LoggingAttributes = new Dictionary<string, string>();
             EnvironmentVariables = new Dictionary<string, string>();
         }
@@ -48,7 +48,7 @@ namespace Hudl.Ffmpeg.Command
         public Dictionary<string, string> EnvironmentVariables { get; private set; }
 
         /// <summary>
-        /// attributes that are to be included with any log messages through Hudl.Ffmpeg.
+        /// attributes that are to be included with any log messages through Hudl.FFmpeg.
         /// </summary>
         public Dictionary<string, string> LoggingAttributes { get; set; } 
 
@@ -63,14 +63,14 @@ namespace Hudl.Ffmpeg.Command
         public string OutputPath { get; private set; }
 
         /// <summary>
-        /// declares the Ffmpeg path for the command factory, this is where the ffmpeg executable is.
+        /// declares the FFmpeg path for the command factory, this is where the ffmpeg executable is.
         /// </summary>
-        public string FfmpegPath { get; private set; }
+        public string FFmpegPath { get; private set; }
 
         /// <summary>
-        /// declares the Ffprobe path for the command factory, this is where the ffprobe executable is.
+        /// declares the FFprobe path for the command factory, this is where the ffprobe executable is.
         /// </summary>
-        public string FfprobePath { get; private set; }
+        public string FFprobePath { get; private set; }
 
         /// <summary>
         /// declares the static resource files path for the command factory, this is where all static resource files will reside.

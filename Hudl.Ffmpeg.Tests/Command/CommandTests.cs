@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
-using Hudl.Ffmpeg.Sugar;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings;
+using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Sugar;
 using Xunit;
-using CommandFactory = Hudl.Ffmpeg.Command.CommandFactory;
+using CommandFactory = Hudl.FFmpeg.Command.CommandFactory;
 
-namespace Hudl.Ffmpeg.Tests.Command
+namespace Hudl.FFmpeg.Tests.Command
 {
     public class CommandTests
     {
@@ -239,7 +239,7 @@ namespace Hudl.Ffmpeg.Tests.Command
 
         private static class CommandHelper
         {
-            public static FfmpegCommand CreateCommand()
+            public static FFmpegCommand CreateCommand()
             {
                 var factory = CommandFactory.Create();
 

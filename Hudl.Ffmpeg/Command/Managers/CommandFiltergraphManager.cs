@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command.Managers
+namespace Hudl.FFmpeg.Command.Managers
 {
     /// <summary>
     /// A manager that controls the list of filterchains for a filtergraph.
     /// </summary>
     public class CommandFiltergraphManager
     {
-        private CommandFiltergraphManager(FfmpegCommand owner)
+        private CommandFiltergraphManager(FFmpegCommand owner)
         {
             Owner = owner;
         }
 
-        private FfmpegCommand Owner { get; set; }
+        private FFmpegCommand Owner { get; set; }
 
         public List<StreamIdentifier> Add(Filterchain filterchain, params StreamIdentifier[] streamIds)
         {
@@ -101,7 +101,7 @@ namespace Hudl.Ffmpeg.Command.Managers
             return resourceList.SelectMany(r => Add(filterchain, r)).ToList();
         }
 
-        internal static CommandFiltergraphManager Create(FfmpegCommand owner)
+        internal static CommandFiltergraphManager Create(FFmpegCommand owner)
         {
             return new CommandFiltergraphManager(owner);
         }

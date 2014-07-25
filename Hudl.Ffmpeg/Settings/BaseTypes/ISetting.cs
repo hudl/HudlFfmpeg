@@ -1,7 +1,7 @@
-﻿namespace Hudl.Ffmpeg.Settings.BaseTypes
+﻿namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     /// <summary>
-    /// representation of a settomg that can be applied to an Ffmpeg resource
+    /// representation of a settomg that can be applied to an FFmpeg resource
     /// </summary>
     public interface ISetting
     {

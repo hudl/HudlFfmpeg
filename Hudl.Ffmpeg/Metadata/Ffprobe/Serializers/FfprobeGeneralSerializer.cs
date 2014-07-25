@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
+using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
+namespace Hudl.FFmpeg.Metadata.FFprobe.Serializers
 {
-    internal class FfprobeGeneralSerializer
+    internal class FFprobeGeneralSerializer
     {
-        public static List<FfprobeKeyValuePair> Serialize(string ffprobeOutput)
+        public static List<FFprobeKeyValuePair> Serialize(string ffprobeOutput)
         {
-            var ffprobeSerialized = new List<FfprobeKeyValuePair>();
+            var ffprobeSerialized = new List<FFprobeKeyValuePair>();
 
             var ffprobeOutputLines = ffprobeOutput.Split(new [] {"\n"}, StringSplitOptions.RemoveEmptyEntries);
 
@@ -28,13 +28,13 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                     continue; 
                 }
 
-                ffprobeSerialized.Add(FfprobeKeyValuePair.Create(ffprobeValuePairKey.Trim(), ffprobeValuePairValue.Trim()));
+                ffprobeSerialized.Add(FFprobeKeyValuePair.Create(ffprobeValuePairKey.Trim(), ffprobeValuePairValue.Trim()));
             }
 
             return ffprobeSerialized;
         }
 
-        public static FfprobeKeyValuePair SerializeAsFfprobeFraction(List<FfprobeKeyValuePair> inputValuePairs, string key)
+        public static FFprobeKeyValuePair SerializeAsFFprobeFraction(List<FFprobeKeyValuePair> inputValuePairs, string key)
         {
             var inputValuePair = inputValuePairs.FirstOrDefault(ivp => ivp.Key == key);
             if (inputValuePair == null)
@@ -42,23 +42,23 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                 return null;
             }
 
-            var ffprobeObject = inputValuePair.Value as FfprobeObject;
+            var ffprobeObject = inputValuePair.Value as FFprobeObject;
             if (ffprobeObject == null)
             {
                 return null;
             }
             
-            FfprobeFraction ffprobeFraction;
+            FFprobeFraction ffprobeFraction;
 
-            if (!FfprobeFraction.TryParse(ffprobeObject, out ffprobeFraction))
+            if (!FFprobeFraction.TryParse(ffprobeObject, out ffprobeFraction))
             {
                 return null; 
             }
 
-            return FfprobeKeyValuePair.Create(key, ffprobeFraction);
+            return FFprobeKeyValuePair.Create(key, ffprobeFraction);
         }
 
-        public static FfprobeKeyValuePair SerializeAsFfprobeInt(List<FfprobeKeyValuePair> inputValuePairs, string key)
+        public static FFprobeKeyValuePair SerializeAsFFprobeInt(List<FFprobeKeyValuePair> inputValuePairs, string key)
         {
             var inputValuePair = inputValuePairs.FirstOrDefault(ivp => ivp.Key == key);
             if (inputValuePair == null)
@@ -66,7 +66,7 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                 return null;
             }
 
-            var ffprobeObject = inputValuePair.Value as FfprobeObject;
+            var ffprobeObject = inputValuePair.Value as FFprobeObject;
             if (ffprobeObject == null)
             {
                 return null;
@@ -79,10 +79,10 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                 return null;
             }
 
-            return FfprobeKeyValuePair.Create(key, FfprobeObject.Create(value));
+            return FFprobeKeyValuePair.Create(key, FFprobeObject.Create(value));
         }
 
-        public static FfprobeKeyValuePair SerializeAsFfprobeLong(List<FfprobeKeyValuePair> inputValuePairs, string key)
+        public static FFprobeKeyValuePair SerializeAsFFprobeLong(List<FFprobeKeyValuePair> inputValuePairs, string key)
         {
             var inputValuePair = inputValuePairs.FirstOrDefault(ivp => ivp.Key == key);
             if (inputValuePair == null)
@@ -90,7 +90,7 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                 return null;
             }
 
-            var ffprobeObject = inputValuePair.Value as FfprobeObject;
+            var ffprobeObject = inputValuePair.Value as FFprobeObject;
             if (ffprobeObject == null)
             {
                 return null;
@@ -103,10 +103,10 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                 return null;
             }
 
-            return FfprobeKeyValuePair.Create(key, FfprobeObject.Create(value));
+            return FFprobeKeyValuePair.Create(key, FFprobeObject.Create(value));
         }
 
-        public static FfprobeKeyValuePair SerializeAsFfprobeDouble(List<FfprobeKeyValuePair> inputValuePairs, string key)
+        public static FFprobeKeyValuePair SerializeAsFFprobeDouble(List<FFprobeKeyValuePair> inputValuePairs, string key)
         {
             var inputValuePair = inputValuePairs.FirstOrDefault(ivp => ivp.Key == key);
             if (inputValuePair == null)
@@ -114,7 +114,7 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                 return null;
             }
 
-            var ffprobeObject = inputValuePair.Value as FfprobeObject;
+            var ffprobeObject = inputValuePair.Value as FFprobeObject;
             if (ffprobeObject == null)
             {
                 return null;
@@ -127,10 +127,10 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                 return null;
             }
 
-            return FfprobeKeyValuePair.Create(key, FfprobeObject.Create(value));
+            return FFprobeKeyValuePair.Create(key, FFprobeObject.Create(value));
         }
 
-        public static FfprobeKeyValuePair SerializeAsFfprobeString(List<FfprobeKeyValuePair> inputValuePairs, string key)
+        public static FFprobeKeyValuePair SerializeAsFFprobeString(List<FFprobeKeyValuePair> inputValuePairs, string key)
         {
             var inputValuePair = inputValuePairs.FirstOrDefault(ivp => ivp.Key == key);
             if (inputValuePair == null)
@@ -138,13 +138,13 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe.Serializers
                 return null;
             }
 
-            var ffprobeObject = inputValuePair.Value as FfprobeObject;
+            var ffprobeObject = inputValuePair.Value as FFprobeObject;
             if (ffprobeObject == null)
             {
                 return null;
             }
 
-            return FfprobeKeyValuePair.Create(key, FfprobeObject.Create(ffprobeObject.Value.ToString()));
+            return FFprobeKeyValuePair.Create(key, FFprobeObject.Create(ffprobeObject.Value.ToString()));
         }
 
     }

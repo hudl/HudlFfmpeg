@@ -1,24 +1,24 @@
-[<-- Home](https://github.com/hudl/HudlFfmpeg)
+[<-- Home](https://github.com/hudl/HudlFFmpeg)
 
-## Hudl.Ffmpeg Sugar Syntax
+## Hudl.FFmpeg Sugar Syntax
 
-The Hudl.Ffmpeg sugar syntax is a library that extends the base functionality of Hudl.Ffmpeg to make it even easier to use. Using the ```Hudl.Ffmpeg.Sugar``` namespace add functionality to the base objects, allowing developers to interact with Hudl.Ffmpeg in as few of lines as possible. 
+The Hudl.FFmpeg sugar syntax is a library that extends the base functionality of Hudl.FFmpeg to make it even easier to use. Using the ```Hudl.FFmpeg.Sugar``` namespace add functionality to the base objects, allowing developers to interact with Hudl.FFmpeg in as few of lines as possible. 
 
 The Sugar syntax is written in a builder based fashion, similar to LINQ. Sugar allowes you to 
 
-* Create new ffmpeg commands.
+* Create new FFmpeg commands.
 * Select and modify media streams. 
 * Add filters and settings to your commands. 
-* Load container/stream metadata with one line using Ffprobe.
+* Load container/stream metadata with one line using FFprobe.
 
-### Load Metadata with Ffprobe
+### Load Metadata with FFprobe
 
-You can only go so far working with video and audio streams without needing to know things like duration, frame rate, sample rate, and dimensions. That is why Hudl.Ffmpeg has a built in Ffprobe parser that will load the files you are working with and give you information about each stream. Any time you would like to load metadata for an ```IContainer``` do the following.
+You can only go so far working with video and audio streams without needing to know things like duration, frame rate, sample rate, and dimensions. That is why Hudl.FFmpeg has a built in FFprobe parser that will load the files you are working with and give you information about each stream. Any time you would like to load metadata for an ```IContainer``` do the following.
 
 ```csharp
 //To load the container use the Resource.From("") construct, it will return an IContainer.
 // - Sugar syntax extends the container object with a method known as LoadMetadata(), this
-//   activates the ffprobe interaction and parser 
+//   activates the FFprobe interaction and parser 
 
 var foo = Resource.From("c:\foo\bar.mp4").LoadMetadata(); 
 
@@ -70,11 +70,11 @@ var settings = SettingsCollection.ForInput(new StartAt(1));
 
 command.AddInput("c:\foo\bar-2.mp4", settings);
 
-//you can also add an input and tell Hudl.Ffmpeg not to load metadata
+//you can also add an input and tell Hudl.FFmpeg not to load metadata
 command.AddInputNoLoad("c:\foo\bar-3.mp4", settings);
 ```
 
-Hudl.Ffmpeg has yet another way to add input that further simplifies working with the stream. This other method is with the ```WithInput<T>``` command. This command does everything that ```AddInput``` would do, but also selects the input stream for editing within a ```CommandStage``` object. The Type constraint ```T``` tells Hudl.Ffmpeg which stream within the file you would like to work with. The options are ```VideoStream``` or ```AudioStream```. 
+Hudl.FFmpeg has yet another way to add input that further simplifies working with the stream. This other method is with the ```WithInput<T>``` command. This command does everything that ```AddInput``` would do, but also selects the input stream for editing within a ```CommandStage``` object. The Type constraint ```T``` tells Hudl.FFmpeg which stream within the file you would like to work with. The options are ```VideoStream``` or ```AudioStream```. 
 
 ```csharp
 //you can add input, and select the VideoStream for editing by specifying

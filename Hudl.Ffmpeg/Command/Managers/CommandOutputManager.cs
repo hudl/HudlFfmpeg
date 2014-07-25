@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Hudl.Ffmpeg.Command.Managers
+namespace Hudl.FFmpeg.Command.Managers
 {
     /// <summary>
-    /// A manager that controls the addition of new outputs to an Ffmpeg command.
+    /// A manager that controls the addition of new outputs to an FFmpeg command.
     /// </summary>
     public class CommandOutputManager
     {
-        private CommandOutputManager(FfmpegCommand owner)
+        private CommandOutputManager(FFmpegCommand owner)
         {
             Owner = owner;
         }    
 
-        private FfmpegCommand Owner { get; set; }
+        private FFmpegCommand Owner { get; set; }
 
         public void Add(CommandOutput output)
         {
@@ -42,7 +42,7 @@ namespace Hudl.Ffmpeg.Command.Managers
             outputList.ForEach(Add);
         }
 
-        internal static CommandOutputManager Create(FfmpegCommand owner)
+        internal static CommandOutputManager Create(FFmpegCommand owner)
         {
             return new CommandOutputManager(owner);
         }

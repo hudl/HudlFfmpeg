@@ -1,24 +1,24 @@
-﻿using Hudl.Ffmpeg.Metadata;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Sugar
+namespace Hudl.FFmpeg.Sugar
 {
     public static class ResourceExtensions
     {
         public static IContainer LoadMetadata(this IContainer resource)
         {
             if (ResourceManagement.CommandConfiguration != null &&
-                !string.IsNullOrWhiteSpace(ResourceManagement.CommandConfiguration.FfprobePath))
+                !string.IsNullOrWhiteSpace(ResourceManagement.CommandConfiguration.FFprobePath))
             {
-                return resource.LoadMetadataFromFfprobe();
+                return resource.LoadMetadataFromFFprobe();
             }
 
             return resource; 
         }
 
-        private static IContainer LoadMetadataFromFfprobe(this IContainer resource)
+        private static IContainer LoadMetadataFromFFprobe(this IContainer resource)
         {
-            var mediaLoader = new Metadata.Ffprobe.MediaLoader(resource);
+            var mediaLoader = new Metadata.FFprobe.MediaLoader(resource);
 
             if (mediaLoader.HasAudio)
             {

@@ -1,11 +1,11 @@
 ﻿using System;
-using Hudl.Ffmpeg.Command;
+using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Metadata
+namespace Hudl.FFmpeg.Metadata
 {
     public class MetadataHelpers
     {
-        public static MetadataInfoTreeContainer GetMetadataInfo(FfmpegCommand command, StreamIdentifier streamId)
+        public static MetadataInfoTreeContainer GetMetadataInfo(FFmpegCommand command, StreamIdentifier streamId)
         {
             //first validate that the streamId does in fact belong to the command. 
             if (!CommandHelper.ReceiptBelongsToCommand(command, streamId))
@@ -35,7 +35,7 @@ namespace Hudl.Ffmpeg.Metadata
             return null;
         }
 
-        internal static MetadataInfoTreeContainer ResourceMetadataInfo(FfmpegCommand command, int index)
+        internal static MetadataInfoTreeContainer ResourceMetadataInfo(FFmpegCommand command, int index)
         {
             if (command.Inputs.Count <= index)
             {
@@ -45,7 +45,7 @@ namespace Hudl.Ffmpeg.Metadata
             return ExecuteStreamCalculator(MetadataInfoStreamCalculator.Create(command.Inputs[index]));
         }
 
-        internal static MetadataInfoTreeContainer FilterchainMetadataInfo(FfmpegCommand command, int index)
+        internal static MetadataInfoTreeContainer FilterchainMetadataInfo(FFmpegCommand command, int index)
         {
             if (command.Filtergraph.Count <= index)
             {
@@ -55,7 +55,7 @@ namespace Hudl.Ffmpeg.Metadata
             return ExecuteStreamCalculator(MetadataInfoStreamCalculator.Create(command, command.Filtergraph[index]));
         }
 
-        internal static MetadataInfoTreeContainer OutputMetadataInfo(FfmpegCommand command, int index)
+        internal static MetadataInfoTreeContainer OutputMetadataInfo(FFmpegCommand command, int index)
         {
             if (command.Outputs.Count <= index)
             {

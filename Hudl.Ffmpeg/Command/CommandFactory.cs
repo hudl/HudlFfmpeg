@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 using log4net; 
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     /// <summary>
-    /// Command Factory is a management list of all the commands to be run in an Ffmpeg job.
+    /// Command Factory is a management list of all the commands to be run in an FFmpeg job.
     /// </summary>
     public class CommandFactory
     {
@@ -18,14 +18,14 @@ namespace Hudl.Ffmpeg.Command
         private CommandFactory()
         {
             Id = Guid.NewGuid().ToString();
-            CommandList = new List<FfmpegCommand>();
+            CommandList = new List<FFmpegCommand>();
         }
 
         public static CommandFactory Create()
         {
             if (ResourceManagement.CommandConfiguration == null)
             {
-                throw new InvalidOperationException("A command factory cannot be created without a global configuration set Hudl.Ffmpeg.ResourceManagement.CommandConfiguration");   
+                throw new InvalidOperationException("A command factory cannot be created without a global configuration set Hudl.FFmpeg.ResourceManagement.CommandConfiguration");   
             }
 
             return new CommandFactory();
@@ -39,7 +39,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Adds a new command and marks the output to be exported.
         /// </summary>
-        public CommandFactory AddCommandAsOutput(FfmpegCommand command)
+        public CommandFactory AddCommandAsOutput(FFmpegCommand command)
         {
             command.Objects.Outputs.ForEach(output => output.Resource.Path = ResourceManagement.CommandConfiguration.OutputPath);
 
@@ -49,7 +49,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Adds a new command and marks the output to be exported.
         /// </summary>
-        public CommandFactory AddCommandAsResource(FfmpegCommand command)
+        public CommandFactory AddCommandAsResource(FFmpegCommand command)
         {
             command.Objects.Outputs.ForEach(output => output.Resource.Path = ResourceManagement.CommandConfiguration.TempPath);
 
@@ -98,7 +98,7 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Returns a boolean indicating if the command already exists in the factory
         /// </summary>
-        public bool Contains(FfmpegCommand command)
+        public bool Contains(FFmpegCommand command)
         {
             return CommandList.Any(c => c.Id == command.Id);
         }
@@ -108,10 +108,10 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public List<IContainer> Render()
         {
-            return RenderWith<FfmpegProcessorReciever>();
+            return RenderWith<FFmpegProcessorReciever>();
         }
 
-        private CommandFactory Add(FfmpegCommand command, bool export)
+        private CommandFactory Add(FFmpegCommand command, bool export)
         {
             if (command == null)
             {
@@ -136,7 +136,7 @@ namespace Hudl.Ffmpeg.Command
         #region Internals
         internal string Id { get; set; }
 
-        internal List<FfmpegCommand> CommandList { get; set; }
+        internal List<FFmpegCommand> CommandList { get; set; }
 
         internal List<IContainer> RenderWith<TProcessor>()
             where TProcessor : class, ICommandProcessor, new()
@@ -145,14 +145,14 @@ namespace Hudl.Ffmpeg.Command
 
             if (!commandProcessor.Open())
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             var returnType = RenderWith(commandProcessor);
 
             if (!commandProcessor.Close())
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             return returnType;

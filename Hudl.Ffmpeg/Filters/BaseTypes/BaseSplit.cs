@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Hudl.Ffmpeg.Command;
+using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     public abstract class BaseSplit : 
         BaseFilter,
@@ -50,14 +50,14 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         #endregion
 
         #region IFilterProcessor
-        public bool Validate(FfmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds)
+        public bool Validate(FFmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds)
         {
             return filterchain.Filters.Count == 1;
         }
         #endregion
 
         #region IFilterValidator
-        public void PrepCommands(FfmpegCommand command, Filterchain filterchain)
+        public void PrepCommands(FFmpegCommand command, Filterchain filterchain)
         {
             if (filterchain.OutputList.Count == 0)
             {

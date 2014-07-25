@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Sugar
+namespace Hudl.FFmpeg.Sugar
 {
-    public static class FfmpegCommandExtensions
+    public static class FFmpegCommandExtensions
     {
-        public static void ValidateInput(FfmpegCommand command, string fileName)
+        public static void ValidateInput(FFmpegCommand command, string fileName)
         {
             if (command.Owner == null)
             {
@@ -30,11 +30,11 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentException("Command must be added via CreateOutput or CreateResource first.", "command");
             }
         }
-        public static FfmpegCommand AddInput(this FfmpegCommand command, string fileName)
+        public static FFmpegCommand AddInput(this FFmpegCommand command, string fileName)
         {
             return command.AddInput(fileName, SettingsCollection.ForInput());
         }
-        public static FfmpegCommand AddInput(this FfmpegCommand command, string fileName, SettingsCollection settings)
+        public static FFmpegCommand AddInput(this FFmpegCommand command, string fileName, SettingsCollection settings)
         {
             ValidateInput(command, fileName);
 
@@ -47,7 +47,7 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command;
         }
-        public static FfmpegCommand AddInput(this FfmpegCommand command, List<string> files)
+        public static FFmpegCommand AddInput(this FFmpegCommand command, List<string> files)
         {
             if (files == null || files.Count == 0)
             {
@@ -58,7 +58,7 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command;
         }
-        public static FfmpegCommand AddInputNoLoad(this FfmpegCommand command, string fileName)
+        public static FFmpegCommand AddInputNoLoad(this FFmpegCommand command, string fileName)
         {
             ValidateInput(command, fileName);
 
@@ -72,7 +72,7 @@ namespace Hudl.Ffmpeg.Sugar
         }
 
         //stream ids
-        public static StreamIdentifier StreamIdentifier(this FfmpegCommand command, int index)
+        public static StreamIdentifier StreamIdentifier(this FFmpegCommand command, int index)
         {
             if (index < 0 || index >= command.Inputs.Count)
             {
@@ -81,7 +81,7 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command.Inputs[index].GetStreamIdentifier();
         }
-        public static StreamIdentifier StreamIdentifier<TStreamType>(this FfmpegCommand command, int index)
+        public static StreamIdentifier StreamIdentifier<TStreamType>(this FFmpegCommand command, int index)
             where TStreamType : class, IStream
         {
             if (index < 0 || index >= command.Inputs.Count)
@@ -92,7 +92,7 @@ namespace Hudl.Ffmpeg.Sugar
             return command.Inputs[index].GetStreamIdentifier<TStreamType>();
         }
 
-        public static StreamIdentifier LastInputStream(this FfmpegCommand command)
+        public static StreamIdentifier LastInputStream(this FFmpegCommand command)
         {
             if (command.Inputs.Count == 0)
             {
@@ -101,7 +101,7 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command.Inputs[command.Inputs.Count - 1].GetStreamIdentifier();
         }
-        public static StreamIdentifier LastInputStream<TStreamType>(this FfmpegCommand command)
+        public static StreamIdentifier LastInputStream<TStreamType>(this FFmpegCommand command)
             where TStreamType : class, IStream
         {
             if (command.Inputs.Count == 0)
@@ -113,24 +113,24 @@ namespace Hudl.Ffmpeg.Sugar
         }
 
         //command output lists
-        private static void ValidateTo(FfmpegCommand command)
+        private static void ValidateTo(FFmpegCommand command)
         {
             if (command.Owner == null)
             {
                 throw new ArgumentException("Command must contain an owner before sugar is allowed.", "command");
             }
         }
-        public static List<CommandOutput> To<TOutputType>(this FfmpegCommand command)
+        public static List<CommandOutput> To<TOutputType>(this FFmpegCommand command)
            where TOutputType : class, IContainer, new()
         {
             return command.To<TOutputType>(SettingsCollection.ForOutput());
         }
-        public static List<CommandOutput> To<TOutputType>(this FfmpegCommand command, SettingsCollection settings)
+        public static List<CommandOutput> To<TOutputType>(this FFmpegCommand command, SettingsCollection settings)
             where TOutputType : class, IContainer, new()
         {
             return command.To<TOutputType>(string.Empty, settings);
         }
-        public static List<CommandOutput> To<TOutputType>(this FfmpegCommand command, string fileName, SettingsCollection settings)
+        public static List<CommandOutput> To<TOutputType>(this FFmpegCommand command, string fileName, SettingsCollection settings)
             where TOutputType : class, IContainer, new()
         {
             ValidateTo(command);
@@ -146,21 +146,21 @@ namespace Hudl.Ffmpeg.Sugar
         }
 
         //command stage 
-        public static CommandStage WithInput<TStreamType>(this FfmpegCommand command, string fileName)
+        public static CommandStage WithInput<TStreamType>(this FFmpegCommand command, string fileName)
             where TStreamType : class, IStream
         {
             var commandStage = CommandStage.Create(command);
 
             return commandStage.WithInput<TStreamType>(fileName); 
         }
-        public static CommandStage WithInput<TStreamType>(this FfmpegCommand command, string fileName, SettingsCollection settings)
+        public static CommandStage WithInput<TStreamType>(this FFmpegCommand command, string fileName, SettingsCollection settings)
             where TStreamType : class, IStream
         {
             command.AddInput(fileName, settings);
 
             return command.Select(command.LastInputStream<TStreamType>());
         }
-        public static CommandStage WithInput<TStreamType>(this FfmpegCommand command, List<string> files)
+        public static CommandStage WithInput<TStreamType>(this FFmpegCommand command, List<string> files)
             where TStreamType : class, IStream
         {
             if (files == null || files.Count == 0)
@@ -177,14 +177,14 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command.Select(streamIds);
         }
-        public static CommandStage WithInputNoLoad(this FfmpegCommand command, string fileName)
+        public static CommandStage WithInputNoLoad(this FFmpegCommand command, string fileName)
         {
             command.AddInputNoLoad(fileName);
 
             return command.Select(command.LastInputStream());
         }
         
-        private static void ValidateStreams(FfmpegCommand command, List<StreamIdentifier> streamIds)
+        private static void ValidateStreams(FFmpegCommand command, List<StreamIdentifier> streamIds)
         {
             if (command.Owner == null)
             {
@@ -196,20 +196,20 @@ namespace Hudl.Ffmpeg.Sugar
                 throw new ArgumentNullException("streamIds");
             }
         }
-        public static CommandStage Select(this FfmpegCommand command, int index)
+        public static CommandStage Select(this FFmpegCommand command, int index)
         {
             var streamId = command.StreamIdentifier(index);
 
             return command.Select(streamId);
         }
-        public static CommandStage Select<TStreamType>(this FfmpegCommand command, int index)
+        public static CommandStage Select<TStreamType>(this FFmpegCommand command, int index)
             where TStreamType : class, IStream
         {
             var streamId = command.StreamIdentifier<TStreamType>(index);
 
             return command.Select(streamId); 
         }
-        public static CommandStage Select(this FfmpegCommand command, CommandInput resource)
+        public static CommandStage Select(this FFmpegCommand command, CommandInput resource)
         {
             if (resource == null)
             {
@@ -218,7 +218,7 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command.Select(resource.GetStreamIdentifier());
         }
-        public static CommandStage Select<TStreamType>(this FfmpegCommand command, CommandInput resource)
+        public static CommandStage Select<TStreamType>(this FFmpegCommand command, CommandInput resource)
             where TStreamType : class, IStream
         {
             if (resource == null)
@@ -228,19 +228,19 @@ namespace Hudl.Ffmpeg.Sugar
 
             return command.Select(resource.GetStreamIdentifier<TStreamType>());
         }
-        public static CommandStage Select(this FfmpegCommand command, StreamIdentifier streamId)
+        public static CommandStage Select(this FFmpegCommand command, StreamIdentifier streamId)
         {
             var streamIdList = new List<StreamIdentifier>() { streamId };
             
             return command.Select(streamIdList);
         }
-        public static CommandStage Select(this FfmpegCommand command, params StreamIdentifier[] streamIds)
+        public static CommandStage Select(this FFmpegCommand command, params StreamIdentifier[] streamIds)
         {
             var streamIdList = new List<StreamIdentifier>(streamIds);
             
             return command.Select(streamIdList);
         }
-        public static CommandStage Select(this FfmpegCommand command, List<StreamIdentifier> streamIds)
+        public static CommandStage Select(this FFmpegCommand command, List<StreamIdentifier> streamIds)
         {
             ValidateStreams(command, streamIds);
 
@@ -249,7 +249,7 @@ namespace Hudl.Ffmpeg.Sugar
                 StreamIdentifiers = streamIds
             };
         }
-        public static CommandStage SelectAll(this FfmpegCommand command)
+        public static CommandStage SelectAll(this FFmpegCommand command)
         {
             var streamIdList = command.Inputs.SelectMany(r => r.GetStreamIdentifiers()).ToList();
 

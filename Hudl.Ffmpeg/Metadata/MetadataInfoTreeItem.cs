@@ -1,4 +1,4 @@
-﻿namespace Hudl.Ffmpeg.Metadata
+﻿namespace Hudl.FFmpeg.Metadata
 {
     internal abstract class MetadataInfoTreeItem
     {

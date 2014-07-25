@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Settings;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata
+namespace Hudl.FFmpeg.Metadata
 {
     internal class MetadataInfoTreeGroup : MetadataInfoTreeItem
     {
@@ -27,7 +27,7 @@ namespace Hudl.Ffmpeg.Metadata
 
         public SettingsCollection Settings { get; set; }
 
-        public static MetadataInfoTreeGroup Create(FfmpegCommand command, Filterchain filterchain)
+        public static MetadataInfoTreeGroup Create(FFmpegCommand command, Filterchain filterchain)
         {
             var metadataInfoTreeGroup = new MetadataInfoTreeGroup(filterchain);
 
@@ -36,7 +36,7 @@ namespace Hudl.Ffmpeg.Metadata
             return metadataInfoTreeGroup;
         }
 
-        public static MetadataInfoTreeGroup Create(FfmpegCommand command, CommandOutput commandOutput)
+        public static MetadataInfoTreeGroup Create(FFmpegCommand command, CommandOutput commandOutput)
         {
             var metadataInfoTreeGroup = new MetadataInfoTreeGroup(commandOutput.Settings);
 
@@ -45,7 +45,7 @@ namespace Hudl.Ffmpeg.Metadata
             return metadataInfoTreeGroup;
         }
 
-        private void Fill(FfmpegCommand command, Filterchain filterchain)
+        private void Fill(FFmpegCommand command, Filterchain filterchain)
         {
             filterchain.ReceiptList.ForEach(streamId =>
             {
@@ -63,7 +63,7 @@ namespace Hudl.Ffmpeg.Metadata
             });
         }
 
-        private void Fill(FfmpegCommand command, CommandOutput commandOutput)
+        private void Fill(FFmpegCommand command, CommandOutput commandOutput)
         {
             //find the command output map setting, if the command output has map settings 
             //then they make up its dependecy tree. 
@@ -82,7 +82,7 @@ namespace Hudl.Ffmpeg.Metadata
             command.Objects.Inputs.ForEach(commandResource => DependecyTree.Add(MetadataInfoTreeSource.Create(commandResource)));
         }
 
-        private void Fill(FfmpegCommand command, List<StreamIdentifier> streamIdList)
+        private void Fill(FFmpegCommand command, List<StreamIdentifier> streamIdList)
         {
             streamIdList.ForEach(streamId =>
             {

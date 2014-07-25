@@ -1,7 +1,7 @@
-﻿using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Command.BaseTypes;
+﻿using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Command.BaseTypes;
 
-namespace Hudl.Ffmpeg.Sugar
+namespace Hudl.FFmpeg.Sugar
 {
     public static class CommandConfigurationExtensions
     {

@@ -1,21 +1,21 @@
-## Hudl.Ffmpeg
+## Hudl.FFmpeg
 
-Extendable C# transcoding framework, built on top of Ffmpeg. Hudl.Ffmpeg helps you
+Extendable C# transcoding framework, built on top of FFmpeg. Hudl.FFmpeg helps you
 
-* Easily interface with Ffmpeg in your .NET applications
+* Easily interface with FFmpeg in your .NET applications
 * Automate audio and video stream transcoding 
 * Create reusable smart filterchain templates
 
-Hudl.Ffmpeg is built to work as a compliment to Ffmpeg for all .NET applications. Its simplified syntax aids in building complex ffmpeg commands. 
+Hudl.FFmpeg is built to work as a compliment to FFmpeg for all .NET applications. Its simplified syntax aids in building complex FFmpeg commands. 
 
 ### Table of Contents
 
 [Getting Started](doc/quickstart.md)
 
-[Hudl.Ffmpeg Architecture](doc/architecture.md)
+[Hudl.FFmpeg Architecture](doc/architecture.md)
 
-[Hudl.Ffmpeg Sugar Syntax](doc/sugar.md)
+[Hudl.FFmpeg Sugar Syntax](doc/sugar.md)
 
 [API Documentation](doc/api.md)
 
-[Extending Hudl.Ffmpeg](doc/custom.md)
+[Extending Hudl.FFmpeg](doc/custom.md)

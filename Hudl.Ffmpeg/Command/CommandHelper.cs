@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     internal class CommandHelper
     {
-        public static bool ReceiptBelongsToCommand(FfmpegCommand command, StreamIdentifier streamId)
+        public static bool ReceiptBelongsToCommand(FFmpegCommand command, StreamIdentifier streamId)
         {
             return command.Owner.Id == streamId.FactoryId
                    && command.Id == streamId.CommandId;
         }
 
-        public static int IndexOfFilterchain(FfmpegCommand command, StreamIdentifier streamId)
+        public static int IndexOfFilterchain(FFmpegCommand command, StreamIdentifier streamId)
         {
             var matchingFilterchain = FilterchainFromStreamIdentifier(command, streamId);
             if (matchingFilterchain == null)
@@ -31,7 +31,7 @@ namespace Hudl.Ffmpeg.Command
             return command.Filtergraph.IndexOf(matchingFilterchain);
         }
 
-        public static int IndexOfResource(FfmpegCommand command, StreamIdentifier streamId)
+        public static int IndexOfResource(FFmpegCommand command, StreamIdentifier streamId)
         {
             var matchingResource = CommandInputFromStreamIdentifier(command, streamId);
             if (matchingResource == null)
@@ -42,7 +42,7 @@ namespace Hudl.Ffmpeg.Command
             return command.Inputs.IndexOf(matchingResource);
         }
 
-        public static int IndexOfOutput(FfmpegCommand command, StreamIdentifier streamId)
+        public static int IndexOfOutput(FFmpegCommand command, StreamIdentifier streamId)
         {
             var matchingOutput = CommandOutputFromStreamIdentifier(command, streamId);
             if (matchingOutput == null)
@@ -53,7 +53,7 @@ namespace Hudl.Ffmpeg.Command
             return command.Outputs.IndexOf(matchingOutput);
         }
 
-        public static IStream StreamFromStreamIdentifier(FfmpegCommand command, StreamIdentifier streamId)
+        public static IStream StreamFromStreamIdentifier(FFmpegCommand command, StreamIdentifier streamId)
         {
             var commandInput = CommandInputFromStreamIdentifier(command, streamId);
             if (commandInput != null)
@@ -78,7 +78,7 @@ namespace Hudl.Ffmpeg.Command
             throw new StreamNotFoundException();
         }
 
-        public static CommandInput CommandInputFromStreamIdentifier(FfmpegCommand command, StreamIdentifier streamId)
+        public static CommandInput CommandInputFromStreamIdentifier(FFmpegCommand command, StreamIdentifier streamId)
         {
             if (streamId == null)
             {
@@ -88,7 +88,7 @@ namespace Hudl.Ffmpeg.Command
             return command.Objects.Inputs.FirstOrDefault(i => i.GetStreamIdentifiers().Any(si => si.Map == streamId.Map));
         }
 
-        public static CommandOutput CommandOutputFromStreamIdentifier(FfmpegCommand command, StreamIdentifier streamId)
+        public static CommandOutput CommandOutputFromStreamIdentifier(FFmpegCommand command, StreamIdentifier streamId)
         {
             if (streamId == null)
             {
@@ -98,7 +98,7 @@ namespace Hudl.Ffmpeg.Command
             return command.Objects.Outputs.FirstOrDefault(i => i.GetStreamIdentifiers().Any(si => si.Map == streamId.Map));
         }
 
-        public static Filterchain FilterchainFromStreamIdentifier(FfmpegCommand command, StreamIdentifier streamId)
+        public static Filterchain FilterchainFromStreamIdentifier(FFmpegCommand command, StreamIdentifier streamId)
         {
             if (streamId == null)
             {
@@ -121,14 +121,14 @@ namespace Hudl.Ffmpeg.Command
 
                 if (theResource == null)
                 {
-                    commandOutput.Settings.Merge(new Map(streamId), FfmpegMergeOptionType.NewWins);
+                    commandOutput.Settings.Merge(new Map(streamId), FFmpegMergeOptionType.NewWins);
                 }
                 else
                 {
                     var resourceIndex = IndexOfResource(stage.Command, streamId);
 
                     commandOutput.Settings.Merge(new Map(string.Format("{0}:{1}", resourceIndex, theStream.ResourceIndicator)),
-                        FfmpegMergeOptionType.NewWins);
+                        FFmpegMergeOptionType.NewWins);
                 }
 
                 commandOutput.Resource.Streams.Add(theStream.Copy());
@@ -142,7 +142,7 @@ namespace Hudl.Ffmpeg.Command
             return commandOutput; 
         }
 
-        public static CommandOutput SetupCommandOutput<TOutputType>(FfmpegCommand command, SettingsCollection settings, string fileName)
+        public static CommandOutput SetupCommandOutput<TOutputType>(FFmpegCommand command, SettingsCollection settings, string fileName)
             where TOutputType : class, IContainer, new()
         {
             var settingsCopy = settings.Copy();

@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using Hudl.Ffmpeg.Command;
+using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Tests.Assets
+namespace Hudl.FFmpeg.Tests.Assets
 {
     public class Utilities
     {

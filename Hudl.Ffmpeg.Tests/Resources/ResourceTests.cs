@@ -1,10 +1,10 @@
 ﻿using System;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Tests.Assets;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Tests.Assets;
 using Xunit;
 
-namespace Hudl.Ffmpeg.Tests.Resources
+namespace Hudl.FFmpeg.Tests.Resources
 {
     public class ResourceTests
     {

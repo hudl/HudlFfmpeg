@@ -1,6 +1,6 @@
-﻿using Hudl.Ffmpeg.Command;
+﻿using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg
+namespace Hudl.FFmpeg
 {
     //a place to load the configuration file for the ffmpeg session.
     public class ResourceManagement

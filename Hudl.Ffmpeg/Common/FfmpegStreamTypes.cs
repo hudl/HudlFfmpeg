@@ -1,6 +1,6 @@
-﻿namespace Hudl.Ffmpeg.Common
+﻿namespace Hudl.FFmpeg.Common
 {
-    internal enum FfmpegStreamTypes
+    internal enum FFmpegStreamTypes
     {
         Video, 
         Audio

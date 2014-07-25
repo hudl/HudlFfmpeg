@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     internal class FilterUtility
     {

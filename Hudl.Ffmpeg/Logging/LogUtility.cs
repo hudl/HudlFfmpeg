@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net;
 
-namespace Hudl.Ffmpeg.Logging
+namespace Hudl.FFmpeg.Logging
 {
     internal class LogUtility
     {
@@ -69,7 +69,7 @@ namespace Hudl.Ffmpeg.Logging
         {
             var attributes = JoinDictionary(LogAttributes); 
             return new Dictionary<string, string> {
-                    {"Program", "Hudl.Ffmpeg"},
+                    {"Program", "Hudl.FFmpeg"},
                     {"Message", message},
                     {"Attributes", string.Format("[{0}]", attributes)},
                 };

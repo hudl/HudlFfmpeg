@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
+using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata.Ffprobe
+namespace Hudl.FFmpeg.Metadata.FFprobe
 {
-    internal class FfprobeSerializerResultItem 
+    internal class FFprobeSerializerResultItem 
     {
-        private FfprobeSerializerResultItem(string type, List<FfprobeKeyValuePair> valuesPairs)
+        private FFprobeSerializerResultItem(string type, List<FFprobeKeyValuePair> valuesPairs)
         {
             Type = type;
             ValuePairs = valuesPairs;
@@ -13,11 +13,11 @@ namespace Hudl.Ffmpeg.Metadata.Ffprobe
 
         public string Type { get; set; }
 
-        public List<FfprobeKeyValuePair> ValuePairs { get; set; }
+        public List<FFprobeKeyValuePair> ValuePairs { get; set; }
 
-        public static FfprobeSerializerResultItem Create(string type, List<FfprobeKeyValuePair> valuePairs)
+        public static FFprobeSerializerResultItem Create(string type, List<FFprobeKeyValuePair> valuePairs)
         {
-            return new FfprobeSerializerResultItem(type, valuePairs);
+            return new FFprobeSerializerResultItem(type, valuePairs);
         }
     }
 }

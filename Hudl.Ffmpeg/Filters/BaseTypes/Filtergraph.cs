@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     /// <summary>
     /// A series of Filterchains that work together to convert Video, Audio, and Image streams.
@@ -18,7 +18,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             FilterchainList = new List<Filterchain>();
         }
 
-        public static Filtergraph Create(FfmpegCommand command)
+        public static Filtergraph Create(FFmpegCommand command)
         {
             return new Filtergraph
                 {
@@ -62,10 +62,10 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// </summary>
         /// <param name="filterchain">the filterchain to be added to the filtergraph</param>
         /// <param name="optionType">the option specifying how the merge should declare a winner</param>
-        public Filtergraph Merge(Filterchain filterchain, FfmpegMergeOptionType optionType)
+        public Filtergraph Merge(Filterchain filterchain, FFmpegMergeOptionType optionType)
         {
             var indexOfItem = IndexOf(filterchain); 
-            if (indexOfItem != -1 && optionType == FfmpegMergeOptionType.NewWins)
+            if (indexOfItem != -1 && optionType == FFmpegMergeOptionType.NewWins)
             {
                 FilterchainList.RemoveAt(indexOfItem);
                 filterchain.Owner = this;
@@ -119,7 +119,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         }
 
         #region Internals
-        internal FfmpegCommand Owner { get; set; }
+        internal FFmpegCommand Owner { get; set; }
         internal List<Filterchain> FilterchainList { get; set; }
         #endregion
     }

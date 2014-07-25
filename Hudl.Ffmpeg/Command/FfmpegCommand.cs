@@ -3,18 +3,18 @@ using System.Collections.ObjectModel;
 using System.Deployment.Internal;
 using System.Linq;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Command.Managers;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Command.Managers;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
-    public class FfmpegCommand
+    public class FFmpegCommand
     {
-        private FfmpegCommand(CommandFactory owner)
+        private FFmpegCommand(CommandFactory owner)
         {
             if (owner == null)
             {
@@ -31,14 +31,14 @@ namespace Hudl.Ffmpeg.Command
             PostRenderAction = EmptyOperation;
         }
 
-        public static FfmpegCommand Create(CommandFactory owner)
+        public static FFmpegCommand Create(CommandFactory owner)
         {
-            return new FfmpegCommand(owner);    
+            return new FFmpegCommand(owner);    
         }
 
-        public Action<CommandFactory, FfmpegCommand, bool> PreRenderAction { get; set; }
+        public Action<CommandFactory, FFmpegCommand, bool> PreRenderAction { get; set; }
 
-        public Action<CommandFactory, FfmpegCommand, bool> PostRenderAction { get; set; }
+        public Action<CommandFactory, FFmpegCommand, bool> PostRenderAction { get; set; }
 
         public ReadOnlyCollection<CommandOutput> Outputs { get { return Objects.Outputs.AsReadOnly(); } }
 
@@ -57,7 +57,7 @@ namespace Hudl.Ffmpeg.Command
         /// </summary>
         public List<CommandOutput> Render()
         {
-            return RenderWith<FfmpegProcessorReciever>();
+            return RenderWith<FFmpegProcessorReciever>();
         }
 
         #region Internals
@@ -79,14 +79,14 @@ namespace Hudl.Ffmpeg.Command
 
             if (!commandProcessor.Open())
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             var returnType = RenderWith(commandProcessor);
 
             if (!commandProcessor.Close())
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             return returnType;
@@ -112,7 +112,7 @@ namespace Hudl.Ffmpeg.Command
             {
                 PostRenderAction(Owner, this, false);
 
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             PostRenderAction(Owner, this, true);
@@ -120,7 +120,7 @@ namespace Hudl.Ffmpeg.Command
             return Objects.Outputs;
         }
 
-        internal void EmptyOperation(CommandFactory factory, FfmpegCommand command, bool success)
+        internal void EmptyOperation(CommandFactory factory, FFmpegCommand command, bool success)
         {
         }
         #endregion

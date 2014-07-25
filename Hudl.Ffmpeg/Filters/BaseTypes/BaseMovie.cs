@@ -1,9 +1,9 @@
 ﻿
 using System;
 using System.Text;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     public abstract class BaseMovie : BaseFilter
     {

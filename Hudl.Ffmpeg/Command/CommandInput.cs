@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     /// <summary>
     /// Represents a single resource file for a command. 
@@ -91,7 +91,7 @@ namespace Hudl.Ffmpeg.Command
 
         #region Internals
         internal string Id { get; set; }
-        internal FfmpegCommand Owner { get; set; }
+        internal FFmpegCommand Owner { get; set; }
         #endregion
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.Command.BaseTypes
+namespace Hudl.FFmpeg.Command.BaseTypes
 {
     /// <summary>
     /// Used in the aide of processing projects, allows the output to several formats

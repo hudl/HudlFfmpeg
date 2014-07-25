@@ -1,11 +1,11 @@
-﻿using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Sugar;
-using Hudl.Ffmpeg.Tests.Assets;
+﻿using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Sugar;
+using Hudl.FFmpeg.Tests.Assets;
 using Xunit;
 
-namespace Hudl.Ffmpeg.Tests.Command
+namespace Hudl.FFmpeg.Tests.Command
 {
     public class CommandFactoryTests
     {

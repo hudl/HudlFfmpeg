@@ -1,7 +1,7 @@
-﻿using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Resources
+namespace Hudl.FFmpeg.Resources
 {
     [ContainsStream(Type = typeof(AudioStream))]
     public class Mp3 : BaseContainer

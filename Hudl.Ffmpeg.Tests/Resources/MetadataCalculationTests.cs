@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Linq;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Filters;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Filters.Templates;
-using Hudl.Ffmpeg.Metadata;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings;
-using Hudl.Ffmpeg.Settings.BaseTypes;
-using Hudl.Ffmpeg.Sugar;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Templates;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings;
+using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Sugar;
 using Xunit;
-using Utilities = Hudl.Ffmpeg.Tests.Assets.Utilities;
+using Utilities = Hudl.FFmpeg.Tests.Assets.Utilities;
 
-namespace Hudl.Ffmpeg.Tests.Resources
+namespace Hudl.FFmpeg.Tests.Resources
 {
     public class MetadataCalculationTests
     {

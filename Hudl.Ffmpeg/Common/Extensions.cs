@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.Common
+namespace Hudl.FFmpeg.Common
 {
     static class Extensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.Settings.BaseTypes
+namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     public abstract class BaseBitStreamFilter : BaseSetting
     {

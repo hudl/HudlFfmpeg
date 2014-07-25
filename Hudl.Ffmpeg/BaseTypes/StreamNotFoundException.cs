@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.BaseTypes
+namespace Hudl.FFmpeg.BaseTypes
 {
     /// <summary>
     /// invalid applies to exception, thrown when Applier does not apply to AppliedTo

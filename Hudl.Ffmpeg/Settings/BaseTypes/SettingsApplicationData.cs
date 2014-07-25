@@ -1,7 +1,7 @@
 ﻿using System;
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.Settings.BaseTypes
+namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     /// <summary>
     /// data class that provides the data from the ISettings Attribute.  

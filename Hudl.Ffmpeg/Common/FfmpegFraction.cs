@@ -1,10 +1,10 @@
-﻿using Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes;
+﻿using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
 
-namespace Hudl.Ffmpeg.Common
+namespace Hudl.FFmpeg.Common
 {
-    public class FfmpegFraction : IFfprobeValue
+    public class FFmpegFraction : IFFprobeValue
     {
-        private FfmpegFraction(int numerator, int denominator)
+        private FFmpegFraction(int numerator, int denominator)
         {
             Numerator = numerator;
             Denominator = denominator;
@@ -21,7 +21,7 @@ namespace Hudl.Ffmpeg.Common
 
         public override bool Equals(object obj)
         {
-            var ffprobeFraction = obj as FfprobeFraction;
+            var ffprobeFraction = obj as FFprobeFraction;
             if (ffprobeFraction == null)
             {
                 return false;
@@ -31,19 +31,19 @@ namespace Hudl.Ffmpeg.Common
                    ffprobeFraction.Denominator == Denominator;
         }
 
-        public static FfmpegFraction Create(int numerator, int denominator)
+        public static FFmpegFraction Create(int numerator, int denominator)
         {
-            return new FfmpegFraction(numerator, denominator);
+            return new FFmpegFraction(numerator, denominator);
         }
 
-        internal static FfmpegFraction Create(FfprobeFraction ffprobeFraction)
+        internal static FFmpegFraction Create(FFprobeFraction ffprobeFraction)
         {
             if (ffprobeFraction == null)
             {
                 return null;
             }
 
-            return new FfmpegFraction(ffprobeFraction.Numerator, ffprobeFraction.Denominator);
+            return new FFmpegFraction(ffprobeFraction.Numerator, ffprobeFraction.Denominator);
         }
     }
 }

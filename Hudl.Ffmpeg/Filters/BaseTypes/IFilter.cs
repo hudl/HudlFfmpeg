@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
+using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     /// <summary>
     /// representation of a simple filt 
@@ -32,6 +32,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// <summary>
         /// sets up the filter based on the settings in the filterchain
         /// </summary>
-        void Setup(FfmpegCommand command, Filterchain filterchain);
+        void Setup(FFmpegCommand command, Filterchain filterchain);
     }
 }

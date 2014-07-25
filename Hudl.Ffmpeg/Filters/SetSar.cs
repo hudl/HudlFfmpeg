@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// SetSar Filter, sets the Sample Aspect Ratio for the video resource.
@@ -20,7 +20,7 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
         }
-        public SetSar(FfmpegRatio ratio)
+        public SetSar(FFmpegRatio ratio)
             : this()
         {
             if (ratio == null)
@@ -31,7 +31,7 @@ namespace Hudl.Ffmpeg.Filters
             Ratio = ratio;
         }
 
-        public FfmpegRatio Ratio { get; set; }
+        public FFmpegRatio Ratio { get; set; }
 
         public override void Validate()
         {

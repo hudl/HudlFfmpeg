@@ -1,8 +1,8 @@
-﻿namespace Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes
+﻿namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
 {
-    internal class FfprobeKeyValuePair
+    internal class FFprobeKeyValuePair
     {
-        private FfprobeKeyValuePair(string key, IFfprobeValue value)
+        private FFprobeKeyValuePair(string key, IFFprobeValue value)
         {
             Key = key;
             Value = value;
@@ -10,18 +10,18 @@
 
         public string Key { get; set; }
 
-        public IFfprobeValue Value { get; set; }
+        public IFFprobeValue Value { get; set; }
 
-        public static FfprobeKeyValuePair Create(string key, object value)
+        public static FFprobeKeyValuePair Create(string key, object value)
         {
-            var rawObject = FfprobeObject.Create(value);
+            var rawObject = FFprobeObject.Create(value);
 
-            return new FfprobeKeyValuePair(key, rawObject);
+            return new FFprobeKeyValuePair(key, rawObject);
         }
 
-        public static FfprobeKeyValuePair Create(string key, IFfprobeValue value)
+        public static FFprobeKeyValuePair Create(string key, IFFprobeValue value)
         {
-            return new FfprobeKeyValuePair(key, value);
+            return new FFprobeKeyValuePair(key, value);
         }
     }
 }

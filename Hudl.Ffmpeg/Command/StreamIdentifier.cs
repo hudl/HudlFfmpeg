@@ -1,7 +1,7 @@
 ﻿
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     /// <summary>
     /// A streamId indicating the resource that was added to the Command

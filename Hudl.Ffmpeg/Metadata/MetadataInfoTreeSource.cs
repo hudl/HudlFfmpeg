@@ -1,8 +1,8 @@
-﻿using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+﻿using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata
+namespace Hudl.FFmpeg.Metadata
 {
     internal class MetadataInfoTreeSource : MetadataInfoTreeItem
     {

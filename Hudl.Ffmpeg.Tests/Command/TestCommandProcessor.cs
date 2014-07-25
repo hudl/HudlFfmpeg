@@ -1,8 +1,8 @@
 ﻿using System;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.Tests.Command
+namespace Hudl.FFmpeg.Tests.Command
 {
     public class TestCommandProcessor : ICommandProcessor
     {

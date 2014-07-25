@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes; 
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes; 
 
-namespace Hudl.Ffmpeg.Resources
+namespace Hudl.FFmpeg.Resources
 {
     /// <summary>
     /// this is a list of resource files used to describe a returned collection of files

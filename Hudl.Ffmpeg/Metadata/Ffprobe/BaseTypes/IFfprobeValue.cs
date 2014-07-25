@@ -1,6 +1,6 @@
-﻿namespace Hudl.Ffmpeg.Metadata.Ffprobe.BaseTypes
+﻿namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
 {
-    internal interface IFfprobeValue
+    internal interface IFFprobeValue
     {
     }
 }

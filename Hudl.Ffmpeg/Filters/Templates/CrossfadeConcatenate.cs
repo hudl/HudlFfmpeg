@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Metadata;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Sugar;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Sugar;
 
-namespace Hudl.Ffmpeg.Filters.Templates
+namespace Hudl.FFmpeg.Filters.Templates
 {
     public class CrossfadeConcatenate : FilterchainTemplate
     {
@@ -24,7 +24,7 @@ namespace Hudl.Ffmpeg.Filters.Templates
 
         private TimeSpan Duration { get; set; }
 
-        public override List<StreamIdentifier> SetupTemplate(FfmpegCommand command, List<StreamIdentifier> streamIdList)
+        public override List<StreamIdentifier> SetupTemplate(FFmpegCommand command, List<StreamIdentifier> streamIdList)
         {
             if (streamIdList.Count != 2)
             {

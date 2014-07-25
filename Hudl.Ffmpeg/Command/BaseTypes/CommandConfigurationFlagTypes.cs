@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.Command.BaseTypes
+namespace Hudl.FFmpeg.Command.BaseTypes
 {
     /// <summary>
     /// Flags that turn on or off features in the render process

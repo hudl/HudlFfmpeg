@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.BaseTypes
+namespace Hudl.FFmpeg.BaseTypes
 {
     /// <summary>
     /// a collecton of <see cref="TCollection"/>, that will be validated to only include objects which contain an AppliesToResource attribute that is a type of this.
@@ -67,7 +67,7 @@ namespace Hudl.Ffmpeg.BaseTypes
             return List.FindIndex(f => f.GetType().IsAssignableFrom(itemType));
         }
 
-        public ForStreamCollection<TCollection> Merge<TItem>(TItem item, FfmpegMergeOptionType optionType)
+        public ForStreamCollection<TCollection> Merge<TItem>(TItem item, FFmpegMergeOptionType optionType)
             where TItem : TCollection
         {
             var applierType = item.GetType();
@@ -77,7 +77,7 @@ namespace Hudl.Ffmpeg.BaseTypes
             }
 
             var indexOfItem = IndexOf(item); 
-            if (indexOfItem != -1 && optionType == FfmpegMergeOptionType.NewWins)
+            if (indexOfItem != -1 && optionType == FFmpegMergeOptionType.NewWins)
             {
                 List.RemoveAt(indexOfItem);
                 List.Insert(indexOfItem, item);

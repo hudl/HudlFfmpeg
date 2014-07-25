@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 using Microsoft.SqlServer.Server;
 
-namespace Hudl.Ffmpeg.Common
+namespace Hudl.FFmpeg.Common
 {
     internal class Formats
     {

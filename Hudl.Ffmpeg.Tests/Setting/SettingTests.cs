@@ -1,10 +1,10 @@
 ﻿using System;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Settings;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Settings;
 using Xunit;
 
-namespace Hudl.Ffmpeg.Tests.Setting
+namespace Hudl.FFmpeg.Tests.Setting
 {
     public class SettingTests
     {
@@ -12,7 +12,7 @@ namespace Hudl.Ffmpeg.Tests.Setting
         public void AspectRatio_Verify()
         {
             var settingWrong1 = new AspectRatio();
-            var setting = new AspectRatio(FfmpegRatio.Create(1, 1));
+            var setting = new AspectRatio(FFmpegRatio.Create(1, 1));
 
             Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.GetAndValidateString(); });
             Assert.DoesNotThrow(() => { var s = setting.GetAndValidateString(); });

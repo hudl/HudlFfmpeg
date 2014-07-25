@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Metadata;
-using Hudl.Ffmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings.BaseTypes
+namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     public abstract class BaseDuration : BaseSetting, IMetadataManipulation
     {

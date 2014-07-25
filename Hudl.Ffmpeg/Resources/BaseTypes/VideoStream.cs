@@ -1,7 +1,7 @@
-﻿using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Metadata;
+﻿using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata;
 
-namespace Hudl.Ffmpeg.Resources.BaseTypes
+namespace Hudl.FFmpeg.Resources.BaseTypes
 {
     public class VideoStream : IStream
     {

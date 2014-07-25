@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.Resources.BaseTypes
+namespace Hudl.FFmpeg.Resources.BaseTypes
 {
     public abstract class BaseContainer : IContainer
     {

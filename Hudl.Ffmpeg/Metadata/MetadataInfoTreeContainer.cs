@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Metadata.Ffprobe;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata.FFprobe;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Metadata
+namespace Hudl.FFmpeg.Metadata
 {
     public class MetadataInfoTreeContainer
     {
