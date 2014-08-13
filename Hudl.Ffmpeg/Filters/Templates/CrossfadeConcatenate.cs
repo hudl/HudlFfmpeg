@@ -73,9 +73,9 @@ namespace Hudl.FFmpeg.Filters.Templates
             var toMain = toSplit.Take(1)
                                 .Filter(new TrimVideo(Duration.TotalSeconds, null, VideoUnitType.Seconds));
 
-            var blendOut = command.Select(fromBlend.StreamIdentifiers)
-                                  .Select(toBlend.StreamIdentifiers)
-                                  .Filter(Filterchain.FilterTo<VideoStream>(new Blend(CrossfadeAlgorithm)));
+            var blendOut = command.Select(toBlend.StreamIdentifiers)
+                                  .Select(fromBlend.StreamIdentifiers)
+                                  .Filter(Filterchain.FilterTo<VideoStream>(new Blend(string.Format(CrossfadeAlgorithm, Duration.TotalSeconds))));
 
             var result = command.Select(fromMain.StreamIdentifiers)
                                 .Select(blendOut.StreamIdentifiers)
