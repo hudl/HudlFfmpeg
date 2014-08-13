@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.Settings.BaseTypes
+namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     public abstract class BaseBitStreamFilter : BaseSetting
     {
@@ -14,13 +14,16 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
 
         public string Setting { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Setting))
             {
                 throw new InvalidOperationException("Bitstream filter must not be null or whitespace.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Setting);
         }
     }

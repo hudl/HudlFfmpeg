@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Deployment.Internal;
 using System.Linq;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Command.Managers;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using log4net;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Command.Managers;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
-    public class FfmpegCommand
+    public class FFmpegCommand
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FfmpegCommand).Name);
-
-        private FfmpegCommand(CommandFactory owner)
+        private FFmpegCommand(CommandFactory owner)
         {
             if (owner == null)
             {
@@ -26,61 +25,68 @@ namespace Hudl.Ffmpeg.Command
             Id = Guid.NewGuid().ToString();
             Objects = CommandObjects.Create(this);
             OutputManager = CommandOutputManager.Create(this);
-            ResourceManager = CommandResourceManager.Create(this);
-            FilterchainManager = CommandFilterchainManager.Create(this);
+            InputManager = CommandInputManager.Create(this);
+            FilterchainManager = CommandFiltergraphManager.Create(this);
             PreRenderAction = EmptyOperation;
             PostRenderAction = EmptyOperation;
         }
 
-        public static FfmpegCommand Create(CommandFactory owner)
+        public static FFmpegCommand Create(CommandFactory owner)
         {
-            return new FfmpegCommand(owner);    
+            return new FFmpegCommand(owner);    
         }
 
-        internal CommandObjects Objects { get; set; }
+        public Action<CommandFactory, FFmpegCommand, bool> PreRenderAction { get; set; }
 
-        public Action<CommandFactory, FfmpegCommand, bool> PreRenderAction { get; set; }
-
-        public Action<CommandFactory, FfmpegCommand, bool> PostRenderAction { get; set; }
+        public Action<CommandFactory, FFmpegCommand, bool> PostRenderAction { get; set; }
 
         public ReadOnlyCollection<CommandOutput> Outputs { get { return Objects.Outputs.AsReadOnly(); } }
 
-        public ReadOnlyCollection<CommandResource> Resources { get { return Objects.Inputs.AsReadOnly(); } }
+        public ReadOnlyCollection<CommandInput> Inputs { get { return Objects.Inputs.AsReadOnly(); } }
 
         public ReadOnlyCollection<Filterchain> Filtergraph { get { return Objects.Filtergraph.FilterchainList.AsReadOnly(); } }
 
         public CommandOutputManager OutputManager { get; set; }
 
-        public CommandResourceManager ResourceManager { get; set; }
+        public CommandInputManager InputManager { get; set; }
 
-        public CommandFilterchainManager FilterchainManager { get; set; }
+        public CommandFiltergraphManager FilterchainManager { get; set; }
 
         /// <summary>
         /// Renders the command stream with the defualt command processor
         /// </summary>
         public List<CommandOutput> Render()
         {
-            return RenderWith<CmdProcessorReciever>();
+            return RenderWith<FFmpegProcessorReciever>();
         }
+
+        #region Internals
+        internal string Id { get; set; }
+
+        internal CommandObjects Objects { get; set; }
+
+        internal CommandFactory Owner { get; set; }
+
+        
 
         /// <summary>
         /// Renders the command stream with a new command processor
         /// </summary>
-        public List<CommandOutput> RenderWith<TProcessor>()
-            where TProcessor : ICommandProcessor, new()
+        internal List<CommandOutput> RenderWith<TProcessor>()
+            where TProcessor : class, ICommandProcessor, new()
         {
             var commandProcessor = new TProcessor();
 
-            if (!commandProcessor.Open(Owner.Configuration))
+            if (!commandProcessor.Open())
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             var returnType = RenderWith(commandProcessor);
 
             if (!commandProcessor.Close())
             {
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             return returnType;
@@ -89,8 +95,8 @@ namespace Hudl.Ffmpeg.Command
         /// <summary>
         /// Renders the command stream with an existing command processor
         /// </summary>
-        public List<CommandOutput> RenderWith<TProcessor>(TProcessor commandProcessor)
-            where TProcessor : ICommandProcessor
+        internal List<CommandOutput> RenderWith<TProcessor>(TProcessor commandProcessor)
+            where TProcessor : class, ICommandProcessor
         {
             if (commandProcessor == null)
             {
@@ -101,12 +107,12 @@ namespace Hudl.Ffmpeg.Command
             commandBuilder.WriteCommand(this);
 
             PreRenderAction(Owner, this, true);
-            
+
             if (!commandProcessor.Send(commandBuilder.ToString()))
             {
                 PostRenderAction(Owner, this, false);
 
-                throw new FfmpegRenderingException(commandProcessor.Error);
+                throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             PostRenderAction(Owner, this, true);
@@ -114,76 +120,8 @@ namespace Hudl.Ffmpeg.Command
             return Objects.Outputs;
         }
 
-        private void EmptyOperation(CommandFactory factory, FfmpegCommand command, bool success)
+        internal void EmptyOperation(CommandFactory factory, FFmpegCommand command, bool success)
         {
-        }
-
-        #region Internals
-        internal string Id { get; set; }
-        internal CommandFactory Owner { get; set; }
-
-        internal List<CommandResource> ResourcesFromReceipts(params CommandReceipt[] receipts)
-        {
-            return ResourcesFromReceipts(new List<CommandReceipt>(receipts));
-        }
-        internal List<CommandResource> ResourcesFromReceipts(List<CommandReceipt> receipts)
-        {
-            if (receipts == null || receipts.Count == 0)
-            {
-                throw new ArgumentException("Receipts cannot be null or empty for a retrieve.", "receipts");
-            }
-
-            return receipts.Select(receipt =>
-                {
-                    CommandResource resource = null;
-                    switch (receipt.Type)
-                    {
-                        case CommandReceiptType.Input:
-                            resource = Objects.Inputs.FirstOrDefault(r => r.Resource.Map == receipt.Map);
-                            break;
-                        case CommandReceiptType.Stream:
-                            var filterchain = Objects.Filtergraph.FilterchainList.FirstOrDefault(f => f.GetReceipts().Any(r => r.Equals(receipt)));
-                            var filterchainOutput = filterchain.OutputList.FirstOrDefault(r => r.Resource.Map == receipt.Map);
-                            resource = CommandResource.Create(filterchainOutput.Resource);
-                            resource.Id = filterchainOutput.Id; 
-                            resource.Owner = this;
-                            break;
-                    }
-                    if (resource == null)
-                    {
-                        throw new KeyNotFoundException("Resource was not found in the command list.");
-                    }
-                    return resource; 
-                }).ToList();
-        }
-
-        internal Filterchain FilterchainFromReceipt(CommandReceipt receipt)
-        {
-            if (receipt == null)
-            {
-                throw new ArgumentNullException("receipt");
-            }
-
-            return Objects.Filtergraph.FilterchainList.FirstOrDefault(f => f.GetReceipts().Any(r => r.Equals(receipt)));
-        }
-
-        internal CommandReceipt RegenerateResourceMap(CommandReceipt receipt)
-        {
-            if (receipt.FactoryId != Owner.Id ||
-                receipt.CommandId != Id)
-            {
-                throw new InvalidOperationException("Receipt is not a part of this command.");
-            }
-
-            var resource =  Objects.Inputs.FirstOrDefault(r => r.Resource.Map == receipt.Map);
-            if (resource == null)
-            {
-                throw new InvalidOperationException("Receipt is not a part of this command.");
-            }
-
-            resource.Resource.Map = Helpers.NewMap();
-
-            return resource.GetReceipt();
         }
         #endregion
     }

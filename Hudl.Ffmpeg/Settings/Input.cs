@@ -1,31 +1,36 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IResource))]
+    /// <summary>
+    /// input file name
+    /// </summary>
+    [ForStream(Type = typeof(IContainer))]
     internal class Input : BaseSetting
     {
         private const string SettingType = "-i";
 
-        public Input(IResource resource)
+        public Input(IContainer resource)
             : base(SettingType)
         {
             Resource = resource; 
         }
 
-        public IResource Resource { get; protected set; }
-        
-        public override string ToString()
+        public IContainer Resource { get; protected set; }
+
+        public override void Validate()
         {
             if (Resource == null)
             {
                 throw new InvalidOperationException("Resource cannot be empty.");
             }
+        }
 
+        public override string ToString()
+        {
             var escapedPath = Resource.FullName.Replace('\\', '/');
             return string.Concat(Type, " \"", escapedPath, "\"");
         }

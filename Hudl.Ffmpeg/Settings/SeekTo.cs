@@ -1,17 +1,20 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using System.Collections.Generic;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
     /// <summary>
-    /// Seek to should be used when StartAt cannot be used, Ffmpeg will process the video up to the timestamp provided, but discard it. 
+    /// Seek to should be used when StartAt cannot be used, FFmpeg will process the video up to the timestamp provided, but discard it. 
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
-    public class SeekTo : BaseSetting
+    public class SeekTo : BaseSetting, IMetadataManipulation
     {
         private const string SettingType = "-ss";
         
@@ -32,18 +35,7 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<Command.CommandResource> resources)
-        {
-            var overallLength = TimeSpan.FromSeconds(0);
-            var baseCalculatedLength = base.LengthFromInputs(resources);
-            if (baseCalculatedLength == null)
-            {
-                return overallLength;
-            }
-            return baseCalculatedLength - Length;
-        }
-
-        public override string ToString()
+        public override void Validate()
         {
             if (Length == null)
             {
@@ -53,8 +45,18 @@ namespace Hudl.Ffmpeg.Settings
             {
                 throw new InvalidOperationException("SeekTo length must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Formats.Duration(Length));
+        }
+
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
+        {
+            infoToUpdate.VideoStream.Duration = infoToUpdate.VideoStream.Duration - Length;
+
+            return infoToUpdate; 
         }
     }
 }

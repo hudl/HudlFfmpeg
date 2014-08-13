@@ -1,17 +1,24 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IVideo))]
+    /// <summary>
+    /// Set frame rate (Hz value, fraction or abbreviation).
+    /// </summary>
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class FrameRate : BaseSetting
     {
         private const string SettingType = "-r";
 
+        public FrameRate()
+            : base(SettingType)
+        {
+        }
         public FrameRate(double rate)
             : base(SettingType)
         {
@@ -25,13 +32,16 @@ namespace Hudl.Ffmpeg.Settings
 
         public double Rate { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Rate <= 0)
             {
                 throw new InvalidOperationException("Frame rate must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Rate);
         }
     }

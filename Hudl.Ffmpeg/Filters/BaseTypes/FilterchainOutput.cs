@@ -1,12 +1,12 @@
 ﻿using System;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     public class FilterchainOutput
     {
-        internal FilterchainOutput(Filterchain owner, IResource resource)
+        internal FilterchainOutput(Filterchain owner, IStream resource)
         {
             if (owner == null)
             {
@@ -18,33 +18,26 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
             }
 
             Owner = owner;
-            Resource = resource;
+            Stream = resource;
             Id = Guid.NewGuid().ToString();
         }
 
-        public TimeSpan Length { get; set; }
-
         public Filterchain Owner { get; protected set; }
-
-        public IResource Output()
-        {
-            Resource.Length = Length;
-            return Resource;
-        }
+        
+        public IStream Stream { get; protected set; }
 
         public FilterchainOutput Copy()
         {
-            return new FilterchainOutput(Owner, Output().Copy<IResource>());
+            return new FilterchainOutput(Owner, Stream.Copy());
         }
 
-        public CommandReceipt GetReceipt()
+        public StreamIdentifier GetStreamIdentifier()
         {
-            return CommandReceipt.CreateFromOutput(Owner.Owner.Owner.Id, Owner.Id, Resource.Map);
+            return StreamIdentifier.Create(Owner.Owner.Owner.Id, Owner.Id, Stream.Map);
         }
 
         #region Internals
         internal string Id { get; set; }
-        internal IResource Resource { get; set; }
         #endregion 
     }
 }

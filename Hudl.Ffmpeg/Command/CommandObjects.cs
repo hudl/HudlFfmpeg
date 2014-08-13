@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
-    public class CommandObjects
+    internal class CommandObjects
     {
-        private CommandObjects(FfmpegCommand owner)
+        private CommandObjects(FFmpegCommand owner)
         {
             Outputs = new List<CommandOutput>();
-            Inputs = new List<CommandResource>();
+            Inputs = new List<CommandInput>();
             Filtergraph = Filtergraph.Create(owner);
         }
 
-        public static CommandObjects Create(FfmpegCommand owner)
+        public static CommandObjects Create(FFmpegCommand owner)
         {
             return new CommandObjects(owner);
         }
@@ -26,21 +23,26 @@ namespace Hudl.Ffmpeg.Command
 
         public List<CommandOutput> Outputs { get; internal set; }
         
-        public List<CommandResource> Inputs { get; internal set; }
+        public List<CommandInput> Inputs { get; internal set; }
 
-        public bool ContainsInput(CommandReceipt receipt)
+        public bool ContainsInput(StreamIdentifier streamId)
         {
-            return receipt.Type == CommandReceiptType.Input && Inputs.Any(input => input.GetReceipt().Equals(receipt));
+            return Inputs.Any(input => input.GetStreamIdentifiers().Any(s => s.Equals(streamId))); 
+        }
+        
+        public bool ContainsInput(CommandInput commandInput)
+        {
+            return Inputs.Any(input => input.Id == commandInput.Id);
         }
 
-        public bool ContainsOutput(CommandReceipt receipt)
+        public bool ContainsOutput(CommandOutput commandOutput)
         {
-            return receipt.Type == CommandReceiptType.Output && Outputs.Any(output => output.GetReceipt().Equals(receipt));
+            return Outputs.Any(output => output.Id == commandOutput.Id); 
         }
 
-        public bool ContainsStream(CommandReceipt receipt)
+        public bool ContainsStream(StreamIdentifier streamId)
         {
-            return receipt.Type == CommandReceiptType.Stream && Filtergraph.FilterchainList.Any(f => f.GetReceipts().Any(r => r.Equals(receipt)));
+            return Filtergraph.FilterchainList.Any(f => f.GetStreamIdentifiers().Any(r => r.Equals(streamId)));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Hudl.Ffmpeg.Common
+﻿namespace Hudl.FFmpeg.Common
 {
     /// <summary>
     /// Video Blend filter options, give further definition to the blend filter. 

@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    /// <summary>
+    /// specifies a video profile target level.
+    /// </summary>
+    [ForStream(Type = typeof(AudioStream))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class Level : BaseSetting
     {
@@ -23,13 +24,16 @@ namespace Hudl.Ffmpeg.Settings
     
         public double Setting { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Setting <= 0)
             {
                 throw new InvalidOperationException("Setting size must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Setting);
         }
     }

@@ -1,15 +1,14 @@
-﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
     /// <summary>
     /// Video codec for a video resource file.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class CodecVideo : BaseCodec
     {

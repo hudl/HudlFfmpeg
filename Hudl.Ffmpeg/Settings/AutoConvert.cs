@@ -1,18 +1,17 @@
-﻿using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
     /// <summary>
     /// Useful if on the fly scaling is needed for demux concatenation. there are no 
     /// specific settings for this and FFmpeg states that it is good practice to include 
     /// as some files need this setting.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
+    [ForStream(Type = typeof(AudioStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
     public class AutoConvert : BaseSetting
     {

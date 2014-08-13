@@ -1,40 +1,23 @@
-﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// Movie Video filter declares a filter resource that can be given a specific map. This resource can then be used as an input stream in any subsequent filterchains.
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
-    [AppliesToResource(Type=typeof(IImage))]
-    public class Movie : BaseFilter
+    [ForStream(Type=typeof(VideoStream))]
+    public class Movie : BaseMovie
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "movie";
-
         public Movie()
-            : base(FilterType, FilterMaxInputs)
+            : base(string.Empty) 
         {
         }
-        public Movie(IResource file)
+        public Movie(IContainer resource)
             : this()
         {
-            File = file;
-        }
-
-        public IResource File { get; set; }
-
-        public override string ToString()
-        {
-            if (File == null)
-            {
-                throw new InvalidOperationException("Movie input cannot be nothing");
-            }
-
-            return string.Concat(Type, "=", File.Path);
+            Resource = resource; 
         }
     }
 }

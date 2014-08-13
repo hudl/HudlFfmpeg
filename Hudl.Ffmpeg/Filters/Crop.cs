@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Text;
 using System.Drawing;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// crop fillter will crop the selected filter to a specific size and dimensions
     /// </summary>
-    [AppliesToResource(Type = typeof(IImage))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     public class Crop : BaseFilter
     {
         private const int FilterMaxInputs = 1;
@@ -42,9 +41,10 @@ namespace Hudl.Ffmpeg.Filters
         }
 
         public Point Offset { get; set; }
+
         public Size Dimensions { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (Dimensions.Width <= 0)
             {
@@ -54,34 +54,38 @@ namespace Hudl.Ffmpeg.Filters
             {
                 throw new InvalidOperationException("Dimensions.Height must be greater than zero for cropping.");
             }
+            if (Offset.X < 0)
+            {
+                throw new InvalidOperationException("Offset.X must be greater than or equal to zero for cropping.");
+            }
+            if (Offset.Y < 0)
+            {
+                throw new InvalidOperationException("Offset.Y must be greater than or equal to zero for cropping.");
+            }
+        }
 
-            var filter = new StringBuilder(100);
+        public override string ToString()
+        {
+            var filterParameters = new StringBuilder(100);
+
             if (Dimensions.Width != 0)
             {
-                filter.AppendFormat("{1}w={0}",
-                    Dimensions.Width,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "w", Dimensions.Width);
             }
             if (Dimensions.Height != 0)
             {
-                filter.AppendFormat("{1}h={0}",
-                    Dimensions.Height,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "h", Dimensions.Height);
             }
             if (Offset.X != 0)
             {
-                filter.AppendFormat("{1}x={0}",
-                    Offset.X,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "x", Offset.X);
             }
             if (Offset.Y != 0)
             {
-                filter.AppendFormat("{1}y={0}",
-                    Offset.Y,
-                    (filter.Length > 0) ? ":" : string.Empty);
+                FilterUtility.ConcatenateParameter(filterParameters, "y", Offset.Y);
             }
 
-            return string.Concat(Type, "=", filter.ToString());
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

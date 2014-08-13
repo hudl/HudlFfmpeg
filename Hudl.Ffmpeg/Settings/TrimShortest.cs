@@ -1,19 +1,18 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
     /// <summary>
     /// The trim shortest setting will trim the output resource to the shortest input resource setting.
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(AudioStream))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class TrimShortest : BaseSetting
     {
@@ -24,14 +23,14 @@ namespace Hudl.Ffmpeg.Settings
         {
         }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
-        {
-            return resources.Min(r => r.Resource.Length);
-        }
-
         public override string ToString()
         {
             return Type;
+        }
+
+        public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
+        {
+            return suppliedInfo.OrderBy(r => r.Duration).FirstOrDefault();
         }
     }
 }

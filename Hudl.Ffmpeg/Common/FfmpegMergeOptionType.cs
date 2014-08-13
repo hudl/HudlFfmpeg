@@ -1,9 +1,9 @@
-﻿namespace Hudl.Ffmpeg.Common
+﻿namespace Hudl.FFmpeg.Common
 {
     /// <summary>
     /// Enumeration that describes how to approach a merge of collections
     /// </summary>
-    public enum FfmpegMergeOptionType
+    public enum FFmpegMergeOptionType
     {
         /// <summary>
         /// value indicates that a new value from a merge wins and replaces the option in the collection, new values are appended.

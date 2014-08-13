@@ -1,6 +1,7 @@
 ﻿using System.IO;
+using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Tests.Assets
+namespace Hudl.FFmpeg.Tests.Assets
 {
     public class Utilities
     {
@@ -20,5 +21,15 @@ namespace Hudl.Ffmpeg.Tests.Assets
         {
             return Path.Combine(GetAssetsDirectory(), "image.png");
         }
+
+        public static void SetGlobalAssets()
+        {
+            const string outputPath = "c:/source/ffmpeg/bin/temp";
+            const string ffmpegPath = "c:/source/ffmpeg/bin/ffmpeg.exe";
+            const string ffprobePath = "c:/source/ffmpeg/bin/ffprobe.exe";
+
+            ResourceManagement.CommandConfiguration = CommandConfiguration.Create(outputPath, ffmpegPath, ffprobePath);
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Hudl.Ffmpeg.Common
+﻿namespace Hudl.FFmpeg.Common
 {
     /// <summary>
     /// enumaration containing the know and extended codec libraries for the Hudl server

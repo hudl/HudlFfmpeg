@@ -2,92 +2,87 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
-    /// Filter that applies mixes to audio resources together into a single resource 
+    /// Filter that mixes multiple audio signals into a single audio source 
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
-    public class AMix : BaseFilter
+    [ForStream(Type = typeof(AudioStream))]
+    public class AMix : BaseFilter, IMetadataManipulation
     {
         private const int FilterMaxInputs = 4;
         private const string FilterType = "amix";
-        private const int AMixDropoutTransitionDefault = 2;
 
         public AMix() 
             : base(FilterType, FilterMaxInputs)
         {
-            DropoutTransition = AMixDropoutTransitionDefault;
-            DurationType = DurationType.Longest;
         }
-        public AMix(DurationType duration)
+        public AMix(int? inputs, double? dropoutTransition, DurationType duration)
             : this()
         {
-            DurationType = duration;
-        }
-        public AMix(DurationType duration, int dropoutTransition)
-            : this(duration)
-        {
+            Inputs = inputs;
+            Duration = duration; 
             DropoutTransition = dropoutTransition;
         }
 
-        public int DropoutTransition { get; set; }
+        public int? Inputs { get; set; }
+        
+        public double? DropoutTransition { get; set; }
 
-        public DurationType DurationType { get; set; }
+        public DurationType Duration { get; set; }
 
-        public override TimeSpan? LengthFromInputs(List<CommandResource> resources)
+        public override void Validate()
         {
-            switch (DurationType)
+            if (Inputs.HasValue && Inputs < 2)
             {
-                case DurationType.First:
-                    return resources.First().Resource.Length;
-                case DurationType.Shortest:
-                    return resources.Min(r => r.Resource.Length);
-                default:
-                    return resources.Max(r => r.Resource.Length);
+                throw new InvalidOperationException("Number of inputs cannot be less than defualt of 2");
+            }
+            if (DropoutTransition.HasValue && DropoutTransition <= 0)
+            {
+                throw new InvalidOperationException("Dropout transition cannot be less than 0");
             }
         }
 
         public override string ToString() 
         {
-            if (CommandResources.Count < 2)
+            var filterParameters = new StringBuilder(100);
+
+            if (Inputs.HasValue)
             {
-                throw new InvalidOperationException("Number of inputs cannot be less than defualt of 2");
-            }
-            if (DropoutTransition < 2)
-            {
-                throw new InvalidOperationException("Dropout transition cannot be less than default of 2");
+                FilterUtility.ConcatenateParameter(filterParameters, "inputs", Inputs.GetValueOrDefault());
             }
 
-            //build the filter string 
-            var filter = new StringBuilder(100);
-            if (CommandResources.Count > 2)
+            if (Duration != DurationType.Longest)
             {
-                filter.AppendFormat("{1}inputs={0}",
-                    CommandResources.Count, 
-                    filter.Length > 0 ? ":" : "=");
-            }
-            if (DurationType != DurationType.Longest)  
-            {
-                filter.AppendFormat("{1}duration={0}", 
-                    DurationType.ToString().ToLower(), 
-                    filter.Length > 0 ? ":" : "=");
-            }
-            if (DropoutTransition > 2)
-            {
-                filter.AppendFormat("{1}dropout_transition={0}", 
-                    DropoutTransition, 
-                    filter.Length > 0 ? ":" : "=");
+                FilterUtility.ConcatenateParameter(filterParameters, "duration", Formats.EnumValue(Duration));
             }
 
-            //return the filter string information 
-            return string.Concat(Type, filter.ToString());
+            if (DropoutTransition.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "dropout_transition", DropoutTransition.GetValueOrDefault());
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
+        }
+
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
+        {
+            switch (Duration)
+            {
+                case DurationType.First:
+                    return suppliedInfo.FirstOrDefault();
+                case DurationType.Shortest:
+                    return suppliedInfo.OrderBy(r => r.AudioStream.Duration).FirstOrDefault();
+                default:
+                    return suppliedInfo.OrderByDescending(r => r.AudioStream.Duration).FirstOrDefault();
+            }
         }
     }
 }

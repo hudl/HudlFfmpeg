@@ -1,4 +1,4 @@
-﻿namespace Hudl.Ffmpeg.Common
+﻿namespace Hudl.FFmpeg.Common
 {
     /// <summary>
     /// enumaration containing the known bit rate configurations

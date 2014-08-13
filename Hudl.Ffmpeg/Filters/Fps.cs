@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Drawing;
 using System.Text;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// fps filter will set a frames per second on the stream, can be used on images as well
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
     public class Fps : BaseFilter
     {
         private const int FilterMaxInputs = 1;
@@ -22,22 +19,32 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
         }
-        public Fps(int frameRate)
+        public Fps(int? frameRate)
             : this()
         {
             FrameRate = frameRate;
         }
 
-        public int FrameRate { get; set; }
+        public double? FrameRate { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
-            if (FrameRate <= 0) 
+            if (FrameRate.HasValue && FrameRate <= 0)
             {
                 throw new InvalidOperationException("FrameRate must be greater than zero.");
             }
+        }
 
-            return string.Concat(Type, "=", FrameRate);
+        public override string ToString()
+        {
+            var filterParameters = new StringBuilder(100);
+
+            if (FrameRate.HasValue)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, FrameRate);
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

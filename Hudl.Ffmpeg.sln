@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.Ffmpeg", "Hudl.Ffmpeg\Hudl.Ffmpeg.csproj", "{A28FA3FF-8D08-4129-987B-F58AAE613A72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFmpeg", "Hudl.Ffmpeg\Hudl.FFmpeg.csproj", "{A28FA3FF-8D08-4129-987B-F58AAE613A72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.Ffmpeg.Tests", "Hudl.Ffmpeg.Tests\Hudl.Ffmpeg.Tests.csproj", "{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFmpeg.Tests", "Hudl.Ffmpeg.Tests\Hudl.FFmpeg.Tests.csproj", "{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{1F73384A-67E8-4893-B109-AD53AD82AECB}"
 EndProject

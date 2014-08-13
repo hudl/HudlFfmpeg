@@ -1,4 +1,4 @@
-﻿namespace Hudl.Ffmpeg.Common
+﻿namespace Hudl.FFmpeg.Common
 {
     /// <summary>
     /// Basic values that define how duration of output should be measured in comparison to the inputs

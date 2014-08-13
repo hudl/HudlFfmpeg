@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.BaseTypes
+namespace Hudl.FFmpeg.BaseTypes
 {
     /// <summary>
-    /// exception that is thrown when Ffmpeg encounters a rendering exception.
+    /// exception that is thrown when Hudl.FFmpeg encounters a rendering exception.
     /// </summary>
-    public class FfmpegRenderingException: Exception
+    public class FFmpegRenderingException: Exception
     {
-        public FfmpegRenderingException(Exception innerException)
-            : base("Ffmpeg encouuntered an exception while attempting to render the file.", innerException)
+        public FFmpegRenderingException(Exception innerException)
+            : base("FFmpeg encouuntered an exception while attempting to render the file.", innerException)
         {
         }
     }

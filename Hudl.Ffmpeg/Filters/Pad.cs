@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Drawing;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using System.Text;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// Filter that applies padding to input video 
     /// </summary>
-    [AppliesToResource(Type = typeof(IImage))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     public class Pad : BaseFilter
     {
         private const int FilterMaxInputs = 1;
@@ -22,11 +22,11 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
         }
-        public Pad(Size toDimensions, Point atPosition)
+        public Pad(Size? toDimensions, Point? atPosition)
             : this()
         {
-            To = toDimensions;
-            Position = atPosition;
+            Dimensions = toDimensions;
+            Offset = atPosition;
         }
         public Pad(string expression)
             : this()
@@ -36,32 +36,60 @@ namespace Hudl.Ffmpeg.Filters
 
         public string Expression { get; set; }
 
-        public Size To { get; set; }
+        public Size? Dimensions { get; set; }
 
-        public Point Position { get; set; }
+        public Point? Offset { get; set; }
 
-        public override string ToString() 
+        public string Color { get; set; }
+
+        public override void Validate()
         {
+            if (string.IsNullOrWhiteSpace(Expression))
+            {
+                if (Offset.HasValue && Offset.Value.IsEmpty)
+                {
+                    throw new InvalidOperationException("Offset point cannot be empty.");
+                }
+                if (Dimensions.HasValue && Dimensions.Value.IsEmpty)
+                {
+                    throw new InvalidOperationException("Dimensions cannot be empty.");
+                }
+            }
+        }
+
+        public override string ToString()
+        {
+            var filterParameters = new StringBuilder(100); 
+
             if (!string.IsNullOrWhiteSpace(Expression))
             {
-                return string.Concat(Type, "=", Expression); 
+                FilterUtility.ConcatenateParameter(filterParameters, Expression);
+
+                return FilterUtility.JoinTypeAndParameters(this, filterParameters); 
             }
 
-            if (To == null)
+            if (Dimensions.HasValue && Dimensions.Value.Width != 0)
             {
-                throw new InvalidOperationException("To dimensions cannot be null.");
+                FilterUtility.ConcatenateParameter(filterParameters, "w", Dimensions.Value.Width);
             }
-            if (Position == null)
+            if (Dimensions.HasValue && Dimensions.Value.Height != 0)
             {
-                throw new InvalidOperationException("Position point cannot be null.");
+                FilterUtility.ConcatenateParameter(filterParameters, "h", Dimensions.Value.Height);
+            }
+            if (Offset.HasValue && Offset.Value.X != 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "x", Offset.Value.X);
+            }
+            if (Offset.HasValue && Offset.Value.Y != 0)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "y", Offset.Value.Y);
+            }
+            if (!string.IsNullOrWhiteSpace(Color))
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "color", Color);
             }
 
-            return string.Format("{0}=width={1}:height={2}:x={3}:y={4}", 
-                Type,
-                To.Width, 
-                To.Height,
-                Position.X, 
-                Position.Y);
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters); 
         }
     }
 }

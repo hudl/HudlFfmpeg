@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
+using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     /// <summary>
     /// representation of a simple filt 
@@ -20,19 +20,18 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         int MaxInputs { get; }
 
         /// <summary>
-        /// the length override function, overrided when a fitler requires a length change of output calculated from the resources.
+        /// A filter must contain a validation system for stringification
         /// </summary>
-        /// <returns>Null indicates that the length difference does not apply</returns>
-        TimeSpan? LengthFromInputs(List<CommandResource> resources);
-
+        void Validate();
+        
         /// <summary>
         /// builds the command necessary to complete the effect
         /// </summary>
-        string ToString();
+        string GetAndValidateString(); 
 
         /// <summary>
         /// sets up the filter based on the settings in the filterchain
         /// </summary>
-        void Setup(FfmpegCommand command, Filterchain filterchain);
+        void Setup(FFmpegCommand command, Filterchain filterchain);
     }
 }

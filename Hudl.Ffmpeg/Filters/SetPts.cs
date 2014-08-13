@@ -1,19 +1,21 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using System.Text;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// Changes the PTS (presentation timestamp of the input frames)
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
+    [ForStream(Type=typeof(VideoStream))]
     public class SetPts : BaseFilter
     {
         private const int FilterMaxInputs = 1;
         private const string FilterType = "setpts";
-        private const string ResetPtsExpression = "PTS-STARTPTS";
+        public const string ResetPtsExpression = "PTS-STARTPTS";
         public const string FormatPlaybackRateExpression = "{0}*PTS"; 
 
         public SetPts() 
@@ -25,9 +27,13 @@ namespace Hudl.Ffmpeg.Filters
         {
             Expression = expression;
         }
-        public SetPts(bool resetTimestamp)
-            : this(ResetPtsExpression)
+        public SetPts(SetPtsExpressionType expressionType)
+            : this()
         {
+            if (expressionType == SetPtsExpressionType.ResetTimestamp)
+            {
+                Expression = ResetPtsExpression;
+            }
         }
 
         /// <summary>
@@ -35,14 +41,24 @@ namespace Hudl.Ffmpeg.Filters
         /// </summary>
         public string Expression { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Expression))
             {
                 throw new InvalidOperationException("Expression cannot be empty with a set PTS filter");
             }
+        }
 
-            return string.Concat(Type, "=", Expression);
+        public override string ToString()
+        {
+            var filterParameters = new StringBuilder(100);
+
+            if (!string.IsNullOrWhiteSpace(Expression))
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "expr", Expression);
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Reflection;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Common
+namespace Hudl.FFmpeg.Common
 {
     /// <summary>
     /// helper class that helps with validation of objects in a ffmpeg project
     /// </summary>
-    public class Validate
+    internal class Validate
     {
         /// <summary>
         /// returns a boolean indicating if <cref name="TObject"/> is applicable to <cref name="TRestrictedTo"/> 
@@ -19,7 +18,7 @@ namespace Hudl.Ffmpeg.Common
         /// <typeparam name="TObject">the type in question to be applied to</typeparam>
         /// <typeparam name="TRestrictedTo">the type in question that is required</typeparam>
         public static bool AppliesTo<TObject, TRestrictedTo>()
-            where TRestrictedTo : IResource
+            where TRestrictedTo : IStream
         {
             var objectType = typeof (TObject);
             var restrictedType = typeof (TRestrictedTo);
@@ -31,7 +30,7 @@ namespace Hudl.Ffmpeg.Common
         /// </summary>
         public static bool AppliesTo(Type objectType, Type restrictedType)
         {
-            var matchingAttributes = GetAttributes<AppliesToResourceAttribute>(objectType);
+            var matchingAttributes = GetAttributes<ForStreamAttribute>(objectType);
             if (matchingAttributes.Count == 0)
             {
                 return false;
@@ -39,6 +38,21 @@ namespace Hudl.Ffmpeg.Common
 
             return matchingAttributes.Any(attribute => (attribute.Type == restrictedType ||
                                                         attribute.Type.IsAssignableFrom(restrictedType)));
+        }
+
+        /// <summary>
+        /// returns a boolean indicating if <cref name="objectType"/> is applicable to <cref name="restrictedType"/> 
+        /// </summary>
+        public static bool ContainsStream(Type objectType, Type streamType)
+        {
+            var matchingAttributes = GetAttributes<ContainsStreamAttribute>(objectType);
+            if (matchingAttributes.Count == 0)
+            {
+                return false;
+            }
+
+            return matchingAttributes.Any(attribute => (attribute.Type == streamType ||
+                                                        attribute.Type.IsAssignableFrom(streamType)));
         }
 
         public static bool IsSettingFor<TSetting>(TSetting item, SettingsCollectionResourceType type)

@@ -1,13 +1,15 @@
 ﻿using System;
-using System.Drawing;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IVideo))]
+    /// <summary>
+    /// set the video display aspect ratio specified by aspect.
+    /// </summary>
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class AspectRatio : BaseSetting
     {
@@ -17,7 +19,7 @@ namespace Hudl.Ffmpeg.Settings
             : base(SettingType)
         {
         }
-        public AspectRatio(FfmpegRatio ratio)
+        public AspectRatio(FFmpegRatio ratio)
             : this()
         {
             if (ratio == null)
@@ -28,15 +30,18 @@ namespace Hudl.Ffmpeg.Settings
             Ratio = ratio;
         }
 
-        public FfmpegRatio Ratio { get; set; } 
-               
-        public override string ToString()  
+        public FFmpegRatio Ratio { get; set; }
+
+        public override void Validate()
         {
             if (Ratio == null)
             {
                 throw new InvalidOperationException("Ratio cannot be null.");
             }
+        }
 
+        public override string ToString()  
+        {
             return string.Concat(Type, " ", Ratio.ToRatio());
         }
     }

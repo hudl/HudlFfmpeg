@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.Settings.BaseTypes
+namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     /// <summary>
     /// A series of Settings that apply to a single resource type.
@@ -94,7 +94,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// <summary>
         /// merges the current setting into the set based on the merge option type
         /// </summary>
-        public SettingsCollection Merge<TSetting>(TSetting setting, FfmpegMergeOptionType option)
+        public SettingsCollection Merge<TSetting>(TSetting setting, FFmpegMergeOptionType option)
             where TSetting : ISetting
         {
             if (setting == null)
@@ -105,7 +105,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
             var alreadyContainsSetting = Contains(setting); 
             if (alreadyContainsSetting)
             {
-                if (option == FfmpegMergeOptionType.NewWins)
+                if (option == FFmpegMergeOptionType.NewWins)
                 {
                     Remove(setting);
                     Add(setting);
@@ -122,7 +122,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         /// <summary>
         /// merges the current SettingsCollection into the set based on the merge option type.
         /// </summary>
-        public SettingsCollection MergeRange(SettingsCollection settings, FfmpegMergeOptionType option)
+        public SettingsCollection MergeRange(SettingsCollection settings, FFmpegMergeOptionType option)
         {
             if (settings == null)
             {
@@ -169,7 +169,16 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         public TSetting Item<TSetting>()
             where TSetting : class, ISetting
         {
-            return SettingsList.FirstOrDefault(s => s is TSetting) as TSetting;
+            return SettingsList.OfType<TSetting>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// will return the List of ISetting that match the type provided
+        /// </summary>
+        public List<TSetting> OfType<TSetting>()
+            where TSetting : class, ISetting
+        {
+            return SettingsList.OfType<TSetting>().ToList();
         }
 
         /// <summary>
@@ -178,7 +187,7 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         public SettingsCollection Copy()
         {
             var newSettingsCollection = new SettingsCollection(Type);
-            newSettingsCollection.MergeRange(this, FfmpegMergeOptionType.NewWins);
+            newSettingsCollection.MergeRange(this, FFmpegMergeOptionType.NewWins);
             return newSettingsCollection;
         }
 

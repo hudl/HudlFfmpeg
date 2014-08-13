@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     internal class Utilities
     {
@@ -30,7 +30,7 @@ namespace Hudl.Ffmpeg.Filters
             return filterchain.Filters.List.Min(f => f.MaxInputs);
         }
 
-        public static bool ValidateFilters(FfmpegCommand command, Filterchain filterchain, List<CommandReceipt> receipts)
+        public static bool ValidateFilters(FFmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds)
         {
             if (filterchain == null)
             {
@@ -43,17 +43,17 @@ namespace Hudl.Ffmpeg.Filters
                 {
                     return true;
                 }
-                return (f as IFilterValidator).Validate(command, filterchain, receipts);
+                return (f as IFilterValidator).Validate(command, filterchain, streamIds);
             });
         }
 
-        public static bool ValidateFiltersMax(Filterchain filterchain, List<CommandReceipt> resources)
+        public static bool ValidateFiltersMax(Filterchain filterchain, List<StreamIdentifier> resources)
         {
             var maximumAllowedMinimum = GetFilterInputMax(filterchain);
             return maximumAllowedMinimum > 1 || (maximumAllowedMinimum == 1 && resources.Count == 1);
         }
 
-        public static void ProcessFilters(FfmpegCommand command, Filterchain filterchain)
+        public static void ProcessFilters(FFmpegCommand command, Filterchain filterchain)
         {
             if (filterchain == null)
             {

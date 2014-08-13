@@ -1,16 +1,16 @@
 ﻿using System;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using System.Text;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// SetDar Filter, sets the Dynamic Aspect Ratio for the video resource.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
     public class SetDar : BaseFilter
     {
         private const int FilterMaxInputs = 1;
@@ -20,7 +20,7 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
         }
-        public SetDar(FfmpegRatio ratio)
+        public SetDar(FFmpegRatio ratio)
             : this()
         {
             if (ratio == null)
@@ -31,16 +31,26 @@ namespace Hudl.Ffmpeg.Filters
             Ratio = ratio;
         }
 
-        public FfmpegRatio Ratio { get; set; } 
-               
-        public override string ToString() 
+        public FFmpegRatio Ratio { get; set; }
+
+        public override void Validate()
         {
             if (Ratio == null)
             {
                 throw new InvalidOperationException("Ratio cannot be null.");
             }
+        }
 
-            return string.Concat(Type, "=dar=", Ratio);
+        public override string ToString() 
+        {
+            var filterParameters = new StringBuilder(100);
+
+            if (Ratio != null)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "dar", Ratio); 
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Command.BaseTypes;
-using Hudl.Ffmpeg.Common;
+using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Common;
 
-namespace Hudl.Ffmpeg.Tests.Command
+namespace Hudl.FFmpeg.Tests.Command
 {
     public class TestCommandProcessor : ICommandProcessor
     {
@@ -13,9 +12,11 @@ namespace Hudl.Ffmpeg.Tests.Command
 
         public CommandProcessorStatus Status { get; protected set; }
 
+        public string StdOut { get; protected set; }
+
         public Exception Error { get; protected set; }
 
-        public bool Open(CommandConfiguration configuration)
+        public bool Open()
         {
             OpenFired = true;
             return true; 

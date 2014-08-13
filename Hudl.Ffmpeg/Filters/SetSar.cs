@@ -1,16 +1,16 @@
 ﻿using System;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using System.Text;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
     /// SetSar Filter, sets the Sample Aspect Ratio for the video resource.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    [ForStream(Type = typeof(VideoStream))]
     public class SetSar : BaseFilter
     {
         private const int FilterMaxInputs = 1;
@@ -20,7 +20,7 @@ namespace Hudl.Ffmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
         }
-        public SetSar(FfmpegRatio ratio)
+        public SetSar(FFmpegRatio ratio)
             : this()
         {
             if (ratio == null)
@@ -31,16 +31,26 @@ namespace Hudl.Ffmpeg.Filters
             Ratio = ratio;
         }
 
-        public FfmpegRatio Ratio { get; set; } 
+        public FFmpegRatio Ratio { get; set; }
 
-        public override string ToString() 
+        public override void Validate()
         {
             if (Ratio == null)
             {
                 throw new InvalidOperationException("Ratio cannot be null.");
             }
+        }
 
-            return string.Concat(Type, "=sar=", Ratio);
+        public override string ToString() 
+        {
+            var filterParameters = new StringBuilder(100);
+
+            if (Ratio != null)
+            {
+                FilterUtility.ConcatenateParameter(filterParameters, "sar", Ratio);
+            }
+
+            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
         }
     }
 }

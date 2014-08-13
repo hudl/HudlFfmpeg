@@ -1,14 +1,19 @@
-﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+﻿using System.Collections.Generic;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IAudio))]
+    /// <summary>
+    /// sets the audio bit rate for the output stream 
+    /// </summary>
+    [ForStream(Type = typeof(AudioStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class BitRateAudio : BaseBitRate
+    public class BitRateAudio : BaseBitRate, IMetadataManipulation
     {
         private const string Suffix = ":a";
 
@@ -19,6 +24,13 @@ namespace Hudl.Ffmpeg.Settings
         public BitRateAudio(AudioBitRateType rate)
             : base(Suffix, (int)rate)
         {
+        }
+
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
+        {
+            infoToUpdate.AudioStream.BitRate = Rate * 1000;
+
+            return infoToUpdate;
         }
     }
 }

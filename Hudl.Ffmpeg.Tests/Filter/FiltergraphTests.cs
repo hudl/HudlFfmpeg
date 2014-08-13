@@ -1,18 +1,24 @@
 ﻿using System;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources;
-using Hudl.Ffmpeg.Sugar;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Sugar;
+using Hudl.FFmpeg.Tests.Assets;
 using Xunit; 
 
-namespace Hudl.Ffmpeg.Tests.Filter
+namespace Hudl.FFmpeg.Tests.Filter
 {
     public class FiltergraphTests
     {
+        public FiltergraphTests()
+        {
+            Utilities.SetGlobalAssets();
+        }
+
         [Fact]
         public void Filtergraph_EmptyToString_ThrowsException()
         {
-
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand()); 
 
             Assert.Throws<InvalidOperationException>(() => filtergraph.ToString());
@@ -22,8 +28,8 @@ namespace Hudl.Ffmpeg.Tests.Filter
         public void Filtergraph_Add()
         {
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand());
-            var filterchain1 = Filterchain.FilterTo<Mp4>();
-            var filterchain2 = Filterchain.FilterTo<Mp4>();
+            var filterchain1 = Filterchain.FilterTo<AudioStream>();
+            var filterchain2 = Filterchain.FilterTo<VideoStream>();
 
             filtergraph.Add(filterchain1);
 
@@ -39,12 +45,11 @@ namespace Hudl.Ffmpeg.Tests.Filter
         {
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand());
 
-            filtergraph.FilterTo<Mp4>();
+            filtergraph.FilterTo<VideoStream>();
 
             Assert.True(filtergraph.Count == 1);
 
-            var outputMp4 = new Mp4();
-            filtergraph.FilterTo(outputMp4);
+            filtergraph.FilterTo<AudioStream>();
 
             Assert.True(filtergraph.Count == 2);
         }
@@ -53,9 +58,9 @@ namespace Hudl.Ffmpeg.Tests.Filter
         public void Filtergraph_RemoveAt()
         {
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand());
-            filtergraph.FilterTo<Mp4>();
-            filtergraph.FilterTo<Mp4>();
-            filtergraph.FilterTo<Mp4>();
+            filtergraph.FilterTo<VideoStream>();
+            filtergraph.FilterTo<VideoStream>();
+            filtergraph.FilterTo<VideoStream>();
 
             Assert.True(filtergraph.Count == 3);
 
@@ -68,8 +73,8 @@ namespace Hudl.Ffmpeg.Tests.Filter
         public void Filtergraph_RemoveAll()
         {
             var filtergraph = Filtergraph.Create(CommandHelper.CreateCommand());
-            filtergraph.FilterTo<Mp4>();
-            filtergraph.FilterTo<Mp4>();
+            filtergraph.FilterTo<VideoStream>();
+            filtergraph.FilterTo<VideoStream>();
 
             Assert.True(filtergraph.Count == 2);
 
@@ -81,23 +86,13 @@ namespace Hudl.Ffmpeg.Tests.Filter
         private class CommandHelper
         {
             private const string OutputVideo = "c:/source/output.mp4";
-            private static readonly CommandConfiguration _testConfiguration = new CommandConfiguration("C:/Source/Test", "C:/Source/Ffmpeg", "C:/Source/Assets");
 
-            public static FfmpegCommand CreateCommand()
+            public static FFmpegCommand CreateCommand()
             {
-                var factory = new CommandFactory(_testConfiguration);
+                var factory = CommandFactory.Create();
 
-                return factory.AsOutput()
-                              .WithOutput(OutputVideo);
+                return factory.CreateOutputCommand();
             }
-
-            public static FfmpegCommand CreateCommandNoOut()
-            {
-                var factory = new CommandFactory(_testConfiguration);
-
-                return factory.AsOutput();
-            }
-
         }
     }
 }

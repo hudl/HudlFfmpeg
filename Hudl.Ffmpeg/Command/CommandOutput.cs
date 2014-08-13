@@ -1,13 +1,18 @@
 ﻿using System;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
+using IContainer = Hudl.FFmpeg.Resources.BaseTypes.IContainer;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     public class CommandOutput
     {
-        private CommandOutput(IResource outputToUse, SettingsCollection outputSettings, bool export)
+        private CommandOutput(IContainer outputToUse, SettingsCollection outputSettings, bool export)
         {
             if (outputSettings == null)
             {
@@ -25,17 +30,18 @@ namespace Hudl.Ffmpeg.Command
             Resource = outputToUse;
             Settings = outputSettings;
             IsExported = export;
+            Id = Guid.NewGuid().ToString();
         }
 
-        public static CommandOutput Create(IResource outputToUse)
+        public static CommandOutput Create(IContainer outputToUse)
         {
             return Create(outputToUse, SettingsCollection.ForOutput());
         }
-        public static CommandOutput Create(IResource outputToUse, SettingsCollection outputSettings)
+        public static CommandOutput Create(IContainer outputToUse, SettingsCollection outputSettings)
         {
             return Create(outputToUse, outputSettings, true);
         }
-        public static CommandOutput Create(IResource outputToUse, SettingsCollection outputSettings, bool export)
+        public static CommandOutput Create(IContainer outputToUse, SettingsCollection outputSettings, bool export)
         {
             return new CommandOutput(outputToUse, outputSettings, export);
         }
@@ -43,35 +49,49 @@ namespace Hudl.Ffmpeg.Command
         public bool IsExported { get; set; }
         
         public SettingsCollection Settings { get; set; }
-        
-        public TimeSpan Length
-        {
-            get
-            {
-                return TimeSpan.FromSeconds(Helpers.GetLength(Owner));
-            }
-        }
 
-        public IResource Output()
-        {
-            Resource.Info.Duration = Length; 
-            return Resource;
-        }
+        public IContainer Resource { get; internal set; }
 
         public string OutputName { get { return Resource.FullName; } }
 
-        /// <summary>
-        /// returns a receipt for the command output
-        /// </summary>
-        /// <returns></returns>
-        public CommandReceipt GetReceipt()
+        public StreamIdentifier GetStreamIdentifier()
         {
-            return CommandReceipt.CreateFromOutput(Owner.Owner.Id, Owner.Id, Resource.Map);
+            if (Resource.Streams.OfType<VideoStream>().Any())
+            {
+                return GetStreamIdentifier<VideoStream>();
+            }
+
+            if (Resource.Streams.OfType<AudioStream>().Any())
+            {
+                return GetStreamIdentifier<AudioStream>();
+            }
+
+            throw new StreamNotFoundException();
         }
 
+        public StreamIdentifier GetStreamIdentifier<TStreamType>()
+            where TStreamType : class, IStream
+        {
+            var streamInReference = Resource.Streams.OfType<TStreamType>().FirstOrDefault();
+
+            if (streamInReference == null)
+            {
+                throw new StreamNotFoundException(typeof(TStreamType));
+            }
+
+            return StreamIdentifier.Create(Owner.Owner.Id, Owner.Id, streamInReference.Map);
+        }
+
+        public List<StreamIdentifier> GetStreamIdentifiers()
+        {
+            return Resource.Streams
+                           .Select(s => StreamIdentifier.Create(Owner.Owner.Id, Owner.Id, s.Map))
+                           .ToList();
+        } 
+
         #region Internals
-        internal FfmpegCommand Owner { get; set; }
-        internal IResource Resource { get; set; }
+        internal string Id { get; set; }
+        internal FFmpegCommand Owner { get; set; }
         #endregion 
     }
 }

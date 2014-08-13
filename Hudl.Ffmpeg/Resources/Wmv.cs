@@ -1,9 +1,11 @@
-﻿using System;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Resources
+namespace Hudl.FFmpeg.Resources
 {
-    public class Wmv : BaseVideo
+    [ContainsStream(Type = typeof(AudioStream))]
+    [ContainsStream(Type = typeof(VideoStream))]
+    public class Wmv : BaseContainer
     {
         private const string FileFormat = ".wmv";
 
@@ -12,15 +14,9 @@ namespace Hudl.Ffmpeg.Resources
         {
         }
 
-        protected override IResource InstanceOfMe()
+        protected override IContainer Clone()
         {
-            return new Wmv
-            {
-                Id = Id,
-                Length = Length,
-                Name = Name,
-                Path = Path
-            };
+            return new Wmv();
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
     /// <summary>
     /// MovFlags is used to set AVOptions that tell ffmpeg how to fragment the file. 
     /// </summary>
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(AudioStream))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class MovFlags : BaseSetting
     {
@@ -29,13 +29,16 @@ namespace Hudl.Ffmpeg.Settings
     
         public string Flags { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Flags))
             {
                 throw new InvalidOperationException("Flags cannot be null or empty.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Flags);
         }
     }

@@ -1,18 +1,25 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.BaseTypes
+namespace Hudl.FFmpeg.BaseTypes
 {
     /// <summary>
-    /// exception that is thrown when Ffmpeg encounters a processing exception.
+    /// exception that is thrown when FFmpeg returns an exit code other than 0.
     /// </summary>
-    public class FfmpegProcessingException: Exception
+    public class FFmpegProcessingException: Exception
     {
-        public FfmpegProcessingException(int exitCode, string errorOutput)
-            : base(string.Format("Ffmpeg failed processing with an exit code of {0}",
+        public FFmpegProcessingException(int exitCode, string errorOutput)
+            : base(string.Format("FFmpeg failed processing with an exit code of {0}",
                    exitCode))
         {
             base.Data["ExitCode"] = exitCode;
             base.Data["ErrorOutput"] = errorOutput;
+
+            ExitCode = exitCode;
+            ErrorOutput = errorOutput; 
         }
+
+        public int ExitCode { get; private set; }
+
+        public string ErrorOutput { get; private set; }
     }
 }

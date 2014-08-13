@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-
-namespace Hudl.Ffmpeg.Settings.BaseTypes
+﻿namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     /// <summary>
-    /// representation of a settomg that can be applied to an Ffmpeg resource
+    /// representation of a settomg that can be applied to an FFmpeg resource
     /// </summary>
     public interface ISetting
     {
@@ -16,14 +11,13 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         string Type { get; }
 
         /// <summary>
-        /// the length override function, overrided when a setting requires a length change of output calculated from the resources.
+        /// A setting must contain a validation system for stringification
         /// </summary>
-        /// <returns>Null indicates that the length difference does not apply</returns>
-        TimeSpan? LengthFromInputs(List<CommandResource> resources);
-
+        void Validate();
+        
         /// <summary>
         /// builds the command necessary to complete the effect
         /// </summary>
-        string ToString();
+        string GetAndValidateString(); 
     }
 }

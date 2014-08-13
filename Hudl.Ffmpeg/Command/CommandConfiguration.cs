@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.Ffmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
 
-namespace Hudl.Ffmpeg.Command
+namespace Hudl.FFmpeg.Command
 {
     /// <summary>
     /// Represents a configuration for the command factory
@@ -14,6 +14,10 @@ namespace Hudl.Ffmpeg.Command
         {
         }
         public CommandConfiguration(string outputPath, string ffmpegPath, string assetsPath)
+            : this(outputPath, ffmpegPath, string.Empty, assetsPath)
+        {
+        }
+        public CommandConfiguration(string outputPath, string ffmpegPath, string ffprobePath, string assetsPath)
         {
             if (string.IsNullOrWhiteSpace(outputPath))
             {
@@ -21,7 +25,7 @@ namespace Hudl.Ffmpeg.Command
             }
             if (string.IsNullOrWhiteSpace(ffmpegPath))
             {
-                throw new ArgumentException("Ffmpeg path path cannot be empty.", "ffmpegPath");
+                throw new ArgumentException("FFmpeg path path cannot be empty.", "ffmpegPath");
             }
             if (string.IsNullOrWhiteSpace(assetsPath))
             {
@@ -30,11 +34,13 @@ namespace Hudl.Ffmpeg.Command
 
             TempPath = outputPath;
             OutputPath = outputPath;
-            FfmpegPath = ffmpegPath;
             AssetsPath = assetsPath;
+            FFmpegPath = ffmpegPath;
+            FFprobePath = ffprobePath;
             LoggingAttributes = new Dictionary<string, string>();
             EnvironmentVariables = new Dictionary<string, string>();
         }
+
 
         /// <summary>
         /// declares some environmental settings for the command
@@ -42,7 +48,7 @@ namespace Hudl.Ffmpeg.Command
         public Dictionary<string, string> EnvironmentVariables { get; private set; }
 
         /// <summary>
-        /// attributes that are to be included with any log messages through Hudl.Ffmpeg.
+        /// attributes that are to be included with any log messages through Hudl.FFmpeg.
         /// </summary>
         public Dictionary<string, string> LoggingAttributes { get; set; } 
 
@@ -57,24 +63,19 @@ namespace Hudl.Ffmpeg.Command
         public string OutputPath { get; private set; }
 
         /// <summary>
-        /// declares the Ffmpeg path for the command factory, this is where the ffmpeg executable is.
+        /// declares the FFmpeg path for the command factory, this is where the ffmpeg executable is.
         /// </summary>
-        public string FfmpegPath { get; private set; }
+        public string FFmpegPath { get; private set; }
+
+        /// <summary>
+        /// declares the FFprobe path for the command factory, this is where the ffprobe executable is.
+        /// </summary>
+        public string FFprobePath { get; private set; }
 
         /// <summary>
         /// declares the static resource files path for the command factory, this is where all static resource files will reside.
         /// </summary>
         public string AssetsPath { get; private set; }
-
-        /// <summary>
-        /// tells ffmpeg framework whether it should run clean up or not
-        /// </summary>
-        public bool RunSetup { get; set; }
-
-        /// <summary>
-        /// tells ffmpeg framework whether it should run clean up or not
-        /// </summary>
-        public bool RunCleanup { get; set; }
 
         /// <summary>
         /// flags that will change the render process behavior
@@ -86,9 +87,10 @@ namespace Hudl.Ffmpeg.Command
             return new CommandConfiguration(outputPath, ffmpegPath);   
         }
 
-        public static CommandConfiguration Create(string outputPath, string ffmpegPath, string assetsPath)
+        public static CommandConfiguration Create(string outputPath, string ffmpegPath, string ffprobePath)
         {
-            return new CommandConfiguration(outputPath, ffmpegPath, assetsPath);
+            return new CommandConfiguration(outputPath, ffmpegPath, ffprobePath, outputPath);
         }
+
     }
 }

@@ -1,6 +1,6 @@
-﻿using Hudl.Ffmpeg.Command;
+﻿using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     /// <summary>
     /// The filter processor interface is used when a filter or template requires input video to be in a specified format. The methods allow the programmer to abstract some of that processing by performing it when the filter is applied.
@@ -12,6 +12,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// </summary>
         /// <param name="command">The Command parent that the filter is by association a part of</param>
         /// <param name="filterchain">The Filterchain parent that the filter is part of</param>
-        void PrepCommands(FfmpegCommand command, Filterchain filterchain);
+        void PrepCommands(FFmpegCommand command, Filterchain filterchain);
     }
 }

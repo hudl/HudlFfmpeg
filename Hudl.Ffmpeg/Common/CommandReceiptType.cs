@@ -1,20 +1,20 @@
-﻿namespace Hudl.Ffmpeg.Common
+﻿namespace Hudl.FFmpeg.Common
 {
     /// <summary>
-    /// A receipt indicating the resource that was added to the Command
+    /// A streamId indicating the resource that was added to the Command
     /// </summary>
     public enum CommandReceiptType
     {
         /// <summary>
-        /// specifies that the receipt is for a command input resource
+        /// specifies that the streamId is for a command input resource
         /// </summary>
         Input, 
         /// <summary>
-        /// specifies that the receipt is for a command output file 
+        /// specifies that the streamId is for a command output file 
         /// </summary>
         Output, 
         /// <summary>
-        /// specifies that the receipt is for a filtergraph stream
+        /// specifies that the streamId is for a filtergraph stream
         /// </summary>
         Stream
     }

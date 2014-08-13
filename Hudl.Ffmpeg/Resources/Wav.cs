@@ -1,9 +1,10 @@
-﻿using System;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Resources
+namespace Hudl.FFmpeg.Resources
 {
-    public class Wav : BaseAudio
+    [ContainsStream(Type = typeof(AudioStream))]
+    public class Wav : BaseContainer
     {
         private const string FileFormat = ".wav";
         
@@ -12,15 +13,9 @@ namespace Hudl.Ffmpeg.Resources
         {
         }
 
-        protected override IResource InstanceOfMe()
+        protected override IContainer Clone()
         {
-            return new Wav
-            {
-                Id = Id,
-                Length = Length,
-                Name = Name,
-                Path = Path
-            };
+            return new Wav();
         }
     }
 }

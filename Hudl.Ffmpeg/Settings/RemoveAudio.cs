@@ -1,13 +1,19 @@
-﻿using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+﻿using System.Collections.Generic;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IVideo))]
+    /// <summary>
+    /// removes the audio stream from the output file
+    /// </summary>
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class RemoveAudio : BaseSetting
+    public class RemoveAudio : BaseSetting, IMetadataManipulation
     {
         private const string SettingType = "-an";
 
@@ -19,6 +25,15 @@ namespace Hudl.Ffmpeg.Settings
         public override string ToString()
         {
             return Type;
+        }
+
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
+        {
+            infoToUpdate.HasAudio = false;
+
+            infoToUpdate.AudioStream = null;
+
+            return infoToUpdate;
         }
     }
 }

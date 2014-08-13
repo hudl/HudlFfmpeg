@@ -1,12 +1,15 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IVideo))]
+    /// <summary>
+    /// sets the output pix format type.
+    /// </summary>
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class PixelFormat : BaseSetting
     {
@@ -15,11 +18,6 @@ namespace Hudl.Ffmpeg.Settings
         public PixelFormat(string library)
             : base(SettingType)
         {
-            if (string.IsNullOrWhiteSpace(library))
-            {
-                throw new ArgumentNullException("library");
-            }
-
             Library = library;
         }
         public PixelFormat(PixelFormatType library)
@@ -29,13 +27,16 @@ namespace Hudl.Ffmpeg.Settings
 
         public string Library { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Library))
             {
                 throw new InvalidOperationException("Library cannot be empty for this setting.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Library);
         }
     }

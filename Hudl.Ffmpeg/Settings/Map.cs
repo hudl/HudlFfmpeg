@@ -1,24 +1,25 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
-    [AppliesToResource(Type = typeof(IAudio))]
-    [AppliesToResource(Type = typeof(IVideo))]
-    [AppliesToResource(Type = typeof(IImage))]
+    /// <summary>
+    /// Designate one or more input streams as a source for the output file.
+    /// </summary>
+    [ForStream(Type = typeof(IContainer))]
     [SettingsApplication(PreDeclaration = true, MultipleAllowed = true, ResourceType = SettingsCollectionResourceType.Output)]
     public class Map : BaseSetting
     {
         private const string SettingType = "-map";
 
-        public Map(CommandReceipt receipt)
+        public Map(StreamIdentifier streamId)
             : base(SettingType)
         {
-            Stream = receipt.Map;
+            Stream = streamId.Map;
         }
 
         public Map(string streamId)
@@ -29,13 +30,16 @@ namespace Hudl.Ffmpeg.Settings
     
         public string Stream { get; set; }
 
-        public override string ToString()
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Stream))
             {
                 throw new InvalidOperationException("Map setting Stream cannot be null.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Formats.Map(Stream, true));
         }
     }

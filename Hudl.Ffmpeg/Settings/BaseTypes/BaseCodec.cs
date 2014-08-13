@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hudl.Ffmpeg.Settings.BaseTypes
+namespace Hudl.FFmpeg.Settings.BaseTypes
 {
     public abstract class BaseCodec : BaseSetting
     {
@@ -13,14 +13,17 @@ namespace Hudl.Ffmpeg.Settings.BaseTypes
         }
 
         public string Codec { get; set; }
-        
-        public override string ToString()
+
+        public override void Validate()
         {
             if (string.IsNullOrWhiteSpace(Codec))
             {
                 throw new InvalidOperationException("Codec cannot be empty for this setting.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Codec);
         }
     }

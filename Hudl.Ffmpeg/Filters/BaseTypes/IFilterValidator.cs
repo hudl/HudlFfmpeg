@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
+using Hudl.FFmpeg.Command;
 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     interface IFilterValidator
     {
@@ -10,7 +10,7 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         /// </summary>
         /// <param name="command">The command that contains the Filterchain that holds the Filter</param>
         /// <param name="filterchain">The Filterchain that hold the Filter</param>
-        /// <param name="receipts">The Resource Receipts from the Command that the filter is to be applied against.</param>
-        bool Validate(FfmpegCommand command, Filterchain filterchain, List<CommandReceipt> receipts);
+        /// <param name="streamIds">The Resource StreamIdentifiers from the Command that the filter is to be applied against.</param>
+        bool Validate(FFmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds);
     }
 }

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Command;
 
-//TODO:CB --> figure out what to do with additional calls here, they are far from optimal 
-namespace Hudl.Ffmpeg.Filters.BaseTypes
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     /// <summary>
     /// The base implementation of Filter's, will store the basic information on setup, and makes it accessible to parents.
@@ -16,7 +12,6 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         {
             Type = type;
             MaxInputs = maxInputs;
-            CommandResources = new List<CommandResource>();
         }
     
         /// <summary>
@@ -30,38 +25,38 @@ namespace Hudl.Ffmpeg.Filters.BaseTypes
         public int MaxInputs { get; protected set; }
 
         /// <summary>
-        /// Available at [Render] time, brings the resources as available objects to the filters
+        /// Available at [Render] time, In an attempt to allow abstraction in some cases
         /// </summary>
-        protected List<CommandResource> CommandResources { get; set; }
+        protected int InputCount { get; set; }
 
         /// <summary>
         /// Method, called during [Render] to bring forward all the necessary resources, necessary action for maximum abstraction from the user.
         /// </summary>
         /// <param name="command">The command chain the current filter belongs to.</param>
         /// <param name="filterchain">The filterchain that the filter belongs to</param>
-        public void Setup(FfmpegCommand command, Filterchain filterchain)
+        public void Setup(FFmpegCommand command, Filterchain filterchain)
         {
-            CommandResources = command.ResourcesFromReceipts(new List<CommandReceipt>(filterchain.Resources));
+            InputCount = filterchain.Resources.Count;
 
-            if (CommandResources.Count == 0)
+            if (InputCount == 0)
             {
                 throw new InvalidOperationException("Cannot setup filter with a resource count of zero.");
             }
-            if (CommandResources.Count > MaxInputs)
+            if (InputCount > MaxInputs)
             {
                 throw new InvalidOperationException("The filter has exceeded the maximum allowed number of inputs.");
             }
         }
 
-        /// <summary>
-        /// Quick way to calculate the output length after a filter has been applied.
-        /// </summary>
-        public virtual TimeSpan? LengthFromInputs(List<CommandResource> resources)
+        public virtual void Validate()
         {
-            var totalSeconds = resources.Sum(r => r.Resource.Length.TotalSeconds);
-            return totalSeconds > 0d
-                       ? (TimeSpan?)TimeSpan.FromSeconds(totalSeconds)
-                       : null;
+        }
+
+        public string GetAndValidateString()
+        {
+            Validate();
+
+            return ToString();
         }
     }
 }

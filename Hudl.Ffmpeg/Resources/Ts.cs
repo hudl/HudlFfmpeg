@@ -1,25 +1,22 @@
-﻿using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Resources
+namespace Hudl.FFmpeg.Resources
 {
-    public class Ts : BaseVideo
+    [ContainsStream(Type = typeof(AudioStream))]
+    [ContainsStream(Type = typeof(VideoStream))]
+    public class Ts : BaseContainer
     {
         private const string FileFormat = ".ts";
 
-        public Ts() 
+        public Ts()
             : base(FileFormat)
         {
         }
 
-        protected override IResource InstanceOfMe()
+        protected override IContainer Clone()
         {
-            return new Ts
-            {
-                Id = Id,
-                Length = Length,
-                Name = Name,
-                Path = Path
-            };
+            return new Ts();
         }
     }
 }

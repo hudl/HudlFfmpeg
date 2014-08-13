@@ -1,26 +1,23 @@
-﻿using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Filters.BaseTypes;
-using Hudl.Ffmpeg.Resources.BaseTypes;
+﻿using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
-namespace Hudl.Ffmpeg.Filters
+namespace Hudl.FFmpeg.Filters
 {
     /// <summary>
-    /// Split Filter copys the input stream into multiple outputs
+    /// Split Filter copys an input video stream into multiple outputs
     /// </summary>
-    [AppliesToResource(Type=typeof(IVideo))]
-    public class Split : BaseSplitFilter
+    [ForStream(Type=typeof(VideoStream))]
+    public class Split : BaseSplit
     {
-        private const string FilterType = "split";
-        private const int DefaultVideoOut = 2;
-        private const int FilterMaxInputs = 1;
-
         public Split() 
-            : base(FilterType, FilterMaxInputs, DefaultVideoOut)
+            : base(string.Empty) 
         {
         }
-        public Split(int numberOfStreams)
-            : base(FilterType, FilterMaxInputs, numberOfStreams)
+        public Split(int? numberOfStreams)
+            : this()
         {
+            NumberOfStreams = numberOfStreams;
         }
     }
 }

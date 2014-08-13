@@ -1,18 +1,20 @@
 ﻿using System;
-using Hudl.Ffmpeg.BaseTypes;
-using Hudl.Ffmpeg.Command;
-using Hudl.Ffmpeg.Common;
-using Hudl.Ffmpeg.Resources.BaseTypes;
-using Hudl.Ffmpeg.Settings.BaseTypes;
+using System.Collections.Generic;
+using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.BaseTypes;
 
-namespace Hudl.Ffmpeg.Settings
+namespace Hudl.FFmpeg.Settings
 {
     /// <summary>
-    /// Start At can only be used on the first input resource stream. Ffmpeg will not process the video until the starting point provided.
+    /// Start At can only be used on the first input resource stream. FFmpeg will not process the video until the starting point provided.
     /// </summary>
-    [AppliesToResource(Type = typeof(IVideo))]
+    [ForStream(Type = typeof(VideoStream))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
-    public class StartAt : BaseSetting
+    public class StartAt : BaseSetting, IMetadataManipulation
     {
         private const string SettingType = "-ss";
         
@@ -33,18 +35,7 @@ namespace Hudl.Ffmpeg.Settings
 
         public TimeSpan Length { get; set; }
 
-        public override TimeSpan? LengthFromInputs(System.Collections.Generic.List<CommandResource> resources)
-        {
-            var overallLength = TimeSpan.FromSeconds(0);
-            var baseCalculatedLength = base.LengthFromInputs(resources);
-            if (baseCalculatedLength == null)
-            {
-                return overallLength;
-            }
-            return baseCalculatedLength - Length;
-        }
-
-        public override string ToString()
+        public override void Validate()
         {
             if (Length == null)
             {
@@ -54,8 +45,18 @@ namespace Hudl.Ffmpeg.Settings
             {
                 throw new InvalidOperationException("StartAt length must be greater than zero.");
             }
+        }
 
+        public override string ToString()
+        {
             return string.Concat(Type, " ", Formats.Duration(Length));
+        }
+
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
+        {
+            infoToUpdate.VideoStream.Duration = infoToUpdate.VideoStream.Duration - Length;
+
+            return infoToUpdate;
         }
     }
 }
