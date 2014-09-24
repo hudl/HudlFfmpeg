@@ -55,6 +55,10 @@ namespace Hudl.Ffmpeg.Filters
             {
                 startAtLocation = CommandResources[0].Resource.Length.TotalSeconds - Duration;
             }
+            if (OverrideStartAt.HasValue)
+            {
+                startAtLocation = OverrideStartAt.Value;
+            }
             filter.AppendFormat("t={0}", Transition.ToString().ToLower());
             switch (Unit)
             {
