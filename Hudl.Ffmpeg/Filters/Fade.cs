@@ -38,6 +38,8 @@ namespace Hudl.Ffmpeg.Filters
 
         public double? OverrideStartAt { get; set; }
 
+        public string Color { get; set; }
+
         public VideoUnitType Unit { get; set; }
 
         public FadeTransitionType Transition { get; set; }
@@ -72,6 +74,11 @@ namespace Hudl.Ffmpeg.Filters
                         startAtLocation,
                         Duration);
                     break;
+            }
+
+            if (!string.IsNullOrWhiteSpace(Color))
+            {
+                filter.AppendFormat(":c={0}", Color);
             }
 
             return string.Concat(Type, "=", filter.ToString());
