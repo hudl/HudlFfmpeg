@@ -58,7 +58,7 @@ namespace Hudl.Ffmpeg.Sugar
         }
         public static List<CommandOutput> MapAudioStream(this List<CommandOutput> outputList, CommandReceipt receipt)
         {
-            outputList.ForEach(output => output.MapVideoStream(receipt));
+            outputList.ForEach(output => output.MapAudioStream(receipt));
 
             return outputList;
         }
