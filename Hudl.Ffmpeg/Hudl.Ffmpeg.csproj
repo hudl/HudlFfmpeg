@@ -76,6 +76,8 @@
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
+    <Compile Include="Settings\MapMetadata.cs" />
+    <Compile Include="Settings\MapChapters.cs" />
     <Compile Include="Settings\Pass.cs" />
     <Compile Include="Settings\MaxRate.cs" />
     <Compile Include="Settings\MinRate.cs" />
