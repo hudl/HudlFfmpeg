@@ -81,6 +81,7 @@
     <Compile Include="Settings\Pass.cs" />
     <Compile Include="Settings\MaxRate.cs" />
     <Compile Include="Settings\MinRate.cs" />
+    <Compile Include="Settings\RemoveSubtitles.cs" />
     <Compile Include="Settings\SampleRate.cs" />
     <Compile Include="Settings\BitStreamFilterAudio.cs" />
     <Compile Include="Settings\BitStreamFilterVideo.cs" />

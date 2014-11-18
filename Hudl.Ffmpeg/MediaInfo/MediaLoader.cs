@@ -36,6 +36,8 @@ namespace Hudl.Ffmpeg.MediaInfo
                 HasVideo = _mi.Count_Get(StreamKind.Video) > 0;
                 HasImage = _mi.Count_Get(StreamKind.Image) > 0;
 
+                LoadCommonData();
+
                 if (HasAudio)
                 {
                     LoadAudioData();
@@ -48,9 +50,6 @@ namespace Hudl.Ffmpeg.MediaInfo
                 {
                     LoadVideoData();
                 }
-
-                LoadCommonData();
-               
             }
             finally
             {
@@ -82,6 +81,9 @@ namespace Hudl.Ffmpeg.MediaInfo
 
             long br;
             if (long.TryParse(_mi.Get(StreamKind.Video, 0, "BitRate"), out br)) BitRate = br;
+
+            double durms; // we want to generally override the container duration with the video duration, this is not a problem is ffmpeg 2.0
+            if (double.TryParse(_mi.Get(StreamKind.Video, 0, "Duration"), out durms)) Duration = TimeSpan.FromMilliseconds(durms);
         }
 
         public void LoadAudioData()
