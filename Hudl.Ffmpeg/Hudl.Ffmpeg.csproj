@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,6 +60,8 @@
     <Compile Include="Command\FFprobeCommand.cs" />
     <Compile Include="Common\FFmpegFraction.cs" />
     <Compile Include="Common\FFmpegStreamTypes.cs" />
+    <Compile Include="Filters\ATrim.cs" />
+    <Compile Include="Filters\ASetPts.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeCodecTypes.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeObject.cs" />
     <Compile Include="Metadata\Ffprobe\FFprobeVideoStream.cs" />
