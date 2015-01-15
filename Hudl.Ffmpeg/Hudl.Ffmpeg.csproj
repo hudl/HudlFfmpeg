@@ -39,6 +39,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -62,6 +65,9 @@
     <Compile Include="Common\FFmpegStreamTypes.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeCodecTypes.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeObject.cs" />
+    <Compile Include="Metadata\Ffprobe\BaseTypes\Models\FFprobeResultContainer.cs" />
+    <Compile Include="Metadata\Ffprobe\BaseTypes\Models\FFprobeResultFormat.cs" />
+    <Compile Include="Metadata\Ffprobe\BaseTypes\Models\FFprobeResultStream.cs" />
     <Compile Include="Metadata\Ffprobe\FFprobeVideoStream.cs" />
     <Compile Include="Metadata\Ffprobe\FFprobeAudioStream.cs" />
     <Compile Include="Metadata\Ffprobe\Serializers\FFprobeGeneralSerializer.cs" />
