@@ -167,6 +167,18 @@ namespace Hudl.FFmpeg.Tests.Filter
         }
 
         [Fact]
+        public void BoxBlur_Verify()
+        {
+            var filter = FilterFactory.CreateEmpty<BoxBlur>();
+            var filterValue = new StringBuilder(100);
+            Assert.DoesNotThrow(() => { var s = filter.ToString(); });
+
+            filter.Expression = "15:1"; 
+            filterValue.Append("boxblur=15:1");
+            Assert.Equal(filter.ToString(), filterValue.ToString());
+        }
+
+        [Fact]
         public void AMix_Verify()
         {
             var filter = FilterFactory.CreateEmpty<AMix>();
