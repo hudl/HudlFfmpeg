@@ -117,6 +117,7 @@
     <Compile Include="Metadata\MetadataInfoTreeItem.cs" />
     <Compile Include="Metadata\MetadataInfoTreeSource.cs" />
     <Compile Include="Resources\Ismv.cs" />
+    <Compile Include="Resources\Mov.cs" />
     <Compile Include="Resources\Ts.cs" />
     <Compile Include="Resources\Txt.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
