@@ -257,5 +257,27 @@ namespace Hudl.Ffmpeg.Tests.Setting
             Assert.DoesNotThrow(() => { var s = setting.ToString(); });
             Assert.Equal(setting.ToString(), "-auto_convert 1");
         }
+
+        [Fact]
+        public void Settings_GOP()
+        {
+            var settingWrong1 = new Gop(0);
+            var setting = new Gop(20);
+
+            Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.ToString(); });
+            Assert.DoesNotThrow(() => { var s = setting.ToString(); });
+            Assert.Equal(setting.ToString(), "-g 20");
+        }
+        [Fact]
+        public void Settings_KeyIntMin()
+        {
+            var settingWrong1 = new KeyIntMin(0);
+            var setting = new KeyIntMin(20);
+
+            Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.ToString(); });
+            Assert.DoesNotThrow(() => { var s = setting.ToString(); });
+            Assert.Equal(setting.ToString(), "-keyint_min 20");
+        }
+
     }
 }
