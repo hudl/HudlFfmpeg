@@ -279,10 +279,10 @@ namespace Hudl.Ffmpeg.Tests.Setting
             Assert.Equal(setting.ToString(), "-keyint_min 20");
         }
         [Fact]
-        public void Settings_SCThreshold()
+        public void Settings_SceneChangeThreshold()
         {
-            var settingWrong1 = new SCThreshold(120);
-            var setting = new SCThreshold(40);
+            var settingWrong1 = new SceneChangeThreshold(120);
+            var setting = new SceneChangeThreshold(40);
 
             Assert.Throws<InvalidOperationException>(() => { var s = settingWrong1.ToString(); });
             Assert.DoesNotThrow(() => { var s = setting.ToString(); });
