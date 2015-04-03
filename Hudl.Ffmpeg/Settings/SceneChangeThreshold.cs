@@ -10,11 +10,11 @@ namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
     [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class SCThreshold : BaseSetting
+    public class SceneChangeThreshold : BaseSetting
     {
         private const string SettingType = "-sc_threshold";
 
-        public SCThreshold(int size)
+        public SceneChangeThreshold(int size)
             : base(SettingType)
         {
             Size = size;
@@ -26,11 +26,11 @@ namespace Hudl.Ffmpeg.Settings
         {
             if (Size < 0)
             {
-                throw new InvalidOperationException("SCThreshold size must be greater than or equal to zero.");
+                throw new InvalidOperationException("SceneChangeThreshold size must be greater than or equal to zero.");
             }
             if (Size > 100)
             {
-                throw new InvalidOperationException("SCThreshold size must be less than or equal to 100.");
+                throw new InvalidOperationException("SceneChangeThreshold size must be less than or equal to 100.");
             }
 
             return string.Concat(Type, " ", Size);
