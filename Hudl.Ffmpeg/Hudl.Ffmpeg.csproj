@@ -63,6 +63,7 @@
     <Compile Include="Command\FFprobeCommand.cs" />
     <Compile Include="Common\FFmpegFraction.cs" />
     <Compile Include="Common\FFmpegStreamTypes.cs" />
+    <Compile Include="Filters\BoxBlur.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeCodecTypes.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeObject.cs" />
     <Compile Include="Metadata\Ffprobe\BaseTypes\Models\FFprobeResultContainer.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Metadata\MetadataInfoTreeItem.cs" />
     <Compile Include="Metadata\MetadataInfoTreeSource.cs" />
     <Compile Include="Resources\Ismv.cs" />
+    <Compile Include="Resources\Mov.cs" />
     <Compile Include="Resources\Ts.cs" />
     <Compile Include="Resources\Txt.cs" />
     <Compile Include="Settings\AutoConvert.cs" />

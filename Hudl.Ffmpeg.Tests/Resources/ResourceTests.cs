@@ -137,6 +137,15 @@ namespace Hudl.FFmpeg.Tests.Resources
             Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.ismv"));
         }
 
+        [Fact]
+        public void Mov_FileLoad()
+        {
+            IContainer resourceInfo = null;
+
+            Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.mov"));
+        }
+
+
         private class ResourceFactory
         {
             public static TResource CreateEmpty<TResource>()
