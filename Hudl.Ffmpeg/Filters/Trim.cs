@@ -133,7 +133,7 @@ namespace Hudl.FFmpeg.Filters
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
             var startTimeInSeconds = 0D;
-            var endTimeInSeconds = infoToUpdate.VideoStream.Duration.TotalSeconds;
+            var endTimeInSeconds = infoToUpdate.VideoStream.VideoMetadata.Duration.TotalSeconds;
 
             if (End.HasValue)
             {
@@ -141,11 +141,11 @@ namespace Hudl.FFmpeg.Filters
             } 
             else if (EndFrame.HasValue)
             {
-                endTimeInSeconds = (double)EndFrame.Value / (double)infoToUpdate.VideoStream.FrameRate.ToDouble();
+                endTimeInSeconds = (double)EndFrame.Value / (double)infoToUpdate.VideoStream.VideoMetadata.AverageFrameRate.ToDouble();
             }
             else if (EndPts.HasValue)
             {
-                endTimeInSeconds = (double)EndPts.Value / (double)infoToUpdate.VideoStream.Timebase.ToDouble();
+                endTimeInSeconds = (double)EndPts.Value / (double)infoToUpdate.VideoStream.VideoMetadata.TimeBase.ToDouble();
             }
 
             if (Start.HasValue)
@@ -154,11 +154,11 @@ namespace Hudl.FFmpeg.Filters
             }
             else if (StartFrame.HasValue)
             {
-                startTimeInSeconds = (double)StartFrame.Value / (double)infoToUpdate.VideoStream.FrameRate.ToDouble();
+                startTimeInSeconds = (double)StartFrame.Value / (double)infoToUpdate.VideoStream.VideoMetadata.AverageFrameRate.ToDouble();
             }
             else if (StartPts.HasValue)
             {
-                startTimeInSeconds = (double)StartPts.Value / (double)infoToUpdate.VideoStream.Timebase.ToDouble();
+                startTimeInSeconds = (double)StartPts.Value / (double)infoToUpdate.VideoStream.VideoMetadata.TimeBase.ToDouble();
             }
 
             var timeInSecondsAfterTrim = endTimeInSeconds - startTimeInSeconds;
@@ -167,7 +167,7 @@ namespace Hudl.FFmpeg.Filters
                 timeInSecondsAfterTrim = 0;
             }
 
-            infoToUpdate.VideoStream.Duration = TimeSpan.FromSeconds(timeInSecondsAfterTrim);
+            infoToUpdate.VideoStream.VideoMetadata.Duration = TimeSpan.FromSeconds(timeInSecondsAfterTrim);
 
             return infoToUpdate;
         }

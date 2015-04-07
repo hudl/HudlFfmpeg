@@ -128,9 +128,9 @@ namespace Hudl.FFmpeg.Command
 
         private void ProcessIt(string command)
         {
-            using (var ffprobeProcess = new Process())
+            using (var FFprobeProcess = new Process())
             {
-                ffprobeProcess.StartInfo = new ProcessStartInfo
+                FFprobeProcess.StartInfo = new ProcessStartInfo
                 {
                     FileName = ResourceManagement.CommandConfiguration.FFprobePath,
                     WorkingDirectory = ResourceManagement.CommandConfiguration.TempPath,
@@ -140,17 +140,17 @@ namespace Hudl.FFmpeg.Command
                     RedirectStandardOutput = true,
                 };
 
-                Log.DebugFormat("ffprobe.exe Args={0}.", ffprobeProcess.StartInfo.Arguments);
+                Log.DebugFormat("FFprobe.exe Args={0}.", FFprobeProcess.StartInfo.Arguments);
                 
-                ffprobeProcess.Start();
+                FFprobeProcess.Start();
                 
-                StdOut = ffprobeProcess.StandardOutput.ReadToEnd();
+                StdOut = FFprobeProcess.StandardOutput.ReadToEnd();
 
-                ffprobeProcess.WaitForExit();
+                FFprobeProcess.WaitForExit();
 
-                Log.DebugFormat("ffprobe.exe Output={0}.", StdOut);
+                Log.DebugFormat("FFprobe.exe Output={0}.", StdOut);
 
-                var exitCode = ffprobeProcess.ExitCode;
+                var exitCode = FFprobeProcess.ExitCode;
                 if (exitCode != 0)
                 {
                     throw new FFmpegProcessingException(exitCode, StdOut);

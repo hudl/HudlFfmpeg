@@ -68,7 +68,7 @@ namespace Hudl.FFmpeg.Command
         public string FFmpegPath { get; private set; }
 
         /// <summary>
-        /// declares the FFprobe path for the command factory, this is where the ffprobe executable is.
+        /// declares the FFprobe path for the command factory, this is where the FFprobe executable is.
         /// </summary>
         public string FFprobePath { get; private set; }
 

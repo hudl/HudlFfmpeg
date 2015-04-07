@@ -39,7 +39,7 @@ namespace Hudl.FFmpeg.Tests.Resources
 
             var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo.VideoStream.Duration == baseline.Info.Duration);
+            Assert.True(metadataInfo.VideoStream.VideoMetadata.Duration == baseline.Info.VideoMetadata.Duration);
 
         }
 
@@ -58,7 +58,7 @@ namespace Hudl.FFmpeg.Tests.Resources
 
             var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo.VideoStream.Duration == TimeSpan.FromSeconds(3));
+            Assert.True(metadataInfo.VideoStream.VideoMetadata.Duration == TimeSpan.FromSeconds(3));
         }
 
         [Fact]
@@ -77,8 +77,8 @@ namespace Hudl.FFmpeg.Tests.Resources
 
             var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo.VideoStream.Duration == TimeSpan.FromSeconds(3)); // this is because the input is only 4 seconds, we start at 1
-            Assert.True(metadataInfo.VideoStream.BitRate == 3000000L);
+            Assert.True(metadataInfo.VideoStream.VideoMetadata.Duration == TimeSpan.FromSeconds(3)); // this is because the input is only 4 seconds, we start at 1
+            Assert.True(metadataInfo.VideoStream.VideoMetadata.BitRate == 3000000L);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Hudl.FFmpeg.Tests.Resources
                                    .Streams
                                    .OfType<VideoStream>()
                                    .First();
-            var calculatedSeconds = (baseline.Info.Duration.TotalSeconds * 3d) - 2d;
+            var calculatedSeconds = (baseline.Info.VideoMetadata.Duration.TotalSeconds * 3d) - 2d;
             var calculatedDuration = TimeSpan.FromSeconds(calculatedSeconds);
 
             var filterchain = Filterchain.FilterTo<VideoStream>(new Split(3));
@@ -112,8 +112,8 @@ namespace Hudl.FFmpeg.Tests.Resources
             var metadataInfo1 = MetadataHelpers.GetMetadataInfo(concat2.Command, concat2.StreamIdentifiers.FirstOrDefault());
             var metadataInfo2 = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo1.VideoStream.Duration == calculatedDuration);
-            Assert.True(metadataInfo2.VideoStream.Duration == calculatedDuration);
+            Assert.True(metadataInfo1.VideoStream.VideoMetadata.Duration == calculatedDuration);
+            Assert.True(metadataInfo2.VideoStream.VideoMetadata.Duration == calculatedDuration);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Hudl.FFmpeg.Tests.Resources
                                    .Streams
                                    .OfType<VideoStream>()
                                    .First();
-            var calculatedSeconds = ((baseline.Info.Duration.TotalSeconds - 1) * 3d) - 2d;
+            var calculatedSeconds = ((baseline.Info.VideoMetadata.Duration.TotalSeconds - 1) * 3d) - 2d;
             var calculatedDuration = TimeSpan.FromSeconds(calculatedSeconds);
 
             var inputSettings = SettingsCollection.ForInput(new StartAt(1d));
@@ -152,9 +152,9 @@ namespace Hudl.FFmpeg.Tests.Resources
             var metadataInfo1 = MetadataHelpers.GetMetadataInfo(concat2.Command, concat2.StreamIdentifiers.FirstOrDefault());
             var metadataInfo2 = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo1.VideoStream.Duration == calculatedDuration);
-            Assert.True(metadataInfo2.VideoStream.Duration == TimeSpan.FromSeconds(5));
-            Assert.True(metadataInfo2.VideoStream.BitRate == 3000000L);
+            Assert.True(metadataInfo1.VideoStream.VideoMetadata.Duration == calculatedDuration);
+            Assert.True(metadataInfo2.VideoStream.VideoMetadata.Duration == TimeSpan.FromSeconds(5));
+            Assert.True(metadataInfo2.VideoStream.VideoMetadata.BitRate == 3000000L);
         }
     }
 }

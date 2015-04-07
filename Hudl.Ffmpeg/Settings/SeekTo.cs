@@ -54,7 +54,7 @@ namespace Hudl.FFmpeg.Settings
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.VideoStream.Duration = infoToUpdate.VideoStream.Duration - Length;
+            infoToUpdate.VideoStream.VideoMetadata.Duration = infoToUpdate.VideoStream.VideoMetadata.Duration - Length;
 
             return infoToUpdate; 
         }

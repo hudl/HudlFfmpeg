@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Metadata.FFprobe;
+﻿using System.Linq;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Metadata
@@ -13,9 +9,9 @@ namespace Hudl.FFmpeg.Metadata
         {
         }
 
-        public bool HasAudio { get; internal set; }
+        public bool HasAudio { get { return AudioStream != null; } }
 
-        public bool HasVideo { get; internal set; }
+        public bool HasVideo { get { return VideoStream != null; } }
 
         public MetadataInfo AudioStream { get; internal set; }
 
@@ -25,8 +21,6 @@ namespace Hudl.FFmpeg.Metadata
         {
             return new MetadataInfoTreeContainer
                 {
-                    HasAudio = HasAudio,
-                    HasVideo = HasVideo,
                     AudioStream = HasAudio ? AudioStream.Copy() : null,
                     VideoStream = HasVideo ? VideoStream.Copy() : null
                 };
@@ -38,15 +32,11 @@ namespace Hudl.FFmpeg.Metadata
 
             if (container.Streams.OfType<VideoStream>().Any())
             {
-                instanceOfTreeContainer.HasVideo = true;
-
                 instanceOfTreeContainer.VideoStream = container.Streams.OfType<VideoStream>().First().Info.Copy();
             }
 
             if (container.Streams.OfType<AudioStream>().Any())
             {
-                instanceOfTreeContainer.HasAudio = true;
-
                 instanceOfTreeContainer.AudioStream = container.Streams.OfType<AudioStream>().First().Info.Copy();
             }
 
@@ -57,7 +47,6 @@ namespace Hudl.FFmpeg.Metadata
         {
             return new MetadataInfoTreeContainer
                 {
-                    HasVideo = true, 
                     VideoStream = stream.Info.Copy()
                 };
         }
@@ -66,7 +55,6 @@ namespace Hudl.FFmpeg.Metadata
         {
             return new MetadataInfoTreeContainer
                 {
-                    HasAudio = true,
                     AudioStream = stream.Info.Copy()
                 };
         }

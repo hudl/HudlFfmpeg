@@ -1,18 +1,18 @@
-﻿namespace Hudl.FFmpeg.Common
+﻿namespace Hudl.FFmpeg.Common.DataTypes
 {
     /// <summary>
     /// Describes a Red Green Blue intensity ratio that is used to intensify that colors
     /// </summary>
-    public class FFmpegScaleRgb
+    public class DecimalScaleRgb
     {
-        public FFmpegScaleRgb()
+        public DecimalScaleRgb()
         {
-            Red = new FFmpegScale();
-            Green = new FFmpegScale();
-            Blue = new FFmpegScale();
+            Red = new DecimalScale();
+            Green = new DecimalScale();
+            Blue = new DecimalScale();
         }
 
-        public FFmpegScaleRgb(FFmpegScale red, FFmpegScale green, FFmpegScale blue)
+        public DecimalScaleRgb(DecimalScale red, DecimalScale green, DecimalScale blue)
         {
             Red = red;
             Green = green;
@@ -22,16 +22,16 @@
         /// <summary>
         /// property containing the double value of ratios to the Red color intensity
         /// </summary>
-        public FFmpegScale Red { get; set; } 
+        public DecimalScale Red { get; set; } 
 
         /// <summary>
         /// property containing the double value of ratios to the Green color intensity
         /// </summary>
-        public FFmpegScale Green { get; set; } 
+        public DecimalScale Green { get; set; } 
 
         /// <summary>
         /// property containing the double value of ratios to the Blue color intensity
         /// </summary>
-        public FFmpegScale Blue  { get; set; } 
+        public DecimalScale Blue { get; set; } 
     }
 }

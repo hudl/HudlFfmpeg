@@ -172,7 +172,7 @@ namespace Hudl.FFmpeg.Command
                 outputList.Count,
                 CommandList.Count);
 
-            CommandList.ForEach(command => command.RenderWith(processor));
+            CommandList.ForEach(command => command.ExecuteWith(processor));
 
             return outputList;
         }

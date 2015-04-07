@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Text;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Common.DataTypes;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Command;
@@ -306,24 +307,24 @@ namespace Hudl.FFmpeg.Tests.Filter
             var filterValue = new StringBuilder(100);
             Assert.DoesNotThrow(() => { var s = filter.ToString(); });
 
-            filter.Shadow = new FFmpegScaleRgb(
-                new FFmpegScale(.3m),
-                new FFmpegScale(.3m), 
-                new FFmpegScale(.3m));
+            filter.Shadow = new DecimalScaleRgb(
+                new DecimalScale(.3m),
+                new DecimalScale(.3m),
+                new DecimalScale(.3m));
             filterValue.Append("colorbalance=rs=0.3:gs=0.3:bs=0.3");
             Assert.Equal(filter.ToString(), filterValue.ToString());
 
-            filter.Midtone = new FFmpegScaleRgb(
-                new FFmpegScale(.3m),
-                new FFmpegScale(.3m),
-                new FFmpegScale(.3m));
+            filter.Midtone = new DecimalScaleRgb(
+                new DecimalScale(.3m),
+                new DecimalScale(.3m),
+                new DecimalScale(.3m));
             filterValue.Append(":rm=0.3:gm=0.3:bm=0.3");
             Assert.Equal(filter.ToString(), filterValue.ToString());
 
-            filter.Highlight = new FFmpegScaleRgb(
-                new FFmpegScale(.3m),
-                new FFmpegScale(.3m),
-                new FFmpegScale(.3m));
+            filter.Highlight = new DecimalScaleRgb(
+                new DecimalScale(.3m),
+                new DecimalScale(.3m),
+                new DecimalScale(.3m));
             filterValue.Append(":rh=0.3:gh=0.3:bh=0.3");
             Assert.Equal(filter.ToString(), filterValue.ToString());
         }
@@ -467,7 +468,7 @@ namespace Hudl.FFmpeg.Tests.Filter
             var filterValue = new StringBuilder(100);
             Assert.DoesNotThrow(() => { var s = filter.ToString(); });
 
-            filter.Ratio = new FFmpegRatio(1, 1);
+            filter.Ratio = new Ratio(1, 1);
             filterValue.Append("setdar=dar=1/1");
             Assert.Equal(filter.ToString(), filterValue.ToString());
         }
@@ -479,7 +480,7 @@ namespace Hudl.FFmpeg.Tests.Filter
             var filterValue = new StringBuilder(100);
             Assert.DoesNotThrow(() => { var s = filter.ToString(); });
 
-            filter.Ratio = new FFmpegRatio(1, 1);
+            filter.Ratio = new Ratio(1, 1);
             filterValue.Append("setsar=sar=1/1");
             Assert.Equal(filter.ToString(), filterValue.ToString());
         }

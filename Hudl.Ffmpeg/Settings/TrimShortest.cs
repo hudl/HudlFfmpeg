@@ -30,7 +30,9 @@ namespace Hudl.FFmpeg.Settings
 
         public MetadataInfo EditInfo(MetadataInfo infoToUpdate, List<MetadataInfo> suppliedInfo)
         {
-            return suppliedInfo.OrderBy(r => r.Duration).FirstOrDefault();
+            return suppliedInfo.OrderBy(supply => (supply.HasAudio)
+                ? supply.AudioMetadata.Duration
+                : supply.VideoMetadata.Duration).FirstOrDefault();
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Hudl.FFmpeg.Filters.Templates
             //output ==
             // - (from:1, blend, to:2)
 
-            var endMinusDuration = streamFromMetadata.VideoStream.Duration - Duration;
+            var endMinusDuration = streamFromMetadata.VideoStream.VideoMetadata.Duration - Duration;
 
             var fromSplit = command.Select(streamFrom)
                                    .Filter(Filterchain.FilterTo<VideoStream>(new Split(2)));

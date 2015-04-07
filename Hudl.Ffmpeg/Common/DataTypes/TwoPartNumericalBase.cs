@@ -1,13 +1,14 @@
 ﻿using System;
 
-namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
+namespace Hudl.FFmpeg.Common.DataTypes
 {
-    internal class FFprobeFraction : IFFprobeValue
+    public abstract class TwoPartNumericalBase
     {
-        private FFprobeFraction(int numerator, int denominator)
+        private readonly char _separationCharacter;
+
+        protected TwoPartNumericalBase(char separationChar)
         {
-            Numerator = numerator;
-            Denominator = denominator;
+            _separationCharacter = separationChar;
         }
 
         public int Numerator { get; set; }
@@ -19,19 +20,25 @@ namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
             return Numerator / Denominator; 
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0}{1}{2}", Numerator, _separationCharacter, Denominator);
+        }
+
         public override bool Equals(object obj)
         {
-            var ffprobeFraction = obj as FFprobeFraction;
-            if (ffprobeFraction == null)
+            var FFprobeFraction = obj as TwoPartNumericalBase;
+            if (FFprobeFraction == null)
             {
                 return false;
             }
 
-            return ffprobeFraction.Numerator == Numerator &&
-                   ffprobeFraction.Denominator == Denominator;
+            return FFprobeFraction.Numerator == Numerator &&
+                   FFprobeFraction.Denominator == Denominator;
         }
 
-        public static bool TryParse(FFprobeObject rawValue, out FFprobeFraction value)
+        public static bool TryParse<TObjectType>(string rawValue, out TObjectType value)
+            where TObjectType : TwoPartNumericalBase, new()
         {
             try
             {
@@ -41,7 +48,7 @@ namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
                     return false;
                 }
 
-                var splitValues = rawValue.Value.ToString().Split(new string[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+                var splitValues = rawValue.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
 
                 var numerator = 0;
                 var denominator = 0;
@@ -56,7 +63,11 @@ namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
                     return false;
                 }
 
-                value = new FFprobeFraction(numerator, denominator);
+                value = new TObjectType
+                {
+                    Numerator = numerator,
+                    Denominator = denominator
+                };
 
                 return true;
             }

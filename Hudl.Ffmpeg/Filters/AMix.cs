@@ -79,9 +79,9 @@ namespace Hudl.FFmpeg.Filters
                 case DurationType.First:
                     return suppliedInfo.FirstOrDefault();
                 case DurationType.Shortest:
-                    return suppliedInfo.OrderBy(r => r.AudioStream.Duration).FirstOrDefault();
+                    return suppliedInfo.OrderBy(r => r.AudioStream.AudioMetadata.Duration).FirstOrDefault();
                 default:
-                    return suppliedInfo.OrderByDescending(r => r.AudioStream.Duration).FirstOrDefault();
+                    return suppliedInfo.OrderByDescending(r => r.AudioStream.AudioMetadata.Duration).FirstOrDefault();
             }
         }
     }

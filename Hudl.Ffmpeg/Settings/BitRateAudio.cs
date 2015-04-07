@@ -28,7 +28,7 @@ namespace Hudl.FFmpeg.Settings
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.AudioStream.BitRate = Rate * 1000;
+            infoToUpdate.AudioStream.AudioMetadata.BitRate = Rate * 1000;
 
             return infoToUpdate;
         }

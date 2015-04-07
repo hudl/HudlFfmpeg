@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Hudl.FFmpeg.Common
+namespace Hudl.FFmpeg.Common.DataTypes
 {
     /// <summary>
     /// Describes an intensity scale that is used to intensify settings within ffmpeg, between -1 to 1
     /// </summary>
-    public class FFmpegScale
+    public class DecimalScale
     {
         private const decimal MinValue = -1;
         private const decimal MaxValue = 1;
         private decimal _value;
 
-        public FFmpegScale()
+        public DecimalScale()
         {
         }
-        public FFmpegScale(decimal value)
+        public DecimalScale(decimal value)
             : this()
         {
             Value = value;
@@ -42,7 +42,7 @@ namespace Hudl.FFmpeg.Common
             return Value.ToString(CultureInfo.InvariantCulture);
         }
 
-        public static bool IsNullOrZero(FFmpegScale scale)
+        public static bool IsNullOrZero(DecimalScale scale)
         {
             return (scale == null || scale.Value == 0); 
         }

@@ -21,7 +21,7 @@ namespace Hudl.FFmpeg.Tests.Render
             ResourceManagement.CommandConfiguration  = CommandConfiguration.Create(
                 "c:/source/ffmpeg/bin/temp",
                 "c:/source/ffmpeg/bin/ffmpeg.exe",
-                "c:/source/ffmpeg/bin/ffprobe.exe");
+                "c:/source/ffmpeg/bin/FFprobe.exe");
 
             var outputSettings = SettingsCollection.ForOutput(
                 new OverwriteOutput(),

@@ -5,6 +5,7 @@ using System.Text;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
+using Hudl.FFmpeg.Metadata.FFprobe.Options.BaseTypes;
 using Hudl.FFmpeg.Settings;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
@@ -19,16 +20,16 @@ namespace Hudl.FFmpeg.Command
             _builderBase = new StringBuilder(100);            
         }
 
-        //ffprobe
+        //FFprobe
         public void WriteCommand(FFprobeCommand command)
         {
             var inputResource = new Input(command.Resource);
             _builderBase.Append(" ");
             _builderBase.Append(inputResource);
 
-            command.Serializers.ForEach(WriteSerializerSpecifier);
+            command.Options.ForEach(WriteSerializerSpecifier);
         }
-        public void WriteSerializerSpecifier(IFFprobeSerializer serializer)
+        public void WriteSerializerSpecifier(IFFprobeOptions serializer)
         {
             _builderBase.Append(" ");
             _builderBase.Append(serializer.Setting);   

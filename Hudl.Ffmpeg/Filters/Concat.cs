@@ -93,12 +93,12 @@ namespace Hudl.FFmpeg.Filters
         {
             if (NumberOfAudioOut > 0)
             {
-                infoToUpdate.AudioStream.Duration = TimeSpan.FromSeconds(suppliedInfo.Sum(i => i.AudioStream.Duration.TotalSeconds));
+                infoToUpdate.AudioStream.AudioMetadata.Duration = TimeSpan.FromSeconds(suppliedInfo.Sum(i => i.AudioStream.AudioMetadata.Duration.TotalSeconds));
             }
 
             if (NumberOfVideoOut > 0)
             {
-                infoToUpdate.VideoStream.Duration = TimeSpan.FromSeconds(suppliedInfo.Sum(i => i.VideoStream.Duration.TotalSeconds));
+                infoToUpdate.VideoStream.VideoMetadata.Duration = TimeSpan.FromSeconds(suppliedInfo.Sum(i => i.VideoStream.VideoMetadata.Duration.TotalSeconds));
             }
 
             return infoToUpdate; 

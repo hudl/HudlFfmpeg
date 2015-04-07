@@ -2,6 +2,7 @@
 using System.Text;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common.DataTypes;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
@@ -19,11 +20,11 @@ namespace Hudl.FFmpeg.Filters
         public ColorBalance()
             : base(FilterType, FilterMaxInputs)
         {
-            Shadow = new FFmpegScaleRgb();
-            Midtone = new FFmpegScaleRgb();
-            Highlight = new FFmpegScaleRgb();
+            Shadow = new DecimalScaleRgb();
+            Midtone = new DecimalScaleRgb();
+            Highlight = new DecimalScaleRgb();
         }
-        public ColorBalance(FFmpegScaleRgb shadows, FFmpegScaleRgb midtones, FFmpegScaleRgb highlights)
+        public ColorBalance(DecimalScaleRgb shadows, DecimalScaleRgb midtones, DecimalScaleRgb highlights)
             : base(FilterType, FilterMaxInputs)
         {
             if (shadows == null)
@@ -47,17 +48,17 @@ namespace Hudl.FFmpeg.Filters
         /// <summary>
         /// property to the RGB shadow color balancing
         /// </summary>
-        public FFmpegScaleRgb Shadow { get; set; }
+        public DecimalScaleRgb Shadow { get; set; }
         
         /// <summary>
         /// property to the RGB midtone color balancing
         /// </summary>
-        public FFmpegScaleRgb Midtone { get; set; }
+        public DecimalScaleRgb Midtone { get; set; }
         
         /// <summary>
         /// property to the RGB highlight color balancing
         /// </summary>
-        public FFmpegScaleRgb Highlight { get; set; }
+        public DecimalScaleRgb Highlight { get; set; }
 
         public override void Validate()
         {

@@ -2,36 +2,36 @@
 using System.Collections.Generic;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command.BaseTypes;
-using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
+using Hudl.FFmpeg.Metadata.FFprobe.Options.BaseTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Command
 {
-    internal class FFprobeCommand
+    internal class FFprobeCommand : FFCommandBase
     {
         private FFprobeCommand(IContainer resource)
         {
             Resource = resource;
-            Serializers = new List<IFFprobeSerializer>();
+            Options = new List<IFFprobeOptions>();
         }
 
         public IContainer Resource { get; set; }
 
-        public List<IFFprobeSerializer> Serializers { get; set; }
+        public List<IFFprobeOptions> Options { get; set; }
 
         public static FFprobeCommand Create(IContainer resource)
         {
             return new FFprobeCommand(resource);    
         }
 
-        public FFprobeCommand Register(IFFprobeSerializer serializer)
+        public FFprobeCommand Register(IFFprobeOptions option)
         {
-            if (serializer == null)
+            if (option == null)
             {
-                throw new ArgumentNullException("serializer");
+                throw new ArgumentNullException("option");
             }
 
-            Serializers.Add(serializer);
+            Options.Add(option);
 
             return this;
         }
@@ -39,45 +39,6 @@ namespace Hudl.FFmpeg.Command
         public ICommandProcessor Execute()
         {
             return ExecuteWith<FFprobeProcessorReceiver>();
-        }
-
-        public ICommandProcessor ExecuteWith<TProcessor>()
-            where TProcessor : class, ICommandProcessor, new()
-        {
-            var commandProcessor = new TProcessor();
-
-            if (!commandProcessor.Open())
-            {
-                throw new FFmpegRenderingException(commandProcessor.Error);
-            }
-
-            var returnType = ExecuteWith(commandProcessor);
-
-            if (!commandProcessor.Close())
-            {
-                throw new FFmpegRenderingException(commandProcessor.Error);
-            }
-
-            return returnType;
-        }
-
-        public ICommandProcessor ExecuteWith<TProcessor>(TProcessor commandProcessor)
-            where TProcessor : class, ICommandProcessor
-        {
-            if (commandProcessor == null)
-            {
-                throw new ArgumentNullException("commandProcessor");
-            }
-
-            var commandBuilder = new CommandBuilder();
-            commandBuilder.WriteCommand(this);
-
-            if (!commandProcessor.Send(commandBuilder.ToString()))
-            {
-                throw new FFmpegRenderingException(commandProcessor.Error);
-            }
-
-            return commandProcessor;
         }
     }
 }

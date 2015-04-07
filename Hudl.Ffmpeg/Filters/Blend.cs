@@ -68,7 +68,7 @@ namespace Hudl.FFmpeg.Filters
 
         public virtual MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.VideoStream.Duration = suppliedInfo.Min(r => r.VideoStream.Duration);
+            infoToUpdate.VideoStream.VideoMetadata.Duration = suppliedInfo.Min(r => r.VideoStream.VideoMetadata.Duration);
 
             return infoToUpdate;
         }

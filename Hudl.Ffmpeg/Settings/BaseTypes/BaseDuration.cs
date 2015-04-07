@@ -46,9 +46,14 @@ namespace Hudl.FFmpeg.Settings.BaseTypes
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            if (infoToUpdate.VideoStream.Duration > Length)
+            if (infoToUpdate.HasVideo && infoToUpdate.VideoStream.VideoMetadata.Duration > Length)
             {
-                infoToUpdate.VideoStream.Duration = Length;
+                infoToUpdate.VideoStream.VideoMetadata.Duration = Length;
+            }
+            
+            if (infoToUpdate.HasAudio && infoToUpdate.AudioStream.AudioMetadata.Duration > Length)
+            {
+                infoToUpdate.AudioStream.AudioMetadata.Duration = Length;
             }
 
             return infoToUpdate; 

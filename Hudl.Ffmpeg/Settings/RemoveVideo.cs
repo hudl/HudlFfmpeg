@@ -29,8 +29,6 @@ namespace Hudl.FFmpeg.Settings
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.HasVideo = false;
-            
             infoToUpdate.VideoStream = null;
 
             return infoToUpdate;

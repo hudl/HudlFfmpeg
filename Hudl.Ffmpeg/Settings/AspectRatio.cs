@@ -1,6 +1,7 @@
 ﻿using System;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Common.DataTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
@@ -19,7 +20,7 @@ namespace Hudl.FFmpeg.Settings
             : base(SettingType)
         {
         }
-        public AspectRatio(FFmpegRatio ratio)
+        public AspectRatio(Ratio ratio)
             : this()
         {
             if (ratio == null)
@@ -30,7 +31,7 @@ namespace Hudl.FFmpeg.Settings
             Ratio = ratio;
         }
 
-        public FFmpegRatio Ratio { get; set; }
+        public Ratio Ratio { get; set; }
 
         public override void Validate()
         {
@@ -42,7 +43,7 @@ namespace Hudl.FFmpeg.Settings
 
         public override string ToString()  
         {
-            return string.Concat(Type, " ", Ratio.ToRatio());
+            return string.Concat(Type, " ", Ratio.ToString());
         }
     }
 }

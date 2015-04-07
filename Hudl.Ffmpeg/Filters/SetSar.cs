@@ -2,6 +2,7 @@
 using System.Text;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Common.DataTypes;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
@@ -20,7 +21,7 @@ namespace Hudl.FFmpeg.Filters
             : base(FilterType, FilterMaxInputs)
         {
         }
-        public SetSar(FFmpegRatio ratio)
+        public SetSar(Ratio ratio)
             : this()
         {
             if (ratio == null)
@@ -31,7 +32,7 @@ namespace Hudl.FFmpeg.Filters
             Ratio = ratio;
         }
 
-        public FFmpegRatio Ratio { get; set; }
+        public Ratio Ratio { get; set; }
 
         public override void Validate()
         {
@@ -47,7 +48,7 @@ namespace Hudl.FFmpeg.Filters
 
             if (Ratio != null)
             {
-                FilterUtility.ConcatenateParameter(filterParameters, "sar", Ratio);
+                FilterUtility.ConcatenateParameter(filterParameters, "sar", Ratio.ToFractionalString());
             }
 
             return FilterUtility.JoinTypeAndParameters(this, filterParameters);

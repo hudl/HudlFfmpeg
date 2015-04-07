@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Metadata.FFprobe;
+﻿using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes.Models;
 
 namespace Hudl.FFmpeg.Metadata
 {
@@ -9,37 +6,22 @@ namespace Hudl.FFmpeg.Metadata
     {
         private MetadataInfo()
         {
-            Dimensions = new Size(0,0);
-            Duration = TimeSpan.FromSeconds(0); 
         }
 
-        public Size Dimensions { get; internal set; }
+        public bool HasAudio { get { return AudioMetadata != null; } }
 
-        public TimeSpan Duration { get; internal set; }
+        public bool HasVideo { get { return VideoMetadata != null; } }
 
-        public long BitRate { get; internal set; }
+        public AudioStreamMetadata AudioMetadata { get; internal set; }
 
-        public bool HasAudio { get; internal set; }
-
-        public bool HasVideo { get; internal set; }
-
-        public FFmpegFraction Timebase { get; internal set; }
-
-
-        public FFmpegFraction FrameRate { get; internal set; }
-
+        public VideoStreamMetadata VideoMetadata { get; internal set; }
 
         public MetadataInfo Copy()
         {
             return new MetadataInfo
                 {
-                    Dimensions = Dimensions, 
-                    Duration = Duration, 
-                    BitRate = BitRate,
-                    HasAudio = HasAudio,
-                    HasVideo = HasVideo,
-                    Timebase = Timebase,
-                    FrameRate = FrameRate,
+                    AudioMetadata = HasAudio ? AudioMetadata.Copy() : null,
+                    VideoMetadata = HasVideo ? VideoMetadata.Copy() : null,
                 };
         }
 
@@ -48,29 +30,19 @@ namespace Hudl.FFmpeg.Metadata
             return new MetadataInfo();
         }
 
-        internal static MetadataInfo Create(FFprobeAudioStream loader)
+        internal static MetadataInfo Create(AudioStreamMetadata loader)
         {
             return new MetadataInfo
             {
-                HasAudio = true,
-                HasVideo = false,
-                BitRate = loader.BitRate,
-                Duration = loader.Duration,
-                Timebase = FFmpegFraction.Create(loader.TimeBase),
+                AudioMetadata = loader,
             };
         }
 
-        internal static MetadataInfo Create(FFprobeVideoStream loader)
+        internal static MetadataInfo Create(VideoStreamMetadata loader)
         {
             return new MetadataInfo
             {
-                HasVideo = true,
-                HasAudio = false,
-                BitRate = loader.BitRate,
-                Duration = loader.Duration,
-                Timebase = FFmpegFraction.Create(loader.TimeBase),
-                FrameRate = FFmpegFraction.Create(loader.FrameRate),
-                Dimensions = new Size(loader.Width, loader.Height),
+                VideoMetadata = loader,
             };
         }
     }

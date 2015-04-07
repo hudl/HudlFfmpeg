@@ -1,4 +1,6 @@
-﻿using Hudl.FFmpeg.Metadata;
+﻿using System.Linq;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes.Models;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Sugar
@@ -22,16 +24,16 @@ namespace Hudl.FFmpeg.Sugar
 
             if (mediaLoader.HasAudio)
             {
-                var audioStreamMetadata = MetadataInfo.Create(mediaLoader.AudioStream);
-
-                resource.Streams.Add(AudioStream.Create(audioStreamMetadata));
+                resource.Streams.AddRange(mediaLoader.BaseData.Streams
+                    .OfType<AudioStreamMetadata>()
+                    .Select(audioMetadata => AudioStream.Create(MetadataInfo.Create(audioMetadata))));
             }
 
             if (mediaLoader.HasVideo)
             {
-                var videoStreamMetadata = MetadataInfo.Create(mediaLoader.VideoStream);
-
-                resource.Streams.Add(VideoStream.Create(videoStreamMetadata));
+                resource.Streams.AddRange(mediaLoader.BaseData.Streams
+                    .OfType<VideoStreamMetadata>()
+                    .Select(videoMetadata => VideoStream.Create(MetadataInfo.Create(videoMetadata))));
             }
 
             return resource;

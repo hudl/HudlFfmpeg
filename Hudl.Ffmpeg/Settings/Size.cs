@@ -74,7 +74,10 @@ namespace Hudl.FFmpeg.Settings
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.VideoStream.Dimensions = Dimensions;
+            infoToUpdate.VideoStream.VideoMetadata.Width = Dimensions.Width;
+            infoToUpdate.VideoStream.VideoMetadata.Height = Dimensions.Height;
+            infoToUpdate.VideoStream.VideoMetadata.CodedWidth = Dimensions.Width;
+            infoToUpdate.VideoStream.VideoMetadata.CodedHeight = Dimensions.Height;
 
             return infoToUpdate;
         }

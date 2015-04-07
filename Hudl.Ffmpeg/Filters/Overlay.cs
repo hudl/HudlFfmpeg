@@ -87,7 +87,7 @@ namespace Hudl.FFmpeg.Filters
         {
             if (Shortest)
             {
-                return suppliedInfo.OrderBy(r => r.VideoStream.Duration).FirstOrDefault();
+                return suppliedInfo.OrderBy(r => r.VideoStream.VideoMetadata.Duration).FirstOrDefault();
             }
 
             var mainMetadataInfo = suppliedInfo.ElementAt(0);

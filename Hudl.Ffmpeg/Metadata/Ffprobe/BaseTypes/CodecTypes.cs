@@ -1,6 +1,6 @@
 ﻿namespace Hudl.FFmpeg.Metadata.FFprobe.BaseTypes
 {
-    internal enum FFprobeCodecTypes
+    internal enum CodecTypes
     {
         Video, 
         Audio
