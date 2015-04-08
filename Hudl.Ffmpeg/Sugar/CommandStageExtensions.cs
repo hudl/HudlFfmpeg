@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Settings;
 using Hudl.FFmpeg.Settings.BaseTypes;
-using Hudl.FFmpeg.Resources;
 
 namespace Hudl.FFmpeg.Sugar
 {
@@ -220,13 +215,13 @@ namespace Hudl.FFmpeg.Sugar
                 };    
         }
         
-        public static CommandStage BeforeRender(this CommandStage command, Action<CommandFactory, FFCommandBase, bool> action)
+        public static CommandStage BeforeRender(this CommandStage command, Action<ICommandFactory, ICommand, bool> action)
         {
             command.Command.PreExecutionAction = action;
 
             return command; 
         }
-        public static CommandStage AfterRender(this CommandStage command, Action<CommandFactory, FFCommandBase, bool> action)
+        public static CommandStage AfterRender(this CommandStage command, Action<ICommandFactory, ICommand, bool> action)
         {
             command.Command.PostExecutionAction = action;
 

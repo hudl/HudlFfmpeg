@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Text;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Filters.BaseTypes;

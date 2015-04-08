@@ -1,7 +1,8 @@
 ﻿using System.Linq;
-using Hudl.FFmpeg.Metadata;
-using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes.Models;
+using Hudl.FFmpeg.Metadata.Models;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFprobe;
+using Hudl.FFprobe.Metadata.Models;
 
 namespace Hudl.FFmpeg.Sugar
 {
@@ -20,7 +21,7 @@ namespace Hudl.FFmpeg.Sugar
 
         private static IContainer LoadMetadataFromFFprobe(this IContainer resource)
         {
-            var mediaLoader = new Metadata.FFprobe.MediaLoader(resource);
+            var mediaLoader = new MediaLoader(resource);
 
             if (mediaLoader.HasAudio)
             {

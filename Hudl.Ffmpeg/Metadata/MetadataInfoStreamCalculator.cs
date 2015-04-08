@@ -2,7 +2,7 @@
 using System.Linq;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Metadata.BaseTypes;
+using Hudl.FFprobe.Metadata.BaseTypes;
 
 namespace Hudl.FFmpeg.Metadata
 {

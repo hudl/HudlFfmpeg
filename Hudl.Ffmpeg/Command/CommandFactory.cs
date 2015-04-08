@@ -11,7 +11,7 @@ namespace Hudl.FFmpeg.Command
     /// <summary>
     /// Command Factory is a management list of all the commands to be run in an FFmpeg job.
     /// </summary>
-    public class CommandFactory
+    public class CommandFactory : ICommandFactory
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CommandFactory).Name);
 
@@ -134,9 +134,9 @@ namespace Hudl.FFmpeg.Command
         }
 
         #region Internals
-        internal string Id { get; set; }
+        public string Id { get; set; }
 
-        internal List<FFmpegCommand> CommandList { get; set; }
+        public List<ICommand> CommandList { get; set; }
 
         internal List<IContainer> RenderWith<TProcessor>()
             where TProcessor : class, ICommandProcessor, new()

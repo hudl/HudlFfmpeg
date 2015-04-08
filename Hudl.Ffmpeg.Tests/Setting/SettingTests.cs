@@ -1,6 +1,6 @@
 ﻿using System;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Common.DataTypes;
+using Hudl.FFmpeg.DataTypes;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Settings;
 using Xunit;

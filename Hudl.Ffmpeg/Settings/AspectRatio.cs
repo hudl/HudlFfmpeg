@@ -1,7 +1,8 @@
 ﻿using System;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Common.DataTypes;
+using Hudl.FFmpeg.DataTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 

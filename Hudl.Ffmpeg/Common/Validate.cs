@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
@@ -95,23 +95,6 @@ namespace Hudl.FFmpeg.Common
             return settingsDictionary;
         }
 
-        internal static TAttribute GetAttribute<TAttribute>(Type itemType)
-            where TAttribute : Attribute
-        {
-            return GetAttributes<TAttribute>(itemType).FirstOrDefault();
-        }
-
-        internal static List<TAttribute> GetAttributes<TAttribute>(Type itemType)
-            where TAttribute : Attribute
-        {
-            var allAttributes = itemType.GetCustomAttributes(true);
-            if (allAttributes.Length == 0)
-            {
-                return null;
-            }
-
-            var matchingAttribute = allAttributes.OfType<TAttribute>().ToList();
-            return matchingAttribute;
-        }
+       
     }
 }

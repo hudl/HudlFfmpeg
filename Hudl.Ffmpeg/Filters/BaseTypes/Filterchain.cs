@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Resources.BaseTypes;
