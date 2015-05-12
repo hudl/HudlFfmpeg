@@ -11,6 +11,7 @@ namespace Hudl.FFmpeg.Resources
     /// </summary>
     public class Resource
     {
+		private static readonly object AllTypesLock = new object();
         private static readonly List<Type> AllTypes = new List<Type>();
 
         /// <summary>
@@ -78,18 +79,21 @@ namespace Hudl.FFmpeg.Resources
         private static IContainer From(string filePath, string fileName)
         {
             var fileExtension = Helpers.GetExtensionFromFullName(fileName);
-            if (AllTypes.Count == 0)
-            {
-                AllTypes.AddRange(GetTypes<IContainer>());
-            }
+			lock (AllTypesLock)
+			{
+				if (AllTypes.Count == 0)
+				{
+					AllTypes.AddRange(GetTypes<IContainer>());
+				}
+			}
 
-            var correcTContainer = AllTypes.FirstOrDefault(t => t.Name.ToUpper() == fileExtension.ToUpper());
-            if (correcTContainer == null)
+            var correctContainer = AllTypes.FirstOrDefault(t => t.Name.ToUpper() == fileExtension.ToUpper());
+            if (correctContainer == null)
             {
                 throw new InvalidOperationException("Cannot derive resource type from path provided.");
             }
 
-            var newInstance = (IContainer)Activator.CreateInstance(correcTContainer);
+            var newInstance = (IContainer)Activator.CreateInstance(correctContainer);
             newInstance.Path = filePath;
             newInstance.Name = fileName;
             return newInstance;
