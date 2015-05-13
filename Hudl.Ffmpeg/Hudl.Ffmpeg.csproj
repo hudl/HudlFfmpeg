@@ -57,6 +57,10 @@
     <Compile Include="BaseTypes\ForStreamCollection.cs" />
     <Compile Include="Command\CommandHelper.cs" />
     <Compile Include="Common\FFmpegStreamTypes.cs" />
+    <Compile Include="Filters\Attributes\FilterAttribute.cs" />
+    <Compile Include="Filters\Attributes\FilterParameterValidatorAttribute.cs" />
+    <Compile Include="Filters\Attributes\FilterParameterAttribute.cs" />
+    <Compile Include="Filters\BaseTypes\SimpleFilterValidator.cs" />
     <Compile Include="Filters\BoxBlur.cs" />
     <Compile Include="Metadata\BaseTypes\IMetadataManipulation.cs" />
     <Compile Include="Metadata\MetadataHelpers.cs" />

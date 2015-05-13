@@ -8,27 +8,6 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
     /// </summary>
     public abstract class BaseFilter : IFilter
     {
-        protected BaseFilter(string type, int maxInputs)
-        {
-            Type = type;
-            MaxInputs = maxInputs;
-        }
-    
-        /// <summary>
-        /// Defines the filter type, name that is given to ffmpeg
-        /// </summary>
-        public string Type { get; protected set; }
-
-        /// <summary>
-        /// Defines the maximum number of allowable inputs to the filter
-        /// </summary>
-        public int MaxInputs { get; protected set; }
-
-        /// <summary>
-        /// Available at [Render] time, In an attempt to allow abstraction in some cases
-        /// </summary>
-        protected int InputCount { get; set; }
-
         /// <summary>
         /// Method, called during [Render] to bring forward all the necessary resources, necessary action for maximum abstraction from the user.
         /// </summary>
