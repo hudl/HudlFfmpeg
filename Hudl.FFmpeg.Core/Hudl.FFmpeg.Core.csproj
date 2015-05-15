@@ -51,10 +51,10 @@
     <Compile Include="Attributes\AttributeValidation.cs" />
     <Compile Include="Attributes\ContainsStreamAttribute.cs" />
     <Compile Include="Attributes\ForStreamAttribute.cs" />
-    <Compile Include="BaseTypes\FfmpegProcessingException.cs" />
-    <Compile Include="BaseTypes\FfmpegRenderingException.cs" />
-    <Compile Include="BaseTypes\ForStreamInvalidException.cs" />
-    <Compile Include="BaseTypes\StreamNotFoundException.cs" />
+    <Compile Include="Exceptions\FfmpegProcessingException.cs" />
+    <Compile Include="Exceptions\FfmpegRenderingException.cs" />
+    <Compile Include="Exceptions\ForStreamInvalidException.cs" />
+    <Compile Include="Exceptions\StreamNotFoundException.cs" />
     <Compile Include="Command\BaseTypes\CommandConfigurationFlagTypes.cs" />
     <Compile Include="Command\BaseTypes\ICommandBuilder.cs" />
     <Compile Include="Command\CommandConfiguration.cs" />
@@ -71,15 +71,23 @@
     <Compile Include="DataTypes\Ratio.cs" />
     <Compile Include="DataTypes\TwoPartNumericalBase.cs" />
     <Compile Include="Enums\LogicalOperators.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterParameterFormatter.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterParameterValidator.cs" />
+    <Compile Include="Filters\Attributes\FilterAttribute.cs" />
+    <Compile Include="Filters\Attributes\FilterParameterAttribute.cs" />
+    <Compile Include="Filters\Attributes\FilterParameterValidatorAttribute.cs" />
+    <Compile Include="Filters\Interfaces\IFilter.cs" />
+    <Compile Include="Filters\Interfaces\IFilterParameterFormatter.cs" />
+    <Compile Include="Filters\Serialization\FilterSerializerWriter.cs" />
+    <Compile Include="Filters\Serialization\FilterSerializer.cs" />
+    <Compile Include="Filters\Serialization\FilterSerializerAttributeParser.cs" />
+    <Compile Include="Filters\Serialization\FilterSerializerDataParameter.cs" />
+    <Compile Include="Filters\Serialization\FilterSerializerData.cs" />
     <Compile Include="Logging\LogUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceManagement.cs" />
     <Compile Include="Resources\BaseTypes\IContainer.cs" />
     <Compile Include="Resources\BaseTypes\IStream.cs" />
     <Compile Include="Settings\Models\BaseSetting.cs" />
-    <Compile Include="Settings\BaseTypes\ISetting.cs" />
+    <Compile Include="Settings\Interfaces\ISetting.cs" />
     <Compile Include="Settings\Input.cs" />
   </ItemGroup>
   <ItemGroup />

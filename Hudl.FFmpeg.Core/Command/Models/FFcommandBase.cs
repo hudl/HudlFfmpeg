@@ -1,6 +1,6 @@
 ﻿using System;
-using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Exceptions;
 
 namespace Hudl.FFmpeg.Command.Models
 {

@@ -1,4 +1,4 @@
-﻿namespace Hudl.FFmpeg.Filters.BaseTypes
+﻿namespace Hudl.FFmpeg.Filters.Interfaces
 {
     /// <summary>
     /// representation of a simple filter

@@ -1,5 +1,6 @@
 ﻿using System;
 using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.Interfaces;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {

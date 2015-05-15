@@ -1,5 +1,6 @@
 ﻿using System;
 using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Interfaces;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {
@@ -11,19 +12,8 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
             Value = value;
         }
 
-        public LogicalOperators Op { get; set; }
+       
 
-        public object Value { get; set; }
-
-        public bool Validate(object value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static SimpleFilterValidator Create(LogicalOperators op, object value)
-        {
-            return new SimpleFilterValidator(op, value);
-        }
         public static SimpleFilterValidator EqualTo(object value)
         {
             return new SimpleFilterValidator(LogicalOperators.Equals, value);

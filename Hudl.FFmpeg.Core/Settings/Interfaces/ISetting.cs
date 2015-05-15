@@ -1,4 +1,4 @@
-﻿namespace Hudl.FFmpeg.Settings.BaseTypes
+﻿namespace Hudl.FFmpeg.Settings.Interfaces
 {
     /// <summary>
     /// representation of a settomg that can be applied to an FFmpeg resource

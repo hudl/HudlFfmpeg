@@ -1,5 +1,4 @@
 ﻿using System;
-using Hudl.FFmpeg.Filters.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters.Attributes
 {
@@ -18,12 +17,6 @@ namespace Hudl.FFmpeg.Filters.Attributes
 
         public object Default { get; set; }
 
-        public ValidatorType Validator { get; set; }
-
         public Type Formatter { get; set; } 
-    }
-
-    public abstract class ValidatorType 
-    {
     }
 }

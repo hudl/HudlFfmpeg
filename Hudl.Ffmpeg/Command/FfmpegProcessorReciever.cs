@@ -4,6 +4,7 @@ using System.IO;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Logging;
 using Hudl.FFmpeg.Sugar;
 
