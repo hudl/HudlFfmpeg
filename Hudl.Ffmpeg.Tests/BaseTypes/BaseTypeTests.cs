@@ -1,8 +1,10 @@
 ﻿using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Filters;
 using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Xunit;
 

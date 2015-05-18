@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hudl.FFmpeg.BaseTypes
+namespace Hudl.FFmpeg.Exceptions
 {
     /// <summary>
     /// exception that is thrown when FFmpeg returns an exit code other than 0.

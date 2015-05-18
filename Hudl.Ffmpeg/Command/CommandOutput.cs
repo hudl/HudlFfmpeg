@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 using IContainer = Hudl.FFmpeg.Resources.BaseTypes.IContainer;

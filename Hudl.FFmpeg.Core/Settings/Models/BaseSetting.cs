@@ -1,4 +1,4 @@
-﻿using Hudl.FFmpeg.Settings.BaseTypes;
+﻿using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings.Models
 {

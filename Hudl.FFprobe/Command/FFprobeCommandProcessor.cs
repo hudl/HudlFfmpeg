@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using Hudl.FFmpeg;
-using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Logging;
 
 namespace Hudl.FFprobe.Command

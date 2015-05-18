@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;

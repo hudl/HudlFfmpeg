@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hudl.FFmpeg.BaseTypes
+namespace Hudl.FFmpeg.Exceptions
 {
     /// <summary>
     /// exception that is thrown when Hudl.FFmpeg encounters a rendering exception.

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Hudl.FFmpeg.Filters.Interfaces;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {

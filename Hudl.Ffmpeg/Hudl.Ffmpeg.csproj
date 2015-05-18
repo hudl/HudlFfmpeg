@@ -57,10 +57,6 @@
     <Compile Include="Command\CommandHelper.cs" />
     <Compile Include="Common\FFmpegStreamTypes.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
-    <Compile Include="Filters\Attributes\FilterAttribute.cs" />
-    <Compile Include="Filters\Attributes\FilterParameterValidatorAttribute.cs" />
-    <Compile Include="Filters\Attributes\FilterParameterAttribute.cs" />
-    <Compile Include="Filters\BaseTypes\FilterSerializer.cs" />
     <Compile Include="Filters\BaseTypes\SimpleFilterValidator.cs" />
     <Compile Include="Filters\BoxBlur.cs" />
     <Compile Include="Metadata\BaseTypes\IMetadataManipulation.cs" />
@@ -150,7 +146,6 @@
     <Compile Include="Filters\BaseTypes\IFilterMultiOutput.cs" />
     <Compile Include="Filters\BaseTypes\IFilterValidator.cs" />
     <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
-    <Compile Include="Filters\BaseTypes\IFilter.cs" />
     <Compile Include="Filters\BaseTypes\IFilterProcessor.cs" />
     <Compile Include="Filters\Blend.cs" />
     <Compile Include="Filters\ColorBalance.cs" />
@@ -229,6 +224,7 @@
       <Name>Hudl.FFprobe</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

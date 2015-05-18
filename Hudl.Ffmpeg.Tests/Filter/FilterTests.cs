@@ -2,6 +2,7 @@
 using System.Text;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Common.DataTypes;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Command;

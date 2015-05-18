@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using log4net; 
 
