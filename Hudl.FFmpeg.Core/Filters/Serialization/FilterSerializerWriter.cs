@@ -22,7 +22,14 @@ namespace Hudl.FFmpeg.Filters.Serialization
                     return;
                 }
 
-                ConcatenateParameter(parameterBuilder, fpd.Name, fpd.Value);
+                if (string.IsNullOrWhiteSpace(fpd.Name))
+                {
+                    ConcatenateParameter(parameterBuilder, fpd.Value);
+                }
+                else
+                {
+                    ConcatenateParameter(parameterBuilder, fpd.Name, fpd.Value);
+                }
             });
 
             return JoinTypeAndParameters(parameterBuilder);
@@ -61,7 +68,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
         {
             builder.AppendFormat("{1}{0}",
                     paramValue,
-                    (builder.Length > 0) ? ":" : string.Empty);
+                    (builder.Length > 0) ? "=" : string.Empty);
         }
     }
 }

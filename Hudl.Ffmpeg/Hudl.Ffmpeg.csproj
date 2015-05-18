@@ -140,7 +140,6 @@
     <Compile Include="Filters\AFade.cs" />
     <Compile Include="Filters\AMix.cs" />
     <Compile Include="Filters\BaseTypes\BaseSplit.cs" />
-    <Compile Include="Filters\BaseTypes\BaseFilter.cs" />
     <Compile Include="Filters\BaseTypes\FilterchainOutput.cs" />
     <Compile Include="Filters\BaseTypes\Filterchain.cs" />
     <Compile Include="Filters\BaseTypes\IFilterMultiOutput.cs" />

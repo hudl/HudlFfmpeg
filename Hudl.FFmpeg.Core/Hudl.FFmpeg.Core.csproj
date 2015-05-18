@@ -74,7 +74,9 @@
     <Compile Include="Filters\Attributes\FilterAttribute.cs" />
     <Compile Include="Filters\Attributes\FilterParameterAttribute.cs" />
     <Compile Include="Filters\Attributes\FilterParameterValidatorAttribute.cs" />
+    <Compile Include="Filters\Binding\FilterBindingContext.cs" />
     <Compile Include="Filters\Interfaces\IFilter.cs" />
+    <Compile Include="Filters\Interfaces\IFilterParameterBinding.cs" />
     <Compile Include="Filters\Interfaces\IFilterParameterFormatter.cs" />
     <Compile Include="Filters\Serialization\FilterSerializerWriter.cs" />
     <Compile Include="Filters\Serialization\FilterSerializer.cs" />

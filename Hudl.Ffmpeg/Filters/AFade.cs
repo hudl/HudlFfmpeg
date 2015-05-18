@@ -53,19 +53,19 @@ namespace Hudl.FFmpeg.Filters
         public FadeCurveType CurveType { get; set; }
 
         [FilterParameter(Name = "ss")]
-        [FilterParameterValidator(LogicalOperators.LesserThanOrEqual, 0)]
+        [FilterParameterValidator(LogicalOperators.GreaterThan, 0)]
         public double? StartSample { get; set; }
 
         [FilterParameter(Name = "ns")]
-        [FilterParameterValidator(LogicalOperators.LesserThanOrEqual, 0)]
+        [FilterParameterValidator(LogicalOperators.GreaterThan, 0)]
         public double? NumberOfSamples { get; set; }
 
         [FilterParameter(Name = "st")]
-        [FilterParameterValidator(LogicalOperators.LesserThanOrEqual, 0)]
+        [FilterParameterValidator(LogicalOperators.GreaterThan, 0)]
         public double? StartTime { get; set; }
 
         [FilterParameter(Name = "d")]
-        [FilterParameterValidator(LogicalOperators.LesserThanOrEqual, 0)]
+        [FilterParameterValidator(LogicalOperators.GreaterThan, 0)]
         public double? Duration { get; set; }
     }
 }

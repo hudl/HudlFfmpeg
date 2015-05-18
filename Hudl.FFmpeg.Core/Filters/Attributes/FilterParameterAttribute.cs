@@ -17,6 +17,8 @@ namespace Hudl.FFmpeg.Filters.Attributes
 
         public object Default { get; set; }
 
-        public Type Formatter { get; set; } 
+        public Type Formatter { get; set; }
+
+        public Type Binding { get; set; }
     }
 }

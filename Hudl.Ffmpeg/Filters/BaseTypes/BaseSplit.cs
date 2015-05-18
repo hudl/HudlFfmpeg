@@ -3,44 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Interfaces;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     public abstract class BaseSplit : 
-        BaseFilter,
+        IFilter,
         IFilterProcessor,
         IFilterValidator, 
         IFilterMultiOutput
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "split";
-
-        protected BaseSplit(string filterPrefix)
-            : base(string.Concat(filterPrefix, FilterType), FilterMaxInputs)
-        {
-        }
-
+        [FilterParameter]
+        [FilterParameterValidator(LogicalOperators.GreaterThanOrEqual, 2)]
         public int? NumberOfStreams { get; set; }
-
-        public override void Validate()
-        {
-            if (NumberOfStreams.HasValue && NumberOfStreams < 2)
-            {
-                throw new InvalidOperationException("Number Of Streams must be greater or equal to 2 for a split filter.");
-            }
-        }
-
-        public override string ToString()
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (NumberOfStreams.HasValue)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, NumberOfStreams.GetValueOrDefault());
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
 
         #region IFilterMultiOutput
         public int OutputCount()

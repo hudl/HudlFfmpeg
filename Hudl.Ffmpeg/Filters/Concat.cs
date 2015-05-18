@@ -4,13 +4,16 @@ using System.Linq;
 using System.Text;
 using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Binding;
 using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFprobe.Metadata.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
 {
+    //TODO: create a way to include a dynamic runtime value like number of resources 
     /// <summary>
     /// Concat Filter concatenates multiple resource streams into a collection of output streams
     /// </summary>
@@ -36,6 +39,7 @@ namespace Hudl.FFmpeg.Filters
             NumberOfVideoOut = numberOfVideoOut;
         }
 
+        [FilterParameter(Binding=FilterBindings.NumberOfStreamsIn)]
         public int? NumberOfVideoOut { get; set; }
         
         public int? NumberOfAudioOut { get; set; }

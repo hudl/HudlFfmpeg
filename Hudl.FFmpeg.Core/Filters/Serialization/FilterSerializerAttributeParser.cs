@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.Interfaces;
 
@@ -22,7 +23,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
 
         private static void FillFilterAttribute(FilterSerializerData filterSerializerData, IFilter filter, Type filterType)
         {
-            var filterParameter = (FilterAttribute)Attribute.GetCustomAttribute(filterType, typeof(FilterAttribute));
+            var filterParameter = AttributeRetrieval.GetAttribute<FilterAttribute>(filterType); 
             if (filterParameter == null)
             {
                 throw new Exception(string.Format("IFilter type of \"{0}\", does not contain the FilterAttribute and must.", filterType.Name));
@@ -37,7 +38,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
 
             foreach (var filterProperty in filterProperties)
             {
-                var filterPropertyAttribute = (FilterParameterAttribute)Attribute.GetCustomAttribute(filterProperty, typeof (FilterParameterAttribute));
+                var filterPropertyAttribute = AttributeRetrieval.GetAttribute<FilterParameterAttribute>(filterProperty);
                 if (filterPropertyAttribute == null)
                 {
                     continue;

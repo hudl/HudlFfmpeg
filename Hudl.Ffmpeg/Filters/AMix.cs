@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Formatters;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFprobe.Metadata.BaseTypes;
@@ -15,13 +15,10 @@ namespace Hudl.FFmpeg.Filters
     /// Filter that mixes multiple audio signals into a single audio source 
     /// </summary>
     [ForStream(Type = typeof(AudioStream))]
-    public class AMix : BaseFilter, IMetadataManipulation
+    [Filter(Name = "amix", MinInputs = 2, MaxInputs = 4)]
+    public class AMix : IFilter, IMetadataManipulation
     {
-        private const int FilterMaxInputs = 4;
-        private const string FilterType = "amix";
-
         public AMix() 
-            : base(FilterType, FilterMaxInputs)
         {
         }
         public AMix(int? inputs, double? dropoutTransition, DurationType duration)
@@ -32,45 +29,14 @@ namespace Hudl.FFmpeg.Filters
             DropoutTransition = dropoutTransition;
         }
 
+        [FilterParameter(Name = "inputs")]
         public int? Inputs { get; set; }
-        
+
+        [FilterParameter(Name = "duration")]
         public double? DropoutTransition { get; set; }
 
-        public DurationType Duration { get; set; }
-
-        public override void Validate()
-        {
-            if (Inputs.HasValue && Inputs < 2)
-            {
-                throw new InvalidOperationException("Number of inputs cannot be less than defualt of 2");
-            }
-            if (DropoutTransition.HasValue && DropoutTransition <= 0)
-            {
-                throw new InvalidOperationException("Dropout transition cannot be less than 0");
-            }
-        }
-
-        public override string ToString() 
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (Inputs.HasValue)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "inputs", Inputs.GetValueOrDefault());
-            }
-
-            if (Duration != DurationType.Longest)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "duration", Formats.EnumValue(Duration));
-            }
-
-            if (DropoutTransition.HasValue)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "dropout_transition", DropoutTransition.GetValueOrDefault());
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
+        [FilterParameter(Name = "dropout_transition", Default = DurationType.Longest, Formatter = typeof(EnumParameterFormatter))]
+        public DurationType? Duration { get; set; }
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
