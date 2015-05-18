@@ -19,7 +19,8 @@ namespace Hudl.FFmpeg.Command
         private CommandFactory()
         {
             Id = Guid.NewGuid().ToString();
-            CommandList = new List<FFmpegCommand>();
+            //TODO: fix
+            CommandList = new List<ICommand>();
         }
 
         public static CommandFactory Create()
@@ -62,14 +63,16 @@ namespace Hudl.FFmpeg.Command
         /// </summary>
         public List<IContainer> GetOutputs()
         {
-            return CommandList.Where(c => c.Outputs.Any(cr => cr.IsExported))
-                              .SelectMany(c =>
-                                  {
-                                      var outputTempList = new List<IContainer>();
-                                      outputTempList.AddRange(c.Outputs.Where(cr => cr.IsExported).Select(cr => cr.Resource));
-                                      return outputTempList;
-                                  })
-                              .ToList();
+            return null;
+            //TODO: fix
+            //return CommandList.Where(c => c.Outputs.Any(cr => cr.IsExported))
+            //                  .SelectMany(c =>
+            //                      {
+            //                          var outputTempList = new List<IContainer>();
+            //                          outputTempList.AddRange(c.Outputs.Where(cr => cr.IsExported).Select(cr => cr.Resource));
+            //                          return outputTempList;
+            //                      })
+            //                  .ToList();
         }
 
         /// <summary>
@@ -77,14 +80,16 @@ namespace Hudl.FFmpeg.Command
         /// </summary>
         public List<IContainer> GetResources()
         {
-            return CommandList.Where(c => c.Outputs.Any(cr => !cr.IsExported))
-                              .SelectMany(c =>
-                              {
-                                  var outputTempList = new List<IContainer>();
-                                  outputTempList.AddRange(c.Outputs.Where(cr => !cr.IsExported).Select(cr => cr.Resource));
-                                  return outputTempList;
-                              })
-                              .ToList();
+            return null;
+            //TODO: fix
+            //return CommandList.Where(c => c.Outputs.Any(cr => !cr.IsExported))
+            //                  .SelectMany(c =>
+            //                  {
+            //                      var outputTempList = new List<IContainer>();
+            //                      outputTempList.AddRange(c.Outputs.Where(cr => !cr.IsExported).Select(cr => cr.Resource));
+            //                      return outputTempList;
+            //                  })
+            //                  .ToList();
         }
 
         /// <summary>
@@ -92,8 +97,10 @@ namespace Hudl.FFmpeg.Command
         /// </summary>
         public List<IContainer> GetAllOutput()
         {
-            return CommandList.SelectMany(c => c.Outputs.Select(cr => cr.Resource))
-                              .ToList();
+            return null;
+            //TODO: fix
+            //    return CommandList.SelectMany(c => c.Outputs.Select(cr => cr.Resource))
+            //                      .ToList();
         }
 
         /// <summary>
@@ -101,7 +108,9 @@ namespace Hudl.FFmpeg.Command
         /// </summary>
         public bool Contains(FFmpegCommand command)
         {
-            return CommandList.Any(c => c.Id == command.Id);
+            return false;
+            //TODO: fix
+            //return CommandList.Any(c => c.Id == command.Id);
         }
 
         /// <summary>
@@ -173,7 +182,8 @@ namespace Hudl.FFmpeg.Command
                 outputList.Count,
                 CommandList.Count);
 
-            CommandList.ForEach(command => command.ExecuteWith(processor));
+            //TODO: fix
+//            CommandList.ForEach(command => command.ExecuteWith(processor));
 
             return outputList;
         }

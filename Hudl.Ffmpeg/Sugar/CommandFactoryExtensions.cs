@@ -8,13 +8,15 @@ namespace Hudl.FFmpeg.Sugar
         {
             factory.AddCommandAsOutput(FFmpegCommand.Create(factory));
 
-            return factory.CommandList[factory.CommandList.Count - 1];
+            //TODO: fix
+            return (FFmpegCommand)factory.CommandList[factory.CommandList.Count - 1];
         }
         public static FFmpegCommand CreateResourceCommand(this CommandFactory factory)
         {
             factory.AddCommandAsResource(FFmpegCommand.Create(factory));
 
-            return factory.CommandList[factory.CommandList.Count - 1];
+            //TODO: fix
+            return (FFmpegCommand)factory.CommandList[factory.CommandList.Count - 1];
         }
     }
 }

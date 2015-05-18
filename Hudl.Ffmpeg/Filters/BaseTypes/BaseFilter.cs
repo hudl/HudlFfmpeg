@@ -9,6 +9,10 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
     /// </summary>
     public abstract class BaseFilter : IFilter
     {
+        protected BaseFilter(string k, int ks)
+        {
+            
+        }
         /// <summary>
         /// Method, called during [Render] to bring forward all the necessary resources, necessary action for maximum abstraction from the user.
         /// </summary>
@@ -16,16 +20,6 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
         /// <param name="filterchain">The filterchain that the filter belongs to</param>
         public void Setup(FFmpegCommand command, Filterchain filterchain)
         {
-            InputCount = filterchain.Resources.Count;
-
-            if (InputCount == 0)
-            {
-                throw new InvalidOperationException("Cannot setup filter with a resource count of zero.");
-            }
-            if (InputCount > MaxInputs)
-            {
-                throw new InvalidOperationException("The filter has exceeded the maximum allowed number of inputs.");
-            }
         }
 
         public virtual void Validate()

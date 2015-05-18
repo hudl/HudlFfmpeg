@@ -52,7 +52,8 @@ namespace Hudl.FFmpeg.Command
         /// </summary>
         public List<CommandOutput> Render()
         {
-            ExecuteWith<FFmpegProcessorReciever>();
+            //TODO: fix
+            //ExecuteWith<FFmpegProcessorReciever>();
 
             return Objects.Outputs; 
         }

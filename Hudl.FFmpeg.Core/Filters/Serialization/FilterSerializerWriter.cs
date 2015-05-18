@@ -4,13 +4,11 @@ namespace Hudl.FFmpeg.Filters.Serialization
 {
     internal class FilterSerializerWriter
     {
-        private readonly StringBuilder _builder;
         private readonly FilterSerializerData _filterData;
 
         public FilterSerializerWriter(FilterSerializerData filterData)
         {
             _filterData = filterData; 
-            _builder = new StringBuilder(100);
         }
 
         public string Write()
@@ -33,7 +31,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
         /// <summary>
         /// used to concatenate the type and parameters in a single standard implementation
         /// </summary>
-        public string JoinTypeAndParameters(StringBuilder builder)
+        private string JoinTypeAndParameters(StringBuilder builder)
         {
             if (builder.Length == 0)
             {
@@ -48,7 +46,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
         /// <summary>
         /// used to attach parameters to a builder string for filters, so that they may meet syntax requirements
         /// </summary>
-        public void ConcatenateParameter(StringBuilder builder, string paramName, object paramValue)
+        private void ConcatenateParameter(StringBuilder builder, string paramName, object paramValue)
         {
             builder.AppendFormat("{2}{0}={1}",
                     paramName,
@@ -59,7 +57,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
         /// <summary>
         /// used to attach parameters to a builder string for filters, so that they may meet syntax requirements
         /// </summary>
-        public void ConcatenateParameter(StringBuilder builder, object paramValue)
+        private void ConcatenateParameter(StringBuilder builder, object paramValue)
         {
             builder.AppendFormat("{1}{0}",
                     paramValue,

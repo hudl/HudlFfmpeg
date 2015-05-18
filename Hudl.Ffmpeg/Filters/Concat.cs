@@ -44,7 +44,8 @@ namespace Hudl.FFmpeg.Filters
 
         public override void Validate()
         {
-            var numberOfResources = InputCount;
+            //TODO: fix
+            var numberOfResources = 0;// InputCount;
             if (NumberOfVideoOut.HasValue && NumberOfVideoOut > numberOfResources)
             {
                 throw new InvalidOperationException("Number of Videos out cannot be greater than Resources in.");
@@ -57,7 +58,8 @@ namespace Hudl.FFmpeg.Filters
 
         public override string ToString()
         {
-            var numberOfResources = InputCount;
+            //TODO: fix
+            var numberOfResources = 0;//InputCount;
 
             var filterParameters = new StringBuilder(100);
 

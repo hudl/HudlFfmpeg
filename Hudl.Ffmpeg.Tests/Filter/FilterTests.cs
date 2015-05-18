@@ -1,8 +1,10 @@
 ﻿using System.Drawing;
+using System.Runtime.Serialization;
 using System.Text;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Common.DataTypes;
+using Hudl.FFmpeg.DataTypes;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Filters.Serialization;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Command;
@@ -113,23 +115,28 @@ namespace Hudl.FFmpeg.Tests.Filter
 
             filter.TransitionType = FadeTransitionType.Out;
             filterValue.Append("afade=t=out");
-            Assert.Equal(filter.ToString(), filterValue.ToString());
+            var sss = FilterSerializer.Serialize(filter);
+            Assert.Equal(sss, filterValue.ToString());
+
+            filter.CurveType = FadeCurveType.Cub;
+            filterValue.Append(":curve=cub");
+            Assert.Equal(FilterSerializer.Serialize(filter), filterValue.ToString());
 
             filter.StartSample = 1D;
             filterValue.Append(":ss=1");
-            Assert.Equal(filter.ToString(), filterValue.ToString());
+            Assert.Equal(FilterSerializer.Serialize(filter), filterValue.ToString());
 
             filter.NumberOfSamples = 2D;
             filterValue.Append(":ns=2");
-            Assert.Equal(filter.ToString(), filterValue.ToString());
+            Assert.Equal(FilterSerializer.Serialize(filter), filterValue.ToString());
 
             filter.StartTime = 2D;
             filterValue.Append(":st=2");
-            Assert.Equal(filter.ToString(), filterValue.ToString());
+            Assert.Equal(FilterSerializer.Serialize(filter), filterValue.ToString());
 
             filter.Duration = 2D;
             filterValue.Append(":d=2");
-            Assert.Equal(filter.ToString(), filterValue.ToString());
+            Assert.Equal(FilterSerializer.Serialize(filter), filterValue.ToString());
         }
 
         [Fact]

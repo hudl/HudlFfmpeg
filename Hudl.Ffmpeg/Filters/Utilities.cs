@@ -27,7 +27,9 @@ namespace Hudl.FFmpeg.Filters
 
         public static int GetFilterInputMax(Filterchain filterchain)
         {
-            return filterchain.Filters.List.Min(f => f.MaxInputs);
+            return 0;
+            //TODO: fix
+            //return filterchain.Filters.List.Min(f => f.MaxInputs);
         }
 
         public static bool ValidateFilters(FFmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds)

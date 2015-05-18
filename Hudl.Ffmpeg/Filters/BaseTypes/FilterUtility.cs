@@ -10,14 +10,16 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
         /// </summary>
         public static string JoinTypeAndParameters(IFilter filter, StringBuilder builder)
         {
-            if (builder.Length == 0)
-            {
-                return filter.Type;
-            }
+            return string.Empty;
+            //TODO: fix
+            //if (builder.Length == 0)
+            //{
+            //    return filter.Type;
+            //}
 
-            return string.Format("{0}={1}",
-                    filter.Type,
-                    builder);
+            //return string.Format("{0}={1}",
+            //        filter.Type,
+            //        builder);
         }
 
         /// <summary>

@@ -30,7 +30,7 @@ namespace Hudl.FFmpeg.Common
         /// </summary>
         public static bool AppliesTo(Type objectType, Type restrictedType)
         {
-            var matchingAttributes = GetAttributes<ForStreamAttribute>(objectType);
+            var matchingAttributes = AttributeRetrieval.GetAttributes<ForStreamAttribute>(objectType);
             if (matchingAttributes.Count == 0)
             {
                 return false;
@@ -45,7 +45,7 @@ namespace Hudl.FFmpeg.Common
         /// </summary>
         public static bool ContainsStream(Type objectType, Type streamType)
         {
-            var matchingAttributes = GetAttributes<ContainsStreamAttribute>(objectType);
+            var matchingAttributes = AttributeRetrieval.GetAttributes<ContainsStreamAttribute>(objectType);
             if (matchingAttributes.Count == 0)
             {
                 return false;
@@ -59,7 +59,7 @@ namespace Hudl.FFmpeg.Common
             where TSetting : ISetting
         {
             var itemType = item.GetType();
-            var matchingAttribute = GetAttribute<SettingsApplicationAttribute>(itemType);
+            var matchingAttribute = AttributeRetrieval.GetAttribute<SettingsApplicationAttribute>(itemType);
             
             return matchingAttribute != null && type == matchingAttribute.ResourceType;
         }
@@ -78,7 +78,7 @@ namespace Hudl.FFmpeg.Common
 
         internal static SettingsApplicationData GetSettingData(Type itemType)
         {
-            var matchingAttribute = GetAttribute<SettingsApplicationAttribute>(itemType);
+            var matchingAttribute = AttributeRetrieval.GetAttribute<SettingsApplicationAttribute>(itemType);
 
             return matchingAttribute == null ? null : matchingAttribute.Data;
         }

@@ -57,8 +57,8 @@
     <Compile Include="Command\CommandHelper.cs" />
     <Compile Include="Common\FFmpegStreamTypes.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
-    <Compile Include="Filters\BaseTypes\SimpleFilterValidator.cs" />
     <Compile Include="Filters\BoxBlur.cs" />
+    <Compile Include="Filters\Formatters\EnumParameterFormatter.cs" />
     <Compile Include="Metadata\BaseTypes\IMetadataManipulation.cs" />
     <Compile Include="Metadata\MetadataHelpers.cs" />
     <Compile Include="Metadata\Models\MetadataInfo.cs" />

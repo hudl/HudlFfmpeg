@@ -132,7 +132,8 @@ namespace Hudl.FFmpeg.Command
                     shouldIncludeDelimitor = true;
                 }
 
-                filter.Setup(command, filterchain);
+                //TODO: fix
+                //filter.Setup(command, filterchain);
                 WriteFilter(filter);
             });
 
@@ -207,7 +208,8 @@ namespace Hudl.FFmpeg.Command
                 throw new ArgumentNullException("filter");
             }
 
-            BuilderBase.Append(filter.GetAndValidateString());
+            //TODO: fix
+            //BuilderBase.Append(filter.GetAndValidateString());
         }
     }
 }

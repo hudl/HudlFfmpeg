@@ -52,13 +52,16 @@ namespace Hudl.FFmpeg.Filters.Serialization
                 }
 
                 var filterPropertyFormattedValue = RunFilterSerializationFormat(filterPropertyAttribute, filterType, filterProperty, filterPropertyValue);
+                var filterPropertyIsDefault = filterPropertyAttribute.Default != null
+                                              && filterPropertyValue != null
+                                              && filterPropertyAttribute.Default.Equals(filterPropertyValue);
 
                 filterSerializerData.Parameters.Add(new FilterSerializerDataParameter
                 {
-                    Name = filterProperty.Name,
+                    Name = filterPropertyAttribute.Name,
                     Value = filterPropertyFormattedValue,
                     Parameter = filterPropertyAttribute,
-                    IsDefault = filterPropertyAttribute.Default == filterPropertyValue
+                    IsDefault = filterPropertyIsDefault
                 });
             }
         }
