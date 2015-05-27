@@ -27,7 +27,7 @@ namespace Hudl.FFmpeg.Command
             Objects = CommandObjects.Create(this);
             OutputManager = CommandOutputManager.Create(this);
             InputManager = CommandInputManager.Create(this);
-            FilterchainManager = CommandFiltergraphManager.Create(this);
+            FilterchainManager = FiltergraphManager.Create(this);
         }
 
         public static FFmpegCommand Create(CommandFactory owner)
@@ -45,7 +45,7 @@ namespace Hudl.FFmpeg.Command
 
         public CommandInputManager InputManager { get; set; }
 
-        public CommandFiltergraphManager FilterchainManager { get; set; }
+        public FiltergraphManager FilterchainManager { get; set; }
 
         /// <summary>
         /// Renders the command stream with the defualt command processor

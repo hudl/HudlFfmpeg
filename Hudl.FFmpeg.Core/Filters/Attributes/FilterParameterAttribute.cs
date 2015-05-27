@@ -17,6 +17,10 @@ namespace Hudl.FFmpeg.Filters.Attributes
 
         public object Default { get; set; }
 
+        public bool ShouldHideName { get; set; }
+
+        public bool ShouldHideValue { get; set; }
+
         public Type Formatter { get; set; }
 
         public Type Binding { get; set; }

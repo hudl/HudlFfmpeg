@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Hudl.FFmpeg.Metadata.Models;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Metadata
 {

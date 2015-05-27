@@ -1,4 +1,4 @@
-﻿using Hudl.FFmpeg.Filters.Binding;
+﻿using Hudl.FFmpeg.Filters.Contexts;
 
 namespace Hudl.FFmpeg.Filters.Interfaces
 {

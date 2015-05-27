@@ -1,17 +1,11 @@
-﻿using System.Drawing;
-using System.Runtime.Serialization;
-using System.Text;
+﻿using System.Text;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.DataTypes;
 using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Filters.Serialization;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Filters;
-using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Sugar;
-using Hudl.FFmpeg.Tests.Filter.Identify;
 using Xunit;
 
 namespace Hudl.FFmpeg.Tests.Filter
@@ -315,24 +309,21 @@ namespace Hudl.FFmpeg.Tests.Filter
             var filterValue = new StringBuilder(100);
             Assert.DoesNotThrow(() => { var s = filter.ToString(); });
 
-            filter.Shadow = new DecimalScaleRgb(
-                new DecimalScale(.3m),
-                new DecimalScale(.3m),
-                new DecimalScale(.3m));
+            filter.ShadowRed = .3m;
+            filter.ShadowGreen = .3m;
+            filter.ShadowBlue = .3m;
             filterValue.Append("colorbalance=rs=0.3:gs=0.3:bs=0.3");
             Assert.Equal(filter.ToString(), filterValue.ToString());
 
-            filter.Midtone = new DecimalScaleRgb(
-                new DecimalScale(.3m),
-                new DecimalScale(.3m),
-                new DecimalScale(.3m));
+            filter.MidtonesRed = .3m;
+            filter.MidtonesGreen = .3m;
+            filter.MidtonesBlue = .3m; 
             filterValue.Append(":rm=0.3:gm=0.3:bm=0.3");
             Assert.Equal(filter.ToString(), filterValue.ToString());
 
-            filter.Highlight = new DecimalScaleRgb(
-                new DecimalScale(.3m),
-                new DecimalScale(.3m),
-                new DecimalScale(.3m));
+            filter.HighlightsRed = .3m;
+            filter.HighlightsGreen = .3m;
+            filter.HighlightsBlue = .3m; 
             filterValue.Append(":rh=0.3:gh=0.3:bh=0.3");
             Assert.Equal(filter.ToString(), filterValue.ToString());
         }
@@ -360,11 +351,13 @@ namespace Hudl.FFmpeg.Tests.Filter
             var filterValue = new StringBuilder(100);
             Assert.DoesNotThrow(() => { var s = filter.ToString(); });
 
-            filter.Dimensions = new System.Drawing.Size(2, 2);
+            filter.Width = 2; 
+            filter.Height = 2; 
             filterValue.Append("crop=w=2:h=2");
             Assert.Equal(filter.ToString(), filterValue.ToString());
 
-            filter.Offset = new Point(2, 2);
+            filter.X = 2;
+            filter.Y = 2; 
             filterValue.Append(":x=2:y=2");
             Assert.Equal(filter.ToString(), filterValue.ToString());
         }
@@ -416,11 +409,13 @@ namespace Hudl.FFmpeg.Tests.Filter
             var filterValue = new StringBuilder(100);
             Assert.DoesNotThrow(() => { var s = filter.ToString(); });
 
-            filter.Dimensions = new System.Drawing.Size(2, 2);
+            filter.Width = 2; 
+            filter.Height = 2; 
             filterValue.Append("pad=w=2:h=2");
             Assert.Equal(filter.ToString(), filterValue.ToString());
 
-            filter.Offset = new Point(2, 2);
+            filter.X = 2; 
+            filter.Y = 2; 
             filterValue.Append(":x=2:y=2");
             Assert.Equal(filter.ToString(), filterValue.ToString());
 
@@ -436,7 +431,8 @@ namespace Hudl.FFmpeg.Tests.Filter
             var filterValue = new StringBuilder(100);
             Assert.DoesNotThrow(() => { var s = filter.ToString(); });
 
-            filter.Dimensions = new System.Drawing.Size(2, 2);
+            filter.Width = 2; 
+            filter.Height = 2; 
             filterValue.Append("scale=w=2:h=2");
             Assert.Equal(filter.ToString(), filterValue.ToString());
 
@@ -566,17 +562,6 @@ namespace Hudl.FFmpeg.Tests.Filter
 
             filter.Eval = VolumeExpressionEvalType.Frame;
             filterValue.Append(":eval=frame");
-            Assert.Equal(filter.ToString(), filterValue.ToString());
-        }
-
-        [Fact]
-        public void Custom_Verify()
-        {
-            var filter = FilterFactory.CreateEmpty<Yadif>();
-            var filterValue = new StringBuilder(100);
-            Assert.DoesNotThrow(() => { var s = filter.ToString(); });
-
-            filterValue.Append("yadif=1");
             Assert.Equal(filter.ToString(), filterValue.ToString());
         }
 

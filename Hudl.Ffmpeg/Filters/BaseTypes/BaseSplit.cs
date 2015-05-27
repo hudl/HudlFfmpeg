@@ -1,64 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Contexts;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     public abstract class BaseSplit : 
         IFilter,
-        IFilterProcessor,
         IFilterValidator, 
+        IFilterProcessor,
         IFilterMultiOutput
     {
         [FilterParameter]
-        [FilterParameterValidator(LogicalOperators.GreaterThanOrEqual, 2)]
+        [Validate(LogicalOperators.GreaterThanOrEqual, 2)]
         public int? NumberOfStreams { get; set; }
 
         #region IFilterMultiOutput
-        public int OutputCount()
+        public int OutputCount(FilterMultiOutputContext context)
         {
             return NumberOfStreams ?? 2;
         }
         #endregion
 
+        #region IFilterValidator 
+        public bool Validate(FilterValidatorContext context)
+        {
+            return context.NumberOfFiltersInFilterchain == 1; 
+        }
+        #endregion
+
         #region IFilterProcessor
-        public bool Validate(FFmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds)
+        //TODO: ensure that this still creates the necessary output
+        public void Process(FilterProcessorContext context)
         {
-            return filterchain.Filters.Count == 1;
+            var firstStream = context.Streams.OfType<VideoStream>().FirstOrDefault();
+            if (firstStream == null)
+            {
+                throw new InvalidOperationException("Found a spit filter with zero video streams.");
+            }
+
+            for (var i = context.Filterchain.OutputCount; i < NumberOfStreams; i++)
+            {
+                context.Filterchain.CreateOutput(firstStream.Copy());
+            } 
         }
         #endregion
 
-        #region IFilterValidator
-        public void PrepCommands(FFmpegCommand command, Filterchain filterchain)
-        {
-            if (filterchain.OutputList.Count == 0)
-            {
-                throw new InvalidOperationException("A split cannot happen without a demo output to split on.");
-            }
 
-            if (filterchain.OutputList.Count > NumberOfStreams)
-            {
-                throw new InvalidOperationException("A split cannot happen when the supplied filterchain has to many demo outputs.");
-            }
 
-            if (filterchain.OutputList.Count == NumberOfStreams)
-            {
-                return;
-            }
-
-            for (var i = filterchain.OutputList.Count; i < NumberOfStreams; i++)
-            {
-                filterchain.OutputList.Add(filterchain.OutputList
-                                                      .First()
-                                                      .Copy());
-            }
-        }
-        #endregion
+        
     }
 
 }

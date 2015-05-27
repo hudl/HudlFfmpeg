@@ -5,6 +5,7 @@ using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using log4net; 
 
 namespace Hudl.FFmpeg.Command

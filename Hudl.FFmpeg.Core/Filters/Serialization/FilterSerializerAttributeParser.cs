@@ -4,6 +4,7 @@ using System.Reflection;
 using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Interfaces;
 
 namespace Hudl.FFmpeg.Filters.Serialization
 {
@@ -46,7 +47,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
 
                 var filterPropertyValue = filterProperty.GetValue(filter);
 
-                var filterPropertyValidationAttribute = (FilterParameterValidatorAttribute)Attribute.GetCustomAttribute(filterProperty, typeof (FilterParameterValidatorAttribute));
+                var filterPropertyValidationAttribute = (ValidateAttribute)Attribute.GetCustomAttribute(filterProperty, typeof (ValidateAttribute));
                 if (filterPropertyValidationAttribute != null)
                 {
                     RunFilterSerializationValidation(filterPropertyValidationAttribute, filterType, filterProperty, filterPropertyValue);
@@ -67,7 +68,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
             }
         }
 
-        private static void RunFilterSerializationValidation(FilterParameterValidatorAttribute filterPropertyValidationAttribute, Type filterType, PropertyInfo propertyInfo, object value)
+        private static void RunFilterSerializationValidation(ValidateAttribute filterPropertyValidationAttribute, Type filterType, PropertyInfo propertyInfo, object value)
         {
             if (!filterPropertyValidationAttribute.Vaildate())
             {
@@ -87,12 +88,12 @@ namespace Hudl.FFmpeg.Filters.Serialization
                 return value.ToString();
             }
 
-            if (!typeof(IFilterParameterFormatter).IsAssignableFrom(filterParameterAttribute.Formatter))
+            if (!typeof(IFormatter).IsAssignableFrom(filterParameterAttribute.Formatter))
             {
                 throw new Exception(string.Format("IFilter type of \"{0}\" parameter \"{1}\", Formatter must be of type IFilterParameterFormatter.", filterType.Name, propertyInfo.Name));
             }
 
-            var formatterFromAttribute = (IFilterParameterFormatter)Activator.CreateInstance(filterParameterAttribute.Formatter);
+            var formatterFromAttribute = (IFormatter)Activator.CreateInstance(filterParameterAttribute.Formatter);
 
             return formatterFromAttribute.Format(value);
         }

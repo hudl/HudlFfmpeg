@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFprobe.Command;
 using Hudl.FFprobe.Metadata.Models;
 using Hudl.FFprobe.Options;

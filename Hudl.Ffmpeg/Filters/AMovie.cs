@@ -2,6 +2,7 @@
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Filters
 {

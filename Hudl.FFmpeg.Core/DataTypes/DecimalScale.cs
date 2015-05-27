@@ -46,5 +46,10 @@ namespace Hudl.FFmpeg.DataTypes
         {
             return (scale == null || scale.Value == 0); 
         }
+
+        public static implicit operator DecimalScale(decimal value)
+        {
+            return new DecimalScale(value);
+        }
     }
 }

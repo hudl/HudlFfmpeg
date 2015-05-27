@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Filters.Interfaces;
-using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {
-    public class Filterchain
+    public class Filterchain : IFilterchain
     {
         private Filterchain(List<IStream> outputsToUse) 
         {
@@ -23,7 +22,7 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
             ReceiptList = new List<StreamIdentifier>();
             OutputList = new List<FilterchainOutput>(); 
             Filters = new ForStreamCollection<IFilter>(outputsToUse.First().GetType());
-            OutputList.AddRange(outputsToUse.Select(output => new FilterchainOutput(this, output)));
+            OutputList.AddRange(outputsToUse.Select(output => FilterchainOutput.Create(this, output)));
         }
         private Filterchain(List<IStream> outputsToUse, params IFilter[] filters)
             : this(outputsToUse)
@@ -115,5 +114,29 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
         internal List<StreamIdentifier> ReceiptList { get; set; }
         internal List<FilterchainOutput> OutputList { get; set; }
         #endregion
+
+        public int InputCount
+        {
+            get { return ReceiptList.Count; }
+        }
+
+        public int OutputCount
+        {
+            get { return OutputList.Count; }
+        }
+
+        public void CreateInput(IStream stream)
+        {
+            var streamId = StreamIdentifier.Create(Owner.Owner.Owner.Id, Owner.Owner.Id, stream.Map);
+
+            ReceiptList.Add(streamId);
+        }
+
+        public void CreateOutput(IStream stream)
+        {
+            var filterchainOutput = FilterchainOutput.Create(this, stream);
+
+            OutputList.Add(filterchainOutput);
+        }
     }
 }

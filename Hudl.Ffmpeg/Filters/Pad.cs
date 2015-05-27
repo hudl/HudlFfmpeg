@@ -1,10 +1,9 @@
-﻿using System;
-using System.Drawing;
-using System.Text;
+﻿using System.Drawing;
 using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Filters.Attributes;
 
 namespace Hudl.FFmpeg.Filters
 {
@@ -12,22 +11,21 @@ namespace Hudl.FFmpeg.Filters
     /// Filter that applies padding to input video 
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    public class Pad : BaseFilter
+    [Filter(Name = "pad", MinInputs = 1, MaxInputs = 1)]
+    public class Pad : IFilter
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "pad";
-
         public const string ExprConvertTo169Aspect = "ih*16/9:ih:(ow-iw)/2:(oh-ih)/2"; 
 
         public Pad() 
-            : base(FilterType, FilterMaxInputs)
         {
         }
         public Pad(Size? toDimensions, Point? atPosition)
             : this()
         {
-            Dimensions = toDimensions;
-            Offset = atPosition;
+            Width = toDimensions.HasValue ? toDimensions.Value.Width : (int?)null;
+            Height = toDimensions.HasValue ? toDimensions.Value.Height : (int?)null;
+            X = atPosition.HasValue ? atPosition.Value.X : (int?)null;
+            Y = atPosition.HasValue ? atPosition.Value.Y : (int?)null;
         }
         public Pad(string expression)
             : this()
@@ -35,62 +33,26 @@ namespace Hudl.FFmpeg.Filters
             Expression = expression;
         }
 
+        [FilterParameter]
         public string Expression { get; set; }
 
-        public Size? Dimensions { get; set; }
+        [FilterParameter(Name = "w")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public int? Width { get; set; }
 
-        public Point? Offset { get; set; }
+        [FilterParameter(Name = "h")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public int? Height { get; set; }
 
+        [FilterParameter(Name = "x")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public int? X { get; set; }
+
+        [FilterParameter(Name = "y")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public int? Y { get; set; }
+
+        [FilterParameter(Name = "color")]
         public string Color { get; set; }
-
-        public override void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Expression))
-            {
-                if (Offset.HasValue && Offset.Value.IsEmpty)
-                {
-                    throw new InvalidOperationException("Offset point cannot be empty.");
-                }
-                if (Dimensions.HasValue && Dimensions.Value.IsEmpty)
-                {
-                    throw new InvalidOperationException("Dimensions cannot be empty.");
-                }
-            }
-        }
-
-        public override string ToString()
-        {
-            var filterParameters = new StringBuilder(100); 
-
-            if (!string.IsNullOrWhiteSpace(Expression))
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, Expression);
-
-                return FilterUtility.JoinTypeAndParameters(this, filterParameters); 
-            }
-
-            if (Dimensions.HasValue && Dimensions.Value.Width != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "w", Dimensions.Value.Width);
-            }
-            if (Dimensions.HasValue && Dimensions.Value.Height != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "h", Dimensions.Value.Height);
-            }
-            if (Offset.HasValue && Offset.Value.X != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "x", Offset.Value.X);
-            }
-            if (Offset.HasValue && Offset.Value.Y != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "y", Offset.Value.Y);
-            }
-            if (!string.IsNullOrWhiteSpace(Color))
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "color", Color);
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters); 
-        }
     }
 }

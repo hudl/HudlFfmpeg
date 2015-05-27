@@ -3,7 +3,9 @@ using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
 namespace Hudl.FFmpeg.Settings

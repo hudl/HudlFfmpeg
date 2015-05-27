@@ -1,6 +1,7 @@
 ﻿using System;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Tests.Assets;
 using Xunit;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Microsoft.SqlServer.Server;
 
 namespace Hudl.FFmpeg.Common

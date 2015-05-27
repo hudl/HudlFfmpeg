@@ -8,6 +8,7 @@ using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings;
 using Hudl.FFmpeg.Settings.BaseTypes;
 

@@ -1,4 +1,4 @@
-﻿namespace Hudl.FFmpeg.Common
+﻿namespace Hudl.FFmpeg.Enums
 {
     /// <summary>
     /// an enumeration describing how the setting applies to the command

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Command.Models;
-using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFprobe.Options.BaseTypes;
 
 namespace Hudl.FFprobe.Command

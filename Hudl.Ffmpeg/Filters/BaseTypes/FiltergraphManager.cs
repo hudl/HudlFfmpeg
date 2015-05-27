@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Filters.BaseTypes;
 
-namespace Hudl.FFmpeg.Command.Managers
+namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     /// <summary>
     /// A manager that controls the list of filterchains for a filtergraph.
     /// </summary>
-    public class CommandFiltergraphManager
+    public class FiltergraphManager
     {
-        private CommandFiltergraphManager(FFmpegCommand owner)
+        private FiltergraphManager(FFmpegCommand owner)
         {
             Owner = owner;
         }
@@ -41,19 +41,19 @@ namespace Hudl.FFmpeg.Command.Managers
                 throw new ArgumentException("Filterchain must contain at least one filter.", "filterchain");
             }
 
-            if (!Filters.Utilities.ValidateFiltersMax(filterchain, streamIdList))
+            if (!Utilities.ValidateFiltersMax(filterchain, streamIdList))
             {
                 throw new InvalidOperationException(
                     "Filterchain is invalid, exceeds maximum calculated allowable resources.");
             }
 
-            if (!Filters.Utilities.ValidateFilters(Owner, filterchain, streamIdList))
+            if (!Utilities.ValidateFilters(Owner, filterchain, streamIdList))
             {
                 throw new InvalidOperationException(
                     "Filterchain is invalid, failed to comply with child filter requirements.");
             }
 
-            var maximumInputs = Filters.Utilities.GetFilterInputMax(filterchain);
+            var maximumInputs = Utilities.GetFilterInputMax(filterchain);
 
             Filterchain finalFilterchain = null;
             var segmentsList = Helpers.BreakStreamIdentifiers(maximumInputs, streamIds);
@@ -71,7 +71,7 @@ namespace Hudl.FFmpeg.Command.Managers
 
                     finalFilterchain.SetResources(segmentList);
 
-                    Filters.Utilities.ProcessFilters(Owner, finalFilterchain);
+                    Utilities.ProcessFilters(Owner, finalFilterchain);
 
                     Owner.Objects.Filtergraph.Add(finalFilterchain);
                 });
@@ -101,9 +101,9 @@ namespace Hudl.FFmpeg.Command.Managers
             return resourceList.SelectMany(r => Add(filterchain, r)).ToList();
         }
 
-        internal static CommandFiltergraphManager Create(FFmpegCommand owner)
+        internal static FiltergraphManager Create(FFmpegCommand owner)
         {
-            return new CommandFiltergraphManager(owner);
+            return new FiltergraphManager(owner);
         }
     }
 }

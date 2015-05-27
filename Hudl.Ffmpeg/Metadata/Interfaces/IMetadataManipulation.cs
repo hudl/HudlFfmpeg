@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Hudl.FFmpeg.Metadata;
 
-namespace Hudl.FFprobe.Metadata.BaseTypes
+namespace Hudl.FFmpeg.Metadata.Interfaces
 {
     public interface IMetadataManipulation
     {

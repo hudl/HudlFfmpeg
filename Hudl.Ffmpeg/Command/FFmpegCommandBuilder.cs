@@ -4,6 +4,7 @@ using System.Linq;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Command.Models;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Settings;

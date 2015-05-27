@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Resources.BaseTypes; 
+using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Resources
 {

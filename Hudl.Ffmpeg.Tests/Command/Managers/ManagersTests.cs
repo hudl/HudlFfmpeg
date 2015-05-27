@@ -28,7 +28,7 @@ namespace Hudl.FFmpeg.Tests.Command.Managers
                                  .WithInput<VideoStream>(Assets.Utilities.GetVideoFile())
                                  .WithInput<VideoStream>(Assets.Utilities.GetVideoFile());
 
-            var commandFilterchainManager = CommandFiltergraphManager.Create(command.Command);
+            var commandFilterchainManager = FiltergraphManager.Create(command.Command);
 
             var filterchain = Filterchain.FilterTo<VideoStream>(new Fps());
             var filterchain2 = Filterchain.FilterTo<VideoStream>(new Concat());

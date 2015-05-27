@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Collections.Generic;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {

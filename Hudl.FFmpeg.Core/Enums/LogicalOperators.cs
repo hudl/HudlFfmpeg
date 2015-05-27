@@ -7,6 +7,8 @@
         GreaterThan, 
         GreaterThanOrEqual, 
         LesserThan, 
-        LesserThanOrEqual
+        LesserThanOrEqual,
+        IsOneOf,
+        IsNotOneOf
     }
 }

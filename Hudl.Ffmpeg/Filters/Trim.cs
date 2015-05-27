@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFprobe.Metadata.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
 {
@@ -14,13 +15,10 @@ namespace Hudl.FFmpeg.Filters
     /// Trim Video filter trims down the length of a video to within the constraints provided.
     /// </summary>
     [ForStream(Type=typeof(VideoStream))]
-    public class Trim : BaseFilter, IMetadataManipulation
+    [Filter(Name = "trim", MinInputs = 1, MaxInputs = 1)]
+    public class Trim : IFilter, IMetadataManipulation
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "trim";
-
         public Trim() 
-            : base(FilterType, FilterMaxInputs)
         {
         }
         public Trim(double? startUnit, double? endUnit, VideoUnitType timebaseUnit)
@@ -48,87 +46,33 @@ namespace Hudl.FFmpeg.Filters
             Duration = duration;
         }
 
+        [FilterParameter(Name = "start")]
+        [Validator(LogicalOperators.GreaterThan, 0)]
         public double? Start { get; set; }
 
+        [FilterParameter(Name = "end")]
+        [Validator(LogicalOperators.GreaterThan, 0)]
         public double? End { get; set; }
 
+        [FilterParameter(Name = "start_pts")]
+        [Validator(LogicalOperators.GreaterThan, 0)]
         public double? StartPts { get; set; }
 
+        [FilterParameter(Name = "end_pts")]
+        [Validator(LogicalOperators.GreaterThan, 0)]
         public double? EndPts { get; set; }
 
+        [FilterParameter(Name = "start_frame")]
+        [Validator(LogicalOperators.GreaterThan, 0)]
         public double? StartFrame { get; set; }
 
+        [FilterParameter(Name = "end_frame")]
+        [Validator(LogicalOperators.GreaterThan, 0)]
         public double? EndFrame { get; set; }
 
+        [FilterParameter(Name = "duration")]
+        [Validator(LogicalOperators.GreaterThan, 0)]
         public double? Duration { get; set; }
-
-        public override void Validate()
-        {
-            if (Start.HasValue && Start <= 0)
-            {
-                throw new InvalidOperationException("Start must be a value greater than zero.");
-            }
-            if (End.HasValue && End <= 0)
-            {
-                throw new InvalidOperationException("End must be a value greater than zero.");
-            }
-            if (StartPts.HasValue && StartPts <= 0)
-            {
-                throw new InvalidOperationException("StartPts must be a value greater than zero.");
-            }
-            if (EndPts.HasValue && EndPts <= 0)
-            {
-                throw new InvalidOperationException("EndPts must be a value greater than zero.");
-            }
-            if (StartFrame.HasValue && StartFrame <= 0)
-            {
-                throw new InvalidOperationException("StartFrame must be a value greater than zero.");
-            }
-            if (EndFrame.HasValue && EndFrame <= 0)
-            {
-                throw new InvalidOperationException("EndFrame must be a value greater than zero.");
-            }
-            if (Duration.HasValue && Duration <= 0)
-            {
-                throw new InvalidOperationException("Duration must be a value greater than zero.");
-            }
-        }
-
-        public override string ToString() 
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (Start.HasValue && Start > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "start", Start);
-            }
-            if (End.HasValue && End > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "end", End);
-            }
-            if (StartPts.HasValue && StartPts > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "start_pts", StartPts);
-            }
-            if (EndPts.HasValue && EndPts > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "end_pts", EndPts);
-            }
-            if (StartFrame.HasValue && StartFrame > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "start_frame", StartFrame);
-            }
-            if (EndFrame.HasValue && EndFrame > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "end_frame", EndFrame);
-            }
-            if (Duration.HasValue && Duration > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "duration", Duration);
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {

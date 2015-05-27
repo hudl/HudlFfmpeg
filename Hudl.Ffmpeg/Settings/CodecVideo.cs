@@ -1,5 +1,6 @@
 ﻿using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 

@@ -57,9 +57,14 @@
     <Compile Include="Command\CommandHelper.cs" />
     <Compile Include="Common\FFmpegStreamTypes.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
+    <Compile Include="Common\FpsRoundType.cs" />
+    <Compile Include="Filters\Bindings\NumberOfStreamsInBinding.cs" />
+    <Compile Include="Filters\Bindings\NumberOfStreamsOutBinding.cs" />
     <Compile Include="Filters\BoxBlur.cs" />
+    <Compile Include="Filters\Formatters\BoolToInt32Formatter.cs" />
+    <Compile Include="Filters\Formatters\RatioFractionalStringFormatter.cs" />
     <Compile Include="Filters\Formatters\EnumParameterFormatter.cs" />
-    <Compile Include="Metadata\BaseTypes\IMetadataManipulation.cs" />
+    <Compile Include="Metadata\Interfaces\IMetadataManipulation.cs" />
     <Compile Include="Metadata\MetadataHelpers.cs" />
     <Compile Include="Metadata\Models\MetadataInfo.cs" />
     <Compile Include="Metadata\MetadataInfoStreamCalculator.cs" />
@@ -87,7 +92,6 @@
     <Compile Include="Common\VolumePrecisionType.cs" />
     <Compile Include="Common\VolumeReplayGainType.cs" />
     <Compile Include="Filters\BaseTypes\BaseMovie.cs" />
-    <Compile Include="Filters\BaseTypes\FilterUtility.cs" />
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Filters\Templates\TrimVideo.cs" />
@@ -115,7 +119,7 @@
     <Compile Include="Settings\RemoveSubtitles.cs" />
     <Compile Include="Settings\RemoveVideo.cs" />
     <Compile Include="Common\CommandReceiptType.cs" />
-    <Compile Include="Command\Managers\CommandFiltergraphManager.cs" />
+    <Compile Include="Filters\BaseTypes\FiltergraphManager.cs" />
     <Compile Include="Command\Managers\CommandOutputManager.cs" />
     <Compile Include="Command\Managers\CommandInputManager.cs" />
     <Compile Include="Common\AudioCodecType.cs" />
@@ -142,10 +146,7 @@
     <Compile Include="Filters\BaseTypes\BaseSplit.cs" />
     <Compile Include="Filters\BaseTypes\FilterchainOutput.cs" />
     <Compile Include="Filters\BaseTypes\Filterchain.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterMultiOutput.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterValidator.cs" />
     <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterProcessor.cs" />
     <Compile Include="Filters\Blend.cs" />
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
@@ -178,9 +179,7 @@
     <Compile Include="Settings\BaseTypes\BaseProfile.cs" />
     <Compile Include="Settings\BaseTypes\SettingsApplicationData.cs" />
     <Compile Include="Settings\BaseTypes\ISetting.cs" />
-    <Compile Include="Settings\BaseTypes\SettingsApplicationAttribute.cs" />
     <Compile Include="Settings\BaseTypes\SettingsCollection.cs" />
-    <Compile Include="Common\SettingsCollectionResourceType.cs" />
     <Compile Include="Settings\BaseTypes\BaseBitRate.cs" />
     <Compile Include="Settings\BitRateVideo.cs" />
     <Compile Include="Settings\BaseTypes\BaseCodec.cs" />

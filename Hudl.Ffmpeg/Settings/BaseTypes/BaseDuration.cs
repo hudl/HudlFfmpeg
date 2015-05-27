@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Metadata;
-using Hudl.FFprobe.Metadata.BaseTypes;
+using Hudl.FFmpeg.Metadata.Interfaces;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {

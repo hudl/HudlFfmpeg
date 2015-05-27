@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -12,15 +12,13 @@ namespace Hudl.FFmpeg.Filters
     /// Changes the PTS (presentation timestamp of the input frames)
     /// </summary>
     [ForStream(Type=typeof(VideoStream))]
-    public class SetPts : BaseFilter
+    [Filter(Name = "setpts", MinInputs = 1, MaxInputs = 1)]
+    public class SetPts : IFilter
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "setpts";
         public const string ResetPtsExpression = "PTS-STARTPTS";
         public const string FormatPlaybackRateExpression = "{0}*PTS"; 
 
         public SetPts() 
-            : base(FilterType, FilterMaxInputs)
         {
         }
         public SetPts(string expression)
@@ -40,26 +38,7 @@ namespace Hudl.FFmpeg.Filters
         /// <summary>
         /// the setpts expression details can be found at http://ffmpeg.org/ffmpeg-all.html#setpts_002c-asetpts
         /// </summary>
+        [FilterParameter(Name = "expr")]
         public string Expression { get; set; }
-
-        public override void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Expression))
-            {
-                throw new InvalidOperationException("Expression cannot be empty with a set PTS filter");
-            }
-        }
-
-        public override string ToString()
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (!string.IsNullOrWhiteSpace(Expression))
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "expr", Expression);
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
     }
 }

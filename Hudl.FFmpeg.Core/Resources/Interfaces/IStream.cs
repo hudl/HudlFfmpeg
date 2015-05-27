@@ -1,6 +1,4 @@
-﻿//using Hudl.FFmpeg.Metadata;
-
-namespace Hudl.FFmpeg.Resources.BaseTypes
+﻿namespace Hudl.FFmpeg.Resources.Interfaces
 {
     public interface IStream
     {
@@ -13,11 +11,6 @@ namespace Hudl.FFmpeg.Resources.BaseTypes
         /// the ffmpeg resource indicator
         /// </summary>
         string ResourceIndicator { get; }
-
-        ///// <summary>
-        ///// the metadata information surrounding the stream
-        ///// </summary>
-        //MetadataInfo Info { get; set; }
 
         /// <summary>
         /// clones the current stream into a new stream
