@@ -1,31 +1,17 @@
-﻿using System;
+﻿using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {
-    public abstract class BaseCodec : BaseSetting
+    public abstract class BaseCodec : ISetting
     {
-        private const string SettingType = "-c";
-
-        protected BaseCodec(string suffix, string codec)
-            : base(string.Format("{0}{1}", SettingType, suffix))
+        protected BaseCodec(string codec)
         {
             Codec = codec;
         }
 
+        [SettingValue]
         public string Codec { get; set; }
-
-        public override void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Codec))
-            {
-                throw new InvalidOperationException("Codec cannot be empty for this setting.");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, " ", Codec);
-        }
     }
 
 }

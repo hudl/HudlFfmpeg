@@ -4,8 +4,8 @@ using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.DataTypes;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Filters.Formatters;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Microsoft.SqlServer.Server;
 

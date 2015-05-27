@@ -1,8 +1,6 @@
 ﻿using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
 namespace Hudl.FFmpeg.Settings
@@ -11,15 +9,13 @@ namespace Hudl.FFmpeg.Settings
     /// set bitstream filters for matching audio streams. bitstream_filters is a comma-separated list of bitstream filters. 
     /// </summary>
     [ForStream(Type = typeof(AudioStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
+    [Setting(Name = "bsf:a")]
     public class BitStreamFilterAudio : BaseBitStreamFilter
     {
-        private const string Suffix = ":a";
-
         public const string ConvertAdtsToAsc = "aac_adtstoasc";
 
         public BitStreamFilterAudio(string setting)
-            : base(Suffix, setting)
+            : base(setting)
         {
         }
     }

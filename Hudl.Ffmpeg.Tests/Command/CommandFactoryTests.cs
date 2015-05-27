@@ -58,7 +58,7 @@ namespace Hudl.FFmpeg.Tests.Command
                    .WithInput<VideoStream>(Utilities.GetVideoFile())
                    .To<Mp4>();
 
-            var result = factory.RenderWith<TestCommandProcessor>();
+            var result = factory.RenderWith<TestCommandProcessor, FFmpegCommandBuilder>();
 
             Assert.True(result.Count == 1);
         }

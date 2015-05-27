@@ -98,7 +98,6 @@
     <Compile Include="Resources\Interfaces\IStream.cs" />
     <Compile Include="Settings\Attributes\SettingValueAttribute.cs" />
     <Compile Include="Settings\Attributes\SettingAttribute.cs" />
-    <Compile Include="Settings\Formatters\IFormattevvr.cs" />
     <Compile Include="Settings\Formatters\LocalUriFormatter.cs" />
     <Compile Include="Settings\Interfaces\ISetting.cs" />
     <Compile Include="Settings\Input.cs" />
@@ -107,6 +106,7 @@
     <Compile Include="Settings\Serialization\SettingSerializerAttributeParser.cs" />
     <Compile Include="Settings\Serialization\SettingSerializerData.cs" />
     <Compile Include="Settings\Serialization\SettingSerializerWriter.cs" />
+    <Compile Include="Settings\Extensions\SettingsExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

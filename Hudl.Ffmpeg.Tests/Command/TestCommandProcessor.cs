@@ -1,7 +1,6 @@
 ﻿using System;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
-using Hudl.FFmpeg.Common;
 
 namespace Hudl.FFmpeg.Tests.Command
 {

@@ -7,10 +7,10 @@ using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Metadata.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Filters.Formatters;
 
 namespace Hudl.FFmpeg.Filters
 {

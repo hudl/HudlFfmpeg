@@ -11,9 +11,17 @@ namespace Hudl.FFmpeg.Settings.Attributes
     {
         public SettingAttribute()
         {
+            IsPreDeclaration = true;
+            IsMultipleAllowed = false; 
+            ResourceType = SettingsCollectionResourceType.Output;
         }
 
         public string Name { get; set; }
+
+        /// <summary>
+        /// IsParameterless indicates that the setting is an on or off flag with no value associated
+        /// </summary>
+        public bool IsParameterless { get; set; } //TODO: implement 
 
         /// <summary>
         /// Pre declaration indicates that the setting must go before the setting declaration

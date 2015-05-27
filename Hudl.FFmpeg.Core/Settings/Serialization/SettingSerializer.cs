@@ -6,10 +6,10 @@ namespace Hudl.FFmpeg.Settings.Serialization
     {
         public static string Serialize(ISetting setting)
         {
-            var filterData = GetSettingData(setting);
-            var filterSerializer = new SettingSerializerWriter(filterData);
+            var settingData = GetSettingData(setting);
+            var settingSerializer = new SettingSerializerWriter(settingData);
 
-            return filterSerializer.Write();
+            return settingSerializer.Write();
         }
 
         private static SettingSerializerData GetSettingData(ISetting setting)

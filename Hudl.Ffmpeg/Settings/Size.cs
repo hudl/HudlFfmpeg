@@ -1,12 +1,16 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Metadata.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -14,15 +18,11 @@ namespace Hudl.FFmpeg.Settings
     /// sets the outpout container size.
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class Size : BaseSetting, IMetadataManipulation
+    [Setting(Name = "s")]
+    public class Size : ISetting, IMetadataManipulation
     {
-        private const string SettingType = "-s";
-
         public Size()
-            : base(SettingType)
         {
-            Dimensions = new System.Drawing.Size(0, 0);
         }
         public Size(ScalePresetType preset)
             : this()
@@ -33,52 +33,39 @@ namespace Hudl.FFmpeg.Settings
                 throw new ArgumentException("The preset does not currently exist.", "preset");
             }
 
-            Dimensions = scalingPresets[preset];
+            Width = scalingPresets[preset].Width;
+            Height = scalingPresets[preset].Height;
         }
-        public Size(int x, int y)
+        public Size(int width, int height)
             : this()
         {
-            if (x <= 0)
+            if (width <= 0)
             {
-                throw new ArgumentException("Dimensions X must be greater than zero.");
+                throw new ArgumentException("Dimensions Width must be greater than zero.");
             }
-            if (y <= 0)
+            if (height <= 0)
             {
-                throw new ArgumentException("Dimensions Y must be greater than zero.");
+                throw new ArgumentException("Dimensions Height must be greater than zero.");
             }
 
-            Dimensions = new System.Drawing.Size(x, y);
+            Width = width; 
+            Height = height; 
         }
 
-        public System.Drawing.Size Dimensions { get; set; }
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        [SettingValue(Formatter = typeof(SizeWidthFormatter))] //TODO: support multiple setting values
+        public int? Width { get; set; }
 
-        public override void Validate()
-        {
-            if (Dimensions == null)
-            {
-                throw new InvalidOperationException("Dimensions size cannot be null.");
-            }
-            if (Dimensions.Width <= 0)
-            {
-                throw new InvalidOperationException("Dimensions width must be greater than zero.");
-            }
-            if (Dimensions.Height <= 0)
-            {
-                throw new InvalidOperationException("Dimensions height must be greater than zero.");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, " ", Dimensions.Width, "x", Dimensions.Height);
-        }
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        [SettingValue(Formatter = typeof(SizeHeightFormatter))]
+        public int? Height { get; set; }
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
-            infoToUpdate.VideoStream.VideoMetadata.Width = Dimensions.Width;
-            infoToUpdate.VideoStream.VideoMetadata.Height = Dimensions.Height;
-            infoToUpdate.VideoStream.VideoMetadata.CodedWidth = Dimensions.Width;
-            infoToUpdate.VideoStream.VideoMetadata.CodedHeight = Dimensions.Height;
+            infoToUpdate.VideoStream.VideoMetadata.Width = Width.GetValueOrDefault();
+            infoToUpdate.VideoStream.VideoMetadata.Height = Height.GetValueOrDefault();
+            infoToUpdate.VideoStream.VideoMetadata.CodedWidth = Width.GetValueOrDefault();
+            infoToUpdate.VideoStream.VideoMetadata.CodedHeight = Height.GetValueOrDefault();
 
             return infoToUpdate;
         }

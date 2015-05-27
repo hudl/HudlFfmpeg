@@ -2,8 +2,8 @@
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
-using Hudl.FFmpeg.Filters.Formatters;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -53,19 +53,19 @@ namespace Hudl.FFmpeg.Filters
         public FadeCurveType CurveType { get; set; }
 
         [FilterParameter(Name = "ss")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartSample { get; set; }
 
         [FilterParameter(Name = "ns")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? NumberOfSamples { get; set; }
 
         [FilterParameter(Name = "st")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartTime { get; set; }
 
         [FilterParameter(Name = "d")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? Duration { get; set; }
     }
 }

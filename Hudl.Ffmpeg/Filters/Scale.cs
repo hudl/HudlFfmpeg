@@ -6,8 +6,8 @@ using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Filters.Formatters;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -51,15 +51,15 @@ namespace Hudl.FFmpeg.Filters
         }
 
         [FilterParameter(Name = "w")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public int? Width { get; set; }
 
         [FilterParameter(Name = "h")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public int? Height { get; set; }
 
         [FilterParameter(Name = "interl")]
-        [Validator(LogicalOperators.IsOneOf, -1, 0, 1)]
+        [Validate(LogicalOperators.IsOneOf, -1, 0, 1)]
         public int? Interlacing { get; set; }
 
         [FilterParameter(Name = "flags")]

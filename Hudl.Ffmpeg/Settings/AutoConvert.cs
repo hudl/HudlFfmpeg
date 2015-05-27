@@ -1,9 +1,9 @@
 ﻿using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -14,19 +14,14 @@ namespace Hudl.FFmpeg.Settings
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
     [ForStream(Type = typeof(AudioStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
-    public class AutoConvert : BaseSetting
+    [Setting(Name = "auto_convert", ResourceType = SettingsCollectionResourceType.Input)]
+    public class AutoConvert : ISetting
     {
-        private const string SettingType = "-auto_convert";
-
         public AutoConvert()
-            : base(SettingType)
         {
         }
 
-        public override string ToString()
-        {
-            return string.Concat(Type, " 1");
-        }
+        [SettingValue(Formatter = typeof(BoolToInt32Formatter))]
+        public bool IsOn { get; set; }
     }
 }

@@ -1,36 +1,21 @@
-﻿using System;
-using Hudl.FFmpeg.Common;
+﻿using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {
-    public abstract class BaseFormat : BaseSetting
+    public abstract class BaseFormat : ISetting
     {
-        private const string SettingType = "-f";
-
         protected BaseFormat(string format)
-            : base(SettingType)
         {
             Format = format;
         }
-
         protected BaseFormat(FormatType format)
             : this(Formats.Library(format))
         {
         }
 
+        [SettingValue]
         public string Format { get; set; }
-
-        public override void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Format))
-            {
-                throw new InvalidOperationException("Format cannot be empty for this setting.");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, " ", Format);
-        }
     }
 }

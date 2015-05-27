@@ -1,6 +1,6 @@
-﻿using System;
-using Hudl.FFmpeg.Resources.Interfaces;
+﻿using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Formatters;
 using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings
@@ -16,12 +16,7 @@ namespace Hudl.FFmpeg.Settings
             Resource = resource; 
         }
 
+        [SettingValue(Formatter = typeof(LocalUriFormatter))]
         public IContainer Resource { get; protected set; }
-
-        public override string ToString()
-        {
-            var escapedPath = Resource.FullName.Replace('\\', '/');
-            return string.Concat(Type, " \"", escapedPath, "\"");
-        }
     }
 }

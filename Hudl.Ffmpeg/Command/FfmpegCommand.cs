@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Deployment.Internal;
-using System.Linq;
 using System.Collections.Generic;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Command.Managers;
 using Hudl.FFmpeg.Command.Models;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Command
 {
@@ -52,8 +46,7 @@ namespace Hudl.FFmpeg.Command
         /// </summary>
         public List<CommandOutput> Render()
         {
-            //TODO: fix
-            //ExecuteWith<FFmpegProcessorReciever>();
+            ExecuteWith<FFmpegCommandProcessor, FFmpegCommandBuilder>();
 
             return Objects.Outputs; 
         }

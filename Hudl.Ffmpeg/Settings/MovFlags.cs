@@ -1,10 +1,7 @@
-﻿using System;
-using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Enums;
+﻿using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -13,35 +10,20 @@ namespace Hudl.FFmpeg.Settings
     /// </summary>
     [ForStream(Type = typeof(AudioStream))]
     [ForStream(Type = typeof(VideoStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class MovFlags : BaseSetting
+    [Setting(Name = "movflags")]
+    public class MovFlags : ISetting
     {
-        private const string SettingType = "-movflags";
- 
         /// <summary>
         /// run a second pass moving the index (moov atom) to the beginning of the file
         /// </summary>
         public const string EnableFastStart = "+faststart"; 
 
         public MovFlags(string flags)
-            : base(SettingType)
         {
             Flags = flags;
         }
     
+        [SettingValue]
         public string Flags { get; set; }
-
-        public override void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Flags))
-            {
-                throw new InvalidOperationException("Flags cannot be null or empty.");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, " ", Flags);
-        }
     }
 }

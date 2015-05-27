@@ -17,7 +17,7 @@ namespace Hudl.FFmpeg.Settings.Serialization
 
             FillSettingAttribute(settingSerializerData, setting, settingType);
 
-            FillFilterParameterAttributes(settingSerializerData, setting, settingType);
+            FillSettingParameterAttributes(settingSerializerData, setting, settingType);
 
             return settingSerializerData;
         }
@@ -33,7 +33,7 @@ namespace Hudl.FFmpeg.Settings.Serialization
             settingSerializerData.Setting = settingParameter; 
         }
 
-        private static void FillFilterParameterAttributes(SettingSerializerData settingSerializerData, ISetting setting, Type settingType)
+        private static void FillSettingParameterAttributes(SettingSerializerData settingSerializerData, ISetting setting, Type settingType)
         {
             var settingProperties = settingType.GetProperties().ToList();
 
@@ -50,12 +50,12 @@ namespace Hudl.FFmpeg.Settings.Serialization
                 var settingPropertyValidationAttribute = (ValidateAttribute)Attribute.GetCustomAttribute(settingProperty, typeof (ValidateAttribute));
                 if (settingPropertyValidationAttribute != null)
                 {
-                    RunFilterSerializationValidation(settingPropertyValidationAttribute, settingType, settingProperty, settingPropertyValue);
+                    RunSettingSerializationValidation(settingPropertyValidationAttribute, settingType, settingProperty, settingPropertyValue);
                 }
 
-                var settingPropertyFormattedValue = RunFilterSerializationFormat(settingValueAttribute, settingType, settingProperty, settingPropertyValue);
+                var settingPropertyFormattedValue = RunSettingSerializationFormat(settingValueAttribute, settingType, settingProperty, settingPropertyValue);
                 
-                settingSerializerData.Value = new SettingSerializerDataValue
+                settingSerializerData.Value = new SettingSerializerDataParameter
                 {
                     Value = settingPropertyFormattedValue,
                     Parameter = settingValueAttribute,
@@ -63,7 +63,7 @@ namespace Hudl.FFmpeg.Settings.Serialization
             }
         }
 
-        private static void RunFilterSerializationValidation(ValidateAttribute settingsValidateAttribute, Type filterType, PropertyInfo propertyInfo, object value)
+        private static void RunSettingSerializationValidation(ValidateAttribute settingsValidateAttribute, Type filterType, PropertyInfo propertyInfo, object value)
         {
             if (!settingsValidateAttribute.Vaildate())
             {
@@ -71,7 +71,7 @@ namespace Hudl.FFmpeg.Settings.Serialization
             }
         }
 
-        private static string RunFilterSerializationFormat(SettingValueAttribute settingValueAttribute, Type filterType, PropertyInfo propertyInfo, object value)
+        private static string RunSettingSerializationFormat(SettingValueAttribute settingValueAttribute, Type filterType, PropertyInfo propertyInfo, object value)
         {
             if (value == null)
             {

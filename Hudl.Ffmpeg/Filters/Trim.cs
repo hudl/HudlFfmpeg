@@ -47,31 +47,31 @@ namespace Hudl.FFmpeg.Filters
         }
 
         [FilterParameter(Name = "start")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? Start { get; set; }
 
         [FilterParameter(Name = "end")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? End { get; set; }
 
         [FilterParameter(Name = "start_pts")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartPts { get; set; }
 
         [FilterParameter(Name = "end_pts")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? EndPts { get; set; }
 
         [FilterParameter(Name = "start_frame")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartFrame { get; set; }
 
         [FilterParameter(Name = "end_frame")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? EndFrame { get; set; }
 
         [FilterParameter(Name = "duration")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? Duration { get; set; }
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)

@@ -1,30 +1,20 @@
-﻿using System;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {
-    public abstract class BaseBitRate : BaseSetting
+    public abstract class BaseBitRate : ISetting
     {
-        private const string SettingType = "-b";
-
-        protected BaseBitRate(string suffix, int rate)
-            : base(string.Format("{0}{1}", SettingType, suffix))
+        protected BaseBitRate(int rate)
         {
             Rate = rate;
         }
 
+        [SettingValue(Formatter = typeof(Int32ToKbs))]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public int Rate { get; set; }
-
-        public override void Validate()
-        {
-            if (Rate <= 0)
-            {
-                throw new InvalidOperationException("Bit Rate must be greater than zero.");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, " ", Rate, "k");
-        }
     }
 }

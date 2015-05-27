@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Command.Models;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Filters.Serialization;
 using Hudl.FFmpeg.Settings;
-using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Settings.Serialization;
+using Hudl.FFmpeg.Settings.Utility;
 
 namespace Hudl.FFmpeg.Command
 {
@@ -29,6 +29,7 @@ namespace Hudl.FFmpeg.Command
 
             WriteFinish();
         }
+
         private void WriteResource(CommandInput resource)
         {
             if (resource == null)
@@ -36,17 +37,15 @@ namespace Hudl.FFmpeg.Command
                 throw new ArgumentNullException("resource");
             }
 
-            var settingsData = Validate.GetSettingCollectionData(resource.Settings);
-
-            WriteResourcePreSettings(resource, settingsData);
+            WriteResourcePreSettings(resource);
 
             var inputResource = new Input(resource.Resource);
-            BuilderBase.Append(" ");
-            BuilderBase.Append(inputResource);
+            BuilderBase.Append(SettingSerializer.Serialize(inputResource));
 
-            WriteResourcePostSettings(resource, settingsData);
+            WriteResourcePostSettings(resource);
         }
-        private void WriteResourcePreSettings(CommandInput resource, Dictionary<Type, SettingsApplicationData> settingsData)
+
+        private void WriteResourcePreSettings(CommandInput resource)
         {
             if (resource == null)
             {
@@ -55,16 +54,12 @@ namespace Hudl.FFmpeg.Command
 
             resource.Settings.SettingsList.ForEach(setting =>
             {
-                var settingInfoData = settingsData[setting.GetType()];
-                if (settingInfoData == null) return;
-                if (!settingInfoData.PreDeclaration) return;
-                if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
+                if (!setting.IsPreSetting()) return; 
 
-                BuilderBase.Append(" ");
-                BuilderBase.Append(setting.GetAndValidateString());
+                BuilderBase.Append(SettingSerializer.Serialize(setting));
             });
         }
-        private void WriteResourcePostSettings(CommandInput resource, Dictionary<Type, SettingsApplicationData> settingsData)
+        private void WriteResourcePostSettings(CommandInput resource)
         {
             if (resource == null)
             {
@@ -73,16 +68,13 @@ namespace Hudl.FFmpeg.Command
 
             resource.Settings.SettingsList.ForEach(setting =>
             {
-                var settingInfoData = settingsData[setting.GetType()];
-                if (settingInfoData == null) return;
-                if (settingInfoData.PreDeclaration) return;
-                if (settingInfoData.ResourceType != SettingsCollectionResourceType.Input) return;
+                if (!setting.IsPostSetting()) return;
 
-                BuilderBase.Append(" ");
-                BuilderBase.Append(setting.GetAndValidateString());
+                BuilderBase.Append(SettingSerializer.Serialize(setting));
             });
 
         }
+        
         private void WriteFiltergraph(FFmpegCommand command, Filtergraph filtergraph)
         {
             if (filtergraph == null)
@@ -167,6 +159,7 @@ namespace Hudl.FFmpeg.Command
                     BuilderBase.Append(Formats.Map(streamId.Map));
                 });
         }
+     
         private void WriteOutput(CommandOutput output)
         {
             if (output == null)
@@ -185,17 +178,7 @@ namespace Hudl.FFmpeg.Command
                 throw new ArgumentNullException("output");
             }
 
-            var settingsData = Validate.GetSettingCollectionData(output.Settings);
-            output.Settings.SettingsList.ForEach(setting =>
-            {
-                var settingInfoData = settingsData[setting.GetType()];
-                if (settingInfoData == null) return;
-                if (!settingInfoData.PreDeclaration) return;
-                if (settingInfoData.ResourceType != SettingsCollectionResourceType.Output) return;
-
-                BuilderBase.Append(" ");
-                BuilderBase.Append(setting.GetAndValidateString());
-            });
+            output.Settings.SettingsList.ForEach(setting => BuilderBase.Append(SettingSerializer.Serialize(setting)));
         }
 
         private void WriteFinish()
@@ -209,8 +192,8 @@ namespace Hudl.FFmpeg.Command
                 throw new ArgumentNullException("filter");
             }
 
-            //TODO: fix
-            //BuilderBase.Append(filter.GetAndValidateString());
+            //TODO: fix, should need to check bindings
+            BuilderBase.Append(FilterSerializer.Serialize(filter));
         }
     }
 }

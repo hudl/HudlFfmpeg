@@ -7,8 +7,8 @@ using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Filters.Formatters;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters

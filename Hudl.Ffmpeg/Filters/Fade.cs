@@ -6,8 +6,8 @@ using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Filters.Formatters;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -46,19 +46,19 @@ namespace Hudl.FFmpeg.Filters
         public FadeTransitionType? TransitionType { get; set; }
 
         [FilterParameter(Name = "s")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartFrame { get; set; }
 
         [FilterParameter(Name = "s")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? NumberOfFrames { get; set; }
 
         [FilterParameter(Name = "st")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartTime { get; set; }
 
         [FilterParameter(Name = "sd")]
-        [Validator(LogicalOperators.GreaterThan, 0)]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? Duration { get; set; }
 
         [FilterParameter(Name = "alpha", Formatter = typeof(BoolToInt32Formatter))]

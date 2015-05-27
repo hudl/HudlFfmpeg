@@ -5,6 +5,7 @@ using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Metadata.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
 namespace Hudl.FFmpeg.Settings
@@ -13,17 +14,15 @@ namespace Hudl.FFmpeg.Settings
     /// sets the audio bit rate for the output stream 
     /// </summary>
     [ForStream(Type = typeof(AudioStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
+    [Setting(Name = "b:a")]
     public class BitRateAudio : BaseBitRate, IMetadataManipulation
     {
-        private const string Suffix = ":a";
-
         public BitRateAudio(int rate)
-            : base(Suffix, rate)
+            : base(rate)
         {
         }
         public BitRateAudio(AudioBitRateType rate)
-            : base(Suffix, (int)rate)
+            : base((int)rate)
         {
         }
 

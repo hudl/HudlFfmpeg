@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command.BaseTypes;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Logging;
-using Hudl.FFmpeg.Sugar;
 
 namespace Hudl.FFmpeg.Command
 {
-    internal class FFmpegProcessorReciever : ICommandProcessor
+    internal class FFmpegCommandProcessor : ICommandProcessor
     {
-        private static readonly LogUtility Log = LogUtility.GetLogger(typeof(FFmpegProcessorReciever));
+        private static readonly LogUtility Log = LogUtility.GetLogger(typeof(FFmpegCommandProcessor));
 
-        private const int MaximumRetryFailures = 1; 
+        private const int MaximumRetryFailures = 1;
 
-        public FFmpegProcessorReciever()
+        public FFmpegCommandProcessor()
         {
             Status = CommandProcessorStatus.Closed;
         }

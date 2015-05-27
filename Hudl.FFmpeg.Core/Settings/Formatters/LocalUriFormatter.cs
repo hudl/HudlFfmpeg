@@ -3,7 +3,7 @@ using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Settings.Formatters
 {
-    public class RatioFractionalStringFormatter : IFormatter
+    public class LocalUriFormatter : IFormatter
     {
         public string Format(object value)
         {

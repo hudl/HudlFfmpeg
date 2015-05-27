@@ -3,7 +3,7 @@ using Hudl.FFmpeg.Enums;
 
 namespace Hudl.FFmpeg.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
     public class ValidateAttribute : Attribute
     {
         public ValidateAttribute(LogicalOperators op, object value)

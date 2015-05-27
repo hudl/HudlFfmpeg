@@ -179,8 +179,7 @@ namespace Hudl.FFmpeg.Tests.Command
 
             command.AddInput(Assets.Utilities.GetVideoFile());
 
-            //TODO: fix
-            //Assert.DoesNotThrow(() => command.ExecuteWith<TestCommandProcessor>());
+            Assert.DoesNotThrow(() => command.ExecuteWith<TestCommandProcessor, FFmpegCommandBuilder>());
         }
 
         [Fact]
@@ -215,8 +214,7 @@ namespace Hudl.FFmpeg.Tests.Command
                                        afterRenderExecuted = true;
                                    });
 
-            //TODO: fix
-            //stage.Command.ExecuteWith<TestCommandProcessor>();
+            stage.Command.ExecuteWith<TestCommandProcessor, FFmpegCommandBuilder>();
 
             Assert.True(afterRenderExecuted);
         }

@@ -26,11 +26,10 @@ namespace Hudl.FFmpeg.Sugar
                 throw new ArgumentException("Command fileName cannot be null or empty.", "fileName");
             }
 
-            //TODO: fix
-            //if (command.Owner.CommandList.All(c => c.Id != command.Id))
-            //{
-            //    throw new ArgumentException("Command must be added via CreateOutput or CreateResource first.", "command");
-            //}
+            if (command.Owner.CommandList.OfType<FFmpegCommand>().All(c => c.Id != command.Id))
+            {
+                throw new ArgumentException("Command must be added via CreateOutput or CreateResource first.", "command");
+            }
         }
         public static FFmpegCommand AddInput(this FFmpegCommand command, string fileName)
         {

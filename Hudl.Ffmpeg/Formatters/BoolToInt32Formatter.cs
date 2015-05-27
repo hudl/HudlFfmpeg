@@ -2,7 +2,7 @@
 using System.Globalization;
 using Hudl.FFmpeg.Interfaces;
 
-namespace Hudl.FFmpeg.Filters.Formatters
+namespace Hudl.FFmpeg.Formatters
 {
     public class BoolToInt32Formatter : IFormatter
     {

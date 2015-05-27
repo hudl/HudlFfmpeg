@@ -4,6 +4,8 @@ using System.Linq;
 using System.Collections.Generic;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Settings.Utility;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {
@@ -155,13 +157,7 @@ namespace Hudl.FFmpeg.Settings.BaseTypes
         {
             var itemType = item.GetType();
 
-            var settingData = Validate.GetSettingData(item);
-            if (settingData != null && settingData.MultipleAllowed)
-            {
-                return false; 
-            }
-            
-            return SettingsList.Any(s => s.GetType().IsAssignableFrom(itemType));
+            return !item.IsMultipleAllowed() && SettingsList.Any(s => s.GetType().IsAssignableFrom(itemType));
         }
 
         /// <summary>

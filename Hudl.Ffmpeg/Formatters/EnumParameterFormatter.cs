@@ -1,7 +1,7 @@
 ﻿using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Interfaces;
 
-namespace Hudl.FFmpeg.Filters.Formatters
+namespace Hudl.FFmpeg.Formatters
 {
     public class EnumParameterFormatter : IFormatter
     {

@@ -1,9 +1,8 @@
 ﻿using System;
 using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
 namespace Hudl.FFmpeg.Settings
@@ -13,7 +12,7 @@ namespace Hudl.FFmpeg.Settings
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
     [ForStream(Type = typeof(AudioStream))]
-    [SettingsApplication(PreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
+    [Setting(Name = "t", IsPreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
     public class DurationInput : BaseDuration
     {
         public DurationInput(TimeSpan length)

@@ -4,18 +4,17 @@ using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings
 {
     [ForStream(Type = typeof(AudioStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class SampleRate : BaseSetting
+    [Setting(Name = "ar")]
+    public class SampleRate : ISetting
     {
-        private const string SettingType = "-ar";
-
         public SampleRate(double rate)
-            : base(SettingType)
         {
             if (rate <= 0)
             {
@@ -25,20 +24,8 @@ namespace Hudl.FFmpeg.Settings
             Rate = rate;
         }
 
+        [SettingValue]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double Rate { get; set; }
-
-        public override void Validate()
-        {
-            if (Rate <= 0)
-            {
-                throw new InvalidOperationException("Sample rate must be greater than zero.");
-            }
-        }
-
-        public override string ToString()
-        {
-           
-            return string.Concat(Type, " ", Rate);
-        }
     }
 }

@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Metadata.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -13,21 +12,9 @@ namespace Hudl.FFmpeg.Settings
     /// removes the video stream from the output file
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class RemoveVideo : BaseSetting, IMetadataManipulation
+    [Setting(Name = "vn", IsParameterless = true)]
+    public class RemoveVideo : ISetting, IMetadataManipulation
     {
-        private const string SettingType = "-vn";
-
-        public RemoveVideo()
-            : base(SettingType)
-        {
-        }
-        
-        public override string ToString()
-        {
-            return Type;
-        }
-
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
             infoToUpdate.VideoStream = null;
