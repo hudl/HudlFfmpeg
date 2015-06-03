@@ -1,5 +1,4 @@
 ﻿using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Resources.Interfaces;
 

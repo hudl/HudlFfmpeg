@@ -1,8 +1,10 @@
 ﻿using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters.Utility;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -18,11 +20,12 @@ namespace Hudl.FFmpeg.Settings
             Library = library;
         }
         public PixelFormat(PixelFormatType library)
-            : this(Formats.Library(library))
+            : this(FormattingUtility.Library(library.ToString()))
         {
         }
 
-        [SettingValue]
+        [SettingParameter]
+        [Validate(typeof(NullOrWhitespaceValidator))]
         public string Library { get; set; }
     }
 }

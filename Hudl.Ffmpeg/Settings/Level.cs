@@ -19,7 +19,7 @@ namespace Hudl.FFmpeg.Settings
             Setting = setting;
         }
     
-        [SettingValue]
+        [SettingParameter]
         [Validate(LogicalOperators.GreaterThan, 0)]
         public double Setting { get; set; }
     }

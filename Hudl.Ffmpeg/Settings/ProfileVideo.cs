@@ -1,5 +1,6 @@
 ﻿using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters.Utility;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.BaseTypes;
@@ -18,7 +19,7 @@ namespace Hudl.FFmpeg.Settings
         {
         }
         public ProfileVideo(VideoProfileType profile)
-            : base(Formats.Library(profile.ToString()))
+            : base(FormattingUtility.Library(profile.ToString()))
         {
         }
     }

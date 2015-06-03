@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Attributes.Utility;
 using Hudl.FFmpeg.Interfaces;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
@@ -35,43 +36,39 @@ namespace Hudl.FFmpeg.Settings.Serialization
 
         private static void FillSettingParameterAttributes(SettingSerializerData settingSerializerData, ISetting setting, Type settingType)
         {
-            var settingProperties = settingType.GetProperties().ToList();
+            var propertyInfos = settingType.GetProperties().ToList();
 
-            foreach (var settingProperty in settingProperties)
+            foreach (var propertyInfo in propertyInfos)
             {
-                var settingValueAttribute = AttributeRetrieval.GetAttribute<SettingValueAttribute>(settingProperty);
-                if (settingValueAttribute == null)
+                var settingParameterAttribute = AttributeRetrieval.GetAttribute<SettingParameterAttribute>(propertyInfo);
+                if (settingParameterAttribute == null)
                 {
                     continue;
                 }
 
-                var settingPropertyValue = settingProperty.GetValue(setting);
+                var settingPropertyValue = propertyInfo.GetValue(setting);
 
-                var settingPropertyValidationAttribute = (ValidateAttribute)Attribute.GetCustomAttribute(settingProperty, typeof (ValidateAttribute));
-                if (settingPropertyValidationAttribute != null)
-                {
-                    RunSettingSerializationValidation(settingPropertyValidationAttribute, settingType, settingProperty, settingPropertyValue);
-                }
+                RunSettingSerializationValidation(settingType, propertyInfo, settingPropertyValue);
 
-                var settingPropertyFormattedValue = RunSettingSerializationFormat(settingValueAttribute, settingType, settingProperty, settingPropertyValue);
+                var settingPropertyFormattedValue = RunSettingSerializationFormat(settingParameterAttribute, settingType, propertyInfo, settingPropertyValue);
                 
-                settingSerializerData.Value = new SettingSerializerDataParameter
+                settingSerializerData.Parameters.Add(new SettingSerializerDataParameter
                 {
                     Value = settingPropertyFormattedValue,
-                    Parameter = settingValueAttribute,
-                };
+                    Parameter = settingParameterAttribute,
+                });
             }
         }
 
-        private static void RunSettingSerializationValidation(ValidateAttribute settingsValidateAttribute, Type filterType, PropertyInfo propertyInfo, object value)
+        private static void RunSettingSerializationValidation(Type filterType, PropertyInfo propertyInfo, object value)
         {
-            if (!settingsValidateAttribute.Vaildate())
+            if (!ValidationUtility.Validate(filterType, propertyInfo, value))
             {
-                throw new Exception(string.Format("ISetting type of \"{0}\" value \"{1}\", Formatter must be {2} {3}.", filterType.Name, propertyInfo.Name, settingsValidateAttribute.Op, settingsValidateAttribute.Value));
+                throw new InvalidOperationException(string.Format("ISetting type of \"{0}\" parameter \"{1}\" has an invalid value of \"{2}\".", filterType.Name, propertyInfo.Name, value));
             }
         }
 
-        private static string RunSettingSerializationFormat(SettingValueAttribute settingValueAttribute, Type filterType, PropertyInfo propertyInfo, object value)
+        private static string RunSettingSerializationFormat(SettingParameterAttribute settingValueAttribute, Type filterType, PropertyInfo propertyInfo, object value)
         {
             if (value == null)
             {

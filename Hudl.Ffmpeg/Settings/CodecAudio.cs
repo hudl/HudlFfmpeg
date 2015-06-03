@@ -1,6 +1,6 @@
 ﻿using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters.Utility;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.BaseTypes;
@@ -20,7 +20,7 @@ namespace Hudl.FFmpeg.Settings
         {
         }
         public CodecAudio(AudioCodecType codec)
-            : base(Formats.Library(codec))
+            : base(FormattingUtility.Library(codec.ToString()))
         {
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Command.Utility;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Settings;
 using Hudl.FFmpeg.Settings.BaseTypes;
@@ -49,13 +50,13 @@ namespace Hudl.FFmpeg.Metadata
         {
             filterchain.ReceiptList.ForEach(streamId =>
             {
-                var resourceIndexOf = CommandHelper.IndexOfResource(command, streamId);
+                var resourceIndexOf = CommandHelperUtility.IndexOfResource(command, streamId);
                 if (resourceIndexOf > -1)
                 {
                     DependecyTree.Add(MetadataInfoTreeSource.Create(command.Inputs[resourceIndexOf]));
                 }
 
-                var filterchainIndexOf = CommandHelper.IndexOfFilterchain(command, streamId);
+                var filterchainIndexOf = CommandHelperUtility.IndexOfFilterchain(command, streamId);
                 if (filterchainIndexOf > -1)
                 {
                     DependecyTree.Add(Create(command, command.Filtergraph[filterchainIndexOf]));
@@ -86,7 +87,7 @@ namespace Hudl.FFmpeg.Metadata
         {
             streamIdList.ForEach(streamId =>
             {
-                var resourceIndexOf = CommandHelper.IndexOfResource(command, streamId);
+                var resourceIndexOf = CommandHelperUtility.IndexOfResource(command, streamId);
                 if (resourceIndexOf > -1)
                 {
                     DependecyTree.Add(MetadataInfoTreeSource.Create(command.Inputs[resourceIndexOf]));
@@ -94,7 +95,7 @@ namespace Hudl.FFmpeg.Metadata
                     return;
                 }
 
-                var filterchainIndexOf = CommandHelper.IndexOfFilterchain(command, streamId);
+                var filterchainIndexOf = CommandHelperUtility.IndexOfFilterchain(command, streamId);
                 if (filterchainIndexOf > -1)
                 {
                     DependecyTree.Add(Create(command, command.Filtergraph[filterchainIndexOf]));

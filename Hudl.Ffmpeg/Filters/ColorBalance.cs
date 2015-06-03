@@ -45,30 +45,30 @@ namespace Hudl.FFmpeg.Filters
         private readonly DecimalScaleRgb _highlightsRgb;
 
         [FilterParameter(Name="rs")]
-        public decimal ShadowRed { get { return _shadowsRgb.Red.Value; } set { _shadowsRgb.Red = value; } }
+        public decimal? ShadowRed { get { return _shadowsRgb.Red.Value; } set { _shadowsRgb.Red = value; } }
 
         [FilterParameter(Name = "gs")]
-        public decimal ShadowGreen { get { return _shadowsRgb.Green.Value; } set { _shadowsRgb.Green = value; } }
+        public decimal? ShadowGreen { get { return _shadowsRgb.Green.Value; } set { _shadowsRgb.Green = value; } }
 
         [FilterParameter(Name = "bs")]
-        public decimal ShadowBlue { get { return _shadowsRgb.Blue.Value; } set { _shadowsRgb.Blue = value; } }
+        public decimal? ShadowBlue { get { return _shadowsRgb.Blue.Value; } set { _shadowsRgb.Blue = value; } }
 
         [FilterParameter(Name = "rm")]
-        public decimal MidtonesRed { get { return _midtonesRgb.Red.Value; } set { _midtonesRgb.Red = value; } }
+        public decimal? MidtonesRed { get { return _midtonesRgb.Red.Value; } set { _midtonesRgb.Red = value; } }
 
         [FilterParameter(Name = "gm")]
-        public decimal MidtonesGreen { get { return _midtonesRgb.Green.Value; } set { _midtonesRgb.Green = value; } }
+        public decimal? MidtonesGreen { get { return _midtonesRgb.Green.Value; } set { _midtonesRgb.Green = value; } }
 
         [FilterParameter(Name = "bm")]
-        public decimal MidtonesBlue { get { return _midtonesRgb.Blue.Value; } set { _midtonesRgb.Blue = value; } }
+        public decimal? MidtonesBlue { get { return _midtonesRgb.Blue.Value; } set { _midtonesRgb.Blue = value; } }
 
         [FilterParameter(Name = "rh")]
-        public decimal HighlightsRed { get { return _highlightsRgb.Red.Value; } set { _highlightsRgb.Red = value; } }
+        public decimal? HighlightsRed { get { return _highlightsRgb.Red.Value; } set { _highlightsRgb.Red = value; } }
 
         [FilterParameter(Name = "gh")]
-        public decimal HighlightsGreen { get { return _highlightsRgb.Green.Value; } set { _highlightsRgb.Green = value; } }
+        public decimal? HighlightsGreen { get { return _highlightsRgb.Green.Value; } set { _highlightsRgb.Green = value; } }
 
         [FilterParameter(Name = "bh")]
-        public decimal HighlightsBlue { get { return _highlightsRgb.Blue.Value; } set { _highlightsRgb.Blue = value; } }
+        public decimal? HighlightsBlue { get { return _highlightsRgb.Blue.Value; } set { _highlightsRgb.Blue = value; } }
     }
 }

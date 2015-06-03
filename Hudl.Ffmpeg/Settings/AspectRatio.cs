@@ -16,11 +16,7 @@ namespace Hudl.FFmpeg.Settings
     [Setting(Name = "aspect")]
     public class AspectRatio : ISetting
     {
-        public AspectRatio()
-        {
-        }
         public AspectRatio(Ratio ratio)
-            : this()
         {
             if (ratio == null)
             {
@@ -30,7 +26,8 @@ namespace Hudl.FFmpeg.Settings
             Ratio = ratio;
         }
 
-        [SettingValue(Formatter = typeof(RatioStringFormatter))]
+        [SettingParameter(Formatter = typeof(RatioStringFormatter))]
+        [Validate(LogicalOperators.NotEquals, null)]
         public Ratio Ratio { get; set; }
     }
 }

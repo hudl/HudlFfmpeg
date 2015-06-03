@@ -8,7 +8,7 @@ namespace Hudl.FFmpeg.Filters.Serialization
 
         public FilterSerializerWriter(FilterSerializerData filterData)
         {
-            _filterData = filterData; 
+            _filterData = filterData;
         }
 
         public string Write()
@@ -22,9 +22,17 @@ namespace Hudl.FFmpeg.Filters.Serialization
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(fpd.Name))
+                if (fpd.Parameter.ShouldHideName)
                 {
-                    ConcatenateParameter(parameterBuilder, fpd.Value);
+                    ConcatenateParameterValue(parameterBuilder, fpd.Value);
+                }
+                else if (fpd.Parameter.ShouldHideValue)
+                {
+                    ConcatenateParameterName(parameterBuilder, fpd.Name);
+                }
+                else if (string.IsNullOrWhiteSpace(fpd.Name))
+                {
+                    ConcatenateParameterValue(parameterBuilder, fpd.Value);
                 }
                 else
                 {
@@ -64,7 +72,14 @@ namespace Hudl.FFmpeg.Filters.Serialization
         /// <summary>
         /// used to attach parameters to a builder string for filters, so that they may meet syntax requirements
         /// </summary>
-        private void ConcatenateParameter(StringBuilder builder, object paramValue)
+        private void ConcatenateParameterName(StringBuilder builder, object paramValue)
+        {
+            builder.AppendFormat("{1}{0}",
+                    paramValue,
+                    (builder.Length > 0) ? ":" : string.Empty);
+        }
+
+        private void ConcatenateParameterValue(StringBuilder builder, object paramValue)
         {
             builder.AppendFormat("{1}{0}",
                     paramValue,

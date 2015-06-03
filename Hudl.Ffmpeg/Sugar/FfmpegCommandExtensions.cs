@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Command.Utility;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
@@ -136,7 +135,7 @@ namespace Hudl.FFmpeg.Sugar
         {
             ValidateTo(command);
 
-            var commandOutput = CommandHelper.SetupCommandOutput<TOutputType>(command, settings, fileName);
+            var commandOutput = CommandHelperUtility.SetupCommandOutput<TOutputType>(command, settings, fileName);
 
             command.OutputManager.Add(commandOutput);
 

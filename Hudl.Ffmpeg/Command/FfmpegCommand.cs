@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using Hudl.FFmpeg.Command.Managers;
 using Hudl.FFmpeg.Command.Models;
 using Hudl.FFmpeg.Filters.BaseTypes;
 

@@ -1,5 +1,4 @@
 ﻿using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.Interfaces;

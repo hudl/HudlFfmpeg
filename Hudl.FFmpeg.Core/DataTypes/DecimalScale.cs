@@ -10,7 +10,7 @@ namespace Hudl.FFmpeg.DataTypes
     {
         private const decimal MinValue = -1;
         private const decimal MaxValue = 1;
-        private decimal _value;
+        private decimal? _value;
 
         public DecimalScale()
         {
@@ -21,7 +21,7 @@ namespace Hudl.FFmpeg.DataTypes
             Value = value;
         }
 
-        public decimal Value
+        public decimal? Value
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Hudl.FFmpeg.DataTypes
             }
             set
             {
-                if (value > 1 || value < -1)
+                if (value != null && (value > 1 || value < -1))
                 {
                     throw new InvalidOperationException(string.Format("Ratio must be a decimal value {0} and {1}", MinValue, MaxValue));
                 }
@@ -39,7 +39,7 @@ namespace Hudl.FFmpeg.DataTypes
 
         public override string ToString()
         {
-            return Value.ToString(CultureInfo.InvariantCulture);
+            return Value.ToString();
         }
 
         public static bool IsNullOrZero(DecimalScale scale)

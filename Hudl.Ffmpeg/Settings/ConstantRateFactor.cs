@@ -19,8 +19,7 @@ namespace Hudl.FFmpeg.Settings
             QuantizerScale = quantizerScale;
         }
     
-        //TODO: support multiple validation 
-        [SettingValue]
+        [SettingParameter]
         [Validate(LogicalOperators.GreaterThanOrEqual, 0)]
         [Validate(LogicalOperators.LesserThanOrEqual, 51)]
         public double QuantizerScale { get; set; }

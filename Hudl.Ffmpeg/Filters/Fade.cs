@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Text;
 using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
-using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
@@ -49,7 +45,7 @@ namespace Hudl.FFmpeg.Filters
         [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartFrame { get; set; }
 
-        [FilterParameter(Name = "s")]
+        [FilterParameter(Name = "n")]
         [Validate(LogicalOperators.GreaterThan, 0)]
         public double? NumberOfFrames { get; set; }
 
@@ -57,11 +53,11 @@ namespace Hudl.FFmpeg.Filters
         [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartTime { get; set; }
 
-        [FilterParameter(Name = "sd")]
+        [FilterParameter(Name = "d")]
         [Validate(LogicalOperators.GreaterThan, 0)]
         public double? Duration { get; set; }
 
-        [FilterParameter(Name = "alpha", Formatter = typeof(BoolToInt32Formatter))]
+        [FilterParameter(Name = "alpha", Default = false, Formatter = typeof(BoolToInt32Formatter))]
         public bool Alpha { get; set; }
 
         [FilterParameter(Name = "c")]

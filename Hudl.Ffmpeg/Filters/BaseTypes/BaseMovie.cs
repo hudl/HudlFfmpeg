@@ -3,6 +3,7 @@ using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Metadata.Interfaces;
 using Hudl.FFmpeg.Resources.Interfaces;
@@ -11,7 +12,7 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     public abstract class BaseMovie : IFilter, IMetadataManipulation
     {
-        [FilterParameter(Name = "filename")]
+        [FilterParameter(Name = "filename", Formatter = typeof(LocalUriFormatterNoWrap))]
         [Validate(LogicalOperators.NotEquals, null)]
         public IContainer Resource { get; set; }
 

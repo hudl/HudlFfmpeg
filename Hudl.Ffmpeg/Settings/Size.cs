@@ -21,11 +21,7 @@ namespace Hudl.FFmpeg.Settings
     [Setting(Name = "s")]
     public class Size : ISetting, IMetadataManipulation
     {
-        public Size()
-        {
-        }
         public Size(ScalePresetType preset)
-            : this()
         {
             var scalingPresets = Helpers.ScalingPresets;
             if (!scalingPresets.ContainsKey(preset))
@@ -37,7 +33,6 @@ namespace Hudl.FFmpeg.Settings
             Height = scalingPresets[preset].Height;
         }
         public Size(int width, int height)
-            : this()
         {
             if (width <= 0)
             {
@@ -52,12 +47,12 @@ namespace Hudl.FFmpeg.Settings
             Height = height; 
         }
 
+        [SettingParameter(Formatter = typeof(SizeWidthFormatter))]
         [Validate(LogicalOperators.GreaterThan, 0)]
-        [SettingValue(Formatter = typeof(SizeWidthFormatter))] //TODO: support multiple setting values
         public int? Width { get; set; }
 
+        [SettingParameter(Formatter = typeof(SizeHeightFormatter))]
         [Validate(LogicalOperators.GreaterThan, 0)]
-        [SettingValue(Formatter = typeof(SizeHeightFormatter))]
         public int? Height { get; set; }
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)

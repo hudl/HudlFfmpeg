@@ -102,10 +102,10 @@ namespace Hudl.FFmpeg.Tests.Resources
             var concat1 = split.Command
                                .Select(split.StreamIdentifiers[1])
                                .Select(split.StreamIdentifiers[1])
-                               .Filter(new CrossfadeConcatenate(1d));
+                               .Filter(new Dissolve(1d));
 
             var concat2 = concat1.Select(split.StreamIdentifiers[2])
-                                 .Filter(new CrossfadeConcatenate(1d));
+                                 .Filter(new Dissolve(1d));
 
             var output = concat2.MapTo<Mp4>().First(); 
 
@@ -142,10 +142,10 @@ namespace Hudl.FFmpeg.Tests.Resources
             var concat1 = split.Command
                                .Select(split.StreamIdentifiers[0])
                                .Select(split.StreamIdentifiers[1])
-                               .Filter(new CrossfadeConcatenate(1d));
+                               .Filter(new Dissolve(1d));
 
             var concat2 = concat1.Select(split.StreamIdentifiers[2])
-                                 .Filter(new CrossfadeConcatenate(1d));
+                                 .Filter(new Dissolve(1d));
 
             var output = concat2.MapTo<Mp4>(outputSettings).First();
 

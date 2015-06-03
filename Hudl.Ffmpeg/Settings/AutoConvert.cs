@@ -19,9 +19,10 @@ namespace Hudl.FFmpeg.Settings
     {
         public AutoConvert()
         {
+            IsOn = true;
         }
 
-        [SettingValue(Formatter = typeof(BoolToInt32Formatter))]
+        [SettingParameter(Formatter = typeof(BoolToInt32Formatter))]
         public bool IsOn { get; set; }
     }
 }

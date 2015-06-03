@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Attributes

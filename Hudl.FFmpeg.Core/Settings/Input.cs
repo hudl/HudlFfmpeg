@@ -1,6 +1,8 @@
-﻿using Hudl.FFmpeg.Resources.Interfaces;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings.Attributes;
-using Hudl.FFmpeg.Settings.Formatters;
 using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings
@@ -15,8 +17,9 @@ namespace Hudl.FFmpeg.Settings
         {
             Resource = resource; 
         }
-
-        [SettingValue(Formatter = typeof(LocalUriFormatter))]
+          
+        [SettingParameter(Formatter = typeof(LocalUriFormatter))]
+        [Validate(LogicalOperators.NotEquals, null)]
         public IContainer Resource { get; protected set; }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -23,7 +25,8 @@ namespace Hudl.FFmpeg.Settings
             Stream = streamId;
         }
 
-        [SettingValue(Formatter = typeof(MapSettingsFormatter))]
+        [SettingParameter(Formatter = typeof(MapSettingsFormatter))]
+        [Validate(typeof(NullOrWhitespaceValidator))]
         public string Stream { get; set; }
     }
 }

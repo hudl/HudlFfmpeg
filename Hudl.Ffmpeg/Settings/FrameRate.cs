@@ -27,7 +27,7 @@ namespace Hudl.FFmpeg.Settings
             Rate = rate;
         }
 
-        [SettingValue]
+        [SettingParameter]
         [Validate(LogicalOperators.GreaterThan, 0)]
         public double Rate { get; set; }
     }

@@ -6,6 +6,11 @@ namespace Hudl.FFmpeg.Attributes
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true, Inherited = true)]
     public class ValidateAttribute : Attribute
     {
+        public ValidateAttribute(Type validator)
+        {
+            Validator = validator;
+        }
+
         public ValidateAttribute(LogicalOperators op, object value)
         {
             Op = op;
@@ -15,16 +20,14 @@ namespace Hudl.FFmpeg.Attributes
         public ValidateAttribute(LogicalOperators op, params object[] values)
         {
             Op = op;
-            Value = values;
+            Value = values ?? new[] {(object) null};
         }
 
-        public LogicalOperators Op { get; set; }
+        public Type Validator { get; set; }
+
+        public LogicalOperators? Op { get; set; }
 
         public object[] Value { get; set; }
 
-        internal bool Vaildate()
-        {
-            return true;
-        }
     }
 }

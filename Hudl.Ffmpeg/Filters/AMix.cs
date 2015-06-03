@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Formatters;
@@ -32,10 +32,10 @@ namespace Hudl.FFmpeg.Filters
         [FilterParameter(Name = "inputs")]
         public int? Inputs { get; set; }
 
-        [FilterParameter(Name = "duration")]
+        [FilterParameter(Name = "dropout_transition")]
         public double? DropoutTransition { get; set; }
 
-        [FilterParameter(Name = "dropout_transition", Default = DurationType.Longest, Formatter = typeof(EnumParameterFormatter))]
+        [FilterParameter(Name = "duration", Default = DurationType.Longest, Formatter = typeof(EnumParameterFormatter))]
         public DurationType? Duration { get; set; }
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)

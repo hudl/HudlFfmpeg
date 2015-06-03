@@ -42,13 +42,13 @@ namespace Hudl.FFmpeg.Filters
         [FilterParameter(Name="n", Binding = typeof(NumberOfStreamsInBinding))]
         public int? NumberOfResources { get { return null; } }
 
-        [FilterParameter(Name ="v")]
+        [FilterParameter(Name ="v", Default = DefaultVideoOut)]
         public int? NumberOfVideoOut { get; set; }
 
-        [FilterParameter(Name="a")]
+        [FilterParameter(Name="a", Default = DefaultAudioOut)]
         public int? NumberOfAudioOut { get; set; }
 
-        [FilterParameter(Name = "unsafe", ShouldHideValue = true)]
+        [FilterParameter(Name = "unsafe", Default = false, ShouldHideValue = true)] 
         public bool UnsafeMode { get; set; }
 
         #region IFilterValidator

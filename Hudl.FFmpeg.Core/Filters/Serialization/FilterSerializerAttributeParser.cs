@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Reflection;
 using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Attributes.Utility;
 using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Contexts;
 using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Interfaces;
 
@@ -10,14 +12,14 @@ namespace Hudl.FFmpeg.Filters.Serialization
 {
     internal class FilterSerializerAttributeParser
     {
-        public static FilterSerializerData GetFilterSerializerData(IFilter filter)
+        public static FilterSerializerData GetFilterSerializerData(IFilter filter, FilterBindingContext context)
         {
             var filterType = filter.GetType();
             var filterSerializerData = new FilterSerializerData();
 
             FillFilterAttribute(filterSerializerData, filter, filterType);
 
-            FillFilterParameterAttributes(filterSerializerData, filter, filterType);
+            FillFilterParameterAttributes(filterSerializerData, filter, filterType, context);
 
             return filterSerializerData;
         }
@@ -33,46 +35,58 @@ namespace Hudl.FFmpeg.Filters.Serialization
             filterSerializerData.Filter = filterParameter; 
         }
 
-        private static void FillFilterParameterAttributes(FilterSerializerData filterSerializerData, IFilter filter, Type filterType)
+        private static void FillFilterParameterAttributes(FilterSerializerData filterSerializerData, IFilter filter, Type filterType, FilterBindingContext context)
         {
-            var filterProperties = filterType.GetProperties().ToList();
+            var propertyInfos = filterType.GetProperties().ToList();
 
-            foreach (var filterProperty in filterProperties)
+            foreach (var propertyInfo in propertyInfos)
             {
-                var filterPropertyAttribute = AttributeRetrieval.GetAttribute<FilterParameterAttribute>(filterProperty);
-                if (filterPropertyAttribute == null)
+                var filterParameterAttribute = AttributeRetrieval.GetAttribute<FilterParameterAttribute>(propertyInfo);
+                if (filterParameterAttribute == null)
                 {
                     continue;
                 }
 
-                var filterPropertyValue = filterProperty.GetValue(filter);
+                //get the value set or bound to the parameter
+                var value = GetFilterSerializationBindingValue(filterParameterAttribute, propertyInfo, context, filter);
 
-                var filterPropertyValidationAttribute = (ValidateAttribute)Attribute.GetCustomAttribute(filterProperty, typeof (ValidateAttribute));
-                if (filterPropertyValidationAttribute != null)
-                {
-                    RunFilterSerializationValidation(filterPropertyValidationAttribute, filterType, filterProperty, filterPropertyValue);
-                }
+                //run validation on the parameter to ensure that it meets all standards
+                RunFilterSerializationValidation(filterType, propertyInfo, value);
 
-                var filterPropertyFormattedValue = RunFilterSerializationFormat(filterPropertyAttribute, filterType, filterProperty, filterPropertyValue);
-                var filterPropertyIsDefault = filterPropertyAttribute.Default != null
-                                              && filterPropertyValue != null
-                                              && filterPropertyAttribute.Default.Equals(filterPropertyValue);
+                //run formatter on the validated value
+                var filterPropertyFormattedValue = RunFilterSerializationFormat(filterParameterAttribute, filterType, propertyInfo, value);
+
+                var filterPropertyIsDefault = filterParameterAttribute.Default != null
+                                              && value != null
+                                              && filterParameterAttribute.Default.Equals(value);
 
                 filterSerializerData.Parameters.Add(new FilterSerializerDataParameter
                 {
-                    Name = filterPropertyAttribute.Name,
+                    Name = filterParameterAttribute.Name,
                     Value = filterPropertyFormattedValue,
-                    Parameter = filterPropertyAttribute,
+                    Parameter = filterParameterAttribute,
                     IsDefault = filterPropertyIsDefault
                 });
             }
         }
 
-        private static void RunFilterSerializationValidation(ValidateAttribute filterPropertyValidationAttribute, Type filterType, PropertyInfo propertyInfo, object value)
+        private static object GetFilterSerializationBindingValue(FilterParameterAttribute filterParameterAttribute, PropertyInfo propertyInfo, FilterBindingContext context, IFilter filter)
         {
-            if (!filterPropertyValidationAttribute.Vaildate())
+            if (filterParameterAttribute.Binding == null)
             {
-                throw new Exception(string.Format("IFilter type of \"{0}\" parameter \"{1}\", Formatter must be {2} {3}.", filterType.Name, propertyInfo.Name, filterPropertyValidationAttribute.Op, filterPropertyValidationAttribute.Value));
+                return propertyInfo.GetValue(filter);
+            }
+
+            var bindingObject = (IFilterParameterBinding)Activator.CreateInstance(filterParameterAttribute.Binding);
+            
+            return bindingObject.GetValue(context);
+        }
+
+        private static void RunFilterSerializationValidation(Type filterType, PropertyInfo propertyInfo, object value)
+        {
+            if (!ValidationUtility.Validate(filterType, propertyInfo, value))
+            {
+                throw new InvalidOperationException(string.Format("IFilter type of \"{0}\" parameter \"{1}\" has an invalid value of \"{2}\".", filterType.Name, propertyInfo.Name, value));
             }
         }
 

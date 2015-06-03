@@ -1,5 +1,7 @@
-﻿using Hudl.FFmpeg.Settings.Attributes;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {
@@ -10,7 +12,8 @@ namespace Hudl.FFmpeg.Settings.BaseTypes
             Profile = profile;
         }
 
-        [SettingValue]
+        [SettingParameter]
+        [Validate(typeof(NullOrWhitespaceValidator))]
         public string Profile { get; set; }
     }
 

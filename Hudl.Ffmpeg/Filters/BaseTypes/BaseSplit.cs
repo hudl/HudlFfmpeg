@@ -36,7 +36,6 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
         #endregion
 
         #region IFilterProcessor
-        //TODO: ensure that this still creates the necessary output
         public void Process(FilterProcessorContext context)
         {
             var firstStream = context.Streams.OfType<VideoStream>().FirstOrDefault();

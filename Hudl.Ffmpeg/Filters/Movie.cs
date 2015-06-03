@@ -10,7 +10,7 @@ namespace Hudl.FFmpeg.Filters
     /// Movie Video filter declares a filter resource that can be given a specific map. This resource can then be used as an input stream in any subsequent filterchains.
     /// </summary>
     [ForStream(Type=typeof(VideoStream))]
-    [Filter(Name = "amovie", MinInputs = 0, MaxInputs = 0)]
+    [Filter(Name = "movie", MinInputs = 0, MaxInputs = 0)]
     public class Movie : BaseMovie
     {
         public Movie()

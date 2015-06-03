@@ -1,7 +1,5 @@
 ﻿using System;
 using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
@@ -24,7 +22,7 @@ namespace Hudl.FFmpeg.Settings
             Rate = rate;
         }
 
-        [SettingValue]
+        [SettingParameter]
         [Validate(LogicalOperators.GreaterThan, 0)]
         public double Rate { get; set; }
     }

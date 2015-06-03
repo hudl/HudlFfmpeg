@@ -1,6 +1,6 @@
 ﻿using System;
-using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.DataTypes;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Settings;
 using Hudl.FFmpeg.Settings.Serialization;
@@ -13,10 +13,8 @@ namespace Hudl.FFmpeg.Tests.Setting
         [Fact]
         public void AspectRatio_Verify()
         {
-            var settingWrong1 = new AspectRatio();
             var setting = new AspectRatio(Ratio.Create(1, 1));
 
-            Assert.Throws<InvalidOperationException>(() => { SettingSerializer.Serialize(settingWrong1); });
             Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
             Assert.Equal(SettingSerializer.Serialize(setting), "-aspect 1:1");
         }
@@ -144,10 +142,8 @@ namespace Hudl.FFmpeg.Tests.Setting
         [Fact]
         public void Size_Verify()
         {
-            var settingWrong1 = new Size();
             var setting = new Size(852, 480);
 
-            Assert.Throws<InvalidOperationException>(() => { SettingSerializer.Serialize(settingWrong1); });
             Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
             Assert.Equal(SettingSerializer.Serialize(setting), "-s 852x480");
         }
@@ -203,10 +199,8 @@ namespace Hudl.FFmpeg.Tests.Setting
         [Fact]
         public void Input_Verify()
         {
-            var settingWrong1 = new Input(null);
             var setting = new Input(Resource.From("c:\\apple.mp4"));
 
-            Assert.Throws<InvalidOperationException>(() => { SettingSerializer.Serialize(settingWrong1); });
             Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
             Assert.Equal(SettingSerializer.Serialize(setting), "-i \"c:/apple.mp4\"");
         }

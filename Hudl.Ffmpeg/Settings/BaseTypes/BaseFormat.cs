@@ -1,6 +1,9 @@
-﻿using Hudl.FFmpeg.Common;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters.Utility;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {
@@ -11,11 +14,12 @@ namespace Hudl.FFmpeg.Settings.BaseTypes
             Format = format;
         }
         protected BaseFormat(FormatType format)
-            : this(Formats.Library(format))
+            : this(FormattingUtility.Library(format.ToString()))
         {
         }
 
-        [SettingValue]
+        [SettingParameter]
+        [Validate(typeof(NullOrWhitespaceValidator))]
         public string Format { get; set; }
     }
 }

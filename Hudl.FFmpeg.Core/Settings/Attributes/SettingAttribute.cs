@@ -21,7 +21,7 @@ namespace Hudl.FFmpeg.Settings.Attributes
         /// <summary>
         /// IsParameterless indicates that the setting is an on or off flag with no value associated
         /// </summary>
-        public bool IsParameterless { get; set; } //TODO: implement 
+        public bool IsParameterless { get; set; } 
 
         /// <summary>
         /// Pre declaration indicates that the setting must go before the setting declaration

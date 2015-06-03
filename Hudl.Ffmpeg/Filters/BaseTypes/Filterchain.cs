@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Collections;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Resources.Interfaces;
@@ -69,7 +69,7 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
         {
             var clonedResources = OutputList.Select(output => output.Stream.Copy());
 
-            return FilterTo(clonedResources.ToList(), Filters.List.ToArray());
+            return FilterTo(clonedResources.ToList(), Filters.ToArray());
         }
 
         public List<StreamIdentifier> GetStreamIdentifiers()

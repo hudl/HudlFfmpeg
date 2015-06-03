@@ -13,7 +13,7 @@ namespace Hudl.FFmpeg.Settings.BaseTypes
             Rate = rate;
         }
 
-        [SettingValue(Formatter = typeof(Int32ToKbs))]
+        [SettingParameter(Formatter = typeof(Int32ToKbs))]
         [Validate(LogicalOperators.GreaterThan, 0)]
         public int Rate { get; set; }
     }

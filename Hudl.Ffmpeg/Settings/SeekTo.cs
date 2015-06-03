@@ -8,6 +8,7 @@ using Hudl.FFmpeg.Metadata.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -33,7 +34,8 @@ namespace Hudl.FFmpeg.Settings
         {
         }
 
-        [SettingValue(Formatter = typeof(TimeSpanFormatter))]
+        [SettingParameter(Formatter = typeof(TimeSpanFormatter))]
+        [Validate(typeof(TimeSpanGreterThanZeroValidator))]
         public TimeSpan Length { get; set; }
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)

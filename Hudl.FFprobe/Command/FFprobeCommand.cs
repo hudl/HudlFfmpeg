@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Command.Models;
 using Hudl.FFmpeg.Resources.Interfaces;
-using Hudl.FFprobe.Options.BaseTypes;
+using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFprobe.Command
 {
@@ -12,26 +12,26 @@ namespace Hudl.FFprobe.Command
         private FFprobeCommand(IContainer resource)
         {
             Resource = resource;
-            Options = new List<IFFprobeOptions>();
+            Settings = new List<ISetting>();
         }
 
         public IContainer Resource { get; set; }
 
-        public List<IFFprobeOptions> Options { get; set; }
+        public List<ISetting> Settings { get; set; }
 
         public static FFprobeCommand Create(IContainer resource)
         {
             return new FFprobeCommand(resource);    
         }
 
-        public FFprobeCommand Register(IFFprobeOptions option)
+        public FFprobeCommand AddSetting(ISetting setting)
         {
-            if (option == null)
+            if (setting == null)
             {
-                throw new ArgumentNullException("option");
+                throw new ArgumentNullException("setting");
             }
 
-            Options.Add(option);
+            Settings.Add(setting);
 
             return this;
         }

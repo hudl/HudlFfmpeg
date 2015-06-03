@@ -71,10 +71,10 @@ namespace Hudl.FFmpeg.Filters
         [FilterParameter(Name = "out_color_matrix", Default = VideoScalingColorMatrixType.Auto, Formatter = typeof(EnumParameterFormatter))]
         public VideoScalingColorMatrixType? OutColorMatrix { get; set; }
 
-        [FilterParameter(Name = "in_range", Default = VideoScalingRangeType.Auto, Formatter = typeof(EnumParameterFormatter))]
+        [FilterParameter(Name = "in_range", Default = VideoScalingRangeType.Auto, Formatter = typeof(EnumParameterSlashFormatter))]
         public VideoScalingRangeType? InRange { get; set; }
 
-        [FilterParameter(Name = "out_range", Default = VideoScalingRangeType.Auto, Formatter = typeof(EnumParameterFormatter))]
+        [FilterParameter(Name = "out_range", Default = VideoScalingRangeType.Auto, Formatter = typeof(EnumParameterSlashFormatter))]
         public VideoScalingRangeType? OutRange { get; set; }
 
         [FilterParameter(Name = "force_original_aspect_ratio", Default = VideoScalingAspectRatioType.Disable, Formatter = typeof(EnumParameterFormatter))]

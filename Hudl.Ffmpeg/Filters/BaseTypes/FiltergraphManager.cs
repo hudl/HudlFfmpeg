@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {

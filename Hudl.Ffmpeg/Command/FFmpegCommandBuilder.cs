@@ -3,9 +3,12 @@ using System.Linq;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Command.Models;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Contexts;
 using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Filters.Serialization;
+using Hudl.FFmpeg.Formatters.Utility;
 using Hudl.FFmpeg.Settings;
 using Hudl.FFmpeg.Settings.Serialization;
 using Hudl.FFmpeg.Settings.Utility;
@@ -110,10 +113,12 @@ namespace Hudl.FFmpeg.Command
                 throw new ArgumentNullException("filterchain");
             }
 
+            var context = FilterBindingContext.Create(filterchain.InputCount, filterchain.OutputCount);
+
             WriteFilterchainIn(command, filterchain);
 
             var shouldIncludeDelimitor = false;
-            filterchain.Filters.List.ForEach(filter =>
+            filterchain.Filters.ToList().ForEach(filter =>
             {
                 if (shouldIncludeDelimitor)
                 {
@@ -125,9 +130,7 @@ namespace Hudl.FFmpeg.Command
                     shouldIncludeDelimitor = true;
                 }
 
-                //TODO: fix
-                //filter.Setup(command, filterchain);
-                WriteFilter(filter);
+                WriteFilter(filter, context);
             });
 
             WriteFilterchainOut(filterchain);
@@ -142,11 +145,11 @@ namespace Hudl.FFmpeg.Command
                 {
                     var commandResource = command.Objects.Inputs[indexOfResource];
                     var commandStream = commandResource.Resource.Streams.First(s => s.Map == streamId.Map);
-                    BuilderBase.Append(Formats.Map(commandStream, indexOfResource));
+                    BuilderBase.Append(FormattingUtility.Map(commandStream, indexOfResource));
                 }
                 else
                 {
-                    BuilderBase.Append(Formats.Map(streamId.Map));
+                    BuilderBase.Append(FormattingUtility.Map(streamId.Map));
                 }
             });
         }
@@ -156,7 +159,7 @@ namespace Hudl.FFmpeg.Command
             filterchainOutputs.ForEach(streamId =>
                 {
                     BuilderBase.Append(" ");
-                    BuilderBase.Append(Formats.Map(streamId.Map));
+                    BuilderBase.Append(FormattingUtility.Map(streamId.Map));
                 });
         }
      
@@ -185,15 +188,14 @@ namespace Hudl.FFmpeg.Command
         {
             BuilderBase.AppendLine();
         }
-        private void WriteFilter(IFilter filter)
+        private void WriteFilter(IFilter filter, FilterBindingContext context)
         {
             if (filter == null)
             {
                 throw new ArgumentNullException("filter");
             }
 
-            //TODO: fix, should need to check bindings
-            BuilderBase.Append(FilterSerializer.Serialize(filter));
+            BuilderBase.Append(FilterSerializer.Serialize(filter, context));
         }
     }
 }

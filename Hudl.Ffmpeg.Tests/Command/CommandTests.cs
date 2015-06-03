@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hudl.FFmpeg.Command;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources;
@@ -195,8 +195,7 @@ namespace Hudl.FFmpeg.Tests.Command
                                        beforeRenderExecuted = true;
                                    });
 
-            //TODO: fix
-            //stage.Command.ExecuteWith<TestCommandProcessor>(); 
+            stage.Command.ExecuteWith<TestCommandProcessor, FFmpegCommandBuilder>(); 
 
             Assert.True(beforeRenderExecuted);
         }

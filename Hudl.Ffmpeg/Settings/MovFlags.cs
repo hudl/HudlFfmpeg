@@ -1,7 +1,9 @@
 ﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -23,7 +25,8 @@ namespace Hudl.FFmpeg.Settings
             Flags = flags;
         }
     
-        [SettingValue]
+        [SettingParameter]
+        [Validate(typeof(NullOrWhitespaceValidator))]
         public string Flags { get; set; }
     }
 }

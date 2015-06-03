@@ -6,6 +6,6 @@ namespace Hudl.FFmpeg.Settings.Serialization
     {
         public string Value { get; set; }
 
-        public SettingValueAttribute Parameter { get; set; }
+        public SettingParameterAttribute Parameter { get; set; }
     }
 }

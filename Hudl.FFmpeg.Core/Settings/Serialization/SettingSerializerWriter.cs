@@ -13,9 +13,24 @@ namespace Hudl.FFmpeg.Settings.Serialization
 
         public string Write()
         {
-            return string.IsNullOrWhiteSpace(_settingData.Value.Value) 
-                ? ConcatenateSetting(_settingData.Setting.Name) 
-                : ConcatenateSetting(_settingData.Setting.Name, _settingData.Value.Value);
+            var parameterBuilder = new StringBuilder(75);
+
+            if (!_settingData.Setting.IsParameterless)
+            {
+                _settingData.Parameters.ForEach(spd =>
+                    {
+                        if (string.IsNullOrWhiteSpace(spd.Value))
+                        {
+                            return;
+                        }
+
+                        parameterBuilder.Append(spd.Value);
+                    });
+            }
+
+            return parameterBuilder.Length == 0 
+                ? ConcatenateSetting(_settingData.Setting.Name)
+                : ConcatenateSetting(_settingData.Setting.Name, parameterBuilder.ToString());
         }
 
         private static string ConcatenateSetting(string paramName, object paramValue)

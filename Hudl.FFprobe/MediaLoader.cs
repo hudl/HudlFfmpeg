@@ -2,8 +2,8 @@
 using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFprobe.Command;
 using Hudl.FFprobe.Metadata.Models;
-using Hudl.FFprobe.Options;
 using Hudl.FFprobe.Serialization;
+using Hudl.FFprobe.Settings;
 
 namespace Hudl.FFprobe
 {
@@ -17,9 +17,9 @@ namespace Hudl.FFprobe
         public void ReadInfo(IContainer resource)
         {
             var ffprobeCommand = FFprobeCommand.Create(resource)
-                                               .Register(new PrintFormatJsonOption())
-                                               .Register(new ShowFormatOption())
-                                               .Register(new ShowStreamsOption())
+                                               .AddSetting(new ShowFormat())
+                                               .AddSetting(new ShowStreams())
+                                               .AddSetting(new PrintFormat(PrintFormat.JsonFormat))
                                                .Execute();
 
             var containerMetadata = FFprobeSerializer.Serialize(ffprobeCommand);

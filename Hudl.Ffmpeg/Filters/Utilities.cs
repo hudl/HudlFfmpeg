@@ -24,7 +24,7 @@ namespace Hudl.FFmpeg.Filters
                     NumberOfOutputsInFilterchain = filterchain.OutputList.Count
                 };
 
-            return filterchain.Filters.List.Max(f =>
+            return filterchain.Filters.Max(f =>
                 {
                     if (!(f is IFilterMultiOutput))
                     {
@@ -41,7 +41,7 @@ namespace Hudl.FFmpeg.Filters
                 throw new ArgumentNullException("filterchain");
             }
 
-            return filterchain.Filters.List.Min(f =>
+            return filterchain.Filters.Min(f =>
                 {
                     var filterAttribute = AttributeRetrieval.GetAttribute<FilterAttribute>(f.GetType());
 
@@ -61,7 +61,7 @@ namespace Hudl.FFmpeg.Filters
                     NumberOfFiltersInFilterchain = filterchain.Filters.Count
                 };
 
-            return filterchain.Filters.List.TrueForAll(f =>
+            return filterchain.Filters.ToList().TrueForAll(f =>
             {
                 if (!(f is IFilterValidator))
                 {
@@ -85,9 +85,13 @@ namespace Hudl.FFmpeg.Filters
                 throw new ArgumentNullException("filterchain");
             }
 
-            var context = new FilterProcessorContext();
+            var context = new FilterProcessorContext
+                {
+                    Filterchain = filterchain, 
+                    Streams = filterchain.OutputList.Select(o => o.Stream).ToList()
+                };
 
-            filterchain.Filters.List.ForEach(filter =>
+            filterchain.Filters.ToList().ForEach(filter =>
             {
                 if (!(filter is IFilterProcessor))
                 {

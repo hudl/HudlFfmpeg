@@ -1,4 +1,5 @@
-﻿using Hudl.FFmpeg.Filters.Interfaces;
+﻿using Hudl.FFmpeg.Filters.Contexts;
+using Hudl.FFmpeg.Filters.Interfaces;
 
 namespace Hudl.FFmpeg.Filters.Serialization
 {
@@ -6,15 +7,20 @@ namespace Hudl.FFmpeg.Filters.Serialization
     {
         public static string Serialize(IFilter filter)
         {
-            var filterData = GetFilterData(filter);
+            return Serialize(filter, FilterBindingContext.Empty());
+        }
+
+        public static string Serialize(IFilter filter, FilterBindingContext context)
+        {
+            var filterData = GetFilterData(filter, context);
             var filterSerializer = new FilterSerializerWriter(filterData);
 
             return filterSerializer.Write();
         }
 
-        private static FilterSerializerData GetFilterData(IFilter filter)
+        private static FilterSerializerData GetFilterData(IFilter filter, FilterBindingContext context)
         {
-            return FilterSerializerAttributeParser.GetFilterSerializerData(filter);
+            return FilterSerializerAttributeParser.GetFilterSerializerData(filter, context);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
+using Hudl.FFmpeg.Command.Utility;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Resources.Interfaces;
@@ -12,6 +13,13 @@ namespace Hudl.FFmpeg.Sugar
 {
     public static class CommandStageExtensions
     {
+        public static CommandStage Clear(this CommandStage command)
+        {
+            command.StreamIdentifiers = new List<StreamIdentifier>();
+
+            return command;
+        }
+
         public static CommandStage WithInput<TStreamType>(this CommandStage command, string fileName)
             where TStreamType : class, IStream
 
@@ -174,7 +182,7 @@ namespace Hudl.FFmpeg.Sugar
         {
             ValidateMapTo(stage.Command);
 
-            var commandOutput = CommandHelper.SetupCommandOutputMaps<TOutputType>(stage, settings, fileName);
+            var commandOutput = CommandHelperUtility.SetupCommandOutputMaps<TOutputType>(stage, settings, fileName);
 
             stage.Command.OutputManager.Add(commandOutput);
 
@@ -206,7 +214,7 @@ namespace Hudl.FFmpeg.Sugar
         {
             ValidateTo(stage.Command);
 
-            var commandOutput = CommandHelper.SetupCommandOutput<TOutputType>(stage.Command, settings, fileName);
+            var commandOutput = CommandHelperUtility.SetupCommandOutput<TOutputType>(stage.Command, settings, fileName);
 
             stage.Command.OutputManager.Add(commandOutput);
 

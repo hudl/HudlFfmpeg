@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Linq;
 using Hudl.FFmpeg.Attributes;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Filters.Interfaces;
@@ -39,10 +39,10 @@ namespace Hudl.FFmpeg.Filters
         [FilterParameter(Name = "y")]
         public string Y { get; set; }
 
-        [FilterParameter(Name = "shortest", Formatter = typeof(BoolToInt32Formatter))]
+        [FilterParameter(Name = "shortest", Default = false, Formatter = typeof(BoolToInt32Formatter))]
         public bool Shortest { get; set; }
 
-        [FilterParameter(Name = "repeatlast", Formatter = typeof(BoolToInt32Formatter))]
+        [FilterParameter(Name = "repeatlast", Default = false, Formatter = typeof(BoolToInt32Formatter))]
         public bool RepeatLast { get; set; }
        
         [FilterParameter(Name ="eval", Default = OverlayVideoEvalType.Frame, Formatter = typeof(EnumParameterFormatter))]

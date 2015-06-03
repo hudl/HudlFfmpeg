@@ -1,5 +1,5 @@
 ﻿using System;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Settings.BaseTypes;
 using Hudl.FFmpeg.Settings;
 using Xunit;

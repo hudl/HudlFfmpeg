@@ -1,4 +1,6 @@
-﻿using Hudl.FFmpeg.Settings.Attributes;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
@@ -10,7 +12,8 @@ namespace Hudl.FFmpeg.Settings.BaseTypes
             NumberOfChannels = numberOfChannels;
         }
 
-        [SettingValue]
+        [SettingParameter]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public int NumberOfChannels { get; set; }
     }
 
