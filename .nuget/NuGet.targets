@@ -16,7 +16,6 @@
         <DownloadNuGetExe Condition=" '$(DownloadNuGetExe)' == '' ">false</DownloadNuGetExe>
 
         <!-- Set a default local package repo if it hasn't been set by the environment -->
-        <NuGetRepo Condition=" '$(NuGetRepo)' == '' ">http://nuget.thorhudl.com/nuget/</NuGetRepo>
         <NuGetRepo Condition=" '$(NuGetRepo)' == '' ">https://www.nuget.org/api/v2/</NuGetRepo>
     </PropertyGroup>
     
