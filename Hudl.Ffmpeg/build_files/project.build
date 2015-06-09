@@ -5,7 +5,7 @@
   <property name="compiledDir" value="${codeDir}\Hudl.Ffmpeg\Deploy_HudlFfmpeg" />
 
   <target name="Build" description="Build" depends="">    
-    <msbuild failonerror="true" project="${codeDir}\Hudl.Ffmpeg\Hudl.Ffmpeg.csproj" target="Rebuild">
+    <msbuild failonerror="true" project="${codeDir}\Hudl.Ffmpeg.Core\Hudl.Ffmpeg.Core.csproj" target="Rebuild">
       <property name="Configuration" value="Release" />
       <property name="DeployOnBuild" value="true" />
       <property name="PublishProfile" value="Local" />
@@ -13,6 +13,24 @@
       <property name="WarningLevel" value="0" />
 	  <arg value="/m" />
 	  <arg value="/nologo" />
+    </msbuild>
+    <msbuild failonerror="true" project="${codeDir}\Hudl.Ffprobe\Hudl.Ffprobe.csproj" target="Rebuild">
+      <property name="Configuration" value="Release" />
+      <property name="DeployOnBuild" value="true" />
+      <property name="PublishProfile" value="Local" />
+      <property name="VisualStudioVersion" value="11.0" />
+      <property name="WarningLevel" value="0" />
+    <arg value="/m" />
+    <arg value="/nologo" />
+    </msbuild>
+    <msbuild failonerror="true" project="${codeDir}\Hudl.Ffmpeg\Hudl.Ffmpeg.csproj" target="Rebuild">
+      <property name="Configuration" value="Release" />
+      <property name="DeployOnBuild" value="true" />
+      <property name="PublishProfile" value="Local" />
+      <property name="VisualStudioVersion" value="11.0" />
+      <property name="WarningLevel" value="0" />
+    <arg value="/m" />
+    <arg value="/nologo" />
     </msbuild>
   </target>
 
