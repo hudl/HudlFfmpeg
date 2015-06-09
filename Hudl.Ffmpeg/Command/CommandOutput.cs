@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings.BaseTypes;
-using IContainer = Hudl.FFmpeg.Resources.BaseTypes.IContainer;
 
 namespace Hudl.FFmpeg.Command
 {

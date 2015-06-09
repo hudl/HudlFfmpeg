@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hudl.FFmpeg.Command;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings;
 using Hudl.FFmpeg.Settings.BaseTypes;
 using Hudl.FFmpeg.Sugar;
@@ -176,9 +177,9 @@ namespace Hudl.FFmpeg.Tests.Command
         {
             var command = CommandHelper.CreateCommand();
 
-            command.AddInput(Assets.Utilities.GetVideoFile()); 
+            command.AddInput(Assets.Utilities.GetVideoFile());
 
-            Assert.DoesNotThrow(() => command.RenderWith<TestCommandProcessor>());
+            Assert.DoesNotThrow(() => command.ExecuteWith<TestCommandProcessor, FFmpegCommandBuilder>());
         }
 
         [Fact]
@@ -194,7 +195,7 @@ namespace Hudl.FFmpeg.Tests.Command
                                        beforeRenderExecuted = true;
                                    });
 
-            stage.Command.RenderWith<TestCommandProcessor>(); 
+            stage.Command.ExecuteWith<TestCommandProcessor, FFmpegCommandBuilder>(); 
 
             Assert.True(beforeRenderExecuted);
         }
@@ -212,7 +213,7 @@ namespace Hudl.FFmpeg.Tests.Command
                                        afterRenderExecuted = true;
                                    });
 
-            stage.Command.RenderWith<TestCommandProcessor>();
+            stage.Command.ExecuteWith<TestCommandProcessor, FFmpegCommandBuilder>();
 
             Assert.True(afterRenderExecuted);
         }

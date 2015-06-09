@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Contexts;
+using Hudl.FFmpeg.Filters.Interfaces;
 
 namespace Hudl.FFmpeg.Filters
 {
@@ -14,20 +18,35 @@ namespace Hudl.FFmpeg.Filters
             {
                 throw new ArgumentNullException("filterchain");
             }
-            
-            return filterchain.Filters.List.Max(f =>
+
+            var context = new FilterMultiOutputContext
+                {
+                    NumberOfOutputsInFilterchain = filterchain.OutputList.Count
+                };
+
+            return filterchain.Filters.Max(f =>
                 {
                     if (!(f is IFilterMultiOutput))
                     {
                         return 1;
                     }
-                    return (f as IFilterMultiOutput).OutputCount();
+                    return (f as IFilterMultiOutput).OutputCount(context);
                 });
         }
 
         public static int GetFilterInputMax(Filterchain filterchain)
         {
-            return filterchain.Filters.List.Min(f => f.MaxInputs);
+            if (filterchain == null)
+            {
+                throw new ArgumentNullException("filterchain");
+            }
+
+            return filterchain.Filters.Min(f =>
+                {
+                    var filterAttribute = AttributeRetrieval.GetAttribute<FilterAttribute>(f.GetType());
+
+                    return filterAttribute.MaxInputs;
+                });
         }
 
         public static bool ValidateFilters(FFmpegCommand command, Filterchain filterchain, List<StreamIdentifier> streamIds)
@@ -37,19 +56,25 @@ namespace Hudl.FFmpeg.Filters
                 throw new ArgumentNullException("filterchain");
             }
 
-            return filterchain.Filters.List.TrueForAll(f =>
+            var context = new FilterValidatorContext
+                {
+                    NumberOfFiltersInFilterchain = filterchain.Filters.Count
+                };
+
+            return filterchain.Filters.ToList().TrueForAll(f =>
             {
                 if (!(f is IFilterValidator))
                 {
                     return true;
                 }
-                return (f as IFilterValidator).Validate(command, filterchain, streamIds);
+                return (f as IFilterValidator).Validate(context);
             });
         }
 
         public static bool ValidateFiltersMax(Filterchain filterchain, List<StreamIdentifier> resources)
         {
             var maximumAllowedMinimum = GetFilterInputMax(filterchain);
+
             return maximumAllowedMinimum > 1 || (maximumAllowedMinimum == 1 && resources.Count == 1);
         }
 
@@ -60,14 +85,20 @@ namespace Hudl.FFmpeg.Filters
                 throw new ArgumentNullException("filterchain");
             }
 
-            filterchain.Filters.List.ForEach(filter =>
+            var context = new FilterProcessorContext
+                {
+                    Filterchain = filterchain, 
+                    Streams = filterchain.OutputList.Select(o => o.Stream).ToList()
+                };
+
+            filterchain.Filters.ToList().ForEach(filter =>
             {
                 if (!(filter is IFilterProcessor))
                 {
                     return;
                 }
 
-                (filter as IFilterProcessor).PrepCommands(command, filterchain);
+                (filter as IFilterProcessor).Process(context);
             });
         }
     }

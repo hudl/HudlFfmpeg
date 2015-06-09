@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using Hudl.FFmpeg.Command;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {

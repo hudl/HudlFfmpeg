@@ -2,7 +2,7 @@
 using System.Linq;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Metadata.Interfaces;
 
 namespace Hudl.FFmpeg.Metadata
 {
@@ -68,7 +68,7 @@ namespace Hudl.FFmpeg.Metadata
             //now we must execute the metadata manipulators for filters 
             if (metadataInfoTreeGroup.Filterchain != null)
             {
-                var metadataManipulators = metadataInfoTreeGroup.Filterchain.Filters.List.OfType<IMetadataManipulation>().ToList();
+                var metadataManipulators = metadataInfoTreeGroup.Filterchain.Filters.OfType<IMetadataManipulation>().ToList();
 
                 metadataManipulators.ForEach(mm => metadataInfoResult = mm.EditInfo(metadataInfoResult, suppliedMetadataInfo));
             }

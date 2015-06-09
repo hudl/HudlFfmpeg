@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Text;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -11,18 +12,13 @@ namespace Hudl.FFmpeg.Filters
     /// Video filter that applies a fade in or out effect.
     /// </summary>
     [ForStream(Type=typeof(VideoStream))]
-    public class Fade : BaseFilter
+    [Filter(Name = "fade", MinInputs = 1, MaxInputs = 1)]
+    public class Fade : IFilter
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "fade";
-
-         public Fade()
-            : base(FilterType, FilterMaxInputs)
+        public Fade()
         {
         }
-
         public Fade(double? startUnit, double? lengthInUnits, VideoUnitType unitType)
-            : this()
         {
             if (unitType == VideoUnitType.Frames)
             {
@@ -42,83 +38,29 @@ namespace Hudl.FFmpeg.Filters
             TransitionType = transitionType;
         }
 
-        public FadeTransitionType TransitionType { get; set; }
+        [FilterParameter(Name = "t", Default = FadeTransitionType.In, Formatter = typeof(EnumParameterFormatter))]
+        public FadeTransitionType? TransitionType { get; set; }
 
+        [FilterParameter(Name = "s")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartFrame { get; set; }
 
+        [FilterParameter(Name = "n")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? NumberOfFrames { get; set; }
 
+        [FilterParameter(Name = "st")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? StartTime { get; set; }
 
+        [FilterParameter(Name = "d")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? Duration { get; set; }
 
+        [FilterParameter(Name = "alpha", Default = false, Formatter = typeof(BoolToInt32Formatter))]
         public bool Alpha { get; set; }
 
+        [FilterParameter(Name = "c")]
         public string Color { get; set; }
-
-        public override void Validate()
-        {
-            if (StartFrame.HasValue && StartFrame <= 0)
-            {
-                throw new InvalidOperationException("Start Frame of the Fade must be greater than zero.");
-            }
-
-            if (NumberOfFrames.HasValue && NumberOfFrames <= 0)
-            {
-                throw new InvalidOperationException("Number Of Frames of the Fade must be greater than zero.");
-            }
-
-            if (StartTime.HasValue && StartTime <= 0)
-            {
-                throw new InvalidOperationException("StartTime of the Fade must be greater than zero.");
-            }
-
-            if (Duration.HasValue && Duration <= 0)
-            {
-                throw new InvalidOperationException("Duration of the Fade must be greater than zero.");
-            }
-        }
-
-        public override string ToString()
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (TransitionType != FadeTransitionType.In)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "t", Formats.EnumValue(TransitionType));
-            }
-
-            if (StartFrame.HasValue)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "s", StartFrame.GetValueOrDefault());
-            }
-
-            if (NumberOfFrames.HasValue)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "n", NumberOfFrames.GetValueOrDefault());
-            }
-
-            if (StartTime.HasValue)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "st", StartTime.GetValueOrDefault());
-            }
-
-            if (Duration.HasValue)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "d", Duration.GetValueOrDefault());
-            }
-
-            if (Alpha)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "alpha", 1);
-            }
-
-            if (!string.IsNullOrWhiteSpace(Color))
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "c", Color);
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
     }
 }

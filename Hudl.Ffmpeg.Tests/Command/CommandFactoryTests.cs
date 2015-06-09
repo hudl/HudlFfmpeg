@@ -11,7 +11,6 @@ namespace Hudl.FFmpeg.Tests.Command
     {
         public CommandFactoryTests()
         {
-            Utilities.SetGlobalAssets();
         }
 
         [Fact]
@@ -51,13 +50,15 @@ namespace Hudl.FFmpeg.Tests.Command
         [Fact]
         public void Factory_RenderWith_OneOutput()
         {
+            Utilities.SetGlobalAssets();
+
             var factory = CommandFactory.Create();
 
             factory.CreateOutputCommand()
                    .WithInput<VideoStream>(Utilities.GetVideoFile())
                    .To<Mp4>();
 
-            var result = factory.RenderWith<TestCommandProcessor>();
+            var result = factory.RenderWith<TestCommandProcessor, FFmpegCommandBuilder>();
 
             Assert.True(result.Count == 1);
         }

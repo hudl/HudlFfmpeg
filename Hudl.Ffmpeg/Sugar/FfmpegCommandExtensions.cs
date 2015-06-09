@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Hudl.FFmpeg.BaseTypes;
 using Hudl.FFmpeg.Command;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Command.Utility;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
 namespace Hudl.FFmpeg.Sugar
@@ -25,7 +25,7 @@ namespace Hudl.FFmpeg.Sugar
                 throw new ArgumentException("Command fileName cannot be null or empty.", "fileName");
             }
 
-            if (command.Owner.CommandList.All(c => c.Id != command.Id))
+            if (command.Owner.CommandList.OfType<FFmpegCommand>().All(c => c.Id != command.Id))
             {
                 throw new ArgumentException("Command must be added via CreateOutput or CreateResource first.", "command");
             }
@@ -135,7 +135,7 @@ namespace Hudl.FFmpeg.Sugar
         {
             ValidateTo(command);
 
-            var commandOutput = CommandHelper.SetupCommandOutput<TOutputType>(command, settings, fileName);
+            var commandOutput = CommandHelperUtility.SetupCommandOutput<TOutputType>(command, settings, fileName);
 
             command.OutputManager.Add(commandOutput);
 

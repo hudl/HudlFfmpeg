@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hudl.FFmpeg</RootNamespace>
     <AssemblyName>Hudl.FFmpeg</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -33,11 +33,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,73 +53,49 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseTypes\ContainsStreamAttribute.cs" />
-    <Compile Include="BaseTypes\ForStreamAttribute.cs" />
-    <Compile Include="BaseTypes\ForStreamCollection.cs" />
-    <Compile Include="BaseTypes\StreamNotFoundException.cs" />
-    <Compile Include="BaseTypes\ForStreamInvalidException.cs" />
-    <Compile Include="BaseTypes\FfmpegRenderingException.cs" />
-    <Compile Include="BaseTypes\FfmpegProcessingException.cs" />
-    <Compile Include="Command\CommandHelper.cs" />
-    <Compile Include="Command\FFprobeCommand.cs" />
-    <Compile Include="Common\FFmpegFraction.cs" />
-    <Compile Include="Common\FFmpegStreamTypes.cs" />
+    <Compile Include="Command\Utility\CommandHelperUtility.cs" />
+    <Compile Include="Enums\FFmpegStreamTypes.cs" />
+    <Compile Include="Enums\FpsRoundType.cs" />
+    <Compile Include="Filters\AEvalSrc.cs" />
+    <Compile Include="Filters\Color.cs" />
+    <Compile Include="Filters\NullSrc.cs" />
+    <Compile Include="Filters\ANullSrc.cs" />
+    <Compile Include="Filters\Bindings\NumberOfStreamsInBinding.cs" />
+    <Compile Include="Filters\Bindings\NumberOfStreamsOutBinding.cs" />
     <Compile Include="Filters\BoxBlur.cs" />
-    <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeCodecTypes.cs" />
-    <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeObject.cs" />
-    <Compile Include="Metadata\Ffprobe\FFprobeVideoStream.cs" />
-    <Compile Include="Metadata\Ffprobe\FFprobeAudioStream.cs" />
-    <Compile Include="Metadata\Ffprobe\Serializers\FFprobeGeneralSerializer.cs" />
-    <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeFraction.cs" />
-    <Compile Include="Metadata\Ffprobe\BaseTypes\FFprobeKeyValuePair.cs" />
-    <Compile Include="Metadata\Ffprobe\BaseTypes\IFFprobeSerializer.cs" />
-    <Compile Include="Metadata\Ffprobe\BaseTypes\IFFprobeValue.cs" />
-    <Compile Include="Metadata\Ffprobe\FFprobeSerializerResultItem.cs" />
-    <Compile Include="Metadata\Ffprobe\FFprobeSerializerResult.cs" />
-    <Compile Include="Metadata\Ffprobe\Serializers\FFprobeSerialzier.cs" />
-    <Compile Include="Metadata\Ffprobe\Serializers\FFprobeFormatSerializer.cs" />
-    <Compile Include="Metadata\Ffprobe\Serializers\FFprobeStreamSerializer.cs" />
-    <Compile Include="Metadata\MetadataInfoTreeContainer.cs" />
-    <Compile Include="ResourceManagement.cs" />
-    <Compile Include="Command\BaseTypes\CommandConfigurationFlagTypes.cs" />
-    <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
-    <Compile Include="Command\FFprobeProcessorReceiver.cs" />
+    <Compile Include="Metadata\Interfaces\IMetadataManipulation.cs" />
+    <Compile Include="Metadata\MetadataHelpers.cs" />
+    <Compile Include="Metadata\MetadataInfoStreamCalculator.cs" />
     <Compile Include="Command\FFmpegProcessorReciever.cs" />
-    <Compile Include="Command\CommandBuilder.cs" />
+    <Compile Include="Command\FFmpegCommandBuilder.cs" />
     <Compile Include="Command\CommandFactory.cs" />
     <Compile Include="Command\CommandObjects.cs" />
     <Compile Include="Command\CommandStage.cs" />
-    <Compile Include="Common\CommandProcessorStatus.cs" />
     <Compile Include="Command\FFmpegCommand.cs" />
     <Compile Include="Command\CommandInput.cs" />
     <Compile Include="Command\StreamIdentifier.cs" />
     <Compile Include="Command\CommandOutput.cs" />
-    <Compile Include="Common\FadeCurveType.cs" />
-    <Compile Include="Common\FormatType.cs" />
-    <Compile Include="Common\OverlayEofActionType.cs" />
-    <Compile Include="Common\SetPtsExpressionType.cs" />
-    <Compile Include="Common\VideoScalingAspectRatioType.cs" />
-    <Compile Include="Common\VideoScalingColorMatrixType.cs" />
-    <Compile Include="Common\VideoScalingRangeType.cs" />
-    <Compile Include="Common\VolumeExpressionEvalType.cs" />
-    <Compile Include="Common\VolumePrecisionType.cs" />
-    <Compile Include="Common\VolumeReplayGainType.cs" />
+    <Compile Include="Enums\FadeCurveType.cs" />
+    <Compile Include="Enums\FormatType.cs" />
+    <Compile Include="Enums\OverlayEofActionType.cs" />
+    <Compile Include="Enums\SetPtsExpressionType.cs" />
+    <Compile Include="Enums\VideoScalingAspectRatioType.cs" />
+    <Compile Include="Enums\VideoScalingColorMatrixType.cs" />
+    <Compile Include="Enums\VideoScalingRangeType.cs" />
+    <Compile Include="Enums\VolumeExpressionEvalType.cs" />
+    <Compile Include="Enums\VolumePrecisionType.cs" />
+    <Compile Include="Enums\VolumeReplayGainType.cs" />
     <Compile Include="Filters\BaseTypes\BaseMovie.cs" />
-    <Compile Include="Filters\BaseTypes\FilterUtility.cs" />
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Filters\Templates\TrimVideo.cs" />
-    <Compile Include="Logging\LogUtility.cs" />
-    <Compile Include="Metadata\Ffprobe\MediaLoader.cs" />
-    <Compile Include="Metadata\MetadataHelpers.cs" />
-    <Compile Include="Metadata\MetadataInfoStreamCalculator.cs" />
-    <Compile Include="Metadata\BaseTypes\IMetadataManipulation.cs" />
+    <Compile Include="Metadata\Models\MetadataInfo.cs" />
+    <Compile Include="Metadata\Models\MetadataInfoTreeContainer.cs" />
+    <Compile Include="Metadata\Models\MetadataInfoTreeGroup.cs" />
+    <Compile Include="Metadata\Models\MetadataInfoTreeItem.cs" />
+    <Compile Include="Metadata\Models\MetadataInfoTreeSource.cs" />
     <Compile Include="Resources\BaseTypes\AudioStream.cs" />
-    <Compile Include="Resources\BaseTypes\IStream.cs" />
     <Compile Include="Resources\BaseTypes\VideoStream.cs" />
-    <Compile Include="Metadata\MetadataInfoTreeGroup.cs" />
-    <Compile Include="Metadata\MetadataInfoTreeItem.cs" />
-    <Compile Include="Metadata\MetadataInfoTreeSource.cs" />
     <Compile Include="Resources\Ismv.cs" />
     <Compile Include="Resources\Mov.cs" />
     <Compile Include="Resources\Ts.cs" />
@@ -137,48 +117,32 @@
     <Compile Include="Settings\ConstantRateFactor.cs" />
     <Compile Include="Settings\RemoveSubtitles.cs" />
     <Compile Include="Settings\RemoveVideo.cs" />
-    <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
-    <Compile Include="Sugar\CommandFactoryExtensions.cs" />
-    <Compile Include="Sugar\FFmpegCommandExtensions.cs" />
-    <Compile Include="Sugar\CommandStageExtensions.cs" />
-    <Compile Include="Command\CommandConfiguration.cs" />
-    <Compile Include="Common\CommandReceiptType.cs" />
-    <Compile Include="Command\Managers\CommandFiltergraphManager.cs" />
-    <Compile Include="Command\Managers\CommandOutputManager.cs" />
-    <Compile Include="Command\Managers\CommandInputManager.cs" />
-    <Compile Include="Common\AudioCodecType.cs" />
-    <Compile Include="Common\BlendVideoOptionType.cs" />
-    <Compile Include="Common\BlendVideoModeType.cs" />
-    <Compile Include="Common\AudioBitRateType.cs" />
-    <Compile Include="Common\VideoProfileType.cs" />
-    <Compile Include="Common\Extensions.cs" />
+    <Compile Include="Enums\CommandReceiptType.cs" />
+    <Compile Include="Filters\BaseTypes\FiltergraphManager.cs" />
+    <Compile Include="Command\CommandOutputManager.cs" />
+    <Compile Include="Command\CommandInputManager.cs" />
+    <Compile Include="Enums\AudioCodecType.cs" />
+    <Compile Include="Enums\BlendVideoOptionType.cs" />
+    <Compile Include="Enums\BlendVideoModeType.cs" />
+    <Compile Include="Enums\AudioBitRateType.cs" />
+    <Compile Include="Enums\VideoProfileType.cs" />
     <Compile Include="Common\Helpers.cs" />
-    <Compile Include="Common\FFmpegMergeOptionType.cs" />
-    <Compile Include="Common\OverlayVideoEvalType.cs" />
-    <Compile Include="Common\OverlayVideoFormatType.cs" />
-    <Compile Include="Common\DurationType.cs" />
-    <Compile Include="Common\AudioUnitType.cs" />
-    <Compile Include="Common\VideoUnitType.cs" />
-    <Compile Include="Common\FadeTransitionType.cs" />
-    <Compile Include="Common\ScalePresetType.cs" />
-    <Compile Include="Common\PixelFormatType.cs" />
-    <Compile Include="Common\FFmpegRatio.cs" />
-    <Compile Include="Common\FFmpegScale.cs" />
-    <Compile Include="Common\FFmpegScaleRgb.cs" />
-    <Compile Include="Common\Formats.cs" />
+    <Compile Include="Enums\OverlayVideoEvalType.cs" />
+    <Compile Include="Enums\OverlayVideoFormatType.cs" />
+    <Compile Include="Enums\DurationType.cs" />
+    <Compile Include="Enums\AudioUnitType.cs" />
+    <Compile Include="Enums\VideoUnitType.cs" />
+    <Compile Include="Enums\FadeTransitionType.cs" />
+    <Compile Include="Enums\ScalePresetType.cs" />
+    <Compile Include="Enums\PixelFormatType.cs" />
     <Compile Include="Common\Validate.cs" />
-    <Compile Include="Common\VideoCodecType.cs" />
+    <Compile Include="Enums\VideoCodecType.cs" />
     <Compile Include="Filters\AFade.cs" />
     <Compile Include="Filters\AMix.cs" />
     <Compile Include="Filters\BaseTypes\BaseSplit.cs" />
-    <Compile Include="Filters\BaseTypes\BaseFilter.cs" />
     <Compile Include="Filters\BaseTypes\FilterchainOutput.cs" />
     <Compile Include="Filters\BaseTypes\Filterchain.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterMultiOutput.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterValidator.cs" />
     <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
-    <Compile Include="Filters\BaseTypes\IFilter.cs" />
-    <Compile Include="Filters\BaseTypes\IFilterProcessor.cs" />
     <Compile Include="Filters\Blend.cs" />
     <Compile Include="Filters\ColorBalance.cs" />
     <Compile Include="Filters\Concat.cs" />
@@ -197,25 +161,18 @@
     <Compile Include="Filters\Movie.cs" />
     <Compile Include="Filters\Overlay.cs" />
     <Compile Include="Filters\Scale.cs" />
-    <Compile Include="Metadata\MetadataInfo.cs" />
     <Compile Include="Resources\Wmv.cs" />
     <Compile Include="Resources\Jpg.cs" />
     <Compile Include="Resources\Png.cs" />
     <Compile Include="Resources\Resource.cs" />
     <Compile Include="Resources\Wav.cs" />
-    <Compile Include="Resources\BaseTypes\IContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\BaseTypes\BaseContainer.cs" />
     <Compile Include="Resources\Mp3.cs" />
     <Compile Include="Resources\M4A.cs" />
     <Compile Include="Resources\Mp4.cs" />
-    <Compile Include="Settings\BaseTypes\BaseSetting.cs" />
     <Compile Include="Settings\BaseTypes\BaseProfile.cs" />
-    <Compile Include="Settings\BaseTypes\SettingsApplicationData.cs" />
-    <Compile Include="Settings\BaseTypes\ISetting.cs" />
-    <Compile Include="Settings\BaseTypes\SettingsApplicationAttribute.cs" />
     <Compile Include="Settings\BaseTypes\SettingsCollection.cs" />
-    <Compile Include="Common\SettingsCollectionResourceType.cs" />
     <Compile Include="Settings\BaseTypes\BaseBitRate.cs" />
     <Compile Include="Settings\BitRateVideo.cs" />
     <Compile Include="Settings\BaseTypes\BaseCodec.cs" />
@@ -226,7 +183,6 @@
     <Compile Include="Settings\Map.cs" />
     <Compile Include="Settings\Level.cs" />
     <Compile Include="Settings\ProfileVideo.cs" />
-    <Compile Include="Settings\Input.cs" />
     <Compile Include="Settings\TrimShortest.cs" />
     <Compile Include="Settings\SeekTo.cs" />
     <Compile Include="Settings\StartAt.cs" />
@@ -237,14 +193,29 @@
     <Compile Include="Settings\CodecVideo.cs" />
     <Compile Include="Settings\Size.cs" />
     <Compile Include="Settings\FrameRate.cs" />
+    <Compile Include="Filters\BaseTypes\FilterchainTemplate.cs" />
+    <Compile Include="Filters\Templates\Dissolve.cs" />
+    <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
+    <Compile Include="Sugar\CommandFactoryExtensions.cs" />
+    <Compile Include="Sugar\CommandStageExtensions.cs" />
+    <Compile Include="Sugar\FfmpegCommandExtensions.cs" />
     <Compile Include="Sugar\FiltergraphExtensions.cs" />
     <Compile Include="Sugar\ResourceExtensions.cs" />
-    <Compile Include="Filters\BaseTypes\FilterchainTemplate.cs" />
-    <Compile Include="Filters\Templates\CrossfadeConcatenate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hudl.FFmpeg.Core\Hudl.FFmpeg.Core.csproj">
+      <Project>{fa5d683b-0eea-4086-b71d-88a8360ae8f0}</Project>
+      <Name>Hudl.FFmpeg.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hudl.FFprobe\Hudl.FFprobe.csproj">
+      <Project>{711728b7-0f13-4ed8-a6cd-7a05657c0a0d}</Project>
+      <Name>Hudl.FFprobe</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

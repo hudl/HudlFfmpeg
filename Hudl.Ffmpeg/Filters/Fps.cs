@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Text;
-using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -10,41 +14,26 @@ namespace Hudl.FFmpeg.Filters
     /// fps filter will set a frames per second on the stream, can be used on images as well
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    public class Fps : BaseFilter
+    [Filter(Name = "fps", MinInputs = 1, MaxInputs = 1)]
+    public class Fps : IFilter
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "fps";
-
         public Fps()
-            : base(FilterType, FilterMaxInputs)
         {
         }
-        public Fps(int? frameRate)
-            : this()
+        public Fps(double frameRate)
         {
             FrameRate = frameRate;
         }
 
+        [FilterParameter(Name = "fps")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
         public double? FrameRate { get; set; }
 
-        public override void Validate()
-        {
-            if (FrameRate.HasValue && FrameRate <= 0)
-            {
-                throw new InvalidOperationException("FrameRate must be greater than zero.");
-            }
-        }
+        [FilterParameter(Name = "start_time")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double? StartTime { get; set; }
 
-        public override string ToString()
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (FrameRate.HasValue)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, FrameRate);
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
+        [FilterParameter(Name = "round", Default = FpsRoundType.Near, Formatter = typeof(EnumParameterFormatter))]
+        public FpsRoundType? Round { get; set; }
     }
 }

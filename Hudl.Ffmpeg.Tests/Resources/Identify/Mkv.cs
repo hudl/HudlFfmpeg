@@ -1,4 +1,5 @@
 ﻿using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Tests.Resources.Identify
 {

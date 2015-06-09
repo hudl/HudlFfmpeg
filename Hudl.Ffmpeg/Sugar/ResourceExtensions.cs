@@ -1,5 +1,9 @@
-﻿using Hudl.FFmpeg.Metadata;
+﻿using System.Linq;
+using Hudl.FFmpeg.Metadata.Models;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
+using Hudl.FFprobe;
+using Hudl.FFprobe.Metadata.Models;
 
 namespace Hudl.FFmpeg.Sugar
 {
@@ -18,20 +22,20 @@ namespace Hudl.FFmpeg.Sugar
 
         private static IContainer LoadMetadataFromFFprobe(this IContainer resource)
         {
-            var mediaLoader = new Metadata.FFprobe.MediaLoader(resource);
+            var mediaLoader = new MediaLoader(resource);
 
             if (mediaLoader.HasAudio)
             {
-                var audioStreamMetadata = MetadataInfo.Create(mediaLoader.AudioStream);
-
-                resource.Streams.Add(AudioStream.Create(audioStreamMetadata));
+                resource.Streams.AddRange(mediaLoader.BaseData.Streams
+                    .OfType<AudioStreamMetadata>()
+                    .Select(audioMetadata => AudioStream.Create(MetadataInfo.Create(audioMetadata))));
             }
 
             if (mediaLoader.HasVideo)
             {
-                var videoStreamMetadata = MetadataInfo.Create(mediaLoader.VideoStream);
-
-                resource.Streams.Add(VideoStream.Create(videoStreamMetadata));
+                resource.Streams.AddRange(mediaLoader.BaseData.Streams
+                    .OfType<VideoStreamMetadata>()
+                    .Select(videoMetadata => VideoStream.Create(MetadataInfo.Create(videoMetadata))));
             }
 
             return resource;
