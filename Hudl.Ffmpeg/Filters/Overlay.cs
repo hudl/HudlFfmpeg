@@ -2,11 +2,14 @@
 using System.Globalization;
 using System.Text;
 using System.Linq;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Metadata;
-using Hudl.FFmpeg.Metadata.BaseTypes;
+using Hudl.FFmpeg.Metadata.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -15,13 +18,10 @@ namespace Hudl.FFmpeg.Filters
     /// Overlay Filter that will overlay a video or image on another video or image.
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    public class Overlay : BaseFilter, IMetadataManipulation
+    [Filter(Name = "overlay", MinInputs = 2, MaxInputs = 2)]
+    public class Overlay : IFilter, IMetadataManipulation
     {
-        private const int FilterMaxInputs = 2;
-        private const string FilterType = "overlay";
-
         public Overlay()
-            : base(FilterType, FilterMaxInputs)
         {
             Format = OverlayVideoFormatType.Yuv420; 
             Eval = OverlayVideoEvalType.Frame;
@@ -32,62 +32,33 @@ namespace Hudl.FFmpeg.Filters
             X = x.ToString(CultureInfo.InvariantCulture);
             Y = y.ToString(CultureInfo.InvariantCulture);
         }
-       
+
+        [FilterParameter(Name = "x")]
         public string X { get; set; }
-        
+
+        [FilterParameter(Name = "y")]
         public string Y { get; set; }
 
-        public bool Shortest { get; set; } 
-        
+        [FilterParameter(Name = "shortest", Default = false, Formatter = typeof(BoolToInt32Formatter))]
+        public bool Shortest { get; set; }
+
+        [FilterParameter(Name = "repeatlast", Default = false, Formatter = typeof(BoolToInt32Formatter))]
         public bool RepeatLast { get; set; }
+       
+        [FilterParameter(Name ="eval", Default = OverlayVideoEvalType.Frame, Formatter = typeof(EnumParameterFormatter))]
+        public OverlayVideoEvalType? Eval { get; set; }
 
-        public OverlayVideoEvalType Eval { get; set; }
-
-        public OverlayEofActionType EofAction { get; set; }
+        [FilterParameter(Name ="eof_action", Default = OverlayEofActionType.Repeat, Formatter = typeof(EnumParameterFormatter))]
+        public OverlayEofActionType? EofAction { get; set; }
         
-        public OverlayVideoFormatType Format { get; set; }
-
-        public override string ToString() 
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (!string.IsNullOrWhiteSpace(X))
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "x", X);
-            }
-            if (!string.IsNullOrWhiteSpace(Y))
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "y", Y);
-            }
-            if (Eval != OverlayVideoEvalType.Frame)  
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "eval", Formats.EnumValue(Eval));
-            }
-            if (Format != OverlayVideoFormatType.Yuv420)  
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "format", Formats.EnumValue(Format));
-            }
-            if (EofAction != OverlayEofActionType.Repeat)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "eof_action", Formats.EnumValue(EofAction));
-            }
-            if (Shortest)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "shortest", 1);
-            }
-            if (RepeatLast)  
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "repeatlast", 1);
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
+        [FilterParameter(Name ="format", Default = OverlayVideoFormatType.Yuv420, Formatter = typeof(EnumParameterFormatter))]
+        public OverlayVideoFormatType? Format { get; set; }
 
         public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
             if (Shortest)
             {
-                return suppliedInfo.OrderBy(r => r.VideoStream.Duration).FirstOrDefault();
+                return suppliedInfo.OrderBy(r => r.VideoStream.VideoMetadata.Duration).FirstOrDefault();
             }
 
             var mainMetadataInfo = suppliedInfo.ElementAt(0);

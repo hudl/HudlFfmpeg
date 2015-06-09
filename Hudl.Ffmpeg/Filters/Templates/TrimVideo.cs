@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hudl.FFmpeg.Command;
-using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Sugar;

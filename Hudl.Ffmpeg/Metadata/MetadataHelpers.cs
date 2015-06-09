@@ -1,5 +1,6 @@
 ﻿using System;
 using Hudl.FFmpeg.Command;
+using Hudl.FFmpeg.Command.Utility;
 
 namespace Hudl.FFmpeg.Metadata
 {
@@ -8,25 +9,25 @@ namespace Hudl.FFmpeg.Metadata
         public static MetadataInfoTreeContainer GetMetadataInfo(FFmpegCommand command, StreamIdentifier streamId)
         {
             //first validate that the streamId does in fact belong to the command. 
-            if (!CommandHelper.ReceiptBelongsToCommand(command, streamId))
+            if (!CommandHelperUtility.ReceiptBelongsToCommand(command, streamId))
             {
                 throw new ArgumentException("The provided streamId is not part of the provided ffmpeg command.",
                     "streamId");
             }
 
-            var resourceIndex = CommandHelper.IndexOfResource(command, streamId);
+            var resourceIndex = CommandHelperUtility.IndexOfResource(command, streamId);
             if (resourceIndex > -1)
             {
                 return ResourceMetadataInfo(command, resourceIndex);
             }
 
-            var filterchainIndex = CommandHelper.IndexOfFilterchain(command, streamId);
+            var filterchainIndex = CommandHelperUtility.IndexOfFilterchain(command, streamId);
             if (filterchainIndex > -1)
             {
                 return FilterchainMetadataInfo(command, filterchainIndex);
             }
 
-            var outputIndex = CommandHelper.IndexOfOutput(command, streamId);
+            var outputIndex = CommandHelperUtility.IndexOfOutput(command, streamId);
             if (outputIndex > -1)
             {
                 return OutputMetadataInfo(command, outputIndex);

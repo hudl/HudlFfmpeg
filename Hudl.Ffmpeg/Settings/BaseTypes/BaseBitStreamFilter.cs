@@ -1,30 +1,19 @@
-﻿using System;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {
-    public abstract class BaseBitStreamFilter : BaseSetting
+    public abstract class BaseBitStreamFilter : ISetting
     {
-        private const string SettingType = "-bsf";
-
-        protected BaseBitStreamFilter(string suffix, string setting)
-            : base(string.Format("{0}{1}", SettingType, suffix))
+        protected BaseBitStreamFilter(string setting)
         {
             Setting = setting;
         }
 
+        [SettingParameter]
+        [Validate(typeof(NullOrWhitespaceValidator))]
         public string Setting { get; set; }
-
-        public override void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Setting))
-            {
-                throw new InvalidOperationException("Bitstream filter must not be null or whitespace.");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, " ", Setting);
-        }
     }
 }

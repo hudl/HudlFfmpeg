@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
-using System.Xml.Serialization;
+using System.Drawing;
 using Hudl.FFmpeg.Command;
-using Hudl.FFmpeg.Filters.BaseTypes;
-using Hudl.FFmpeg.Resources;
-using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Settings;
-using Hudl.FFmpeg.Settings.BaseTypes;
-using Size = System.Drawing.Size;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Extensions;
+using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Common
 {

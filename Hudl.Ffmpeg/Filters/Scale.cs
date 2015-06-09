@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using System.Text;
-using Hudl.FFmpeg.BaseTypes;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -12,15 +16,11 @@ namespace Hudl.FFmpeg.Filters
     /// Scale Filter, scales the output stream to match the filter settings.
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    public class Scale : BaseFilter
+    [Filter(Name = "scale", MinInputs = 1, MaxInputs = 1)]
+    public class Scale : IFilter
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "scale";
-
         public Scale()
-            : base(FilterType, FilterMaxInputs)
         {
-            Dimensions = new Size(0, 0);
         }
         public Scale(ScalePresetType preset)
             : this()
@@ -31,97 +31,53 @@ namespace Hudl.FFmpeg.Filters
                 throw new ArgumentException("The preset does not currently exist.", "preset");
             }
 
-            Dimensions = scalingPresets[preset];
+            Width = scalingPresets[preset].Width;
+            Height = scalingPresets[preset].Height;
         }
-        public Scale(int x, int y)
+        public Scale(int width, int height)
             : this()
         {
-            if (x <= 0)
+            if (width <= 0)
             {
-                throw new ArgumentException("X must be greater than zero for scaling.");
+                throw new ArgumentException("Width must be greater than zero for scaling.");
             }
-            if (y <= 0)
+            if (height <= 0)
             {
-                throw new ArgumentException("Y must be greater than zero for scaling.");
+                throw new ArgumentException("Height must be greater than zero for scaling.");
             }
 
-            Dimensions = new Size(x, y);
+            Width = width;
+            Height = height;
         }
 
-        public Size? Dimensions { get; set; }
+        [FilterParameter(Name = "w")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public int? Width { get; set; }
 
+        [FilterParameter(Name = "h")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public int? Height { get; set; }
+
+        [FilterParameter(Name = "interl")]
+        [Validate(LogicalOperators.IsOneOf, -1, 0, 1)]
         public int? Interlacing { get; set; }
 
+        [FilterParameter(Name = "flags")]
         public string Flags { get; set; }
 
-        public VideoScalingColorMatrixType InColorMatrix { get; set; }
+        [FilterParameter(Name = "in_color_matrix", Default = VideoScalingColorMatrixType.Auto, Formatter = typeof(EnumParameterFormatter))]
+        public VideoScalingColorMatrixType? InColorMatrix { get; set; }
 
-        public VideoScalingColorMatrixType OutColorMatrix { get; set; }
+        [FilterParameter(Name = "out_color_matrix", Default = VideoScalingColorMatrixType.Auto, Formatter = typeof(EnumParameterFormatter))]
+        public VideoScalingColorMatrixType? OutColorMatrix { get; set; }
 
-        public VideoScalingRangeType InRange { get; set; }
+        [FilterParameter(Name = "in_range", Default = VideoScalingRangeType.Auto, Formatter = typeof(EnumParameterSlashFormatter))]
+        public VideoScalingRangeType? InRange { get; set; }
 
-        public VideoScalingRangeType OutRange { get; set; }
+        [FilterParameter(Name = "out_range", Default = VideoScalingRangeType.Auto, Formatter = typeof(EnumParameterSlashFormatter))]
+        public VideoScalingRangeType? OutRange { get; set; }
 
-        public VideoScalingAspectRatioType ForceAspectRatio { get; set; }
-
-        public override void Validate()
-        {
-            if (Dimensions.HasValue && Dimensions.Value.Width <= 0)
-            {
-                throw new InvalidOperationException("Dimensions.X must be greater than zero for scaling.");
-            }
-            if (Dimensions.HasValue && Dimensions.Value.Height <= 0)
-            {
-                throw new InvalidOperationException("Dimensions.Y must be greater than zero for scaling.");
-            }
-            if (Interlacing.HasValue && (Interlacing >= 1 || Interlacing <= -1))
-            {
-                throw new InvalidOperationException("Interlacing flag must be a value of 1, 0, or -1 for scaling.");
-            }
-        }
-
-        public override string ToString()
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (Dimensions.HasValue && Dimensions.Value.Width > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "w", Dimensions.GetValueOrDefault().Width);
-            }
-            if (Dimensions.HasValue && Dimensions.Value.Height > 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "h", Dimensions.GetValueOrDefault().Height);
-            }
-            if (Interlacing.HasValue && Interlacing != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "interl", Interlacing); 
-            }
-            if (!string.IsNullOrWhiteSpace(Flags))
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "flags", Flags); 
-            }
-            if (InColorMatrix != VideoScalingColorMatrixType.Auto)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "in_color_matrix", Formats.EnumValue(InColorMatrix));
-            }
-            if (OutColorMatrix != VideoScalingColorMatrixType.Auto)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "out_color_matrix", Formats.EnumValue(OutColorMatrix));
-            }
-            if (InRange != VideoScalingRangeType.Auto)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "in_range", Formats.EnumValue(InRange, true));
-            }
-            if (OutRange != VideoScalingRangeType.Auto)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "out_range", Formats.EnumValue(OutRange, true));
-            }
-            if (ForceAspectRatio != VideoScalingAspectRatioType.Disable)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "force_original_aspect_ratio", Formats.EnumValue(ForceAspectRatio));
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
+        [FilterParameter(Name = "force_original_aspect_ratio", Default = VideoScalingAspectRatioType.Disable, Formatter = typeof(EnumParameterFormatter))]
+        public VideoScalingAspectRatioType? ForceAspectRatio { get; set; }
     }
 }

@@ -1,8 +1,10 @@
-﻿using System;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters.Utility;
 using Hudl.FFmpeg.Resources.BaseTypes;
-using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings
 {
@@ -10,34 +12,20 @@ namespace Hudl.FFmpeg.Settings
     /// sets the output pix format type.
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
-    public class PixelFormat : BaseSetting
+    [Setting(Name = "pix_fmt")]
+    public class PixelFormat : ISetting
     {
-        private const string SettingType = "-pix_fmt";
-
         public PixelFormat(string library)
-            : base(SettingType)
         {
             Library = library;
         }
         public PixelFormat(PixelFormatType library)
-            : this(Formats.Library(library))
+            : this(FormattingUtility.Library(library.ToString()))
         {
         }
 
+        [SettingParameter]
+        [Validate(typeof(NullOrWhitespaceValidator))]
         public string Library { get; set; }
-
-        public override void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Library))
-            {
-                throw new InvalidOperationException("Library cannot be empty for this setting.");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, " ", Library);
-        }
     }
 }

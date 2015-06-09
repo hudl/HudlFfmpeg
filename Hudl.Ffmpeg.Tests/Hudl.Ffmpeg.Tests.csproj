@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.0.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.0.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hudl.FFmpeg.Tests</RootNamespace>
     <AssemblyName>Hudl.FFmpeg.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -26,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -60,7 +63,6 @@
     <Compile Include="Filter\FilterchainTests.cs" />
     <Compile Include="Filter\FiltergraphTests.cs" />
     <Compile Include="Filter\FilterTests.cs" />
-    <Compile Include="Filter\Identify\Yadif.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Render\RenderTests.cs" />
     <Compile Include="Resources\Identify\Mkv.cs" />
@@ -89,9 +91,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Hudl.FFmpeg.Core\Hudl.FFmpeg.Core.csproj">
+      <Project>{fa5d683b-0eea-4086-b71d-88a8360ae8f0}</Project>
+      <Name>Hudl.FFmpeg.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Hudl.Ffmpeg\Hudl.FFmpeg.csproj">
       <Project>{a28fa3ff-8d08-4129-987b-f58aae613a72}</Project>
       <Name>Hudl.FFmpeg</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Hudl.FFprobe\Hudl.FFprobe.csproj">
+      <Project>{711728B7-0F13-4ED8-A6CD-7A05657C0A0D}</Project>
+      <Name>Hudl.FFprobe</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

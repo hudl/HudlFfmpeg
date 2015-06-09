@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Text;
-using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.DataTypes;
+using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -11,20 +11,16 @@ namespace Hudl.FFmpeg.Filters
     /// ColorBalance filter adjusts the color balance on the output video by intensifying the colors in each frame of video.
     /// </summary>
     [ForStream(Type=typeof(VideoStream))]
-    public class ColorBalance : BaseFilter
+    [Filter(Name="colorbalance", MinInputs = 1, MaxInputs = 2)]
+    public class ColorBalance : IFilter
     {
-        private const int FilterMaxInputs = 2;
-        private const string FilterType = "colorbalance";
-
         public ColorBalance()
-            : base(FilterType, FilterMaxInputs)
         {
-            Shadow = new FFmpegScaleRgb();
-            Midtone = new FFmpegScaleRgb();
-            Highlight = new FFmpegScaleRgb();
+            _shadowsRgb = new DecimalScaleRgb();
+            _midtonesRgb = new DecimalScaleRgb();
+            _highlightsRgb = new DecimalScaleRgb();
         }
-        public ColorBalance(FFmpegScaleRgb shadows, FFmpegScaleRgb midtones, FFmpegScaleRgb highlights)
-            : base(FilterType, FilterMaxInputs)
+        public ColorBalance(DecimalScaleRgb shadows, DecimalScaleRgb midtones, DecimalScaleRgb highlights)
         {
             if (shadows == null)
             {
@@ -39,84 +35,40 @@ namespace Hudl.FFmpeg.Filters
                 throw new ArgumentNullException("highlights");
             }
 
-            Shadow = shadows;
-            Midtone = midtones;
-            Highlight = highlights; 
+            _shadowsRgb = shadows;
+            _midtonesRgb = midtones;
+            _highlightsRgb = highlights; 
         }
 
-        /// <summary>
-        /// property to the RGB shadow color balancing
-        /// </summary>
-        public FFmpegScaleRgb Shadow { get; set; }
-        
-        /// <summary>
-        /// property to the RGB midtone color balancing
-        /// </summary>
-        public FFmpegScaleRgb Midtone { get; set; }
-        
-        /// <summary>
-        /// property to the RGB highlight color balancing
-        /// </summary>
-        public FFmpegScaleRgb Highlight { get; set; }
+        private readonly DecimalScaleRgb _shadowsRgb;
+        private readonly DecimalScaleRgb _midtonesRgb;
+        private readonly DecimalScaleRgb _highlightsRgb;
 
-        public override void Validate()
-        {
-            if (Shadow.Red.Value == 0 &&
-                Shadow.Green.Value == 0 &&
-                Shadow.Blue.Value == 0 &&
-                Midtone.Red.Value == 0 &&
-                Midtone.Green.Value == 0 &&
-                Midtone.Blue.Value == 0 &&
-                Highlight.Red.Value == 0 &&
-                Highlight.Green.Value == 0 &&
-                Highlight.Blue.Value == 0)
-            {
-                throw new InvalidOperationException("At least one Color Balance ratio greater or less than 0 is required.");
-            }
-        }
+        [FilterParameter(Name="rs")]
+        public decimal? ShadowRed { get { return _shadowsRgb.Red.Value; } set { _shadowsRgb.Red = value; } }
 
-        public override string ToString() 
-        {
-            var filterParameters = new StringBuilder(100);
+        [FilterParameter(Name = "gs")]
+        public decimal? ShadowGreen { get { return _shadowsRgb.Green.Value; } set { _shadowsRgb.Green = value; } }
 
-            if (Shadow.Red.Value != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "rs", Shadow.Red);
-            }
-            if (Shadow.Green.Value != 0) 
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "gs", Shadow.Green);
-            }
-            if (Shadow.Blue.Value != 0) 
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "bs", Shadow.Blue);
-            }
-            if (Midtone.Red.Value != 0) 
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "rm", Midtone.Red);
-            }
-            if (Midtone.Green.Value != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "gm", Midtone.Green);
-            }
-            if (Midtone.Blue.Value != 0) 
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "bm", Midtone.Blue);
-            }
-            if (Highlight.Red.Value != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "rh", Highlight.Red);
-            }
-            if (Highlight.Green.Value != 0) 
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "gh", Highlight.Green);
-            }
-            if (Highlight.Blue.Value != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "bh", Highlight.Blue);
-            }
+        [FilterParameter(Name = "bs")]
+        public decimal? ShadowBlue { get { return _shadowsRgb.Blue.Value; } set { _shadowsRgb.Blue = value; } }
 
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
+        [FilterParameter(Name = "rm")]
+        public decimal? MidtonesRed { get { return _midtonesRgb.Red.Value; } set { _midtonesRgb.Red = value; } }
+
+        [FilterParameter(Name = "gm")]
+        public decimal? MidtonesGreen { get { return _midtonesRgb.Green.Value; } set { _midtonesRgb.Green = value; } }
+
+        [FilterParameter(Name = "bm")]
+        public decimal? MidtonesBlue { get { return _midtonesRgb.Blue.Value; } set { _midtonesRgb.Blue = value; } }
+
+        [FilterParameter(Name = "rh")]
+        public decimal? HighlightsRed { get { return _highlightsRgb.Red.Value; } set { _highlightsRgb.Red = value; } }
+
+        [FilterParameter(Name = "gh")]
+        public decimal? HighlightsGreen { get { return _highlightsRgb.Green.Value; } set { _highlightsRgb.Green = value; } }
+
+        [FilterParameter(Name = "bh")]
+        public decimal? HighlightsBlue { get { return _highlightsRgb.Blue.Value; } set { _highlightsRgb.Blue = value; } }
     }
 }

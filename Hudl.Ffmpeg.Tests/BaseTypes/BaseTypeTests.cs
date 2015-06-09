@@ -1,7 +1,10 @@
-﻿using Hudl.FFmpeg.BaseTypes;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Collections;
 using Hudl.FFmpeg.Common;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Filters;
-using Hudl.FFmpeg.Filters.BaseTypes;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Xunit;
 
@@ -40,9 +43,9 @@ namespace Hudl.FFmpeg.Tests.BaseTypes
         [Fact]
         public void ForStreamAttribute_Verify()
         {
-            Assert.True(Validate.AppliesTo(typeof(ForStreamTestType), typeof(VideoStream)));
+            Assert.True(AttributeValidation.AttributeTypeEquals(typeof(ForStreamTestType), typeof(VideoStream)));
 
-            Assert.False(Validate.AppliesTo(typeof(ForStreamTestType), typeof(AudioStream)));
+            Assert.False(AttributeValidation.AttributeTypeEquals(typeof(ForStreamTestType), typeof(AudioStream)));
         }
 
         [ContainsStream(Type = typeof(VideoStream))]

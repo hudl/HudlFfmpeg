@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hudl.FFmpeg.Command;
-using Hudl.FFmpeg.Command.Managers;
 using Hudl.FFmpeg.Filters;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Resources;
@@ -28,7 +27,7 @@ namespace Hudl.FFmpeg.Tests.Command.Managers
                                  .WithInput<VideoStream>(Assets.Utilities.GetVideoFile())
                                  .WithInput<VideoStream>(Assets.Utilities.GetVideoFile());
 
-            var commandFilterchainManager = CommandFiltergraphManager.Create(command.Command);
+            var commandFilterchainManager = FiltergraphManager.Create(command.Command);
 
             var filterchain = Filterchain.FilterTo<VideoStream>(new Fps());
             var filterchain2 = Filterchain.FilterTo<VideoStream>(new Concat());

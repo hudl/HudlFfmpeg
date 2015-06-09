@@ -1,31 +1,20 @@
-﻿using System;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Settings.Attributes;
+using Hudl.FFmpeg.Settings.Interfaces;
+using Hudl.FFmpeg.Validators;
 
 namespace Hudl.FFmpeg.Settings.BaseTypes
 {
-    public abstract class BaseProfile : BaseSetting
+    public abstract class BaseProfile : ISetting
     {
-        private const string SettingType = "-profile";
-
-        protected BaseProfile(string suffix, string profile)
-            : base(string.Format("{0}{1}", SettingType, suffix))
+        protected BaseProfile(string profile)
         {
             Profile = profile;
         }
 
+        [SettingParameter]
+        [Validate(typeof(NullOrWhitespaceValidator))]
         public string Profile { get; set; }
-
-        public override void Validate()
-        {
-            if (string.IsNullOrWhiteSpace(Profile))
-            {
-                throw new InvalidOperationException("Profile cannot be empty for this setting.");
-            }
-        }
-
-        public override string ToString()
-        {
-            return string.Concat(Type, " ", Profile);
-        }
     }
 
 }

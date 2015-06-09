@@ -1,6 +1,8 @@
-﻿using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Common;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters.Utility;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.BaseTypes;
 
 namespace Hudl.FFmpeg.Settings
@@ -10,17 +12,15 @@ namespace Hudl.FFmpeg.Settings
     /// </summary>
     [ForStream(Type = typeof(AudioStream))]
     [ForStream(Type = typeof(VideoStream))]
-    [SettingsApplication(PreDeclaration = true, ResourceType = SettingsCollectionResourceType.Output)]
+    [Setting(Name = "c:a")]
     public class CodecAudio : BaseCodec
     {
-        private const string Suffix = ":a";
-
         public CodecAudio(string codec)
-            : base(Suffix, codec)
+            : base(codec)
         {
         }
         public CodecAudio(AudioCodecType codec)
-            : base(Suffix, Formats.Library(codec))
+            : base(FormattingUtility.Library(codec.ToString()))
         {
         }
     }

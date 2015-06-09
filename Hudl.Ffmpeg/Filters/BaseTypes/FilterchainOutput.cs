@@ -1,12 +1,13 @@
 ﻿using System;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Resources.BaseTypes;
+using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Filters.BaseTypes
 {
     public class FilterchainOutput
     {
-        internal FilterchainOutput(Filterchain owner, IStream resource)
+        private FilterchainOutput(Filterchain owner, IStream resource)
         {
             if (owner == null)
             {
@@ -34,6 +35,11 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
         public StreamIdentifier GetStreamIdentifier()
         {
             return StreamIdentifier.Create(Owner.Owner.Owner.Id, Owner.Id, Stream.Map);
+        }
+
+        internal static FilterchainOutput Create(Filterchain owner, IStream resource)
+        {
+            return new FilterchainOutput(owner, resource);
         }
 
         #region Internals

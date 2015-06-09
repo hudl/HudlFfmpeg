@@ -1,8 +1,7 @@
-﻿using System;
-using System.Text;
-using System.Drawing;
-using Hudl.FFmpeg.BaseTypes;
-using Hudl.FFmpeg.Filters.BaseTypes;
+﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Interfaces;
 using Hudl.FFmpeg.Resources.BaseTypes;
 
 namespace Hudl.FFmpeg.Filters
@@ -11,81 +10,39 @@ namespace Hudl.FFmpeg.Filters
     /// crop fillter will crop the selected filter to a specific size and dimensions
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    public class Crop : BaseFilter
+    [Filter(Name = "crop", MinInputs = 1, MaxInputs = 1)]
+    public class Crop : IFilter
     {
-        private const int FilterMaxInputs = 1;
-        private const string FilterType = "crop";
-
         public Crop()
-            : base(FilterType, FilterMaxInputs)
         {
-            Dimensions = new Size(0, 0);
-            Offset = new Point(0, 0);
         }
         public Crop(int width, int height)
             : this()
         {
-            Dimensions = new Size(width, height);
+            Width = width; 
+            Height = height; 
         }
         public Crop(int width, int height, int x, int y)
-            : this()
+            : this(width, height)
         {
-            Offset = new Point(x, y);
-            Dimensions = new Size(width, height);
-        }
-        public Crop(Size dimensions, Point offset) 
-            : this()
-        {
-            Offset = offset;
-            Dimensions = dimensions; 
+            X = x;
+            Y = y;
         }
 
-        public Point Offset { get; set; }
+        [FilterParameter(Name = "w")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public int? Width { get; set; }
 
-        public Size Dimensions { get; set; }
+        [FilterParameter(Name = "h")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public int? Height { get; set; }
 
-        public override void Validate()
-        {
-            if (Dimensions.Width <= 0)
-            {
-                throw new InvalidOperationException("Dimensions.Width must be greater than zero for cropping.");
-            }
-            if (Dimensions.Height <= 0)
-            {
-                throw new InvalidOperationException("Dimensions.Height must be greater than zero for cropping.");
-            }
-            if (Offset.X < 0)
-            {
-                throw new InvalidOperationException("Offset.X must be greater than or equal to zero for cropping.");
-            }
-            if (Offset.Y < 0)
-            {
-                throw new InvalidOperationException("Offset.Y must be greater than or equal to zero for cropping.");
-            }
-        }
+        [FilterParameter(Name = "x")]
+        [Validate(LogicalOperators.GreaterThanOrEqual, 0)]
+        public int? X { get; set; }
 
-        public override string ToString()
-        {
-            var filterParameters = new StringBuilder(100);
-
-            if (Dimensions.Width != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "w", Dimensions.Width);
-            }
-            if (Dimensions.Height != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "h", Dimensions.Height);
-            }
-            if (Offset.X != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "x", Offset.X);
-            }
-            if (Offset.Y != 0)
-            {
-                FilterUtility.ConcatenateParameter(filterParameters, "y", Offset.Y);
-            }
-
-            return FilterUtility.JoinTypeAndParameters(this, filterParameters);
-        }
+        [FilterParameter(Name = "y")]
+        [Validate(LogicalOperators.GreaterThanOrEqual, 0)]
+        public int? Y { get; set; }
     }
 }
