@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<project name="Hudl.Ffprobe">  
+  <property name="teamcity_dotnet_tools_version" value="4.0"/> <!-- force MSBuild 4.0 -->
+  <property name="tempDir" value="${codeDir}\Hudl.Ffprobe\Temp_HudlFfprobe" />
+  <property name="compiledDir" value="${codeDir}\Hudl.Ffprobe\Deploy_HudlFfprobe" />
+
+  <target name="Build" description="Build" depends="">    
+    <msbuild failonerror="true" project="${codeDir}\Hudl.Ffprobe\Hudl.Ffprobe.csproj" target="Rebuild">
+      <property name="Configuration" value="Release" />
+      <property name="DeployOnBuild" value="true" />
+      <property name="PublishProfile" value="Local" />
+      <property name="VisualStudioVersion" value="11.0" />
+      <property name="WarningLevel" value="0" />
+    <arg value="/m" />
+    <arg value="/nologo" />
+    </msbuild>
+  </target>
+</project>
