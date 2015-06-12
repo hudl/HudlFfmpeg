@@ -7,7 +7,7 @@ namespace Hudl.Ffmpeg.Settings
 {
     [AppliesToResource(Type = typeof(IVideo))]
     [AppliesToResource(Type = typeof(IAudio))]
-    [SettingsApplication(ResourceType = SettingsCollectionResourceType.Input)]
+    [SettingsApplication(ResourceType = SettingsCollectionResourceType.Input, PreDeclaration=true)]
     public class Loop : BaseSetting
     {
         private const string SettingType = "-loop";
