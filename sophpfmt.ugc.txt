@@ -1,0 +1,10 @@
+﻿add the select filter to hudl.ffmpeg
+# Please enter the commit message for your changaes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch HL-AddSelectFilter
+# Changes to be committed:
+#	new file:   Hudl.Ffmpeg/Filters/Select.cs
+#	modified:   Hudl.Ffmpeg/Hudl.Ffmpeg.csproj
+#	modified:   Hudl.Ffmpeg/Properties/AssemblyInfo.cs
+#
+
