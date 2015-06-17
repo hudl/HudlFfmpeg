@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Templates;
 using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
@@ -34,7 +35,7 @@ namespace Hudl.FFmpeg.Tests.Render
             factory.CreateOutputCommand()
                    .WithInput<VideoStream>(Assets.Utilities.GetVideoFile())
                    .WithInput<VideoStream>(Assets.Utilities.GetVideoFile())
-                   .Filter(new CrossfadeConcatenate(1))
+                   .Filter(new Dissolve(1))
                    .MapTo<Mp4>("c:/source/ffmpeg/bin/temp/output-test.mp4", outputSettings);
 
             factory.Render();
