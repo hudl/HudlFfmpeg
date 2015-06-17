@@ -43,6 +43,7 @@ namespace Hudl.FFmpeg.Command
             WriteResourcePreSettings(resource);
 
             var inputResource = new Input(resource.Resource);
+            BuilderBase.Append(" ");
             BuilderBase.Append(SettingSerializer.Serialize(inputResource));
 
             WriteResourcePostSettings(resource);
@@ -57,8 +58,9 @@ namespace Hudl.FFmpeg.Command
 
             resource.Settings.SettingsList.ForEach(setting =>
             {
-                if (!setting.IsPreSetting()) return; 
+                if (!setting.IsPreSetting()) return;
 
+                BuilderBase.Append(" ");
                 BuilderBase.Append(SettingSerializer.Serialize(setting));
             });
         }
@@ -73,6 +75,7 @@ namespace Hudl.FFmpeg.Command
             {
                 if (!setting.IsPostSetting()) return;
 
+                BuilderBase.Append(" ");
                 BuilderBase.Append(SettingSerializer.Serialize(setting));
             });
 
@@ -181,7 +184,11 @@ namespace Hudl.FFmpeg.Command
                 throw new ArgumentNullException("output");
             }
 
-            output.Settings.SettingsList.ForEach(setting => BuilderBase.Append(SettingSerializer.Serialize(setting)));
+            output.Settings.SettingsList.ForEach(setting =>
+                {
+                    BuilderBase.Append(" ");
+                    BuilderBase.Append(SettingSerializer.Serialize(setting));
+                });
         }
 
         private void WriteFinish()
