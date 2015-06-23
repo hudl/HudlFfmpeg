@@ -1,4 +1,5 @@
 ## Hudl.FFmpeg
+[![](https://img.shields.io/badge/hudl-OSS-orange.svg)](http://hudl.github.io/)
 
 Extendable C# transcoding framework, built on top of FFmpeg. Hudl.FFmpeg helps you
 
