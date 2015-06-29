@@ -13,7 +13,12 @@
         /// <summary>
         /// indicates the unit of measure to apply the fade is in samples
         /// </summary>
-        Sample = 1
+        Sample = 1,
         // ReSharper restore UnusedMember.Local
+        /// <summary>
+        /// indicates the unit of measure to apply the fade is in timebase units
+        /// </summary>
+        Timebase = 2
+
     }
 }

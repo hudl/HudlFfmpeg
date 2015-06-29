@@ -14,7 +14,6 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
     public abstract class BaseSplit : 
         IFilter,
         IFilterValidator, 
-        IFilterProcessor,
         IFilterMultiOutput
     {
         [FilterParameter]
@@ -34,26 +33,6 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
             return context.NumberOfFiltersInFilterchain == 1; 
         }
         #endregion
-
-        #region IFilterProcessor
-        public void Process(FilterProcessorContext context)
-        {
-            var firstStream = context.Streams.OfType<VideoStream>().FirstOrDefault();
-            if (firstStream == null)
-            {
-                throw new InvalidOperationException("Found a spit filter with zero video streams.");
-            }
-
-            for (var i = context.Filterchain.OutputCount; i < NumberOfStreams; i++)
-            {
-                context.Filterchain.CreateOutput(firstStream.Copy());
-            } 
-        }
-        #endregion
-
-
-
-        
     }
 
 }

@@ -140,6 +140,21 @@ namespace Hudl.FFmpeg.Tests.Command
             Assert.True(command.Outputs.Count == 3);
         }
 
+
+        [Fact]
+        public void Command_FilterWithNoStream()
+        {
+            var command = CommandHelper.CreateCommand();
+
+            var filterchain = Filterchain.FilterTo<AudioStream>(new AEvalSrc {Expression = "0"});
+
+            CommandStage stage = null;
+            Assert.DoesNotThrow(() => stage = command.Filter(filterchain));
+
+            Assert.True(stage.StreamIdentifiers.Count == 1);
+        }
+
+
         [Fact]
         public void Command_FilterchainManager_Verify()
         {

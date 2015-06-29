@@ -7,6 +7,7 @@ using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.BaseTypes;
 using Hudl.FFmpeg.Filters.Contexts;
 using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Resources;
 
 namespace Hudl.FFmpeg.Filters
 {
@@ -32,6 +33,21 @@ namespace Hudl.FFmpeg.Filters
                     }
                     return (f as IFilterMultiOutput).OutputCount(context);
                 });
+        }
+
+        public static int GetFilterInputMin(Filterchain filterchain)
+        {
+            if (filterchain == null)
+            {
+                throw new ArgumentNullException("filterchain");
+            }
+
+            return filterchain.Filters.Min(f =>
+            {
+                var filterAttribute = AttributeRetrieval.GetAttribute<FilterAttribute>(f.GetType());
+
+                return filterAttribute.MinInputs;
+            });
         }
 
         public static int GetFilterInputMax(Filterchain filterchain)
@@ -71,11 +87,12 @@ namespace Hudl.FFmpeg.Filters
             });
         }
 
-        public static bool ValidateFiltersMax(Filterchain filterchain, List<StreamIdentifier> resources)
+        public static bool ValidateFiltersMaxMin(Filterchain filterchain, List<StreamIdentifier> resources)
         {
-            var maximumAllowedMinimum = GetFilterInputMax(filterchain);
+            var maximumAllowed = GetFilterInputMax(filterchain);
+            var minimumAllowed = GetFilterInputMin(filterchain);
 
-            return maximumAllowedMinimum > 1 || (maximumAllowedMinimum == 1 && resources.Count == 1);
+            return resources.Count >= minimumAllowed; 
         }
 
         public static void ProcessFilters(FFmpegCommand command, Filterchain filterchain)
