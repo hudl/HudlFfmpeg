@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<project name="Hudl.Ffmpeg">  
+<project name="Hudl.FFmpeg">  
   <property name="teamcity_dotnet_tools_version" value="4.0"/> <!-- force MSBuild 4.0 -->
-  <property name="tempDir" value="${codeDir}\Hudl.Ffmpeg\Temp_HudlFfmpeg" />
-  <property name="compiledDir" value="${codeDir}\Hudl.Ffmpeg\Deploy_HudlFfmpeg" />
+  <property name="tempDir" value="${codeDir}\Hudl.FFmpeg\Temp_HudlFFmpeg" />
+  <property name="compiledDir" value="${codeDir}\Hudl.FFmpeg\Deploy_HudlFFmpeg" />
 
   <target name="Build" description="Build" depends="">    
-    <msbuild failonerror="true" project="${codeDir}\Hudl.Ffprobe\Hudl.Ffprobe.csproj" target="Rebuild">
+    <msbuild failonerror="true" project="${codeDir}\Hudl.FFprobe\Hudl.FFprobe.csproj" target="Rebuild">
       <property name="Configuration" value="Release" />
       <property name="DeployOnBuild" value="true" />
       <property name="PublishProfile" value="Local" />

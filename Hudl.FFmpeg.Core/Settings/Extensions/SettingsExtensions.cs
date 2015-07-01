@@ -19,7 +19,7 @@ namespace Hudl.FFmpeg.Settings.Utility
         {
             var settingsAttribute = GetSettingsAttribute(setting);
 
-            return settingsAttribute.IsPreDeclaration;
+            return !settingsAttribute.IsPreDeclaration;
         }
 
         public static bool IsMultipleAllowed(this ISetting setting)
@@ -33,7 +33,7 @@ namespace Hudl.FFmpeg.Settings.Utility
         {
             var settingsAttribute = GetSettingsAttribute(setting);
 
-            return settingsAttribute.IsMultipleAllowed;
+            return settingsAttribute.IsParameterless;
         }
 
         public static SettingsCollectionResourceType GetResourceType(this ISetting setting)

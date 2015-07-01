@@ -255,5 +255,12 @@ namespace Hudl.FFmpeg.Sugar
 
             return command.Select(streamIdList);
         }
+
+        public static CommandStage Filter(this FFmpegCommand command, Filterchain filterchain)
+        {
+            var outputStreamIdentifiers = command.FilterchainManager.Add(filterchain, null);
+
+            return command.Select(outputStreamIdentifiers);
+        }
     }
 }

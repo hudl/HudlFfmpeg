@@ -25,15 +25,18 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
             {
                 throw new ArgumentNullException("filterchain");
             }
-            if (streamIds == null || streamIds.Length == 0)
-            {
-                throw new ArgumentException("Cannot apply filters to null or empty objects.", "streamIds");
-            }
 
-            var streamIdList = new List<StreamIdentifier>(streamIds);
-            if (!streamIdList.TrueForAll(streamId => Owner.Objects.ContainsInput(streamId) || Owner.Objects.ContainsStream(streamId)))
+            var streamIdList = new List<StreamIdentifier>();
+            var hasStreams = (streamIds != null && streamIds.Length > 0); 
+
+            if (hasStreams)
             {
-                throw new ArgumentException("Cannot apply filters to inputs or streams that do not exist in the command.", "streamIds");
+                streamIdList.AddRange(streamIds);
+
+                if (!streamIdList.TrueForAll(streamId => Owner.Objects.ContainsInput(streamId) || Owner.Objects.ContainsStream(streamId)))
+                {
+                    throw new ArgumentException("Cannot apply filters to inputs or streams that do not exist in the command.", "streamIds");
+                }
             }
 
             var finalFilter = filterchain.Filters.LastOrDefault();
@@ -42,10 +45,11 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
                 throw new ArgumentException("Filterchain must contain at least one filter.", "filterchain");
             }
 
-            if (!Utilities.ValidateFiltersMax(filterchain, streamIdList))
+
+            if (!Utilities.ValidateFiltersMaxMin(filterchain, streamIdList))
             {
                 throw new InvalidOperationException(
-                    "Filterchain is invalid, exceeds maximum calculated allowable resources.");
+                    "Filterchain is invalid, not withing range of calculated allowable resources.");
             }
 
             if (!Utilities.ValidateFilters(Owner, filterchain, streamIdList))
@@ -55,10 +59,12 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
             }
 
             var maximumInputs = Utilities.GetFilterInputMax(filterchain);
-
+        
             Filterchain finalFilterchain = null;
-            var segmentsList = Helpers.BreakStreamIdentifiers(maximumInputs, streamIds);
-            segmentsList.ForEach(segment =>
+            if (hasStreams)
+            {
+                var segmentsList = Helpers.BreakStreamIdentifiers(maximumInputs, streamIds);
+                segmentsList.ForEach(segment =>
                 {
                     var segmentList = new List<StreamIdentifier>(segment);
                     if (finalFilterchain != null)
@@ -68,7 +74,7 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
 
                     finalFilterchain = filterchain.Copy();
 
-                    finalFilterchain.Owner = Owner.Objects.Filtergraph; 
+                    finalFilterchain.Owner = Owner.Objects.Filtergraph;
 
                     finalFilterchain.SetResources(segmentList);
 
@@ -76,6 +82,17 @@ namespace Hudl.FFmpeg.Filters.BaseTypes
 
                     Owner.Objects.Filtergraph.Add(finalFilterchain);
                 });
+            }
+            else
+            {
+                finalFilterchain = filterchain.Copy();
+
+                finalFilterchain.Owner = Owner.Objects.Filtergraph;
+
+                Utilities.ProcessFilters(Owner, finalFilterchain);
+
+                Owner.Objects.Filtergraph.Add(finalFilterchain);
+            }
 
             if (finalFilterchain == null)
             {
