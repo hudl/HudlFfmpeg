@@ -13,7 +13,7 @@ namespace Hudl.Ffmpeg.Settings
     {
          private const string SettingType = "-frames:v";
 
-         protected VideoFrames(int framesCount)
+         public VideoFrames(int framesCount)
             : base(SettingType)
         {
             if (framesCount <= 0)
