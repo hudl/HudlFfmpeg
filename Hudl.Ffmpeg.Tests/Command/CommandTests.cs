@@ -171,20 +171,23 @@ namespace Hudl.FFmpeg.Tests.Command
             var streamId4 = command.StreamIdentifier(3);
 
             var filterchain = Filterchain.FilterTo<VideoStream>(new Trim(1, 2, VideoUnitType.Seconds));
+            var filterchain2 = Filterchain.FilterTo<AudioStream>(new AEvalSrc());
 
             Assert.Throws<ArgumentNullException>(() => command.FilterchainManager.Add(null));
 
-            Assert.Throws<ArgumentException>(() => command.FilterchainManager.Add(filterchain, null));
+            Assert.Throws<InvalidOperationException>(() => command.FilterchainManager.Add(filterchain, null));
             
             Assert.Throws<ArgumentNullException>(() => command.FilterchainManager.AddToEach(null)); 
             
             Assert.Throws<ArgumentException>(() => command.FilterchainManager.AddToEach(filterchain, null));
 
+            Assert.DoesNotThrow(() => command.FilterchainManager.Add(filterchain2, null));
+
             Assert.DoesNotThrow(() => command.FilterchainManager.Add(filterchain, streamId1));
             
             Assert.DoesNotThrow(() => command.FilterchainManager.AddToEach(filterchain, streamId2, streamId3, streamId4));
 
-            Assert.True(command.Filtergraph.Count == 4);
+            Assert.True(command.Filtergraph.Count == 5);
         }
 
         [Fact]
