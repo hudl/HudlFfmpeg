@@ -47,11 +47,22 @@ namespace Hudl.Ffmpeg.Filters
 
             Dimensions = new Point(x, y);
         }
+        public Scale(string expression)
+            : this()
+        {
+            Expression = expression;
+        }
 
         public Point Dimensions { get; set; }
+        public string Expression { get; set; }
 
         public override string ToString()
         {
+            if (!string.IsNullOrWhiteSpace(Expression))
+            {
+                return string.Concat(Type, "=", Expression);
+            }
+
             if (Dimensions.X <= 0)
             {
                 throw new InvalidOperationException("Dimensions.X must be greater than zero for scaling.");
