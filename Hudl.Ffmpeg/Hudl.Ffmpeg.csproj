@@ -67,6 +67,8 @@
     <Compile Include="Command\CommandReceipt.cs" />
     <Compile Include="Command\CommandOutput.cs" />
     <Compile Include="Common\FormatType.cs" />
+    <Compile Include="Common\TuneType.cs" />
+    <Compile Include="Common\PresetType.cs" />
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Logging\LogUtility.cs" />
@@ -79,6 +81,8 @@
     <Compile Include="Settings\AutoConvert.cs" />
     <Compile Include="Settings\Gop.cs" />
     <Compile Include="Settings\Loop.cs" />
+    <Compile Include="Settings\Tune.cs" />
+    <Compile Include="Settings\Preset.cs" />
     <Compile Include="Settings\SceneChangeThreshold.cs" />
     <Compile Include="Settings\KeyIntMin.cs" />
     <Compile Include="Settings\MapMetadata.cs" />
