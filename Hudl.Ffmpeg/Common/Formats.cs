@@ -64,5 +64,13 @@ namespace Hudl.Ffmpeg.Common
         {
             return Library(library.ToString());
         }
+        public static string Library(PresetType library)
+        {
+            return Library(library.ToString());
+        }
+        public static string Library(TuneType library)
+        {
+            return Library(library.ToString());
+        }
     }
 }
