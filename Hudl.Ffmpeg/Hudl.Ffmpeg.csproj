@@ -69,6 +69,7 @@
     <Compile Include="Common\FormatType.cs" />
     <Compile Include="Common\TuneType.cs" />
     <Compile Include="Common\PresetType.cs" />
+    <Compile Include="Filters\Select.cs" />
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Logging\LogUtility.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
+    <Compile Include="Settings\VideoFrames.cs" />
     <Compile Include="Settings\Gop.cs" />
     <Compile Include="Settings\Loop.cs" />
     <Compile Include="Settings\Tune.cs" />
