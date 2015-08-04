@@ -68,13 +68,13 @@ namespace Hudl.Ffmpeg.Filters
                     Dimensions.Height,
                     (filter.Length > 0) ? ":" : string.Empty);
             }
-            if (Offset.X != 0)
+            if (Offset.X >= 0)
             {
                 filter.AppendFormat("{1}x={0}",
                     Offset.X,
                     (filter.Length > 0) ? ":" : string.Empty);
             }
-            if (Offset.Y != 0)
+            if (Offset.Y >= 0)
             {
                 filter.AppendFormat("{1}y={0}",
                     Offset.Y,
