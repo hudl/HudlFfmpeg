@@ -69,6 +69,7 @@
     <Compile Include="Common\FormatType.cs" />
     <Compile Include="Common\TuneType.cs" />
     <Compile Include="Common\PresetType.cs" />
+    <Compile Include="Filters\Select.cs" />
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Logging\LogUtility.cs" />
