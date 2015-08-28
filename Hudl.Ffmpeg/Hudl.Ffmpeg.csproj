@@ -72,7 +72,17 @@
     <Compile Include="Filters\Fps.cs" />
     <Compile Include="Filters\Crop.cs" />
     <Compile Include="Logging\LogUtility.cs" />
+    <Compile Include="Resources\Xwd.cs" />
+    <Compile Include="Resources\Tga.cs" />
+    <Compile Include="Resources\Sgi.cs" />
+    <Compile Include="Resources\Ppm.cs" />
+    <Compile Include="Resources\Pgm.cs" />
+    <Compile Include="Resources\Pcx.cs" />
+    <Compile Include="Resources\Pbm.cs" />
+    <Compile Include="Resources\Bmp.cs" />
+    <Compile Include="Resources\Xbm.cs" />
     <Compile Include="Resources\Ismv.cs" />
+    <Compile Include="Resources\Gif.cs" />
     <Compile Include="Resources\Tiff.cs" />
     <Compile Include="Resources\Ts.cs" />
     <Compile Include="Resources\VideoTxt.cs" />
