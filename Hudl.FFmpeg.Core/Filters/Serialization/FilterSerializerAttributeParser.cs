@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Hudl.FFmpeg.Attributes;
@@ -99,7 +100,8 @@ namespace Hudl.FFmpeg.Filters.Serialization
 
             if (filterParameterAttribute.Formatter == null)
             {
-                return value.ToString();
+                decimal decValue;
+                return Decimal.TryParse(value.ToString(), out decValue) ? decValue.ToString(CultureInfo.InvariantCulture) : value.ToString();
             }
 
             if (!typeof(IFormatter).IsAssignableFrom(filterParameterAttribute.Formatter))
