@@ -127,7 +127,7 @@ namespace Hudl.FFmpeg.Common
             }
 
             var index = 0;
-            var subDivision = division - 1;
+            var subDivision = division > 1 ? division - 1 : 1;
             var breakouts = new List<StreamIdentifier[]>();
             var resourcesRemainderCount = streamIds.Length;
             resourcesRemainderCount -= (resourcesRemainderCount > division)
