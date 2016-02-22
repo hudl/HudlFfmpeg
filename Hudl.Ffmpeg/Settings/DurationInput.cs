@@ -12,7 +12,7 @@ namespace Hudl.FFmpeg.Settings
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
     [ForStream(Type = typeof(AudioStream))]
-    [Setting(Name = "t", IsPreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
+    [Setting(Name = "t", IsPreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
     public class DurationInput : BaseDuration
     {
         public DurationInput(TimeSpan length)
