@@ -72,20 +72,7 @@
     <Compile Include="Setting\SettingTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\video.mp4">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\audio.mp3">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\image.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -8,6 +8,7 @@ using Hudl.FFmpeg.Resources;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Resources.Interfaces;
 using Hudl.FFmpeg.Settings.BaseTypes;
+using Hudl.FFmpeg.Command.BaseTypes;
 
 namespace Hudl.FFmpeg.Sugar
 {
@@ -249,6 +250,30 @@ namespace Hudl.FFmpeg.Sugar
                 StreamIdentifiers = streamIds
             };
         }
+        public static CommandStage Select(this FFmpegCommand command, params CommandStage[] stages)
+        {
+            if (stages == null || stages.Length == 0)
+            {
+                throw new ArgumentNullException("stages");
+            }
+
+            return command.Select(stages.ToList());
+        }
+        public static CommandStage Select(this FFmpegCommand command, List<CommandStage> stages)
+        {
+            var streams = new List<StreamIdentifier>();
+            foreach (var commandStage in stages)
+            {
+                if (commandStage.StreamIdentifiers == null)
+                {
+                    continue;
+                }
+
+                streams.AddRange(commandStage.StreamIdentifiers);
+            }
+
+            return command.Select(streams);
+        }
         public static CommandStage SelectAll(this FFmpegCommand command)
         {
             var streamIdList = command.Inputs.SelectMany(r => r.GetStreamIdentifiers()).ToList();
@@ -256,11 +281,46 @@ namespace Hudl.FFmpeg.Sugar
             return command.Select(streamIdList);
         }
 
+
+        public static CommandStage Take(this FFmpegCommand command, int index)
+        {
+            var streamId = command.StreamIdentifier(index);
+
+            return command.Select(streamId);
+        }
+
+
         public static CommandStage Filter(this FFmpegCommand command, Filterchain filterchain)
         {
             var outputStreamIdentifiers = command.FilterchainManager.Add(filterchain, null);
 
             return command.Select(outputStreamIdentifiers);
+        }
+
+
+        public static FFmpegCommand BeforeRender(this FFmpegCommand command, Action<ICommandFactory, ICommand, bool> action)
+        {
+            command.PreExecutionAction = action;
+
+            return command;
+        }
+        public static FFmpegCommand AfterRender(this FFmpegCommand command, Action<ICommandFactory, ICommand, bool> action)
+        {
+            command.PostExecutionAction = action;
+
+            return command;
+        }
+        public static FFmpegCommand OnSuccess(this FFmpegCommand command, Action<ICommandFactory, ICommand, ICommandProcessor> action)
+        {
+            command.OnSuccessAction = action;
+
+            return command;
+        }
+        public static FFmpegCommand OnError(this FFmpegCommand command, Action<ICommandFactory, ICommand, ICommandProcessor> action)
+        {
+            command.OnErrorAction = action;
+
+            return command;
         }
     }
 }

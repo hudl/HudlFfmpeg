@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFmpeg", "Hudl.Ffmpeg\Hudl.FFmpeg.csproj", "{A28FA3FF-8D08-4129-987B-F58AAE613A72}"
 EndProject
@@ -19,6 +19,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFprobe", "Hudl.FFprobe\Hudl.FFprobe.csproj", "{711728B7-0F13-4ED8-A6CD-7A05657C0A0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFmpeg.Core", "Hudl.FFmpeg.Core\Hudl.FFmpeg.Core.csproj", "{FA5D683B-0EEA-4086-B71D-88A8360AE8F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{683942F4-823C-4CE5-8DB4-4D22A243DFA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFmpeg.Samples", "Samples\Hudl.FFmpeg.Samples\Hudl.FFmpeg.Samples.csproj", "{1AB72653-9117-42FF-A57A-1C6FD272417B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,14 +46,19 @@ Global
 		{FA5D683B-0EEA-4086-B71D-88A8360AE8F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA5D683B-0EEA-4086-B71D-88A8360AE8F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA5D683B-0EEA-4086-B71D-88A8360AE8F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AB72653-9117-42FF-A57A-1C6FD272417B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AB72653-9117-42FF-A57A-1C6FD272417B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AB72653-9117-42FF-A57A-1C6FD272417B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AB72653-9117-42FF-A57A-1C6FD272417B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A28FA3FF-8D08-4129-987B-F58AAE613A72} = {1F73384A-67E8-4893-B109-AD53AD82AECB}
+		{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3} = {AC459ADE-4D0F-4823-9799-F8390B40054C}
 		{711728B7-0F13-4ED8-A6CD-7A05657C0A0D} = {1F73384A-67E8-4893-B109-AD53AD82AECB}
 		{FA5D683B-0EEA-4086-B71D-88A8360AE8F0} = {1F73384A-67E8-4893-B109-AD53AD82AECB}
-		{F9C431BE-E48B-4E6E-A6E5-AFE7A63236F3} = {AC459ADE-4D0F-4823-9799-F8390B40054C}
+		{1AB72653-9117-42FF-A57A-1C6FD272417B} = {683942F4-823C-4CE5-8DB4-4D22A243DFA0}
 	EndGlobalSection
 EndGlobal

@@ -121,6 +121,31 @@ namespace Hudl.FFmpeg.Sugar
 
             return stage;
         }
+        public static CommandStage Select(this CommandStage stage, params CommandStage[] stages)
+        {
+            if (stages == null || stages.Length == 0)
+            {
+                throw new ArgumentNullException("stages"); 
+            }
+
+            return stage.Select(stages.ToList()); 
+        }
+
+        public static CommandStage Select(this CommandStage stage, List<CommandStage> stages)
+        {
+            var streams = new List<StreamIdentifier>();
+            foreach (var commandStage in stages)
+            {
+                if (commandStage.StreamIdentifiers == null)
+                {
+                    continue;
+                }
+
+                streams.AddRange(commandStage.StreamIdentifiers);
+            }
+
+            return stage.Select(streams);
+        }
 
         public static CommandStage Take(this CommandStage stage, int index)
         {
@@ -224,17 +249,29 @@ namespace Hudl.FFmpeg.Sugar
                 };    
         }
         
-        public static CommandStage BeforeRender(this CommandStage command, Action<ICommandFactory, ICommand, bool> action)
+        public static CommandStage BeforeRender(this CommandStage stage, Action<ICommandFactory, ICommand, bool> action)
         {
-            command.Command.PreExecutionAction = action;
+            stage.Command.PreExecutionAction = action;
 
-            return command; 
+            return stage; 
         }
-        public static CommandStage AfterRender(this CommandStage command, Action<ICommandFactory, ICommand, bool> action)
+        public static CommandStage AfterRender(this CommandStage stage, Action<ICommandFactory, ICommand, bool> action)
         {
-            command.Command.PostExecutionAction = action;
+            stage.Command.PostExecutionAction = action;
 
-            return command;
+            return stage;
+        }
+        public static CommandStage OnSuccess(this CommandStage stage, Action<ICommandFactory, ICommand, ICommandProcessor> action)
+        {
+            stage.Command.OnSuccessAction = action;
+
+            return stage;
+        }
+        public static CommandStage OnError(this CommandStage stage, Action<ICommandFactory, ICommand, ICommandProcessor> action)
+        {
+            stage.Command.OnErrorAction = action;
+
+            return stage;
         }
     }
 }
