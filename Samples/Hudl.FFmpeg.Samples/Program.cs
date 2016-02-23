@@ -2,6 +2,7 @@
 using Hudl.FFmpeg.Samples.FFmpeg.Convert;
 using Hudl.FFmpeg.Samples.FFmpeg.Events;
 using Hudl.FFmpeg.Samples.FFmpeg.Mapping;
+using Hudl.FFmpeg.Samples.Metadata;
 using System;
 using System.Collections.Generic;
 
@@ -30,6 +31,7 @@ namespace Hudl.FFmpeg.Samples
                 { "5", new SampleRun { Name = "MapMultipleStreamsToSingleOutput", Action = MapMultipleStreamsToSingleOutput.Run} },
                 { "6", new SampleRun { Name = "ExtractFrame", Action = ExtractFrame.Run} },
                 { "7", new SampleRun { Name = "AttachOnSuccessOnErrorEvents", Action = AttachOnSuccessOnErrorEvents.Run} },
+                { "8", new SampleRun { Name = "MetadataCalculation", Action = MetadataCalculation.Run} },
             };
 
             Console.ForegroundColor = ConsoleColor.Yellow;

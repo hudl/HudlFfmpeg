@@ -51,6 +51,7 @@
     <Compile Include="FFmpeg\Events\AttachOnSuccessOnErrorEvents.cs" />
     <Compile Include="FFmpeg\Mapping\MapMultipleStreamsToMultipleOutputs.cs" />
     <Compile Include="FFmpeg\Mapping\MapMultipleStreamsToSingleOutput.cs" />
+    <Compile Include="Metadata\MetadataCalculation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
