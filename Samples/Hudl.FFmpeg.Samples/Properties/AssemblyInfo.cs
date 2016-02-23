@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Hudl.FFmpeg.Core")]
+[assembly: AssemblyTitle("Hudl.FFmpeg.Samples")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Hudl.FFmpeg.Core")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyProduct("Hudl.FFmpeg.Samples")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c3d97cf6-f7d5-4ba2-a37c-90dd39a77428")]
+[assembly: Guid("1ab72653-9117-42ff-a57a-1c6fd272417b")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,6 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyInformationalVersion("3.4.0")]
-[assembly: AssemblyFileVersion("3.4.0")]
-[assembly: AssemblyVersion("3.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -100,6 +100,12 @@
     <Compile Include="Resources\BaseTypes\AudioStream.cs" />
     <Compile Include="Resources\BaseTypes\VideoStream.cs" />
     <Compile Include="Resources\Ismv.cs" />
+    <Compile Include="Resources\Avi.cs" />
+    <Compile Include="Resources\Nut.cs" />
+    <Compile Include="Resources\Ogg.cs" />
+    <Compile Include="Resources\Mkv.cs" />
+    <Compile Include="Resources\Vob.cs" />
+    <Compile Include="Resources\Mts.cs" />
     <Compile Include="Resources\Mov.cs" />
     <Compile Include="Resources\Ts.cs" />
     <Compile Include="Resources\Txt.cs" />
