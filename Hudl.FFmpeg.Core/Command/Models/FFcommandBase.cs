@@ -10,6 +10,8 @@ namespace Hudl.FFmpeg.Command.Models
         {
             PreExecutionAction = EmptyOperation;
             PostExecutionAction = EmptyOperation;
+            OnSuccessAction = EmptyOperation;
+            OnErrorAction = EmptyOperation;
         }
 
         public ICommandFactory Owner { get; protected set; }
@@ -17,6 +19,10 @@ namespace Hudl.FFmpeg.Command.Models
         public Action<ICommandFactory, ICommand, bool> PreExecutionAction { get; set; }
 
         public Action<ICommandFactory, ICommand, bool> PostExecutionAction { get; set; }
+
+        public Action<ICommandFactory, ICommand, ICommandProcessor> OnSuccessAction { get; set; }
+
+        public Action<ICommandFactory, ICommand, ICommandProcessor> OnErrorAction { get; set; }
 
         public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>()
             where TProcessorType : class, ICommandProcessor, new()
@@ -57,15 +63,22 @@ namespace Hudl.FFmpeg.Command.Models
             {
                 PostExecutionAction(Owner, this, false);
 
+                OnErrorAction(Owner, this, commandProcessor);
+
                 throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
             PostExecutionAction(Owner, this, true);
 
+            OnSuccessAction(Owner, this, commandProcessor);
+
             return commandProcessor;
         }
 
         internal void EmptyOperation(ICommandFactory factory, ICommand command, bool success)
+        {
+        }
+        internal void EmptyOperation(ICommandFactory factory, ICommand command, ICommandProcessor processor)
         {
         }
     }

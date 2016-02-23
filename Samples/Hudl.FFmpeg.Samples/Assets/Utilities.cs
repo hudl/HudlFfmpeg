@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using Hudl.FFmpeg.Command;
 
-namespace Hudl.FFmpeg.Tests.Assets
+namespace Hudl.FFmpeg.Samples.Assets
 {
     public class Utilities
     {
         public static string GetAssetsDirectory()
         {
-            return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\samples\assets"));
+            return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\samples\assets"));
         }
         public static string GetAudioFile()
         {
