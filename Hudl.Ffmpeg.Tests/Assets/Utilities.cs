@@ -11,7 +11,7 @@ namespace Hudl.FFmpeg.Tests.Assets
         }
         public static string GetAudioFile()
         {
-            return Path.Combine(GetAssetsDirectory(), "sample-audio.mp3");
+            return Path.Combine(GetAssetsDirectory(), "sample-audio.m4a");
         }
         public static string GetVideoFile()
         {

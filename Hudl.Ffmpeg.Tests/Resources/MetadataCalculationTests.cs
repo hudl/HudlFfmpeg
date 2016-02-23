@@ -77,9 +77,31 @@ namespace Hudl.FFmpeg.Tests.Resources
 
             var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
 
-            Assert.True(metadataInfo.VideoStream.VideoMetadata.Duration == TimeSpan.FromSeconds(3)); // this is because the input is only 4 seconds, we start at 1
+            Assert.True(metadataInfo.VideoStream.VideoMetadata.Duration == TimeSpan.FromSeconds(5)); 
             Assert.True(metadataInfo.VideoStream.VideoMetadata.BitRate == 3000000L);
         }
+
+
+        [Fact]
+        public void InputSettingsToOutputSettingsOverDuration_Verify()
+        {
+            var inputSettings = SettingsCollection.ForInput(new StartAt(1d));
+            var outputSettings = SettingsCollection.ForOutput(
+                new BitRateVideo(3000),
+                new DurationOutput(10d));
+
+            var output = CommandFactory.Create()
+                                       .CreateOutputCommand()
+                                       .WithInput<VideoStream>(Utilities.GetVideoFile(), inputSettings)
+                                       .To<Mp4>(outputSettings)
+                                       .First();
+
+            var metadataInfo = MetadataHelpers.GetMetadataInfo(output.Owner, output.GetStreamIdentifier());
+
+            Assert.True(metadataInfo.VideoStream.VideoMetadata.Duration == TimeSpan.FromSeconds(9)); // we have a 10 second video, and start 1 second in, this should only be 9
+            Assert.True(metadataInfo.VideoStream.VideoMetadata.BitRate == 3000000L);
+        }
+
 
         [Fact]
         public void InputToFilterToOutput_Verify()
