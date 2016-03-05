@@ -30,7 +30,8 @@ namespace Hudl.FFmpeg.Common
         public static bool IsSettingFor<TSetting>(TSetting item, SettingsCollectionResourceType type)
             where TSetting : ISetting
         {
-            return type == item.GetResourceType();
+            return item.GetResourceType() == SettingsCollectionResourceType.Any ||
+                type == item.GetResourceType();
         }
 
     }
