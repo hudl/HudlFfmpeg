@@ -35,6 +35,13 @@ namespace Hudl.FFmpeg.Tests.Setting
         {
             Assert.Throws<ArgumentException>(() => SettingsCollection.ForOutput(new StartAt(1))); 
         }
+        
+        [Fact]
+        public void SettingsCollection_ForAny()
+        {
+            Assert.DoesNotThrow(() => SettingsCollection.ForOutput(new SampleRate(44100)));
+            Assert.DoesNotThrow(() => SettingsCollection.ForInput(new SampleRate(44100)));
+        }
 
         [Fact]
         public void SettingsCollection_AllowMultiple()
