@@ -59,6 +59,7 @@
     <Compile Include="Enums\FpsRoundType.cs" />
     <Compile Include="Filters\AEvalSrc.cs" />
     <Compile Include="Filters\Color.cs" />
+    <Compile Include="Filters\Rotate.cs" />
     <Compile Include="Filters\NullSrc.cs" />
     <Compile Include="Filters\ANullSrc.cs" />
     <Compile Include="Filters\Bindings\NumberOfStreamsInBinding.cs" />
