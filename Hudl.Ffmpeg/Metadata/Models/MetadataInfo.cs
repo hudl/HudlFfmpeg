@@ -12,7 +12,7 @@ namespace Hudl.FFmpeg.Metadata.Models
 
         public bool HasVideo { get { return VideoMetadata != null; } }
 
-        public bool HasData { get { return VideoMetadata != null; } }
+        public bool HasData { get { return DataMetadata != null; } }
 
         public AudioStreamMetadata AudioMetadata { get; internal set; }
 
