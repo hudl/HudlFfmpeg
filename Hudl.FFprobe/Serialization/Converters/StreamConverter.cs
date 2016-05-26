@@ -22,7 +22,11 @@ namespace Hudl.FFprobe.Serialization.Converters
             {
                 return new VideoStreamMetadata();
             }
-             
+            if (string.Equals(codecType, CodecTypes.Data.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                return new DataStreamMetadata();
+            }
+
             return new AudioStreamMetadata();
         }
 

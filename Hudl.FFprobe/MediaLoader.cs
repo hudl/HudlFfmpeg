@@ -26,11 +26,13 @@ namespace Hudl.FFprobe
 
             HasAudio = containerMetadata.Streams.OfType<AudioStreamMetadata>().Any();
             HasVideo = containerMetadata.Streams.OfType<VideoStreamMetadata>().Any();
+            HasData = containerMetadata.Streams.OfType<DataStreamMetadata>().Any();
             BaseData = containerMetadata; 
         }
 
         public bool HasVideo { get; protected set; }
         public bool HasAudio { get; protected set; }
+        public bool HasData { get; protected set; }
         public ContainerMetadata BaseData { get; protected set; }
     }
 }

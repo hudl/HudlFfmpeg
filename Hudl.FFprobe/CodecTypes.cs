@@ -3,6 +3,7 @@
     internal enum CodecTypes
     {
         Video, 
-        Audio
+        Audio,
+        Data,
     }
 }

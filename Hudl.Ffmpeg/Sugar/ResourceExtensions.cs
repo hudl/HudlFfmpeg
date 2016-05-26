@@ -38,6 +38,13 @@ namespace Hudl.FFmpeg.Sugar
                     .Select(videoMetadata => VideoStream.Create(MetadataInfo.Create(videoMetadata))));
             }
 
+            if (mediaLoader.HasData)
+            {
+                resource.Streams.AddRange(mediaLoader.BaseData.Streams
+                    .OfType<DataStreamMetadata>()
+                    .Select(dataMetadata => DataStream.Create(MetadataInfo.Create(dataMetadata))));
+            }
+
             return resource;
         }
     }
