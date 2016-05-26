@@ -39,13 +39,13 @@ namespace Hudl.FFmpeg.Filters
             OutputHeight = outputHeight;
         }
 
-        [FilterParameter(Name = "a", Default = "0")]
+        [FilterParameter(Name = "a", Default = "0", Formatter = typeof(SingleQuoteFormatter))]
         public string Angle { get; set; }
 
-        [FilterParameter(Name = "ow", Default = "iw")]
+        [FilterParameter(Name = "ow", Default = "iw", Formatter = typeof(SingleQuoteFormatter))]
         public string OutputWidth { get; set; }
 
-        [FilterParameter(Name = "oh", Default = "ih")]
+        [FilterParameter(Name = "oh", Default = "ih", Formatter = typeof(SingleQuoteFormatter))]
         public string OutputHeight { get; set; }
 
         [FilterParameter(Name = "c", Default = "black")]
