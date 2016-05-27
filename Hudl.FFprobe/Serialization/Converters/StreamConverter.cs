@@ -28,6 +28,11 @@ namespace Hudl.FFprobe.Serialization.Converters
                 return new AudioStreamMetadata();
             }
 
+            if (string.Equals(codecType, CodecTypes.Data.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                return new DataStreamMetadata();
+            }
+
             return null; 
         }
 

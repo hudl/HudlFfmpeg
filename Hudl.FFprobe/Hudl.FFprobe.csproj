@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="CodecTypes.cs" />
     <Compile Include="Command\FFprobeCommandProcessor.cs" />
+    <Compile Include="Metadata\Models\DataStreamMetadata.cs" />
     <Compile Include="Serialization\Converters\FractionConverter.cs" />
     <Compile Include="Serialization\Converters\RatioConverter.cs" />
     <Compile Include="Serialization\Converters\StreamConverter.cs" />

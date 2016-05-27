@@ -5,6 +5,7 @@ using Hudl.FFmpeg.Resources.Interfaces;
 namespace Hudl.FFmpeg.Resources
 {
     [ContainsStream(Type = typeof(VideoStream))]
+    [ContainsStream(Type = typeof(DataStream))]
     public class Jpg : BaseContainer
     {
         private const string FileFormat = ".jpg";
