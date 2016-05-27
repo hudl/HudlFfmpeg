@@ -5,8 +5,8 @@
 	<version>$version$</version>
 	<authors>$author$</authors>
 	<description>$description$</description>
-  <tags>video audio codec ffmpeg framework</tags>
-  <projectUrl>https://github.com/hudl/HudlFfmpeg</projectUrl>
+    <tags>video audio codec ffmpeg framework</tags>
+    <projectUrl>https://github.com/hudl/HudlFfmpeg</projectUrl>
 	<iconUrl>https://raw.githubusercontent.com/hudl/HudlFfmpeg/master/hudl.png</iconUrl>
   </metadata>
   <files>
