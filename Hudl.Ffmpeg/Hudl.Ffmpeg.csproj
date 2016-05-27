@@ -98,6 +98,7 @@
     <Compile Include="Metadata\Models\MetadataInfoTreeGroup.cs" />
     <Compile Include="Metadata\Models\MetadataInfoTreeItem.cs" />
     <Compile Include="Metadata\Models\MetadataInfoTreeSource.cs" />
+    <Compile Include="Resources\BaseTypes\DataStream.cs" />
     <Compile Include="Resources\BaseTypes\AudioStream.cs" />
     <Compile Include="Resources\BaseTypes\VideoStream.cs" />
     <Compile Include="Resources\Ismv.cs" />
