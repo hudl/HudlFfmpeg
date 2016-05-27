@@ -23,7 +23,12 @@ namespace Hudl.FFprobe.Serialization.Converters
                 return new VideoStreamMetadata();
             }
              
-            return new AudioStreamMetadata();
+            if (string.Equals(codecType, CodecTypes.Audio.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                return new AudioStreamMetadata();
+            }
+
+            return null; 
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -41,6 +46,11 @@ namespace Hudl.FFprobe.Serialization.Converters
 
                 var targetObject = jsonToken.Value<JObject>();
                 var targetType = Create(objectType, targetObject);
+                if (targetType == null)
+                {
+                    //unsupported type, dont wanna worry about it.
+                    continue;
+                }
 
                 serializer.Populate(targetObject.CreateReader(), targetType);
 
