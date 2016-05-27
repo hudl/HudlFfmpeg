@@ -9,7 +9,7 @@ using Hudl.FFmpeg.Settings.Interfaces;
 namespace Hudl.FFmpeg.Settings
 {
     [ForStream(Type = typeof(AudioStream))]
-    [Setting(Name = "ar")]
+    [Setting(Name = "ar", ResourceType = SettingsCollectionResourceType.Any)]
     public class SampleRate : ISetting
     {
         public SampleRate(double rate)
