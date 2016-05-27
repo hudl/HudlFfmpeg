@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
-	<id>$id$</id>
-	<version>$version$</version>
-	<authors>$author$</authors>
-	<description>$description$</description>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <description>$description$</description>
     <tags>video audio codec ffmpeg framework</tags>
     <projectUrl>https://github.com/hudl/HudlFfmpeg</projectUrl>
-	<iconUrl>https://raw.githubusercontent.com/hudl/HudlFfmpeg/master/hudl.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/hudl/HudlFfmpeg/master/hudl.png</iconUrl>
   </metadata>
   <files>
     <file src="bin\Release\$id$.dll" target="lib\net45"/>        
