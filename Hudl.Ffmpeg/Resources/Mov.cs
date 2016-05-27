@@ -6,6 +6,7 @@ namespace Hudl.FFmpeg.Resources
 {
     [ContainsStream(Type = typeof(AudioStream))]
     [ContainsStream(Type = typeof(VideoStream))]
+    [ContainsStream(Type = typeof(DataStream))]
     public class Mov : BaseContainer
     {
         private const string FileFormat = ".mov";
