@@ -90,6 +90,7 @@
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
+    <Compile Include="Settings\RemoveVideo.cs" />
     <Compile Include="Settings\VideoFrames.cs" />
     <Compile Include="Settings\Gop.cs" />
     <Compile Include="Settings\Loop.cs" />
