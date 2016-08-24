@@ -1,5 +1,6 @@
 ﻿using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
 using Hudl.FFmpeg.Settings.Interfaces;
@@ -13,10 +14,12 @@ namespace Hudl.FFmpeg.Settings
     [Setting(Name = "loop", IsPreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
     public class LoopInput : ISetting
     {
-        [SettingParameter]
-        public string Flags
+        public LoopInput()
         {
-            get { return "1"; }
+            IsOn = true;
         }
+
+        [SettingParameter(Formatter = typeof(BoolToInt32Formatter))]
+        public bool IsOn { get; set; }
     }
 }
