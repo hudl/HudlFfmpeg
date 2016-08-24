@@ -120,6 +120,7 @@
     <Compile Include="Settings\BitStreamFilterVideo.cs" />
     <Compile Include="Settings\ChannelInput.cs" />
     <Compile Include="Settings\DurationOutput.cs" />
+    <Compile Include="Settings\LoopInput.cs" />
     <Compile Include="Settings\VideoFrames.cs" />
     <Compile Include="Settings\SampleRate.cs" />
     <Compile Include="Settings\MovFlags.cs" />
