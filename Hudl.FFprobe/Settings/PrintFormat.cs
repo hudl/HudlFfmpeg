@@ -3,15 +3,17 @@ using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFprobe.Settings
 {
-    [Setting(Name = "read_intervals")]
-    internal class ReadIntervals : ISetting
+    [Setting(Name = "print_format")]
+    internal class PrintFormat : ISetting
     {
-        public ReadIntervals(string expression)
+        public const string JsonFormat = "json";
+
+        public PrintFormat(string format)
         {
-            Expression = expression;
+            Format = format;
         }
 
         [SettingParameter]
-        public string Expression { get; set; }
+        public string Format { get; set; }
     }
 }
