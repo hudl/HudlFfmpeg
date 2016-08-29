@@ -4,7 +4,7 @@ using Hudl.FFmpeg.Settings.Interfaces;
 namespace Hudl.FFprobe.Settings
 {
     [Setting(Name = "read_intervals")]
-    internal class ReadIntervals : ISetting
+    public class ReadIntervals : ISetting
     {
         public ReadIntervals(string expression)
         {

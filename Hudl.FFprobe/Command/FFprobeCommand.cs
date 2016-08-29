@@ -7,7 +7,7 @@ using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFprobe.Command
 {
-    internal class FFprobeCommand : FFcommandBase
+    public class FFprobeCommand : FFcommandBase
     {
         private FFprobeCommand(IContainer resource)
         {
