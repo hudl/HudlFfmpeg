@@ -63,6 +63,7 @@
     <Compile Include="Serialization\FFprobeSerialzier.cs" />
     <Compile Include="Settings\PrintFormat.cs" />
     <Compile Include="Settings\ReadIntervals.cs" />
+    <Compile Include="Settings\ShowFrames.cs" />
     <Compile Include="Settings\ShowFormat.cs" />
     <Compile Include="Settings\ShowStreams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
