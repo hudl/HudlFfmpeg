@@ -16,23 +16,52 @@ namespace Hudl.FFprobe
 
         public void ReadInfo(IContainer resource)
         {
-            var ffprobeCommand = FFprobeCommand.Create(resource)
-                                               .AddSetting(new ShowFormat())
-                                               .AddSetting(new ShowStreams())
-                                               .AddSetting(new PrintFormat(PrintFormat.JsonFormat))
-                                               .Execute();
+            ReadInfo(resource, LoaderFlags.ShowFormat | LoaderFlags.ShowStreams); 
+        }
 
-            var containerMetadata = FFprobeSerializer.Serialize(ffprobeCommand);
+
+        public void ReadInfo(IContainer resource, LoaderFlags flags)
+        {
+            var ffprobeCommand = FFprobeCommand.Create(resource);
+
+            if (flags.HasFlag(LoaderFlags.ShowFormat))
+            {
+                ffprobeCommand.AddSetting(new ShowFormat());
+            }
+
+            if (flags.HasFlag(LoaderFlags.ShowStreams))
+            {
+                ffprobeCommand.AddSetting(new ShowStreams());
+            }
+
+            if (flags.HasFlag(LoaderFlags.ShowFrames))
+            {
+                ffprobeCommand.AddSetting(new ShowFrames());
+            }
+                                               
+            var commandProcessor = ffprobeCommand.Execute();
+
+            var containerMetadata = FFprobeSerializer.Serialize(commandProcessor);
 
             HasAudio = containerMetadata.Streams.OfType<AudioStreamMetadata>().Any();
             HasVideo = containerMetadata.Streams.OfType<VideoStreamMetadata>().Any();
             HasData = containerMetadata.Streams.OfType<DataStreamMetadata>().Any();
-            BaseData = containerMetadata; 
+            HasFrames = containerMetadata.Frames.Any();
+            BaseData = containerMetadata;
+        }
+
+        public enum LoaderFlags
+        {
+            None = 0,
+            ShowFormat = 1 << 0, 
+            ShowStreams = 1 << 1, 
+            ShowFrames = 1 << 2,
         }
 
         public bool HasVideo { get; protected set; }
         public bool HasAudio { get; protected set; }
         public bool HasData { get; protected set; }
+        public bool HasFrames { get; protected set; }
         public ContainerMetadata BaseData { get; protected set; }
     }
 }

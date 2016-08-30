@@ -47,9 +47,13 @@
   <ItemGroup>
     <Compile Include="CodecTypes.cs" />
     <Compile Include="Command\FFprobeCommandProcessor.cs" />
+    <Compile Include="Metadata\Models\AudioFrameMetadata.cs" />
+    <Compile Include="Metadata\Models\BaseFrameMetadata.cs" />
     <Compile Include="Metadata\Models\DataStreamMetadata.cs" />
+    <Compile Include="Metadata\Models\VideoFrameMetadata.cs" />
     <Compile Include="Serialization\Converters\FractionConverter.cs" />
     <Compile Include="Serialization\Converters\RatioConverter.cs" />
+    <Compile Include="Serialization\Converters\FrameConverter.cs" />
     <Compile Include="Serialization\Converters\StreamConverter.cs" />
     <Compile Include="Serialization\Converters\TimeSpanConverter.cs" />
     <Compile Include="Command\FFprobeCommand.cs" />

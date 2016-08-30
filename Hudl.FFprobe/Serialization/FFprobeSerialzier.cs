@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Hudl.FFprobe.Serialization
 {
-    internal class FFprobeSerializer 
+    public class FFprobeSerializer 
     {
         public static ContainerMetadata Serialize(ICommandProcessor processor)
         {
