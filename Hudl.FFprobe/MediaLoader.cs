@@ -22,7 +22,8 @@ namespace Hudl.FFprobe
 
         public void ReadInfo(IContainer resource, LoaderFlags flags)
         {
-            var ffprobeCommand = FFprobeCommand.Create(resource);
+            var ffprobeCommand = FFprobeCommand.Create(resource)
+                .AddSetting(new PrintFormat(PrintFormat.JsonFormat));
 
             if (flags.HasFlag(LoaderFlags.ShowFormat))
             {
@@ -43,10 +44,10 @@ namespace Hudl.FFprobe
 
             var containerMetadata = FFprobeSerializer.Serialize(commandProcessor);
 
-            HasAudio = containerMetadata.Streams.OfType<AudioStreamMetadata>().Any();
-            HasVideo = containerMetadata.Streams.OfType<VideoStreamMetadata>().Any();
-            HasData = containerMetadata.Streams.OfType<DataStreamMetadata>().Any();
-            HasFrames = containerMetadata.Frames.Any();
+            HasAudio = containerMetadata.Streams != null && containerMetadata.Streams.OfType<AudioStreamMetadata>().Any();
+            HasVideo = containerMetadata.Streams != null && containerMetadata.Streams.OfType<VideoStreamMetadata>().Any();
+            HasData = containerMetadata.Streams != null && containerMetadata.Streams.OfType<DataStreamMetadata>().Any();
+            HasFrames = containerMetadata.Frames != null && containerMetadata.Frames.Any();
             BaseData = containerMetadata;
         }
 
