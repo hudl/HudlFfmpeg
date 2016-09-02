@@ -4,7 +4,7 @@ using Hudl.FFmpeg.Settings.Interfaces;
 namespace Hudl.FFprobe.Settings
 {
     [Setting(Name = "print_format")]
-    internal class PrintFormat : ISetting
+    public class PrintFormat : ISetting
     {
         public const string JsonFormat = "json";
 

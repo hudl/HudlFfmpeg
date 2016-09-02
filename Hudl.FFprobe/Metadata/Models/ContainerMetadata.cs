@@ -14,5 +14,9 @@ namespace Hudl.FFprobe.Metadata.Models
         [JsonProperty(PropertyName = "streams")]
         [JsonConverter(typeof(StreamConverter))]
         public List<BaseStreamMetadata> Streams { get; set; }
+
+        [JsonProperty(PropertyName = "frames")]
+        [JsonConverter(typeof(FrameConverter))]
+        public List<BaseFrameMetadata> Frames { get; set; }
     }
 }

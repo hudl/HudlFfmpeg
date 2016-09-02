@@ -4,7 +4,7 @@ using Hudl.FFmpeg.Settings.Interfaces;
 namespace Hudl.FFprobe.Settings
 {
     [Setting(Name = "show_streams", IsParameterless = true)]
-    internal class ShowStreams : ISetting
+    public class ShowStreams : ISetting
     {
     }
 }
