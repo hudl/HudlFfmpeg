@@ -116,12 +116,15 @@
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
     <Compile Include="Settings\BaseTypes\BaseDuration.cs" />
     <Compile Include="Settings\BaseTypes\BaseChannel.cs" />
+    <Compile Include="Settings\BaseTypes\BaseQualityScale.cs" />
     <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
     <Compile Include="Settings\BitStreamFilterAudio.cs" />
     <Compile Include="Settings\BitStreamFilterVideo.cs" />
     <Compile Include="Settings\ChannelInput.cs" />
     <Compile Include="Settings\DurationOutput.cs" />
     <Compile Include="Settings\LoopInput.cs" />
+    <Compile Include="Settings\QualityScaleAudio.cs" />
+    <Compile Include="Settings\QualityScaleVideo.cs" />
     <Compile Include="Settings\VideoFrames.cs" />
     <Compile Include="Settings\SampleRate.cs" />
     <Compile Include="Settings\MovFlags.cs" />
