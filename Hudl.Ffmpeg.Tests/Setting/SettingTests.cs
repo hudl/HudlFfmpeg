@@ -11,6 +11,24 @@ namespace Hudl.FFmpeg.Tests.Setting
     public class SettingTests
     {
         [Fact]
+        public void QualityScaleVideo_Verify()
+        {
+            var setting = new QualityScaleVideo(1);
+
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
+            Assert.Equal(SettingSerializer.Serialize(setting), "-q:v 1");
+        }
+
+        [Fact]
+        public void QualityScaleAudio_Verify()
+        {
+            var setting = new QualityScaleAudio(1);
+
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
+            Assert.Equal(SettingSerializer.Serialize(setting), "-q:a 1");
+        }
+
+        [Fact]
         public void AspectRatio_Verify()
         {
             var setting = new AspectRatio(Ratio.Create(1, 1));
