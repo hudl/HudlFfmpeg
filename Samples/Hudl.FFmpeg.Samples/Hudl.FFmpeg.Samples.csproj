@@ -44,10 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Utilities.cs" />
+    <Compile Include="FFmpeg\Concat\DissolveVideo.cs" />
+    <Compile Include="FFmpeg\Concat\CameraFlashVideo.cs" />
     <Compile Include="FFmpeg\Concat\ConcatAudio.cs" />
     <Compile Include="FFmpeg\Concat\ConcatVideo.cs" />
     <Compile Include="FFmpeg\Concat\ConcatVideoAndAudio.cs" />
     <Compile Include="FFmpeg\Convert\ExtractFrame.cs" />
+    <Compile Include="FFmpeg\Concat\AngleSwipeVideo.cs" />
     <Compile Include="FFmpeg\Events\AttachOnSuccessOnErrorEvents.cs" />
     <Compile Include="FFmpeg\Mapping\MapMultipleStreamsToMultipleOutputs.cs" />
     <Compile Include="FFmpeg\Mapping\MapMultipleStreamsToSingleOutput.cs" />

@@ -7,35 +7,44 @@ using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Sugar;
 
+
 namespace Hudl.FFmpeg.Filters.Templates
 {
-    public class Dissolve : FilterchainTemplate
+    public class AngleSwipe : FilterchainTemplate
     {
-        private const string CrossfadeAlgorithm = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
+        private const string SwipeAlgorithm = "if(gt(X+N*{0},Y+W),A,B)";
 
-        public Dissolve(TimeSpan crossfadeDuration)
+        public AngleSwipe(TimeSpan crossfadeDuration)
         {
             Duration = crossfadeDuration;
+            Speed = 50;
+            OverlayDeltaX = 0;
         }
-        public Dissolve(double crossfadeDuration)
+
+        public AngleSwipe(double crossfadeDuration)
             : this(TimeSpan.FromSeconds(crossfadeDuration))
         {
         }
+
+        public int Speed { get; set; }
+        
+        public int OverlayDeltaX { get; set; }
 
         private TimeSpan Duration { get; set; }
 
         public override List<StreamIdentifier> SetupTemplate(FFmpegCommand command, List<StreamIdentifier> streamIdList)
         {
-            if (streamIdList.Count != 2)
+            if (streamIdList.Count != 3)
             {
-                throw new InvalidOperationException("Crossfade Concatenate requires two input video streams.");
+                throw new InvalidOperationException("AngleSwipe Concatenate requires two input video streams and an image stream.");
             }
 
             var streamTo = streamIdList[1];
             var streamFrom = streamIdList[0];
+            var streamOverlay = streamIdList[2];
 
             //grab the current length of the streamId specified 
-            var streamFromMetadata = MetadataHelpers.GetMetadataInfo(command, streamFrom);
+            var videoMeta = MetadataHelpers.GetMetadataInfo(command, streamFrom).VideoStream.VideoMetadata;
 
             //from == 
             // - split
@@ -53,7 +62,7 @@ namespace Hudl.FFmpeg.Filters.Templates
             //output ==
             // - (from:1, blend, to:2)
 
-            var endMinusDuration = streamFromMetadata.VideoStream.VideoMetadata.Duration - Duration;
+            var endMinusDuration = videoMeta.Duration - Duration;
 
             var fromSplit = command.Select(streamFrom)
                                    .Filter(Filterchain.FilterTo<VideoStream>(new Split(2)));
@@ -74,11 +83,18 @@ namespace Hudl.FFmpeg.Filters.Templates
                                 .Filter(new TrimVideo(Duration.TotalSeconds, null, VideoUnitType.Seconds));
 
             var blendOut = command.Select(toBlend.StreamIdentifiers)
-                                  .Select(fromBlend.StreamIdentifiers)
-                                  .Filter(Filterchain.FilterTo<VideoStream>(new Blend(string.Format(CrossfadeAlgorithm, Duration.TotalSeconds))));
+                .Select(fromBlend.StreamIdentifiers)
+                .Filter(Filterchain.FilterTo<VideoStream>(new Blend(string.Format(SwipeAlgorithm, Speed))));
+
+            var overlayImage = command.Select(streamOverlay)
+                .Filter(Filterchain.FilterTo<VideoStream>(new Scale(videoMeta.Width, videoMeta.Height)));
+
+            var overlay = command.Select(blendOut.StreamIdentifiers)
+                .Select(overlayImage.StreamIdentifiers)
+                .Filter(Filterchain.FilterTo<VideoStream>(new Overlay($"W-{OverlayDeltaX}-(n+1)*{Speed}", "0")));
 
             var result = command.Select(fromMain.StreamIdentifiers)
-                                .Select(blendOut.StreamIdentifiers)
+                                .Select(overlay.StreamIdentifiers)
                                 .Select(toMain.StreamIdentifiers)
                                 .Filter(Filterchain.FilterTo<VideoStream>(new Concat()));
 

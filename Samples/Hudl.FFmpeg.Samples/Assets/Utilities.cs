@@ -21,6 +21,10 @@ namespace Hudl.FFmpeg.Samples.Assets
         {
             return Path.Combine(GetAssetsDirectory(), "sample-image.jpg");
         }
+        public static string GetImageFileOverlay()
+        {
+            return Path.Combine(GetAssetsDirectory(), "overlay.png");
+        }
 
         public static void SetGlobalAssets()
         {

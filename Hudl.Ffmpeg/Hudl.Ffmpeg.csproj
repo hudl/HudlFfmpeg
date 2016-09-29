@@ -68,6 +68,8 @@
     <Compile Include="Filters\BoxBlur.cs" />
     <Compile Include="Filters\ATrim.cs" />
     <Compile Include="Filters\ASetPts.cs" />
+    <Compile Include="Filters\Templates\AngleSwipe.cs" />
+    <Compile Include="Filters\Templates\CameraFlash.cs" />
     <Compile Include="Metadata\Interfaces\IMetadataManipulation.cs" />
     <Compile Include="Metadata\MetadataHelpers.cs" />
     <Compile Include="Metadata\MetadataInfoStreamCalculator.cs" />

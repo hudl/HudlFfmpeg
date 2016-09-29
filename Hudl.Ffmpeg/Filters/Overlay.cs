@@ -33,6 +33,13 @@ namespace Hudl.FFmpeg.Filters
             Y = y.ToString(CultureInfo.InvariantCulture);
         }
 
+        public Overlay(string x, string y)
+            : this()
+        {
+            X = x;
+            Y = y;
+        }
+
         [FilterParameter(Name = "x")]
         public string X { get; set; }
 
