@@ -10,6 +10,26 @@ namespace Hudl.FFmpeg.Tests.Setting
 {
     public class SettingTests
     {
+
+        [Fact]
+        public void CopyTimestamps_Verify()
+        {
+            var setting = new CopyTimestamps();
+
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
+            Assert.Equal(SettingSerializer.Serialize(setting), "-copyts");
+        }
+
+
+        [Fact]
+        public void FrameDropThreshold_Verify()
+        {
+            var setting = new FrameDropThreshold(0);
+
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
+            Assert.Equal(SettingSerializer.Serialize(setting), "-frame_drop_threshold 0");
+        }
+
         [Fact]
         public void QualityScaleVideo_Verify()
         {
