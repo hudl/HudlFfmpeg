@@ -122,7 +122,9 @@
     <Compile Include="Settings\BitStreamFilterVideo.cs" />
     <Compile Include="Settings\ChannelInput.cs" />
     <Compile Include="Settings\DurationOutput.cs" />
+    <Compile Include="Settings\FrameDropThreshold.cs" />
     <Compile Include="Settings\LoopInput.cs" />
+    <Compile Include="Settings\CopyTimestamps.cs" />
     <Compile Include="Settings\QualityScaleAudio.cs" />
     <Compile Include="Settings\QualityScaleVideo.cs" />
     <Compile Include="Settings\VideoFrames.cs" />
