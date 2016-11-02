@@ -1,2 +1,0 @@
-set-variable -name tests -value (ls *.Tests/bin/Release/*.Tests.dll | % FullName)
-packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register -target:"packages\xunit.runner.console.2.0.0\tools\xunit.console.x86.exe" "-targetargs:$tests -noshadow -parallel none" "-filter:+[Hudl.FFmpeg*]* +[Hudl.FFprobe]*" -hideskipped:All -excludebyattribute:*.ExcludeFromCodeCoverage* -output:Hudl.FFmpeg_Coverage.xml
