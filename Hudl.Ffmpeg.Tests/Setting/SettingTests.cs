@@ -24,10 +24,13 @@ namespace Hudl.FFmpeg.Tests.Setting
         [Fact]
         public void FrameDropThreshold_Verify()
         {
-            var setting = new FrameDropThreshold(0);
+            var setting1 = new FrameDropThreshold() { Threshold = 0 };
+            var setting2 = new FrameDropThreshold(0);
 
-            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
-            Assert.Equal(SettingSerializer.Serialize(setting), "-frame_drop_threshold 0");
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting1));
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting2));
+            Assert.Equal(SettingSerializer.Serialize(setting1), "-frame_drop_threshold 0");
+            Assert.Equal(SettingSerializer.Serialize(setting2), "-frame_drop_threshold 0");
         }
 
         [Fact]
@@ -35,6 +38,8 @@ namespace Hudl.FFmpeg.Tests.Setting
         {
             var setting = new QualityScaleVideo(1);
 
+            Assert.Throws<ArgumentException>(() => new QualityScaleAudio(0));
+            Assert.Throws<ArgumentException>(() => new QualityScaleAudio(32));
             Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting));
             Assert.Equal(SettingSerializer.Serialize(setting), "-q:v 1");
         }

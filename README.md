@@ -1,6 +1,8 @@
 ## Hudl.FFmpeg
 [![](https://img.shields.io/badge/hudl-OSS-orange.svg)](http://hudl.github.io/)
 
+[![codecov](https://codecov.io/gh/hudl/HudlFfmpeg/branch/master/graph/badge.svg)](https://codecov.io/gh/hudl/HudlFfmpeg)
+
 Extendable C# transcoding framework, built on top of FFmpeg. Hudl.FFmpeg helps you
 
 * Easily interface with FFmpeg in your .NET applications

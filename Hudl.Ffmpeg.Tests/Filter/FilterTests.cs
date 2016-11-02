@@ -94,6 +94,11 @@ namespace Hudl.FFmpeg.Tests.Filter
             TestAppliesTo<Volume>(false, true);
         }
 
+        [Fact]
+        public void APad_AppliesTo_Audio()
+        {
+            TestAppliesTo<APad>(false, true);
+        }
 
         private void TestAppliesTo<TFilter>(bool iVideo, bool iAudio)
             where TFilter : IFilter
@@ -102,6 +107,27 @@ namespace Hudl.FFmpeg.Tests.Filter
             Assert.True(iAudio == AttributeValidation.AttributeTypeEquals<TFilter, AudioStream>());
         }
         #endregion
+
+        [Fact]
+        public void APad_Verify()
+        {
+            var filter = FilterFactory.CreateEmpty<APad>();
+            var filterValue = new StringBuilder(100);
+            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+
+            filter.PacketSize = 2;
+            filterValue.Append("apad=packet_size=2");
+            var sss = FilterSerializer.Serialize(filter);
+            Assert.Equal(sss, filterValue.ToString());
+
+            filter.PadLength = 2;
+            filterValue.Append(":pad_len=2");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            filter.WholeLength = 2;
+            filterValue.Append(":whole_len=2");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+        }
 
         [Fact]
         public void AFade_Verify()
