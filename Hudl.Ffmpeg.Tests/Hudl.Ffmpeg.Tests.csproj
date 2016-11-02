@@ -58,8 +58,10 @@
     <Compile Include="BaseTypes\BaseTypeTests.cs" />
     <Compile Include="Command\CommandTests.cs" />
     <Compile Include="Command\CommandFactoryTests.cs" />
+    <Compile Include="Command\FFprobeComandTests.cs" />
     <Compile Include="Command\Managers\ManagersTests.cs" />
     <Compile Include="Command\TestCommandProcessor.cs" />
+    <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Filter\FilterchainTests.cs" />
     <Compile Include="Filter\FiltergraphTests.cs" />
     <Compile Include="Filter\FilterTests.cs" />
