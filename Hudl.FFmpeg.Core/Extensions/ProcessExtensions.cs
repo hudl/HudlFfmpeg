@@ -12,7 +12,7 @@ namespace Hudl.FFmpeg.Extensions
         }
         public static bool WaitForProcessStart(this Process process, int? timeoutMilliseconds)
         {
-            var processTimeout = TimeSpan.FromMilliseconds(timeoutMilliseconds ?? 5000);
+            var processTimeout = TimeSpan.FromMilliseconds(timeoutMilliseconds ?? 10000);
             return process.WaitForProcessStart(processTimeout);
         }
         public static bool WaitForProcessStart(this Process process, TimeSpan processTimeout)
@@ -27,7 +27,7 @@ namespace Hudl.FFmpeg.Extensions
 
                 try
                 {
-                    isProcessRunning = (process != null && !process.HasExited && process.Id != 0);
+                    isProcessRunning = (process != null && process.HasExited && process.Id != 0);
                 }
                 catch
                 {

@@ -165,11 +165,7 @@ namespace Hudl.FFmpeg.Command
                 //   - link http://mono.1490590.n4.nabble.com/System-Diagnostic-Process-and-event-handlers-td3246096.html
                 // we will wait a total of 10 seconds for the process to start, if nothing has happened in that time then we will 
                 // return a failure for the event. 
-                var processStarted = ffmpegProcess.WaitForProcessStart();
-                if (!processStarted)
-                {
-                    throw new FFmpegTimeoutException(ffmpegProcess.StartInfo.Arguments);
-                }
+                ffmpegProcess.WaitForProcessStart();
 
                 stdErrorReader.Listen();
 
