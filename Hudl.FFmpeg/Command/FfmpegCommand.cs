@@ -45,9 +45,14 @@ namespace Hudl.FFmpeg.Command
         /// </summary>
         public List<CommandOutput> Render()
         {
-            ExecuteWith<FFmpegCommandProcessor, FFmpegCommandBuilder>();
+            return Render(null);
+        }
 
-            return Objects.Outputs; 
+        public List<CommandOutput> Render(int? timeoutMilliseconds)
+        {
+            ExecuteWith<FFmpegCommandProcessor, FFmpegCommandBuilder>(timeoutMilliseconds);
+
+            return Objects.Outputs;
         }
 
         #region Internals

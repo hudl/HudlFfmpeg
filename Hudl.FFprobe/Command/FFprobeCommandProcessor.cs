@@ -6,7 +6,6 @@ using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Logging;
-using System.ComponentModel;
 
 namespace Hudl.FFprobe.Command
 {
@@ -91,7 +90,7 @@ namespace Hudl.FFprobe.Command
             {
                 Status = CommandProcessorStatus.Processing;
 
-                ProcessIt(command);
+                ProcessIt(command, timeoutMilliseconds);
 
                 Status = CommandProcessorStatus.Ready;
             }
@@ -145,31 +144,9 @@ namespace Hudl.FFprobe.Command
                 
                 FFprobeProcess.Start();
                 
-                if (timeoutMilliseconds.HasValue)
-                {
-                    StdOut = FFprobeProcess.StandardOutput.reed;
+                StdOut = FFprobeProcess.StandardOutput.ReadToEnd();
 
-                    FFprobeProcess.WaitForExit();
-                }
-                else
-                {
-                    var hasExited = FFprobeProcess.WaitForExit(timeoutMilliseconds.Value);
-                    if (!hasExited)
-                    {
-                        try
-                        {
-                            FFprobeProcess.Kill();
-
-                            FFprobeProcess.WaitForExit();
-                        }
-                        catch(Win32Exception ex)
-                        {
-                            Log.DebugFormat("FFprobe.exe access denied, already exited"); 
-                        }
-
-                        throw new FFmpegTimeoutException(command.Trim()); 
-                    }
-                }
+                FFprobeProcess.WaitForExit();
 
                 Log.DebugFormat("FFprobe.exe Output={0}.", StdOut);
 

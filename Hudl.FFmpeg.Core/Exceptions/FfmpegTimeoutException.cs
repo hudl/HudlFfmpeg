@@ -11,14 +11,10 @@ namespace Hudl.FFmpeg.Exceptions
             : base("FFmpeg timed out during processing")
         {
             base.Data["Arguments"] = arguments;
-            base.Data["ErrorOutput"] = errorOutput;
 
             Arguments = arguments;
-            ErrorOutput = errorOutput; 
         }
 
         public string Arguments { get; private set; }
-
-        public string ErrorOutput { get; private set; }
     }
 }

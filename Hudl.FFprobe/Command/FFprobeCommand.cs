@@ -36,9 +36,10 @@ namespace Hudl.FFprobe.Command
             return this;
         }
 
-        public ICommandProcessor Execute()
+        public ICommandProcessor Execute(int? timeoutMilliseconds)
         {
-            return ExecuteWith<FFprobeCommandProcessor, FFprobeCommandBuilder>();
+            return ExecuteWith<FFprobeCommandProcessor, FFprobeCommandBuilder>(timeoutMilliseconds);
         }
+
     }
 }
