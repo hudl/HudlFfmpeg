@@ -48,6 +48,11 @@ namespace Hudl.FFmpeg.Command
             return Render(null);
         }
 
+        public List<CommandOutput> Render(TimeSpan timeout)
+        {
+            return Render((int)timeout.TotalMilliseconds);
+        }
+
         public List<CommandOutput> Render(int? timeoutMilliseconds)
         {
             ExecuteWith<FFmpegCommandProcessor, FFmpegCommandBuilder>(timeoutMilliseconds);

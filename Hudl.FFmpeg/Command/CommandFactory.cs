@@ -117,6 +117,14 @@ namespace Hudl.FFmpeg.Command
             return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>(timeoutMilliseconds);
         }
 
+        /// <summary>
+        /// Renders the command stream with the defualt command processor
+        /// </summary>
+        public List<IContainer> Render(TimeSpan timeout)
+        {
+            return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>((int)timeout.TotalMilliseconds);
+        }
+
 
         private CommandFactory Add(FFmpegCommand command, bool export)
         {
