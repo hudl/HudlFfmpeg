@@ -44,7 +44,7 @@ namespace Hudl.FFmpeg.Extensions
         }
         public static bool WaitForProcessStop(this Process process, int? timeoutMilliseconds)
         {
-            var processTimeout = TimeSpan.FromMilliseconds(timeoutMilliseconds ?? 5000);
+            var processTimeout = TimeSpan.FromMilliseconds(timeoutMilliseconds ?? 0);
             return process.WaitForProcessStop(processTimeout);
         }
         public static bool WaitForProcessStop(this Process process, TimeSpan processTimeout)
