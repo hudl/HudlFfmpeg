@@ -35,7 +35,7 @@ namespace Hudl.FFmpeg.Command.BaseTypes
         /// <summary>
         /// processes the given command string against the processor engine
         /// </summary>
-        bool Send(string command);
+        bool Send(string command, int? timeoutMilliseconds);
 
        
     }

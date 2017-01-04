@@ -4,6 +4,9 @@ using System.IO;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Logging;
+using Hudl.FFmpeg.Command.StreamReaders;
+using System.Threading;
+using Hudl.FFmpeg.Extensions;
 
 namespace Hudl.FFmpeg.Command
 {
@@ -75,7 +78,7 @@ namespace Hudl.FFmpeg.Command
             return true;
         }
 
-        public bool Send(string command)
+        public bool Send(string command, int? timeoutMilliseconds)
         {
             if (Status != CommandProcessorStatus.Ready)
             {
@@ -94,7 +97,7 @@ namespace Hudl.FFmpeg.Command
                 {
                     Status = CommandProcessorStatus.Processing;
 
-                    ProcessIt(command);
+                    ProcessIt(command, timeoutMilliseconds);
 
                     Status = CommandProcessorStatus.Ready;
 
@@ -138,7 +141,7 @@ namespace Hudl.FFmpeg.Command
             }
         }
 
-        private void ProcessIt(string command)
+        private void ProcessIt(string command, int? timeoutMilliseconds)
         {
             using (var ffmpegProcess = new Process())
             {
@@ -152,15 +155,35 @@ namespace Hudl.FFmpeg.Command
                     RedirectStandardError = true,
                 };
 
-                Log.DebugFormat("ffmpeg.exe Args={0}.", ffmpegProcess.StartInfo.Arguments);
-                
+                Log.Debug($"ffmpeg.exe MonoRuntime={ResourceManagement.IsMonoRuntime()} Args={ffmpegProcess.StartInfo.Arguments}");
+
+                var stdErrorReader = StandardErrorAsyncStreamReader.AttachReader(ffmpegProcess); 
+
                 ffmpegProcess.Start();
 
-                StdOut = ffmpegProcess.StandardError.ReadToEnd();
+                //workaround for a bug in the mono process when attempting to read async from console output events 
+                //   - link http://mono.1490590.n4.nabble.com/System-Diagnostic-Process-and-event-handlers-td3246096.html
+                // we will wait a total of 10 seconds for the process to start, if nothing has happened in that time then we will 
+                // return a failure for the event. 
+                var processStarted = ffmpegProcess.WaitForProcessStart();
+                if (!processStarted)
+                {
+                    throw new FFmpegTimeoutException(ffmpegProcess.StartInfo.Arguments);
+                }
 
-                ffmpegProcess.WaitForExit();
+                stdErrorReader.Listen();
 
-                Log.DebugFormat("ffmpeg.exe Output={0}.", StdOut);
+                var processStopped = ffmpegProcess.WaitForProcessStop(timeoutMilliseconds);
+                if (!processStopped)
+                {
+                    throw new FFmpegTimeoutException(ffmpegProcess.StartInfo.Arguments);
+                }
+
+                stdErrorReader.Stop();
+
+                StdOut = stdErrorReader.ToString(); 
+
+                Log.Debug($"ffmpeg.exe MonoRuntime={ResourceManagement.IsMonoRuntime()}  Output={StdOut}.");
 
                 var exitCode = ffmpegProcess.ExitCode;
                 if (exitCode != 0)

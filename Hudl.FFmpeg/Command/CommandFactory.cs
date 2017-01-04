@@ -106,8 +106,17 @@ namespace Hudl.FFmpeg.Command
         /// </summary>
         public List<IContainer> Render()
         {
-            return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>();
+            return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>(null);
         }
+
+        /// <summary>
+        /// Renders the command stream with the defualt command processor
+        /// </summary>
+        public List<IContainer> Render(int timeoutMilliseconds)
+        {
+            return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>(timeoutMilliseconds);
+        }
+
 
         private CommandFactory Add(FFmpegCommand command, bool export)
         {
@@ -133,7 +142,7 @@ namespace Hudl.FFmpeg.Command
 
         #region Internals
 
-        internal List<IContainer> RenderWith<TProcessor, TBuilder>()
+        internal List<IContainer> RenderWith<TProcessor, TBuilder>(int? timeoutMilliseconds)
             where TProcessor : class, ICommandProcessor, new()
             where TBuilder : class, ICommandBuilder, new()
         {
@@ -144,7 +153,7 @@ namespace Hudl.FFmpeg.Command
                 throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
-            var returnType = RenderWith<TProcessor, TBuilder>(commandProcessor);
+            var returnType = RenderWith<TProcessor, TBuilder>(commandProcessor, timeoutMilliseconds);
 
             if (!commandProcessor.Close())
             {
@@ -154,7 +163,7 @@ namespace Hudl.FFmpeg.Command
             return returnType;
         }
 
-        internal List<IContainer> RenderWith<TProcessor, TBuilder>(TProcessor processor)
+        internal List<IContainer> RenderWith<TProcessor, TBuilder>(TProcessor processor, int? timeoutMilliseconds)
             where TProcessor : class, ICommandProcessor, new()
             where TBuilder : class, ICommandBuilder, new()
         {
@@ -171,7 +180,7 @@ namespace Hudl.FFmpeg.Command
 
             CommandList.OfType<FFmpegCommand>()
                 .ToList()
-                .ForEach(command => command.ExecuteWith<TProcessor, TBuilder>(processor)); 
+                .ForEach(command => command.ExecuteWith<TProcessor, TBuilder>(processor, timeoutMilliseconds)); 
 
             return outputList;
         }

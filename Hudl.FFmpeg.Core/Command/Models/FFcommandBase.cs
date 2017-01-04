@@ -24,7 +24,7 @@ namespace Hudl.FFmpeg.Command.Models
 
         public Action<ICommandFactory, ICommand, ICommandProcessor> OnErrorAction { get; set; }
 
-        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>()
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(int? timeoutMilliseconds)
             where TProcessorType : class, ICommandProcessor, new()
             where TBuilderType : class, ICommandBuilder, new()
         {
@@ -35,7 +35,7 @@ namespace Hudl.FFmpeg.Command.Models
                 throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
-            var returnType = ExecuteWith<TProcessorType, TBuilderType>(commandProcessor);
+            var returnType = ExecuteWith<TProcessorType, TBuilderType>(commandProcessor, timeoutMilliseconds);
 
             if (!commandProcessor.Close())
             {
@@ -45,7 +45,7 @@ namespace Hudl.FFmpeg.Command.Models
             return returnType;
         }
 
-        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor)
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor, int? timeoutMilliseconds)
             where TProcessorType : class, ICommandProcessor
             where TBuilderType : class, ICommandBuilder, new()
         {
@@ -59,7 +59,7 @@ namespace Hudl.FFmpeg.Command.Models
 
             PreExecutionAction(Owner, this, true);
 
-            if (!commandProcessor.Send(commandBuilder.ToString()))
+            if (!commandProcessor.Send(commandBuilder.ToString(), timeoutMilliseconds))
             {
                 PostExecutionAction(Owner, this, false);
 

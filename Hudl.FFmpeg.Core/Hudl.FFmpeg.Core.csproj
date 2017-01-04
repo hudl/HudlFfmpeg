@@ -56,8 +56,12 @@
     <Compile Include="Attributes\ValidateAttribute.cs" />
     <Compile Include="Attributes\ForStreamAttribute.cs" />
     <Compile Include="Collections\ForStreamCollection.cs" />
+    <Compile Include="Command\StreamReaders\BaseStandardStreamReader.cs" />
+    <Compile Include="Command\StreamReaders\StandardOutputAsyncStreamReader.cs" />
+    <Compile Include="Command\StreamReaders\StandardErrorAsyncStreamReader.cs" />
     <Compile Include="Enums\FfmpegMergeOptionType.cs" />
     <Compile Include="Enums\SettingsCollectionResourceType.cs" />
+    <Compile Include="Exceptions\FfmpegTimeoutException.cs" />
     <Compile Include="Exceptions\FfmpegProcessingException.cs" />
     <Compile Include="Exceptions\FfmpegRenderingException.cs" />
     <Compile Include="Exceptions\ForStreamInvalidException.cs" />
@@ -80,6 +84,8 @@
     <Compile Include="Enums\LogicalOperators.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\ProcessExtensions.cs" />
+    <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Filters\Attributes\FilterAttribute.cs" />
     <Compile Include="Filters\Attributes\FilterParameterAttribute.cs" />
     <Compile Include="Filters\Contexts\FilterBindingContext.cs" />
