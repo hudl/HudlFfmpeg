@@ -9,7 +9,7 @@ namespace Hudl.FFmpeg.Command.StreamReaders
     public abstract class BaseStandardStreamReader
     {
         private static readonly LogUtility Log = LogUtility.GetLogger(typeof(BaseStandardStreamReader));
-        private const int OutputBuilderLimit = 10000;
+        private const int OutputBuilderLimitDefault = 10000;
 
         protected BaseStandardStreamReader(Process processToListenTo)
         {
@@ -69,13 +69,15 @@ namespace Hudl.FFmpeg.Command.StreamReaders
                 LastLineReceived = data;
             }
 
+            var outputLimit = ResourceManagement.MaxStandardOutputRetentionLength ?? OutputBuilderLimitDefault; 
+
             //there is no specific reason behind this number other than, it seems like a pretty good number baseline. 
             //ultimately ffmpeg can blow up the standard output/error stream with logs. we dont want to create
             //an OOM exception. so we will trash and reset.
-            if (OutputBuilder.Length > OutputBuilderLimit)
+            if (outputLimit > 0 && OutputBuilder.Length > outputLimit)
             {
-                var newBuilder = new StringBuilder(OutputBuilderLimit);
-                newBuilder.Append(OutputBuilder.ToString(), OutputBuilderLimit / 2, OutputBuilderLimit / 2);
+                var newBuilder = new StringBuilder(outputLimit);
+                newBuilder.Append(OutputBuilder.ToString(), outputLimit / 2, outputLimit / 2);
                 OutputBuilder = newBuilder;
             }
 

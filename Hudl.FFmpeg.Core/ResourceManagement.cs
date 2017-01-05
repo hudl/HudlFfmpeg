@@ -8,6 +8,7 @@ namespace Hudl.FFmpeg
     {
         public static CommandConfiguration CommandConfiguration { get; set; }
 
+        public static int? MaxStandardOutputRetentionLength { get; set; }
       
         private static bool? _isMonoRuntime;
         /// <summary>

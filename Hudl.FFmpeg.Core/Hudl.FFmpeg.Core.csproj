@@ -56,6 +56,8 @@
     <Compile Include="Attributes\ValidateAttribute.cs" />
     <Compile Include="Attributes\ForStreamAttribute.cs" />
     <Compile Include="Collections\ForStreamCollection.cs" />
+    <Compile Include="Command\Models\FFcommandContext.cs" />
+    <Compile Include="Command\Models\FFcommandState.cs" />
     <Compile Include="Command\StreamReaders\BaseStandardStreamReader.cs" />
     <Compile Include="Command\StreamReaders\StandardOutputAsyncStreamReader.cs" />
     <Compile Include="Command\StreamReaders\StandardErrorAsyncStreamReader.cs" />
