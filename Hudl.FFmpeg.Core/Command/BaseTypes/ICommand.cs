@@ -8,6 +8,10 @@ namespace Hudl.FFmpeg.Command.BaseTypes
 
         Action<ICommandFactory, ICommand, bool> PostExecutionAction { get; set; }
 
+        ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>()
+            where TProcessorType : class, ICommandProcessor, new()
+            where TBuilderType : class, ICommandBuilder, new();
+
         ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(int? timeoutMilliseconds)
             where TProcessorType : class, ICommandProcessor, new()
             where TBuilderType : class, ICommandBuilder, new();

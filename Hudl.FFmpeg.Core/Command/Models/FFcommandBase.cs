@@ -4,9 +4,9 @@ using Hudl.FFmpeg.Exceptions;
 
 namespace Hudl.FFmpeg.Command.Models
 {
-    public abstract class FFcommandBase : ICommand
+    public abstract class FFCommandBase : ICommand
     {
-        protected FFcommandBase()
+        protected FFCommandBase()
         {
             PreExecutionAction = EmptyOperation;
             PostExecutionAction = EmptyOperation;
@@ -23,6 +23,13 @@ namespace Hudl.FFmpeg.Command.Models
         public Action<ICommandFactory, ICommand, ICommandProcessor> OnSuccessAction { get; set; }
 
         public Action<ICommandFactory, ICommand, ICommandProcessor> OnErrorAction { get; set; }
+
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>()
+            where TProcessorType : class, ICommandProcessor, new()
+            where TBuilderType : class, ICommandBuilder, new()
+        {
+            return ExecuteWith<TProcessorType, TBuilderType>(null);
+        }
 
         public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(int? timeoutMilliseconds)
             where TProcessorType : class, ICommandProcessor, new()

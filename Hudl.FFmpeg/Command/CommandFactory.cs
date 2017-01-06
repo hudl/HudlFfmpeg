@@ -125,7 +125,6 @@ namespace Hudl.FFmpeg.Command
             return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>((int)timeout.TotalMilliseconds);
         }
 
-
         private CommandFactory Add(FFmpegCommand command, bool export)
         {
             if (command == null)

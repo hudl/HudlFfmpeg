@@ -70,11 +70,11 @@
     <Compile Include="Command\BaseTypes\ICommandBuilder.cs" />
     <Compile Include="Command\CommandConfiguration.cs" />
     <Compile Include="Command\CommandProcessorStatus.cs" />
-    <Compile Include="Command\Models\FFcommandBase.cs" />
+    <Compile Include="Command\Models\FFCommandBase.cs" />
     <Compile Include="Command\BaseTypes\ICommandFactory.cs" />
     <Compile Include="Command\BaseTypes\ICommand.cs" />
     <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
-    <Compile Include="Command\Models\FFcommandBuilderBase.cs" />
+    <Compile Include="Command\Models\FFCommandBuilderBase.cs" />
     <Compile Include="Command\Models\FFmpegCommandBuilder.cs" />
     <Compile Include="DataTypes\DecimalScale.cs" />
     <Compile Include="DataTypes\DecimalScaleRgb.cs" />

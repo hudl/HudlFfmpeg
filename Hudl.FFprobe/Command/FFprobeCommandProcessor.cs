@@ -75,6 +75,11 @@ namespace Hudl.FFprobe.Command
             return true;
         }
 
+        public bool Send(string command)
+        {
+            return Send(command, null);
+        }
+
         public bool Send(string command, int? timeoutMilliseconds)
         {
             if (Status != CommandProcessorStatus.Ready)

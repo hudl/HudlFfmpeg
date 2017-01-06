@@ -6,7 +6,7 @@ using Hudl.FFmpeg.Filters.BaseTypes;
 
 namespace Hudl.FFmpeg.Command
 {
-    public class FFmpegCommand : FFcommandBase
+    public class FFmpegCommand : FFCommandBase
     {
         private FFmpegCommand(CommandFactory owner)
         {

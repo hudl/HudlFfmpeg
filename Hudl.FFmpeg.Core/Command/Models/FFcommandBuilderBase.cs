@@ -2,11 +2,11 @@
 
 namespace Hudl.FFmpeg.Command.Models
 {
-    public abstract class FFcommandBuilderBase 
+    public abstract class FFCommandBuilderBase 
     {
         protected readonly StringBuilder BuilderBase;
 
-        protected FFcommandBuilderBase()
+        protected FFCommandBuilderBase()
         {
             BuilderBase = new StringBuilder(100);            
         }

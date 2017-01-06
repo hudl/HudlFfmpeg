@@ -15,7 +15,7 @@ using Hudl.FFmpeg.Settings.Utility;
 
 namespace Hudl.FFmpeg.Command
 {
-    internal class FFmpegCommandBuilder: FFcommandBuilderBase, ICommandBuilder
+    internal class FFmpegCommandBuilder: FFCommandBuilderBase, ICommandBuilder
     {
         public void WriteCommand(ICommand command)
         {
