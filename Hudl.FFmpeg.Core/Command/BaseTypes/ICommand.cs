@@ -12,7 +12,11 @@ namespace Hudl.FFmpeg.Command.BaseTypes
             where TProcessorType : class, ICommandProcessor, new()
             where TBuilderType : class, ICommandBuilder, new();
 
-        ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor)
+        ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(int? timeoutMilliseconds)
+            where TProcessorType : class, ICommandProcessor, new()
+            where TBuilderType : class, ICommandBuilder, new();
+
+        ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor, int? timeoutMilliseconds)
             where TProcessorType : class, ICommandProcessor
             where TBuilderType : class, ICommandBuilder, new();
     }

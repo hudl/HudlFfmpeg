@@ -77,6 +77,11 @@ namespace Hudl.FFprobe.Command
 
         public bool Send(string command)
         {
+            return Send(command, null);
+        }
+
+        public bool Send(string command, int? timeoutMilliseconds)
+        {
             if (Status != CommandProcessorStatus.Ready)
             {
                 throw new InvalidOperationException(string.Format("Cannot process a command processor that is currently in the '{0}' state.", Status));
@@ -90,7 +95,7 @@ namespace Hudl.FFprobe.Command
             {
                 Status = CommandProcessorStatus.Processing;
 
-                ProcessIt(command);
+                ProcessIt(command, timeoutMilliseconds);
 
                 Status = CommandProcessorStatus.Ready;
             }
@@ -126,7 +131,7 @@ namespace Hudl.FFprobe.Command
             }
         }
 
-        private void ProcessIt(string command)
+        private void ProcessIt(string command, int? timeoutMilliseconds)
         {
             using (var FFprobeProcess = new Process())
             {

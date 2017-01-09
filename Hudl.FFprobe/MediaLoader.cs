@@ -40,7 +40,7 @@ namespace Hudl.FFprobe
                 ffprobeCommand.AddSetting(new ShowFrames());
             }
                                                
-            var commandProcessor = ffprobeCommand.Execute();
+            var commandProcessor = ffprobeCommand.Execute(null);
 
             var containerMetadata = FFprobeSerializer.Serialize(commandProcessor);
 

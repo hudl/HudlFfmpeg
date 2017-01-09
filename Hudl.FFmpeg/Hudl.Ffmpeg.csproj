@@ -71,7 +71,7 @@
     <Compile Include="Metadata\Interfaces\IMetadataManipulation.cs" />
     <Compile Include="Metadata\MetadataHelpers.cs" />
     <Compile Include="Metadata\MetadataInfoStreamCalculator.cs" />
-    <Compile Include="Command\FFmpegProcessorReciever.cs" />
+    <Compile Include="Command\FFmpegCommandProcessor.cs" />
     <Compile Include="Command\FFmpegCommandBuilder.cs" />
     <Compile Include="Command\CommandFactory.cs" />
     <Compile Include="Command\CommandObjects.cs" />

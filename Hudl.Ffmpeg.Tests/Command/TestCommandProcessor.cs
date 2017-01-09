@@ -30,6 +30,11 @@ namespace Hudl.FFmpeg.Tests.Command
 
         public bool Send(string command)
         {
+            return Send(command, null);
+        }
+
+        public bool Send(string command, int? timeout)
+        {
             SendFired = true;
             return true;
         }

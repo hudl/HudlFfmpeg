@@ -60,6 +60,10 @@ namespace Hudl.FFmpeg.Logging
         {
             _log.Error(GetLogMessage(message));
         }
+        public void Error(string message, Exception e)
+        {
+            _log.Error(GetLogMessage(message), e);
+        }
         public void ErrorFormat(string message, params object[] args)
         {
             _log.Error(GetLogMessage(string.Format(message, args)));

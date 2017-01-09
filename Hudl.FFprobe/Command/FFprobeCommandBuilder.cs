@@ -6,7 +6,7 @@ using Hudl.FFmpeg.Settings.Serialization;
 
 namespace Hudl.FFprobe.Command
 {
-    internal class FFprobeCommandBuilder : FFcommandBuilderBase, ICommandBuilder
+    internal class FFprobeCommandBuilder : FFCommandBuilderBase, ICommandBuilder
     {
         public void WriteCommand(ICommand command)
         {

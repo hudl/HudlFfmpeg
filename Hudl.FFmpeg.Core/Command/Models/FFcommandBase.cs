@@ -4,9 +4,9 @@ using Hudl.FFmpeg.Exceptions;
 
 namespace Hudl.FFmpeg.Command.Models
 {
-    public abstract class FFcommandBase : ICommand
+    public abstract class FFCommandBase : ICommand
     {
-        protected FFcommandBase()
+        protected FFCommandBase()
         {
             PreExecutionAction = EmptyOperation;
             PostExecutionAction = EmptyOperation;
@@ -28,6 +28,13 @@ namespace Hudl.FFmpeg.Command.Models
             where TProcessorType : class, ICommandProcessor, new()
             where TBuilderType : class, ICommandBuilder, new()
         {
+            return ExecuteWith<TProcessorType, TBuilderType>(null);
+        }
+
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(int? timeoutMilliseconds)
+            where TProcessorType : class, ICommandProcessor, new()
+            where TBuilderType : class, ICommandBuilder, new()
+        {
             var commandProcessor = new TProcessorType();
 
             if (!commandProcessor.Open())
@@ -35,7 +42,7 @@ namespace Hudl.FFmpeg.Command.Models
                 throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
-            var returnType = ExecuteWith<TProcessorType, TBuilderType>(commandProcessor);
+            var returnType = ExecuteWith<TProcessorType, TBuilderType>(commandProcessor, timeoutMilliseconds);
 
             if (!commandProcessor.Close())
             {
@@ -45,7 +52,7 @@ namespace Hudl.FFmpeg.Command.Models
             return returnType;
         }
 
-        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor)
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor, int? timeoutMilliseconds)
             where TProcessorType : class, ICommandProcessor
             where TBuilderType : class, ICommandBuilder, new()
         {
@@ -59,7 +66,7 @@ namespace Hudl.FFmpeg.Command.Models
 
             PreExecutionAction(Owner, this, true);
 
-            if (!commandProcessor.Send(commandBuilder.ToString()))
+            if (!commandProcessor.Send(commandBuilder.ToString(), timeoutMilliseconds))
             {
                 PostExecutionAction(Owner, this, false);
 

@@ -7,7 +7,7 @@ using Hudl.FFmpeg.Settings.Interfaces;
 
 namespace Hudl.FFprobe.Command
 {
-    public class FFprobeCommand : FFcommandBase
+    public class FFprobeCommand : FFCommandBase
     {
         private FFprobeCommand(IContainer resource)
         {
@@ -38,7 +38,13 @@ namespace Hudl.FFprobe.Command
 
         public ICommandProcessor Execute()
         {
-            return ExecuteWith<FFprobeCommandProcessor, FFprobeCommandBuilder>();
+            return Execute(null);
         }
+
+        public ICommandProcessor Execute(int? timeoutMilliseconds)
+        {
+            return ExecuteWith<FFprobeCommandProcessor, FFprobeCommandBuilder>(timeoutMilliseconds);
+        }
+
     }
 }
