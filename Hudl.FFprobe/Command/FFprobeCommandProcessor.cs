@@ -21,6 +21,7 @@ namespace Hudl.FFprobe.Command
         public Exception Error { get; protected set; }
 
         public string StdOut { get; protected set; }
+        public string Arguments { get; protected set; }
 
         public CommandProcessorStatus Status { get; protected set; }
 
@@ -90,6 +91,8 @@ namespace Hudl.FFprobe.Command
             {
                 throw new ArgumentException("Processing command cannot be null or empty.", "command");
             }
+
+            Arguments = command; 
 
             try
             {
