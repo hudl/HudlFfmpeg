@@ -14,7 +14,7 @@ namespace Hudl.FFmpeg.Tests.Command
 
         public string StdOut { get; protected set; }
 
-        public string Arguments { get; protected set; }
+        public string Command { get; protected set; }
 
         public Exception Error { get; protected set; }
 
@@ -37,7 +37,7 @@ namespace Hudl.FFmpeg.Tests.Command
 
         public bool Send(string command, int? timeout)
         {
-            Arguments = command;
+            Command = command;
             SendFired = true;
             return true;
         }
