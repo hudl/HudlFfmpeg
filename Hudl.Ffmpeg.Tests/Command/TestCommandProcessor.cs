@@ -14,6 +14,8 @@ namespace Hudl.FFmpeg.Tests.Command
 
         public string StdOut { get; protected set; }
 
+        public string Command { get; protected set; }
+
         public Exception Error { get; protected set; }
 
         public bool Open()
@@ -35,6 +37,7 @@ namespace Hudl.FFmpeg.Tests.Command
 
         public bool Send(string command, int? timeout)
         {
+            Command = command;
             SendFired = true;
             return true;
         }
