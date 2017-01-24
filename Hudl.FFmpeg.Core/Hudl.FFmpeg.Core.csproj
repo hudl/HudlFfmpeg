@@ -52,6 +52,7 @@
     <Compile Include="Attributes\AttributeRetrieval.cs" />
     <Compile Include="Attributes\AttributeValidation.cs" />
     <Compile Include="Attributes\ContainsStreamAttribute.cs" />
+    <Compile Include="Attributes\SerializedAsAttribute.cs" />
     <Compile Include="Attributes\Utility\ValidationUtility.cs" />
     <Compile Include="Attributes\ValidateAttribute.cs" />
     <Compile Include="Attributes\ForStreamAttribute.cs" />

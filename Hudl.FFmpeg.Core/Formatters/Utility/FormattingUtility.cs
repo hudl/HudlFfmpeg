@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using Hudl.FFmpeg.Resources.Interfaces;
+using Hudl.FFmpeg.Attributes;
+using System.Linq;
 
 namespace Hudl.FFmpeg.Formatters.Utility
 {
@@ -61,6 +63,19 @@ namespace Hudl.FFmpeg.Formatters.Utility
             }
 
             return enumString;
+        }
+
+        public static string EnumDefaultValue<TValue>(TValue enumValue, bool convertIdentifiers = false)
+        {
+            var enumType = enumValue.GetType();
+            var enumMember = enumType.GetMember(enumValue.ToString());
+            var enumAttribute = AttributeRetrieval.GetAttribute<SerializedAsAttribute>(enumMember.First());
+            if (enumAttribute != null)
+            {
+                return enumAttribute.Name; 
+            }
+
+            return EnumValue(enumValue, convertIdentifiers);
         }
 
         public static string EscapeString(string value)

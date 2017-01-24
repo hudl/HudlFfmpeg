@@ -47,7 +47,7 @@ namespace Hudl.FFmpeg.Tests.Resources
         public void InputSettingsToOutput_Verify()
         {
             var inputSettings = SettingsCollection.ForInput(
-                new StartAt(1d),
+                new SeekPositionInput(1d),
                 new DurationInput(3d)); 
 
             var output = CommandFactory.Create()
@@ -64,7 +64,7 @@ namespace Hudl.FFmpeg.Tests.Resources
         [Fact]
         public void InputSettingsToOutputSettings_Verify()
         {
-            var inputSettings = SettingsCollection.ForInput(new StartAt(1d));
+            var inputSettings = SettingsCollection.ForInput(new SeekPositionInput(1d));
             var outputSettings = SettingsCollection.ForOutput(
                 new BitRateVideo(3000), 
                 new DurationOutput(5d)); 
@@ -85,7 +85,7 @@ namespace Hudl.FFmpeg.Tests.Resources
         [Fact]
         public void InputSettingsToOutputSettingsOverDuration_Verify()
         {
-            var inputSettings = SettingsCollection.ForInput(new StartAt(1d));
+            var inputSettings = SettingsCollection.ForInput(new SeekPositionInput(1d));
             var outputSettings = SettingsCollection.ForOutput(
                 new BitRateVideo(3000),
                 new DurationOutput(10d));
@@ -149,7 +149,7 @@ namespace Hudl.FFmpeg.Tests.Resources
             var calculatedSeconds = ((baseline.Info.VideoMetadata.Duration.TotalSeconds - 1) * 3d) - 2d;
             var calculatedDuration = TimeSpan.FromSeconds(calculatedSeconds);
 
-            var inputSettings = SettingsCollection.ForInput(new StartAt(1d));
+            var inputSettings = SettingsCollection.ForInput(new SeekPositionInput(1d));
             var outputSettings = SettingsCollection.ForOutput(
                 new BitRateVideo(3000),
                 new DurationOutput(5d)); 
