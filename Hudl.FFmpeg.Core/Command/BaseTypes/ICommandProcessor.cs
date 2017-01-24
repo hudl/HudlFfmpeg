@@ -21,7 +21,12 @@ namespace Hudl.FFmpeg.Command.BaseTypes
         /// contains the stdout message from the last command.
         /// </summary>
         string StdOut { get; }
-        
+
+        /// <summary>
+        /// contains the last ran Arguments through the processor
+        /// </summary>
+        string Command { get; }
+
         /// <summary>
         /// opens a command builder session, should get the processor started and ready to recieve commands
         /// </summary>

@@ -25,6 +25,7 @@ namespace Hudl.FFmpeg.Filters
         {
             Format = OverlayVideoFormatType.Yuv420; 
             Eval = OverlayVideoEvalType.Frame;
+            RepeatLast = true;
         }
         public Overlay(int x, int y)
             : this()
@@ -42,7 +43,7 @@ namespace Hudl.FFmpeg.Filters
         [FilterParameter(Name = "shortest", Default = false, Formatter = typeof(BoolToInt32Formatter))]
         public bool Shortest { get; set; }
 
-        [FilterParameter(Name = "repeatlast", Default = false, Formatter = typeof(BoolToInt32Formatter))]
+        [FilterParameter(Name = "repeatlast", Default = true, Formatter = typeof(BoolToInt32Formatter))]
         public bool RepeatLast { get; set; }
        
         [FilterParameter(Name ="eval", Default = OverlayVideoEvalType.Frame, Formatter = typeof(EnumParameterFormatter))]

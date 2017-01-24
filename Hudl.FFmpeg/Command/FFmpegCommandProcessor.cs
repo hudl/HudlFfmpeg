@@ -24,6 +24,7 @@ namespace Hudl.FFmpeg.Command
         public Exception Error { get; protected set; }
 
         public string StdOut { get; protected set; }
+        public string Command { get; protected set; }
 
         public CommandProcessorStatus Status { get; protected set; }
 
@@ -93,6 +94,8 @@ namespace Hudl.FFmpeg.Command
             {
                 throw new ArgumentException("Processing command cannot be null or empty.", "command");
             }
+
+            Command = command; 
 
             var retryCount = 0; 
             var isSuccessful = false;
