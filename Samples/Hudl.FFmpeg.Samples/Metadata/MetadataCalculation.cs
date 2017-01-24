@@ -29,7 +29,7 @@ namespace Hudl.FFmpeg.Samples.Metadata
             var factory = CommandFactory.Create();
 
             //set up the output and input settings 
-            var inputSettings = SettingsCollection.ForInput(new StartAt(1d));
+            var inputSettings = SettingsCollection.ForInput(new SeekPositionInput(1d));
             var outputSettings = SettingsCollection.ForOutput(
                 new BitRateVideo(3000),
                 new DurationOutput(10d));

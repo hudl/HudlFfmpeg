@@ -21,7 +21,7 @@ namespace Hudl.FFmpeg.Samples.FFmpeg.Convert
 
             //create a command adding a video file
             var command = factory.CreateOutputCommand()
-                .AddInput(Assets.Utilities.GetVideoFile(), SettingsCollection.ForInput(new SeekTo(2)))
+                .AddInput(Assets.Utilities.GetVideoFile(), SettingsCollection.ForInput(new SeekPositionInput(2)))
                 .To<Jpg>(@"c:\source\ffmpeg\bin\temp\foo.jpg", SettingsCollection.ForOutput(new VideoFrames(1), new OverwriteOutput())); 
 
             //render the output

@@ -57,6 +57,7 @@
     <Compile Include="Command\Utility\CommandHelperUtility.cs" />
     <Compile Include="Enums\FFmpegStreamTypes.cs" />
     <Compile Include="Enums\FpsRoundType.cs" />
+    <Compile Include="Enums\AvoidNegativeTimestampsType.cs" />
     <Compile Include="Filters\AEvalSrc.cs" />
     <Compile Include="Filters\Color.cs" />
     <Compile Include="Filters\APad.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Resources\Txt.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
+    <Compile Include="Settings\BaseTypes\BaseSeekPosition.cs" />
     <Compile Include="Settings\BaseTypes\BaseDuration.cs" />
     <Compile Include="Settings\BaseTypes\BaseChannel.cs" />
     <Compile Include="Settings\BaseTypes\BaseQualityScale.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="Settings\FrameDropThreshold.cs" />
     <Compile Include="Settings\LoopInput.cs" />
     <Compile Include="Settings\CopyTimestamps.cs" />
+    <Compile Include="Settings\AvoidNegativeTimestamps.cs" />
     <Compile Include="Settings\QualityScaleAudio.cs" />
     <Compile Include="Settings\QualityScaleVideo.cs" />
     <Compile Include="Settings\VideoFrames.cs" />
@@ -203,8 +206,8 @@
     <Compile Include="Settings\Level.cs" />
     <Compile Include="Settings\ProfileVideo.cs" />
     <Compile Include="Settings\TrimShortest.cs" />
-    <Compile Include="Settings\SeekTo.cs" />
-    <Compile Include="Settings\StartAt.cs" />
+    <Compile Include="Settings\SeekPositionInput.cs" />
+    <Compile Include="Settings\SeekPositionOutput.cs" />
     <Compile Include="Settings\RemoveAudio.cs" />
     <Compile Include="Settings\PixelFormat.cs" />
     <Compile Include="Settings\OverwriteOutput.cs" />

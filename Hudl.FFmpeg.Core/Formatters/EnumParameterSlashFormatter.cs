@@ -7,7 +7,7 @@ namespace Hudl.FFmpeg.Formatters
     {
         public string Format(object value)
         {
-            return FormattingUtility.EnumValue(value, true);
+            return FormattingUtility.EnumDefaultValue(value, true);
         }
     }
 }

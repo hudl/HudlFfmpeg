@@ -19,6 +19,12 @@ namespace Hudl.FFmpeg.Attributes
             return (TAttribute)Attribute.GetCustomAttribute(itemType, typeof(TAttribute));
         }
 
+        public static TAttribute GetAttribute<TAttribute>(MemberInfo itemType)
+         where TAttribute : Attribute
+        {
+            return (TAttribute)Attribute.GetCustomAttribute(itemType, typeof(TAttribute));
+        }
+
         public static List<TAttribute> GetAttributes<TAttribute>(Type itemType)
             where TAttribute : Attribute
         {
@@ -34,6 +40,19 @@ namespace Hudl.FFmpeg.Attributes
      
         public static List<TAttribute> GetAttributes<TAttribute>(PropertyInfo itemType)
             where TAttribute : Attribute
+        {
+            var allAttributes = Attribute.GetCustomAttributes(itemType, typeof(TAttribute));
+            if (allAttributes.Length == 0)
+            {
+                return null;
+            }
+
+            var matchingAttribute = allAttributes.OfType<TAttribute>().ToList();
+            return matchingAttribute;
+        }
+
+        public static List<TAttribute> GetAttributes<TAttribute>(MemberInfo itemType)
+          where TAttribute : Attribute
         {
             var allAttributes = Attribute.GetCustomAttributes(itemType, typeof(TAttribute));
             if (allAttributes.Length == 0)

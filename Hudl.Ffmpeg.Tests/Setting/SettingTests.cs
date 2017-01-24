@@ -304,11 +304,32 @@ namespace Hudl.FFmpeg.Tests.Setting
         }
 
         [Fact]
-        public void SeekTo_Verify()
+        public void AvoidNegativeTimestamps_Verify()
         {
-            var settingWrong1 = new SeekTo(0);
-            var settingWrong2 = new SeekTo(-1);
-            var setting = new SeekTo(120);
+            var setting1 = new AvoidNegativeTimestamps(AvoidNegativeTimestampsType.Auto);
+            var setting2 = new AvoidNegativeTimestamps(AvoidNegativeTimestampsType.Disabled);
+            var setting3 = new AvoidNegativeTimestamps(AvoidNegativeTimestampsType.MakeNonNegative);
+            var setting4 = new AvoidNegativeTimestamps(AvoidNegativeTimestampsType.MakeZero);
+
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting1));
+            Assert.Equal(SettingSerializer.Serialize(setting1), "-avoid_negative_ts auto");
+
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting2));
+            Assert.Equal(SettingSerializer.Serialize(setting2), "-avoid_negative_ts disabled");
+
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting3));
+            Assert.Equal(SettingSerializer.Serialize(setting3), "-avoid_negative_ts make_non_negative");
+
+            Assert.DoesNotThrow(() => SettingSerializer.Serialize(setting4));
+            Assert.Equal(SettingSerializer.Serialize(setting4), "-avoid_negative_ts make_zero");
+        }
+
+        [Fact]
+        public void SeekPositionOutput_Verify()
+        {
+            var settingWrong1 = new SeekPositionOutput(0);
+            var settingWrong2 = new SeekPositionOutput(-1);
+            var setting = new SeekPositionOutput(120);
 
             Assert.Throws<InvalidOperationException>(() => { SettingSerializer.Serialize(settingWrong1); });
             Assert.Throws<InvalidOperationException>(() => { SettingSerializer.Serialize(settingWrong2); });
@@ -317,11 +338,11 @@ namespace Hudl.FFmpeg.Tests.Setting
         }
 
         [Fact]
-        public void StartAt_Verify()
+        public void SeekPositionInput_Verify()
         {
-            var settingWrong1 = new StartAt(0);
-            var settingWrong2 = new StartAt(-1);
-            var setting = new StartAt(120);
+            var settingWrong1 = new SeekPositionInput(0);
+            var settingWrong2 = new SeekPositionInput(-1);
+            var setting = new SeekPositionInput(120);
 
             Assert.Throws<InvalidOperationException>(() => { SettingSerializer.Serialize(settingWrong1); });
             Assert.Throws<InvalidOperationException>(() => { SettingSerializer.Serialize(settingWrong2); });
