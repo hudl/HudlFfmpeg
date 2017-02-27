@@ -62,6 +62,7 @@
     <Compile Include="Filters\Color.cs" />
     <Compile Include="Filters\APad.cs" />
     <Compile Include="Filters\AReverse.cs" />
+    <Compile Include="Filters\ZoomPan.cs" />
     <Compile Include="Filters\Reverse.cs" />
     <Compile Include="Filters\Rotate.cs" />
     <Compile Include="Filters\NullSrc.cs" />
