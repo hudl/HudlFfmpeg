@@ -21,22 +21,22 @@ namespace Hudl.FFmpeg.Filters
 
         }
 
-        public ZoomPan(string zoom, string x, string y, string d, ScalePresetType size)
+        public ZoomPan(string zoom, string x, string y, string d, ScalePresetType? size)
         {
             Zoom = zoom;
             X = x;
             Y = y;
             D = d;
-            S = size;
+            S = size.HasValue ? size.Value : ScalePresetType.Hd720;
         }
 
-        [FilterParameter(Name = "zoom", Default = "1", Formatter = typeof(SingleQuoteFormatter))]
+        [FilterParameter(Name = "zoom", Formatter = typeof(SingleQuoteFormatter))]
         public string Zoom { get; set; }
 
-        [FilterParameter(Name = "x", Default = "0", Formatter = typeof(SingleQuoteFormatter))]
+        [FilterParameter(Name = "x", Formatter = typeof(SingleQuoteFormatter))]
         public string X { get; set; }
 
-        [FilterParameter(Name = "y", Default = "0", Formatter = typeof(SingleQuoteFormatter))]
+        [FilterParameter(Name = "y", Formatter = typeof(SingleQuoteFormatter))]
         public string Y { get; set; }
 
         [FilterParameter(Name = "d")]
@@ -46,7 +46,7 @@ namespace Hudl.FFmpeg.Filters
         public ScalePresetType S { get; set; }
 
         [FilterParameter(Name = "fps", Default = 25)]
-        public string Fps { get; set; }
+        public double Fps { get; set; }
 
         public virtual MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
