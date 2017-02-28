@@ -45,7 +45,7 @@ namespace Hudl.FFmpeg.Filters
         public int? Height { get; set; }
 
         [FilterParameter(Name = "x")]
-        [Validate(LogicalOperators.GreaterThanOrEqual 0)]
+        [Validate(LogicalOperators.GreaterThanOrEqual, 0)]
         public int? X { get; set; }
 
         [FilterParameter(Name = "y")]
