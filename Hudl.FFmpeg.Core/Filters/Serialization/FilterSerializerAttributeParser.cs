@@ -69,6 +69,11 @@ namespace Hudl.FFmpeg.Filters.Serialization
                     IsDefault = filterPropertyIsDefault
                 });
             }
+
+            if (filterSerializerData.Parameters.Any(f => f.Parameter.Order > 0))
+            {
+                filterSerializerData.Parameters = filterSerializerData.Parameters.OrderBy(f => f.Parameter.Order).ToList(); 
+            }
         }
 
         private static object GetFilterSerializationBindingValue(FilterParameterAttribute filterParameterAttribute, PropertyInfo propertyInfo, FilterBindingContext context, IFilter filter)

@@ -31,17 +31,20 @@ namespace Hudl.FFmpeg.Filters
             Expression = expression;
         }
 
-        [FilterParameter]
+        [FilterParameter(Order = 1)]
         public BlendVideoOptionType? Option { get; set; }
 
-        [FilterParameter(Default = BlendVideoModeType.and)]
+        [FilterParameter(Order = 2, Default = BlendVideoModeType.and)]
         public BlendVideoModeType? Mode { get; set; }
 
         /// <summary>
         /// the blend expression details can be found at http://ffmpeg.org/ffmpeg-all.html#blend. 
         /// </summary>
-        [FilterParameter(Formatter = typeof(SingleQuoteFormatter))]
+        [FilterParameter(Order = 3, Formatter = typeof(SingleQuoteFormatter))]
         public string Expression { get; set; }
+
+        [FilterParameter(Order = 4, Name = "repeatlast", Default = false, Formatter = typeof(BoolToInt32Formatter))]
+        public bool RepeatLast { get; set; }
 
         public virtual MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {

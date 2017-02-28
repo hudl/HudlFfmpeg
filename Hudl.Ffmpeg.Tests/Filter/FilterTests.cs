@@ -330,6 +330,10 @@ namespace Hudl.FFmpeg.Tests.Filter
             filter.Expression = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
             filterValue.Append("blend=all_expr='A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))'");
             Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            filter.RepeatLast = true;
+            filterValue.Append(":repeatlast=1");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
         }
 
         [Fact]

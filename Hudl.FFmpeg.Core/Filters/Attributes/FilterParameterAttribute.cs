@@ -24,5 +24,7 @@ namespace Hudl.FFmpeg.Filters.Attributes
         public Type Formatter { get; set; }
 
         public Type Binding { get; set; }
+
+        public int Order { get; set; }
     }
 }
