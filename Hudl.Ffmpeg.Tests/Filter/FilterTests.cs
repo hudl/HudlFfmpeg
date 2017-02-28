@@ -692,7 +692,7 @@ namespace Hudl.FFmpeg.Tests.Filter
             Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
 
             filter.Duration = TimeSpan.FromSeconds(3.222);
-            filterValue.Append(":d=00:00:03.222");
+            filterValue.Append(":d=3.222");
             Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
 
             filter.SampleAspectRatio = Ratio.Create(1, 1);
