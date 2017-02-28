@@ -24,6 +24,7 @@ namespace Hudl.FFmpeg.Filters
         {
             Mode = BlendVideoModeType.and;
             Option = BlendVideoOptionType.all_expr;
+            RepeatLast = true;
         }
         public Blend(string expression) 
             : this()
@@ -43,7 +44,7 @@ namespace Hudl.FFmpeg.Filters
         [FilterParameter(Order = 3, Formatter = typeof(SingleQuoteFormatter))]
         public string Expression { get; set; }
 
-        [FilterParameter(Order = 4, Name = "repeatlast", Default = false, Formatter = typeof(BoolToInt32Formatter))]
+        [FilterParameter(Order = 4, Name = "repeatlast", Default = true, Formatter = typeof(BoolToInt32Formatter))]
         public bool RepeatLast { get; set; }
 
         public virtual MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
