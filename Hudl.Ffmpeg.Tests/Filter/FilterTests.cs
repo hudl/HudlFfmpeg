@@ -702,6 +702,66 @@ namespace Hudl.FFmpeg.Tests.Filter
            
         }
 
+        [Fact]
+        public void ZoomPan_Verify()
+        {
+            var filter = FilterFactory.CreateEmpty<Hudl.FFmpeg.Filters.ZoomPan>();
+            var filterValue = new StringBuilder(100);
+            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+
+            filter.Zoom = "2";
+            filterValue.Append("zoompan=zoom=2");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            filter.X = "100";
+            filterValue.Append(":x=100");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            filter.Y = "200";
+            filterValue.Append(":y=200");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            filter.D = "1";
+            filterValue.Append(":d=1");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            filter.S = new Size(1280, 720);
+            filterValue.Append(":s=1280x720");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            filter.Fps = 30;
+            filterValue.Append(":fps=30");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            var filter2 = FilterFactory.CreateEmpty<Hudl.FFmpeg.Filters.ZoomPan>();
+            filterValue = new StringBuilder(100);
+            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter2));
+
+            filter2.Zoom = "in_w";
+            filterValue.Append("zoompan=zoom='in_w'");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter2));
+
+            filter2.X = "in_w+2";
+            filterValue.Append(":x='in_w+2'");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter2));
+
+            filter2.Y = "out_w+3";
+            filterValue.Append(":y='out_w+3'");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter2));
+
+            filter2.D = "1";
+            filterValue.Append(":d=1");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter2));
+
+            filter2.S = new Size(1280, 720);
+            filterValue.Append(":s=1280x720");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter2));
+
+            filter2.Fps = 30;
+            filterValue.Append(":fps=30");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter2));
+        }
+
         private class FilterFactory
         {
             internal static TFilter CreateEmpty<TFilter>()

@@ -1,4 +1,5 @@
 ﻿using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Common;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Attributes;
 using Hudl.FFmpeg.Filters.Interfaces;
@@ -6,6 +7,7 @@ using Hudl.FFmpeg.Formatters;
 using Hudl.FFmpeg.Metadata;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Hudl.FFmpeg.Filters
 {
@@ -18,40 +20,44 @@ namespace Hudl.FFmpeg.Filters
     {
         public ZoomPan()
         {
-
         }
 
-        public ZoomPan(string zoom, string x, string y, string d, ScalePresetType? size)
+        public ZoomPan(string zoom, string x, string y, string d, double? fps, Size? size)
         {
             Zoom = zoom;
             X = x;
             Y = y;
             D = d;
-            S = size.HasValue ? size.Value : ScalePresetType.Hd720;
+            S = size;
+            Fps = fps;
         }
 
-        [FilterParameter(Name = "zoom", Formatter = typeof(SingleQuoteFormatter))]
+        public ZoomPan(string zoom, string x, string y, string d, double? fps, ScalePresetType? preset)
+            : this(zoom, x, y, d, fps, (Size?)null)
+        {
+            Size sizeValue = default(Size); 
+            if (preset.HasValue && Helpers.ScalingPresets.TryGetValue(preset.Value, out sizeValue))
+            {
+                S = sizeValue;
+            }
+        }
+
+        [FilterParameter(Name = "zoom", Formatter = typeof(SingleQuoteExpressionFormatter))]
         public string Zoom { get; set; }
 
-        [FilterParameter(Name = "x", Formatter = typeof(SingleQuoteFormatter))]
+        [FilterParameter(Name = "x", Formatter = typeof(SingleQuoteExpressionFormatter))]
         public string X { get; set; }
 
-        [FilterParameter(Name = "y", Formatter = typeof(SingleQuoteFormatter))]
+        [FilterParameter(Name = "y", Formatter = typeof(SingleQuoteExpressionFormatter))]
         public string Y { get; set; }
 
         [FilterParameter(Name = "d")]
         public string D { get; set; }
 
-        [FilterParameter(Name = "s", Default = ScalePresetType.Hd720)]
-        public ScalePresetType S { get; set; }
+        [FilterParameter(Name = "s", Formatter = typeof(SizeFormatter))]
+        public Size? S { get; set; }
 
-        [FilterParameter(Name = "fps", Default = 25)]
-        public double Fps { get; set; }
-
-        public virtual MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
-        {
-            //To-do: Need to fill this in.
-            return infoToUpdate;
-        }
+        [FilterParameter(Name = "fps")]
+        public double? Fps { get; set; }
     }
 }
