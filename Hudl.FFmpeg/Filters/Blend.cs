@@ -47,6 +47,9 @@ namespace Hudl.FFmpeg.Filters
         [FilterParameter(Order = 4, Name = "repeatlast", Default = true, Formatter = typeof(BoolToInt32Formatter))]
         public bool RepeatLast { get; set; }
 
+        [FilterParameter(Order = 5, Name = "shortest", Default = false, Formatter = typeof(BoolToInt32Formatter))]
+        public bool Shortest { get; set; }
+
         public virtual MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
         {
             infoToUpdate.VideoStream.VideoMetadata.Duration = suppliedInfo.Min(r => r.VideoStream.VideoMetadata.Duration);

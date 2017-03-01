@@ -334,6 +334,10 @@ namespace Hudl.FFmpeg.Tests.Filter
             filter.RepeatLast = false;
             filterValue.Append(":repeatlast=0");
             Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
+
+            filter.Shortest = true;
+            filterValue.Append(":shortest=1");
+            Assert.Equal(filterValue.ToString(), FilterSerializer.Serialize(filter));
         }
 
         [Fact]
