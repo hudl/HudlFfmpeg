@@ -12,7 +12,7 @@ namespace Hudl.FFmpeg.Settings
     /// </summary>
     [ForStream(Type = typeof(AudioStream))]
     [ForStream(Type = typeof(VideoStream))]
-    [Setting(Name = "ss", IsPreDeclaration = false, ResourceType = SettingsCollectionResourceType.Input)]
+    [Setting(Name = "ss", IsPreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
     public class SeekPositionInput : BaseSeekPosition
     {
         public SeekPositionInput(TimeSpan length)
