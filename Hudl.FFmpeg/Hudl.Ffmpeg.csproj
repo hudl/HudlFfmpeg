@@ -116,6 +116,7 @@
     <Compile Include="Resources\Txt.cs" />
     <Compile Include="Settings\AutoConvert.cs" />
     <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
+    <Compile Include="Settings\BaseTypes\BaseFrameRate.cs" />
     <Compile Include="Settings\BaseTypes\BaseSeekPosition.cs" />
     <Compile Include="Settings\BaseTypes\BaseDuration.cs" />
     <Compile Include="Settings\BaseTypes\BaseChannel.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Settings\ChannelInput.cs" />
     <Compile Include="Settings\DurationOutput.cs" />
     <Compile Include="Settings\FrameDropThreshold.cs" />
+    <Compile Include="Settings\FrameRateInput.cs" />
     <Compile Include="Settings\MapChapters.cs" />
     <Compile Include="Settings\MapMetadata.cs" />
     <Compile Include="Settings\LogLevel.cs" />
