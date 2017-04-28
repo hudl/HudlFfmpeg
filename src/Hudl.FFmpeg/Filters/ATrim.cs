@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using Hudl.FFmpeg.Attributes;
+using Hudl.FFmpeg.Enums;
+using Hudl.FFmpeg.Filters.Attributes;
+using Hudl.FFmpeg.Filters.Interfaces;
+using Hudl.FFmpeg.Metadata;
+using Hudl.FFmpeg.Metadata.Interfaces;
+using Hudl.FFmpeg.Resources.BaseTypes;
+
+namespace Hudl.FFmpeg.Filters
+{
+    /// <summary>
+    /// Trim Audio filter trims down the length of a audio to within the constraints provided.
+    /// </summary>
+    [ForStream(Type=typeof(AudioStream))]
+    [Filter(Name = "atrim", MinInputs = 1, MaxInputs = 1)]
+    public class ATrim : IFilter, IMetadataManipulation
+    {
+        public ATrim() 
+        {
+        }
+        public ATrim(double? startUnit, double? endUnit, AudioUnitType timebaseUnit)
+            : this()
+        {
+            switch (timebaseUnit)
+            {
+                case AudioUnitType.Sample:
+                    EndSample = endUnit;
+                    StartSample = startUnit;
+                    break;
+                case AudioUnitType.Seconds:
+                    End = endUnit;
+                    Start = startUnit;
+                    break;
+                case AudioUnitType.Timebase:
+                    EndPts = endUnit;
+                    StartPts = startUnit;
+                    break;
+            }
+        }
+        public ATrim(double? startUnit, double? endUnit, double? duration, AudioUnitType timebaseUnit)
+            : this(startUnit, endUnit, timebaseUnit)
+        {
+            Duration = duration;
+        }
+
+        [FilterParameter(Name = "start")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double? Start { get; set; }
+
+        [FilterParameter(Name = "end")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double? End { get; set; }
+
+        [FilterParameter(Name = "start_pts")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double? StartPts { get; set; }
+
+        [FilterParameter(Name = "end_pts")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double? EndPts { get; set; }
+
+        [FilterParameter(Name = "start_sample")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double? StartSample { get; set; }
+
+        [FilterParameter(Name = "end_sample")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double? EndSample { get; set; }
+
+        [FilterParameter(Name = "duration")]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double? Duration { get; set; }
+
+        public MetadataInfoTreeContainer EditInfo(MetadataInfoTreeContainer infoToUpdate, List<MetadataInfoTreeContainer> suppliedInfo)
+        {
+            var startTimeInSeconds = 0D;
+            var endTimeInSeconds = infoToUpdate.VideoStream.VideoMetadata.Duration.TotalSeconds;
+
+            if (End.HasValue)
+            {
+                endTimeInSeconds = End.Value;
+            } 
+            else if (EndSample.HasValue)
+            {
+                endTimeInSeconds = (double)EndSample.Value / (double)infoToUpdate.AudioStream.AudioMetadata.SampleRate;
+            }
+            else if (EndPts.HasValue)
+            {
+                endTimeInSeconds = (double)EndPts.Value / (double)infoToUpdate.AudioStream.AudioMetadata.TimeBase.ToDouble();
+            }
+
+            if (Start.HasValue)
+            {
+                startTimeInSeconds = Start.Value;
+            }
+            else if (StartSample.HasValue)
+            {
+                startTimeInSeconds = (double)StartSample.Value / (double)infoToUpdate.AudioStream.AudioMetadata.SampleRate;
+            }
+            else if (StartPts.HasValue)
+            {
+                startTimeInSeconds = (double)StartPts.Value / (double)infoToUpdate.AudioStream.AudioMetadata.TimeBase.ToDouble();
+            }
+
+            var timeInSecondsAfterTrim = endTimeInSeconds - startTimeInSeconds;
+            if (timeInSecondsAfterTrim < 0)
+            {
+                timeInSecondsAfterTrim = 0;
+            }
+
+            infoToUpdate.AudioStream.AudioMetadata.Duration = TimeSpan.FromSeconds(timeInSecondsAfterTrim);
+
+            return infoToUpdate;
+        }
+    }
+}

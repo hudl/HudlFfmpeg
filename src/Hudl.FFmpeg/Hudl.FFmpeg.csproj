@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hudl.FFmpeg.Core\Hudl.FFmpeg.Core.csproj" />
+    <ProjectReference Include="..\Hudl.FFprobe\Hudl.FFprobe.csproj" />
+  </ItemGroup>
+
+</Project>
