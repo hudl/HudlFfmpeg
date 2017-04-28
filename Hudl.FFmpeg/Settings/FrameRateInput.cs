@@ -1,5 +1,4 @@
-﻿using System;
-using Hudl.FFmpeg.Attributes;
+﻿using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
@@ -15,20 +14,12 @@ namespace Hudl.FFmpeg.Settings
     public class FrameRateInput : BaseFrameRate
     {
         public FrameRateInput()
+            : base()
         {
         }
         public FrameRateInput(double rate)
+            : base(rate)
         {
-            if (rate <= 0)
-            {
-                throw new ArgumentException("Frame rate must be greater than zero.");
-            }
-
-            Rate = rate;
         }
-
-        [SettingParameter]
-        [Validate(LogicalOperators.GreaterThan, 0)]
-        public double Rate { get; set; }
     }
 }
