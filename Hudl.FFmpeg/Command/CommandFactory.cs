@@ -4,7 +4,9 @@ using System.Linq;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Resources.Interfaces;
-using log4net; 
+using log4net;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Hudl.FFmpeg.Command
 {
@@ -112,6 +114,14 @@ namespace Hudl.FFmpeg.Command
         /// <summary>
         /// Renders the command stream with the defualt command processor
         /// </summary>
+        public async Task<List<IContainer>> RenderAsync(CancellationToken token = default(CancellationToken))
+        {
+            return await RenderWithAsync<FFmpegCommandProcessor, FFmpegCommandBuilder>(null);
+        }
+
+        /// <summary>
+        /// Renders the command stream with the defualt command processor
+        /// </summary>
         public List<IContainer> Render(int timeoutMilliseconds)
         {
             return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>(timeoutMilliseconds);
@@ -148,6 +158,54 @@ namespace Hudl.FFmpeg.Command
         }
 
         #region Internals
+
+        internal async Task<List<IContainer>> RenderWithAsync<TProcessor, TBuilder>(CancellationToken token = default(CancellationToken))
+           where TProcessor : class, ICommandProcessor, new()
+           where TBuilder : class, ICommandBuilder, new()
+        {
+            token.ThrowIfCancellationRequested(); 
+
+            var commandProcessor = new TProcessor();
+
+            if (!commandProcessor.Open())
+            {
+                throw new FFmpegRenderingException(commandProcessor.Error);
+            }
+
+            var returnType = await RenderWithAsync<TProcessor, TBuilder>(commandProcessor, token);
+
+            if (!commandProcessor.Close())
+            {
+                throw new FFmpegRenderingException(commandProcessor.Error);
+            }
+
+            return returnType;
+        }
+
+        internal async Task<List<IContainer>> RenderWithAsync<TProcessor, TBuilder>(TProcessor processor, CancellationToken token = default(CancellationToken))
+            where TProcessor : class, ICommandProcessor, new()
+            where TBuilder : class, ICommandBuilder, new()
+        {
+            if (processor == null)
+            {
+                throw new ArgumentNullException("processor");
+            }
+
+            var outputList = GetOutputs();
+
+            Log.InfoFormat("Rendering command factory Outputs={0} Commands={1}",
+                outputList.Count,
+                CommandList.Count);
+
+            foreach (var command in CommandList.OfType<FFmpegCommand>().ToList())
+            {
+                token.ThrowIfCancellationRequested(); 
+
+                await command.ExecuteWithAsync<TProcessor, TBuilder>(processor, token); 
+            }
+
+            return outputList;
+        }
 
         internal List<IContainer> RenderWith<TProcessor, TBuilder>(int? timeoutMilliseconds)
             where TProcessor : class, ICommandProcessor, new()
@@ -191,6 +249,8 @@ namespace Hudl.FFmpeg.Command
 
             return outputList;
         }
+
+        
         #endregion
     }
 }

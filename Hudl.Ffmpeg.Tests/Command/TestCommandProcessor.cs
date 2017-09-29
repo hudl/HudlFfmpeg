@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
 
@@ -40,6 +42,13 @@ namespace Hudl.FFmpeg.Tests.Command
             Command = command;
             SendFired = true;
             return true;
+        }
+
+        public Task<bool> SendAsync(string command, CancellationToken token = default(CancellationToken))
+        {
+            Command = command;
+            SendFired = true;
+            return Task.FromResult(true);
         }
     }
 }

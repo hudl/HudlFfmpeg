@@ -7,6 +7,7 @@ using Hudl.FFmpeg.Logging;
 using Hudl.FFmpeg.Command.StreamReaders;
 using System.Threading;
 using Hudl.FFmpeg.Extensions;
+using System.Threading.Tasks;
 
 namespace Hudl.FFmpeg.Command
 {
@@ -127,6 +128,56 @@ namespace Hudl.FFmpeg.Command
             return true;
         }
 
+        public Task<bool> SendAsync(string command, CancellationToken token = default(CancellationToken))
+        {
+            if (Status != CommandProcessorStatus.Ready)
+            {
+                throw new InvalidOperationException(string.Format("Cannot process a command processor that is currently in the '{0}' state.", Status));
+            }
+            if (string.IsNullOrWhiteSpace(command))
+            {
+                throw new ArgumentException("Processing command cannot be null or empty.", "command");
+            }
+
+            Command = command;
+
+            var retryCount = 0;
+            var isSuccessful = false;
+            do
+            {
+                token.ThrowIfCancellationRequested(); 
+
+                try
+                {
+                    Status = CommandProcessorStatus.Processing;
+
+                    ProcessItAsync(command, token);
+
+                    Status = CommandProcessorStatus.Ready;
+
+                    isSuccessful = true;
+                }
+                catch (TaskCanceledException)
+                {
+                    throw;
+                }
+                catch (Exception err)
+                {
+                    if (!CheckForKnownExceptions(err))
+                    {
+                        Error = err;
+                        Status = CommandProcessorStatus.Faulted;
+                        return Task.FromResult(false);
+                    }
+
+                    retryCount++;
+                }
+            } while (!isSuccessful && retryCount <= MaximumRetryFailures);
+
+            return Task.FromResult(true);
+        }
+
+
         private void Create()
         {
             if (ResourceManagement.CommandConfiguration.HasFlag(CommandConfigurationFlagTypes.PerformPreRenderSetup))
@@ -197,6 +248,59 @@ namespace Hudl.FFmpeg.Command
             }
         }
 
+        private void ProcessItAsync(string command, CancellationToken token = default(CancellationToken))
+        {
+            using (var ffmpegProcess = new Process())
+            {
+                ffmpegProcess.StartInfo = new ProcessStartInfo
+                {
+                    FileName = ResourceManagement.CommandConfiguration.FFmpegPath,
+                    WorkingDirectory = ResourceManagement.CommandConfiguration.TempPath,
+                    Arguments = command.Trim(),
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                };
+
+                Log.Debug($"ffmpeg.exe MonoRuntime={ResourceManagement.IsMonoRuntime()} Args={ffmpegProcess.StartInfo.Arguments}");
+
+                var stdErrorReader = StandardErrorAsyncStreamReader.AttachReader(ffmpegProcess);
+
+                token.Register(() => ffmpegProcess.Kill()); 
+
+                ffmpegProcess.Start();
+
+                //workaround for a bug in the mono process when attempting to read async from console output events 
+                //   - link http://mono.1490590.n4.nabble.com/System-Diagnostic-Process-and-event-handlers-td3246096.html
+                // we will wait a total of 10 seconds for the process to start, if nothing has happened in that time then we will 
+                // return a failure for the event. 
+                ffmpegProcess.WaitForProcessStart();
+
+                stdErrorReader.Listen();
+
+                var processStopped = ffmpegProcess.WaitForProcessStop();
+                if (!processStopped)
+                {
+                    throw new FFmpegTimeoutException(ffmpegProcess.StartInfo.Arguments);
+                }
+
+                stdErrorReader.Stop();
+
+                token.ThrowIfCancellationRequested(); 
+
+                StdOut = stdErrorReader.ToString();
+
+                Log.Debug($"ffmpeg.exe MonoRuntime={ResourceManagement.IsMonoRuntime()}  Output={StdOut}.");
+
+                var exitCode = ffmpegProcess.ExitCode;
+                if (exitCode != 0)
+                {
+                    throw new FFmpegProcessingException(exitCode, StdOut);
+                }
+            }
+        }
+
+
         private bool CheckForKnownExceptions(Exception err)
         {
             var errorOutput = err.Data.Contains("ErrorOutput") 
@@ -231,7 +335,8 @@ namespace Hudl.FFmpeg.Command
             return errorIndex > -1; 
         }
 
-#endregion 
+       
+        #endregion
 
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Hudl.FFmpeg;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
@@ -112,6 +114,41 @@ namespace Hudl.FFprobe.Command
             return true;
         }
 
+        public Task<bool> SendAsync(string command, CancellationToken token = default(CancellationToken))
+        {
+            if (Status != CommandProcessorStatus.Ready)
+            {
+                throw new InvalidOperationException(string.Format("Cannot process a command processor that is currently in the '{0}' state.", Status));
+            }
+            if (string.IsNullOrWhiteSpace(command))
+            {
+                throw new ArgumentException("Processing command cannot be null or empty.", "command");
+            }
+
+            Command = command;
+
+            try
+            {
+                Status = CommandProcessorStatus.Processing;
+
+                ProcessItAsync(command, token);
+
+                Status = CommandProcessorStatus.Ready;
+            }
+            catch (TaskCanceledException)
+            {
+                throw;
+            }
+            catch (Exception err)
+            {
+                Error = err;
+                Status = CommandProcessorStatus.Faulted;
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
+        }
+
         private void Create()
         {
             if (ResourceManagement.CommandConfiguration.HasFlag(CommandConfigurationFlagTypes.PerformPreRenderSetup))
@@ -165,5 +202,42 @@ namespace Hudl.FFprobe.Command
                 }
             }
         }
+
+        private void ProcessItAsync(string command, CancellationToken token = default(CancellationToken))
+        {
+            using (var FFprobeProcess = new Process())
+            {
+                FFprobeProcess.StartInfo = new ProcessStartInfo
+                {
+                    FileName = ResourceManagement.CommandConfiguration.FFprobePath,
+                    WorkingDirectory = ResourceManagement.CommandConfiguration.TempPath,
+                    Arguments = command.Trim(),
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                };
+
+                Log.DebugFormat("FFprobe.exe Args={0}.", FFprobeProcess.StartInfo.Arguments);
+
+                token.Register(() => FFprobeProcess.Kill()); 
+
+                FFprobeProcess.Start();
+                
+                StdOut = FFprobeProcess.StandardOutput.ReadToEnd();
+
+                FFprobeProcess.WaitForExit();
+
+                token.ThrowIfCancellationRequested(); 
+
+                Log.DebugFormat("FFprobe.exe Output={0}.", StdOut);
+
+                var exitCode = FFprobeProcess.ExitCode;
+                if (exitCode != 0)
+                {
+                    throw new FFmpegProcessingException(exitCode, StdOut);
+                }
+            }
+        }
+
     }
 }

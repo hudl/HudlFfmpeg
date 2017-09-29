@@ -1,6 +1,8 @@
 ﻿using System;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Exceptions;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Hudl.FFmpeg.Command.Models
 {
@@ -81,6 +83,60 @@ namespace Hudl.FFmpeg.Command.Models
 
             return commandProcessor;
         }
+
+        public async Task<ICommandProcessor> ExecuteWithAsync<TProcessorType, TBuilderType>(CancellationToken token = default(CancellationToken))
+            where TProcessorType : class, ICommandProcessor, new()
+            where TBuilderType : class, ICommandBuilder, new()
+        {
+            var commandProcessor = new TProcessorType();
+
+            if (!commandProcessor.Open())
+            {
+                throw new FFmpegRenderingException(commandProcessor.Error);
+            }
+
+            var returnType = await ExecuteWithAsync<TProcessorType, TBuilderType>(commandProcessor, token);
+
+            if (!commandProcessor.Close())
+            {
+                throw new FFmpegRenderingException(commandProcessor.Error);
+            }
+
+            return returnType;
+        }
+
+        public async Task<ICommandProcessor> ExecuteWithAsync<TProcessorType, TBuilderType>(TProcessorType commandProcessor, CancellationToken token = default(CancellationToken))
+            where TProcessorType : class, ICommandProcessor
+            where TBuilderType : class, ICommandBuilder, new()
+        {
+            if (commandProcessor == null)
+            {
+                throw new ArgumentNullException("commandProcessor");
+            }
+
+            var commandBuilder = new TBuilderType();
+            commandBuilder.WriteCommand(this);
+
+            PreExecutionAction(Owner, this, true);
+
+            var isSuccessful = await commandProcessor.SendAsync(commandBuilder.ToString(), token); 
+
+            if (!isSuccessful)
+            {
+                PostExecutionAction(Owner, this, false);
+
+                OnErrorAction(Owner, this, commandProcessor);
+
+                throw new FFmpegRenderingException(commandProcessor.Error);
+            }
+
+            PostExecutionAction(Owner, this, true);
+
+            OnSuccessAction(Owner, this, commandProcessor);
+
+            return commandProcessor;
+        }
+
 
         internal void EmptyOperation(ICommandFactory factory, ICommand command, bool success)
         {

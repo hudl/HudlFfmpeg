@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Hudl.FFmpeg.Command.BaseTypes
 {
@@ -46,5 +48,11 @@ namespace Hudl.FFmpeg.Command.BaseTypes
         /// processes the given command string against the processor engine
         /// </summary>
         bool Send(string command, int? timeoutMilliseconds);
+
+        /// <summary>
+        /// processes the given command string against the processor engine
+        /// </summary>
+        Task<bool> SendAsync(string command, CancellationToken token = default(CancellationToken));
+
     }
 }
