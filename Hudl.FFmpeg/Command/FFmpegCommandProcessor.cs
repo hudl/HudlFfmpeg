@@ -7,6 +7,7 @@ using Hudl.FFmpeg.Logging;
 using Hudl.FFmpeg.Command.StreamReaders;
 using System.Threading;
 using Hudl.FFmpeg.Extensions;
+using System.Threading.Tasks;
 
 namespace Hudl.FFmpeg.Command
 {
@@ -81,10 +82,10 @@ namespace Hudl.FFmpeg.Command
 
         public bool Send(string command)
         {
-            return Send(command, null);
+            return Send(command, default(CancellationToken));
         }
 
-        public bool Send(string command, int? timeoutMilliseconds)
+        public bool Send(string command, CancellationToken token = default(CancellationToken))
         {
             if (Status != CommandProcessorStatus.Ready)
             {
@@ -105,11 +106,15 @@ namespace Hudl.FFmpeg.Command
                 {
                     Status = CommandProcessorStatus.Processing;
 
-                    ProcessIt(command, timeoutMilliseconds);
+                    ProcessIt(command, token);
 
                     Status = CommandProcessorStatus.Ready;
 
                     isSuccessful = true;
+                }
+                catch (OperationCanceledException)
+                {
+                    throw;
                 }
                 catch (Exception err)
                 {
@@ -149,7 +154,7 @@ namespace Hudl.FFmpeg.Command
             }
         }
 
-        private void ProcessIt(string command, int? timeoutMilliseconds)
+        private void ProcessIt(string command, CancellationToken token = default(CancellationToken))
         {
             using (var ffmpegProcess = new Process())
             {
@@ -165,27 +170,32 @@ namespace Hudl.FFmpeg.Command
 
                 Log.Debug($"ffmpeg.exe MonoRuntime={ResourceManagement.IsMonoRuntime()} Args={ffmpegProcess.StartInfo.Arguments}");
 
-                var stdErrorReader = StandardErrorAsyncStreamReader.AttachReader(ffmpegProcess); 
+                var stdErrorReader = StandardErrorAsyncStreamReader.AttachReader(ffmpegProcess);
 
-                ffmpegProcess.Start();
-
-                //workaround for a bug in the mono process when attempting to read async from console output events 
-                //   - link http://mono.1490590.n4.nabble.com/System-Diagnostic-Process-and-event-handlers-td3246096.html
-                // we will wait a total of 10 seconds for the process to start, if nothing has happened in that time then we will 
-                // return a failure for the event. 
-                ffmpegProcess.WaitForProcessStart();
-
-                stdErrorReader.Listen();
-
-                var processStopped = ffmpegProcess.WaitForProcessStop(timeoutMilliseconds);
-                if (!processStopped)
+                using (var registration = token.Register(() => ffmpegProcess.Kill()))
                 {
-                    throw new FFmpegTimeoutException(ffmpegProcess.StartInfo.Arguments);
+                    ffmpegProcess.Start();
+
+                    //workaround for a bug in the mono process when attempting to read async from console output events 
+                    //   - link http://mono.1490590.n4.nabble.com/System-Diagnostic-Process-and-event-handlers-td3246096.html
+                    // we will wait a total of 10 seconds for the process to start, if nothing has happened in that time then we will 
+                    // return a failure for the event. 
+                    ffmpegProcess.WaitForProcessStart();
+
+                    stdErrorReader.Listen();
+
+                    var processStopped = ffmpegProcess.WaitForProcessStop();
+                    if (!processStopped)
+                    {
+                        throw new FFmpegTimeoutException(ffmpegProcess.StartInfo.Arguments);
+                    }
+
+                    stdErrorReader.Stop();
+
+                    token.ThrowIfCancellationRequested();
+
+                    StdOut = stdErrorReader.ToString();
                 }
-
-                stdErrorReader.Stop();
-
-                StdOut = stdErrorReader.ToString(); 
 
                 Log.Debug($"ffmpeg.exe MonoRuntime={ResourceManagement.IsMonoRuntime()}  Output={StdOut}.");
 
@@ -231,7 +241,8 @@ namespace Hudl.FFmpeg.Command
             return errorIndex > -1; 
         }
 
-#endregion 
+       
+        #endregion
 
     }
 }

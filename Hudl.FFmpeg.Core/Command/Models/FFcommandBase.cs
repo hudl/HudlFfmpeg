@@ -1,6 +1,7 @@
-﻿using System;
-using Hudl.FFmpeg.Command.BaseTypes;
+﻿using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Exceptions;
+using System;
+using System.Threading;
 
 namespace Hudl.FFmpeg.Command.Models
 {
@@ -35,6 +36,19 @@ namespace Hudl.FFmpeg.Command.Models
             where TProcessorType : class, ICommandProcessor, new()
             where TBuilderType : class, ICommandBuilder, new()
         {
+            var cancellationTokenSource = new CancellationTokenSource();
+            if (timeoutMilliseconds.HasValue)
+            {
+                cancellationTokenSource.CancelAfter(timeoutMilliseconds.Value);
+            }
+
+            return ExecuteWith<TProcessorType, TBuilderType>(cancellationTokenSource.Token);
+        }
+
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(CancellationToken token = default(CancellationToken))
+            where TProcessorType : class, ICommandProcessor, new()
+            where TBuilderType : class, ICommandBuilder, new()
+        {
             var commandProcessor = new TProcessorType();
 
             if (!commandProcessor.Open())
@@ -42,7 +56,7 @@ namespace Hudl.FFmpeg.Command.Models
                 throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
-            var returnType = ExecuteWith<TProcessorType, TBuilderType>(commandProcessor, timeoutMilliseconds);
+            var returnType = ExecuteWith<TProcessorType, TBuilderType>(commandProcessor, token);
 
             if (!commandProcessor.Close())
             {
@@ -52,7 +66,7 @@ namespace Hudl.FFmpeg.Command.Models
             return returnType;
         }
 
-        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor, int? timeoutMilliseconds)
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor, CancellationToken token = default(CancellationToken))
             where TProcessorType : class, ICommandProcessor
             where TBuilderType : class, ICommandBuilder, new()
         {
@@ -66,7 +80,7 @@ namespace Hudl.FFmpeg.Command.Models
 
             PreExecutionAction(Owner, this, true);
 
-            if (!commandProcessor.Send(commandBuilder.ToString(), timeoutMilliseconds))
+            if (!commandProcessor.Send(commandBuilder.ToString(), token))
             {
                 PostExecutionAction(Owner, this, false);
 

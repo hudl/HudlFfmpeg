@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Hudl.FFmpeg;
 using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
@@ -78,10 +80,10 @@ namespace Hudl.FFprobe.Command
 
         public bool Send(string command)
         {
-            return Send(command, null);
+            return Send(command, default(CancellationToken));
         }
 
-        public bool Send(string command, int? timeoutMilliseconds)
+        public bool Send(string command, CancellationToken token = default(CancellationToken))
         {
             if (Status != CommandProcessorStatus.Ready)
             {
@@ -92,21 +94,25 @@ namespace Hudl.FFprobe.Command
                 throw new ArgumentException("Processing command cannot be null or empty.", "command");
             }
 
-            Command = command; 
+            Command = command;
 
             try
             {
                 Status = CommandProcessorStatus.Processing;
 
-                ProcessIt(command, timeoutMilliseconds);
+                ProcessIt(command, token);
 
                 Status = CommandProcessorStatus.Ready;
             }
+            catch (TaskCanceledException)
+            {
+                throw;
+            }
             catch (Exception err)
             {
-                    Error = err;
-                    Status = CommandProcessorStatus.Faulted;
-                    return false;
+                Error = err;
+                Status = CommandProcessorStatus.Faulted;
+                return false;
             }
 
             return true;
@@ -134,7 +140,7 @@ namespace Hudl.FFprobe.Command
             }
         }
 
-        private void ProcessIt(string command, int? timeoutMilliseconds)
+        private void ProcessIt(string command, CancellationToken token = default(CancellationToken))
         {
             using (var FFprobeProcess = new Process())
             {
@@ -149,12 +155,17 @@ namespace Hudl.FFprobe.Command
                 };
 
                 Log.DebugFormat("FFprobe.exe Args={0}.", FFprobeProcess.StartInfo.Arguments);
-                
-                FFprobeProcess.Start();
-                
-                StdOut = FFprobeProcess.StandardOutput.ReadToEnd();
 
-                FFprobeProcess.WaitForExit();
+                using (var register = token.Register(() => FFprobeProcess.Kill()))
+                {
+                    FFprobeProcess.Start();
+                
+                    StdOut = FFprobeProcess.StandardOutput.ReadToEnd();
+
+                    FFprobeProcess.WaitForExit();
+
+                    token.ThrowIfCancellationRequested();
+                }
 
                 Log.DebugFormat("FFprobe.exe Output={0}.", StdOut);
 
@@ -165,5 +176,6 @@ namespace Hudl.FFprobe.Command
                 }
             }
         }
+
     }
 }

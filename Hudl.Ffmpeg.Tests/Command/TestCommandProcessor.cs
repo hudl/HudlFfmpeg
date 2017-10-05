@@ -1,6 +1,7 @@
-﻿using System;
-using Hudl.FFmpeg.Command;
+﻿using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
+using System;
+using System.Threading;
 
 namespace Hudl.FFmpeg.Tests.Command
 {
@@ -32,10 +33,10 @@ namespace Hudl.FFmpeg.Tests.Command
 
         public bool Send(string command)
         {
-            return Send(command, null);
+            return Send(command, default(CancellationToken));
         }
 
-        public bool Send(string command, int? timeout)
+        public bool Send(string command, CancellationToken token = default(CancellationToken))
         {
             Command = command;
             SendFired = true;

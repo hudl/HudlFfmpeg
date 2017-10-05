@@ -4,7 +4,9 @@ using System.Linq;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Exceptions;
 using Hudl.FFmpeg.Resources.Interfaces;
-using log4net; 
+using log4net;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Hudl.FFmpeg.Command
 {
@@ -125,6 +127,14 @@ namespace Hudl.FFmpeg.Command
             return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>((int)timeout.TotalMilliseconds);
         }
 
+        /// <summary>
+        /// Renders the command stream with the defualt command processor
+        /// </summary>
+        public List<IContainer> Render(CancellationToken token = default(CancellationToken))
+        {
+            return RenderWith<FFmpegCommandProcessor, FFmpegCommandBuilder>(token);
+        }
+
         private CommandFactory Add(FFmpegCommand command, bool export)
         {
             if (command == null)
@@ -148,11 +158,25 @@ namespace Hudl.FFmpeg.Command
         }
 
         #region Internals
-
         internal List<IContainer> RenderWith<TProcessor, TBuilder>(int? timeoutMilliseconds)
             where TProcessor : class, ICommandProcessor, new()
             where TBuilder : class, ICommandBuilder, new()
         {
+            var cancellationTokenSource = new CancellationTokenSource();
+            if (timeoutMilliseconds.HasValue)
+            {
+                cancellationTokenSource.CancelAfter(timeoutMilliseconds.Value);
+            }
+
+            return RenderWith<TProcessor, TBuilder>(cancellationTokenSource.Token);
+        }
+
+        internal List<IContainer> RenderWith<TProcessor, TBuilder>(CancellationToken token = default(CancellationToken))
+           where TProcessor : class, ICommandProcessor, new()
+           where TBuilder : class, ICommandBuilder, new()
+        {
+            token.ThrowIfCancellationRequested(); 
+
             var commandProcessor = new TProcessor();
 
             if (!commandProcessor.Open())
@@ -160,7 +184,7 @@ namespace Hudl.FFmpeg.Command
                 throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
-            var returnType = RenderWith<TProcessor, TBuilder>(commandProcessor, timeoutMilliseconds);
+            var returnType = RenderWith<TProcessor, TBuilder>(commandProcessor, token);
 
             if (!commandProcessor.Close())
             {
@@ -170,7 +194,7 @@ namespace Hudl.FFmpeg.Command
             return returnType;
         }
 
-        internal List<IContainer> RenderWith<TProcessor, TBuilder>(TProcessor processor, int? timeoutMilliseconds)
+        internal List<IContainer> RenderWith<TProcessor, TBuilder>(TProcessor processor, CancellationToken token = default(CancellationToken))
             where TProcessor : class, ICommandProcessor, new()
             where TBuilder : class, ICommandBuilder, new()
         {
@@ -185,9 +209,12 @@ namespace Hudl.FFmpeg.Command
                 outputList.Count,
                 CommandList.Count);
 
-            CommandList.OfType<FFmpegCommand>()
-                .ToList()
-                .ForEach(command => command.ExecuteWith<TProcessor, TBuilder>(processor, timeoutMilliseconds)); 
+            foreach (var command in CommandList.OfType<FFmpegCommand>().ToList())
+            {
+                token.ThrowIfCancellationRequested(); 
+
+                command.ExecuteWith<TProcessor, TBuilder>(processor, token); 
+            }
 
             return outputList;
         }
