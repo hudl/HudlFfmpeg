@@ -266,29 +266,30 @@ namespace Hudl.FFmpeg.Command
 
                 var stdErrorReader = StandardErrorAsyncStreamReader.AttachReader(ffmpegProcess);
 
-                token.Register(() => ffmpegProcess.Kill()); 
-
-                ffmpegProcess.Start();
-
-                //workaround for a bug in the mono process when attempting to read async from console output events 
-                //   - link http://mono.1490590.n4.nabble.com/System-Diagnostic-Process-and-event-handlers-td3246096.html
-                // we will wait a total of 10 seconds for the process to start, if nothing has happened in that time then we will 
-                // return a failure for the event. 
-                ffmpegProcess.WaitForProcessStart();
-
-                stdErrorReader.Listen();
-
-                var processStopped = ffmpegProcess.WaitForProcessStop();
-                if (!processStopped)
+                using (var registration = token.Register(() => ffmpegProcess.Kill()))
                 {
-                    throw new FFmpegTimeoutException(ffmpegProcess.StartInfo.Arguments);
+                    ffmpegProcess.Start();
+
+                    //workaround for a bug in the mono process when attempting to read async from console output events 
+                    //   - link http://mono.1490590.n4.nabble.com/System-Diagnostic-Process-and-event-handlers-td3246096.html
+                    // we will wait a total of 10 seconds for the process to start, if nothing has happened in that time then we will 
+                    // return a failure for the event. 
+                    ffmpegProcess.WaitForProcessStart();
+
+                    stdErrorReader.Listen();
+
+                    var processStopped = ffmpegProcess.WaitForProcessStop();
+                    if (!processStopped)
+                    {
+                        throw new FFmpegTimeoutException(ffmpegProcess.StartInfo.Arguments);
+                    }
+
+                    stdErrorReader.Stop();
+
+                    token.ThrowIfCancellationRequested(); 
+
+                    StdOut = stdErrorReader.ToString();
                 }
-
-                stdErrorReader.Stop();
-
-                token.ThrowIfCancellationRequested(); 
-
-                StdOut = stdErrorReader.ToString();
 
                 Log.Debug($"ffmpeg.exe MonoRuntime={ResourceManagement.IsMonoRuntime()}  Output={StdOut}.");
 

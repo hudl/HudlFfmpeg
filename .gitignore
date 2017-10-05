@@ -4,6 +4,7 @@ bin/
 obj/
 Bin/
 Obj/
+.vs/
 hudl-jobs/Quartz.NET-1.0.2/build/
 WebApp/WebApp.Publish.xml
 ProTools/Pro Quagic/obj/*
