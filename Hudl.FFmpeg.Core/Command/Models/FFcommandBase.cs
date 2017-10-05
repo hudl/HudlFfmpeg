@@ -1,7 +1,6 @@
-﻿using System;
-using Hudl.FFmpeg.Command.BaseTypes;
+﻿using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFmpeg.Exceptions;
-using System.Threading.Tasks;
+using System;
 using System.Threading;
 
 namespace Hudl.FFmpeg.Command.Models
@@ -37,54 +36,16 @@ namespace Hudl.FFmpeg.Command.Models
             where TProcessorType : class, ICommandProcessor, new()
             where TBuilderType : class, ICommandBuilder, new()
         {
-            var commandProcessor = new TProcessorType();
-
-            if (!commandProcessor.Open())
+            var cancellationTokenSource = new CancellationTokenSource();
+            if (timeoutMilliseconds.HasValue)
             {
-                throw new FFmpegRenderingException(commandProcessor.Error);
+                cancellationTokenSource.CancelAfter(timeoutMilliseconds.Value);
             }
 
-            var returnType = ExecuteWith<TProcessorType, TBuilderType>(commandProcessor, timeoutMilliseconds);
-
-            if (!commandProcessor.Close())
-            {
-                throw new FFmpegRenderingException(commandProcessor.Error);
-            }
-
-            return returnType;
+            return ExecuteWith<TProcessorType, TBuilderType>(cancellationTokenSource.Token);
         }
 
-        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor, int? timeoutMilliseconds)
-            where TProcessorType : class, ICommandProcessor
-            where TBuilderType : class, ICommandBuilder, new()
-        {
-            if (commandProcessor == null)
-            {
-                throw new ArgumentNullException("commandProcessor");
-            }
-
-            var commandBuilder = new TBuilderType();
-            commandBuilder.WriteCommand(this);
-
-            PreExecutionAction(Owner, this, true);
-
-            if (!commandProcessor.Send(commandBuilder.ToString(), timeoutMilliseconds))
-            {
-                PostExecutionAction(Owner, this, false);
-
-                OnErrorAction(Owner, this, commandProcessor);
-
-                throw new FFmpegRenderingException(commandProcessor.Error);
-            }
-
-            PostExecutionAction(Owner, this, true);
-
-            OnSuccessAction(Owner, this, commandProcessor);
-
-            return commandProcessor;
-        }
-
-        public async Task<ICommandProcessor> ExecuteWithAsync<TProcessorType, TBuilderType>(CancellationToken token = default(CancellationToken))
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(CancellationToken token = default(CancellationToken))
             where TProcessorType : class, ICommandProcessor, new()
             where TBuilderType : class, ICommandBuilder, new()
         {
@@ -95,7 +56,7 @@ namespace Hudl.FFmpeg.Command.Models
                 throw new FFmpegRenderingException(commandProcessor.Error);
             }
 
-            var returnType = await ExecuteWithAsync<TProcessorType, TBuilderType>(commandProcessor, token);
+            var returnType = ExecuteWith<TProcessorType, TBuilderType>(commandProcessor, token);
 
             if (!commandProcessor.Close())
             {
@@ -105,7 +66,7 @@ namespace Hudl.FFmpeg.Command.Models
             return returnType;
         }
 
-        public async Task<ICommandProcessor> ExecuteWithAsync<TProcessorType, TBuilderType>(TProcessorType commandProcessor, CancellationToken token = default(CancellationToken))
+        public ICommandProcessor ExecuteWith<TProcessorType, TBuilderType>(TProcessorType commandProcessor, CancellationToken token = default(CancellationToken))
             where TProcessorType : class, ICommandProcessor
             where TBuilderType : class, ICommandBuilder, new()
         {
@@ -119,9 +80,7 @@ namespace Hudl.FFmpeg.Command.Models
 
             PreExecutionAction(Owner, this, true);
 
-            var isSuccessful = await commandProcessor.SendAsync(commandBuilder.ToString(), token); 
-
-            if (!isSuccessful)
+            if (!commandProcessor.Send(commandBuilder.ToString(), token))
             {
                 PostExecutionAction(Owner, this, false);
 
@@ -136,7 +95,6 @@ namespace Hudl.FFmpeg.Command.Models
 
             return commandProcessor;
         }
-
 
         internal void EmptyOperation(ICommandFactory factory, ICommand command, bool success)
         {

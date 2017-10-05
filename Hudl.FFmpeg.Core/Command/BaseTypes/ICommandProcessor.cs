@@ -47,12 +47,6 @@ namespace Hudl.FFmpeg.Command.BaseTypes
         /// <summary>
         /// processes the given command string against the processor engine
         /// </summary>
-        bool Send(string command, int? timeoutMilliseconds);
-
-        /// <summary>
-        /// processes the given command string against the processor engine
-        /// </summary>
-        Task<bool> SendAsync(string command, CancellationToken token = default(CancellationToken));
-
+        bool Send(string command, CancellationToken token = default(CancellationToken));
     }
 }
