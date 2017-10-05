@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFmpeg", "src\Hudl.FFmpeg\Hudl.FFmpeg.csproj", "{39F85896-D888-4005-93C2-284C6FE4E945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hudl.FFmpeg", "src\Hudl.FFmpeg\Hudl.FFmpeg.csproj", "{39F85896-D888-4005-93C2-284C6FE4E945}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFmpeg.Core", "src\Hudl.FFmpeg.Core\Hudl.FFmpeg.Core.csproj", "{CEFDEF7F-7F02-4527-A673-82B4FCBC5940}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hudl.FFmpeg.Core", "src\Hudl.FFmpeg.Core\Hudl.FFmpeg.Core.csproj", "{CEFDEF7F-7F02-4527-A673-82B4FCBC5940}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFprobe", "src\Hudl.FFprobe\Hudl.FFprobe.csproj", "{5E1BB5FC-9B74-4CBB-A6B4-30B2108D0F02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hudl.FFprobe", "src\Hudl.FFprobe\Hudl.FFprobe.csproj", "{5E1BB5FC-9B74-4CBB-A6B4-30B2108D0F02}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{50492D78-744B-4957-8899-2E2AFDB59CC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hudl.FFmpeg.Tests", "src\Hudl.FFmpeg.Tests\Hudl.FFmpeg.Tests.csproj", "{DCA84045-1821-4D33-8457-123B721A869A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +31,18 @@ Global
 		{5E1BB5FC-9B74-4CBB-A6B4-30B2108D0F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E1BB5FC-9B74-4CBB-A6B4-30B2108D0F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E1BB5FC-9B74-4CBB-A6B4-30B2108D0F02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCA84045-1821-4D33-8457-123B721A869A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCA84045-1821-4D33-8457-123B721A869A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCA84045-1821-4D33-8457-123B721A869A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCA84045-1821-4D33-8457-123B721A869A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DCA84045-1821-4D33-8457-123B721A869A} = {50492D78-744B-4957-8899-2E2AFDB59CC9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6AEA630-7157-4608-BF59-8B4E1616339E}
 	EndGlobalSection
 EndGlobal
