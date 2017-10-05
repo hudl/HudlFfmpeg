@@ -112,7 +112,7 @@ namespace Hudl.FFmpeg.Command
 
                     isSuccessful = true;
                 }
-                catch (TaskCanceledException)
+                catch (OperationCanceledException)
                 {
                     throw;
                 }
