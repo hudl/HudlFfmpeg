@@ -111,10 +111,12 @@
     <Compile Include="Formatters\MapSettingsFormatter.cs" />
     <Compile Include="Formatters\RatioFractionalStringFormatter.cs" />
     <Compile Include="Formatters\RatioStringFormatter.cs" />
+    <Compile Include="Formatters\SingleQuoteExpressionFormatter.cs" />
     <Compile Include="Formatters\SingleQuoteFormatter.cs" />
     <Compile Include="Formatters\SizeFormatter.cs" />
     <Compile Include="Formatters\SizeHeightFormatter.cs" />
     <Compile Include="Formatters\SizeWidthFormatter.cs" />
+    <Compile Include="Formatters\TimeSpanSecondsFormatter.cs" />
     <Compile Include="Formatters\TimeSpanFormatter.cs" />
     <Compile Include="Formatters\Utility\FormattingUtility.cs" />
     <Compile Include="Interfaces\IValidator.cs" />

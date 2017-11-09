@@ -32,7 +32,7 @@ namespace Hudl.FFmpeg.Filters
         [FilterParameter(Name = "r", Default = 25)]
         public int? FrameRate { get; set; }
 
-        [FilterParameter(Name = "d", Formatter = typeof(TimeSpanFormatter))]
+        [FilterParameter(Name = "d", Formatter = typeof(TimeSpanSecondsFormatter))]
         [Validate(typeof(TimeSpanGreterThanZeroValidator))]
         public TimeSpan? Duration { get; set; }
 
