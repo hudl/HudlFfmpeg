@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
 	<id>$id$</id>
-	<version>1.18.0_AddSetPtsTrim</version>
+	<version>1.18.0-AddSetPtsTrim</version>
 	<authors>Hudl</authors>
 	<description>Hudl.FFmpeg library for automating ffmpeg commands</description>
 	<iconUrl>http://nuget.thorhudl.com/package-icons/hudl.png</iconUrl>
