@@ -3,8 +3,8 @@
   <metadata>
 	<id>$id$</id>
 	<version>$version$</version>
-	<authors>$author$</authors>
-	<description>$description$</description>
+	<authors>Hudl</authors>
+	<description>Hudl.FFmpeg library for automating ffmpeg commands</description>
 	<iconUrl>http://nuget.thorhudl.com/package-icons/hudl.png</iconUrl>
   </metadata>
   <files>
