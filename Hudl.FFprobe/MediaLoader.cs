@@ -46,6 +46,7 @@ namespace Hudl.FFprobe
 
             HasAudio = containerMetadata.Streams != null && containerMetadata.Streams.OfType<AudioStreamMetadata>().Any();
             HasVideo = containerMetadata.Streams != null && containerMetadata.Streams.OfType<VideoStreamMetadata>().Any();
+            HasSubtitles = containerMetadata.Streams != null && containerMetadata.Streams.OfType<SubtitleStreamMetadata>().Any();
             HasData = containerMetadata.Streams != null && containerMetadata.Streams.OfType<DataStreamMetadata>().Any();
             HasFrames = containerMetadata.Frames != null && containerMetadata.Frames.Any();
             BaseData = containerMetadata;
@@ -61,6 +62,7 @@ namespace Hudl.FFprobe
 
         public bool HasVideo { get; protected set; }
         public bool HasAudio { get; protected set; }
+        public bool HasSubtitles { get; protected set; }
         public bool HasData { get; protected set; }
         public bool HasFrames { get; protected set; }
         public ContainerMetadata BaseData { get; protected set; }
