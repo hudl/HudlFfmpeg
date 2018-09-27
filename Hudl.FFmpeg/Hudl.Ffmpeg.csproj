@@ -104,6 +104,8 @@
     <Compile Include="Resources\BaseTypes\AudioStream.cs" />
     <Compile Include="Resources\BaseTypes\SubtitleStream.cs" />
     <Compile Include="Resources\BaseTypes\VideoStream.cs" />
+    <Compile Include="Resources\Ass.cs" />
+    <Compile Include="Resources\Srt.cs" />
     <Compile Include="Resources\Ismv.cs" />
     <Compile Include="Resources\Avi.cs" />
     <Compile Include="Resources\Bmp.cs" />
