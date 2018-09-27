@@ -12,11 +12,15 @@ namespace Hudl.FFmpeg.Metadata.Models
 
         public bool HasVideo { get { return VideoMetadata != null; } }
 
+        public bool HasSubtitle { get { return SubtitleMetadata != null; } }
+
         public bool HasData { get { return DataMetadata != null; } }
 
         public AudioStreamMetadata AudioMetadata { get; internal set; }
 
         public VideoStreamMetadata VideoMetadata { get; internal set; }
+
+        public SubtitleStreamMetadata SubtitleMetadata { get; internal set; }
 
         public DataStreamMetadata DataMetadata { get; internal set; }
 
@@ -27,6 +31,7 @@ namespace Hudl.FFmpeg.Metadata.Models
                 AudioMetadata = HasAudio ? AudioMetadata.Copy() : null,
                 VideoMetadata = HasVideo ? VideoMetadata.Copy() : null,
                 DataMetadata = HasData ? DataMetadata.Copy() : null,
+                SubtitleMetadata = HasSubtitle ? SubtitleMetadata.Copy() : null,
             };
         }
 
@@ -48,6 +53,14 @@ namespace Hudl.FFmpeg.Metadata.Models
             return new MetadataInfo
             {
                 VideoMetadata = loader,
+            };
+        }
+
+        internal static MetadataInfo Create(SubtitleStreamMetadata loader)
+        {
+            return new MetadataInfo
+            {
+                SubtitleMetadata = loader,
             };
         }
 

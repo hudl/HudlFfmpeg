@@ -8,5 +8,9 @@ namespace Hudl.FFprobe.Metadata.Models
     [JsonObject]
     public class SubtitleStreamMetadata : BaseStreamMetadata
     {
+        public SubtitleStreamMetadata Copy()
+        {
+            return (SubtitleStreamMetadata)MemberwiseClone();
+        }
     }
 }
