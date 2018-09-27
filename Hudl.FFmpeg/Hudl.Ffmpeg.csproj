@@ -102,6 +102,7 @@
     <Compile Include="Metadata\Models\MetadataInfoTreeSource.cs" />
     <Compile Include="Resources\BaseTypes\DataStream.cs" />
     <Compile Include="Resources\BaseTypes\AudioStream.cs" />
+    <Compile Include="Resources\BaseTypes\SubtitleStream.cs" />
     <Compile Include="Resources\BaseTypes\VideoStream.cs" />
     <Compile Include="Resources\Ismv.cs" />
     <Compile Include="Resources\Avi.cs" />
