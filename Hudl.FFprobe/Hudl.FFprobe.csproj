@@ -50,6 +50,8 @@
     <Compile Include="Metadata\Models\AudioFrameMetadata.cs" />
     <Compile Include="Metadata\Models\BaseFrameMetadata.cs" />
     <Compile Include="Metadata\Models\DataStreamMetadata.cs" />
+    <Compile Include="Metadata\Models\SubtitleFrameMetadata.cs" />
+    <Compile Include="Metadata\Models\SubtitleStreamMetadata.cs" />
     <Compile Include="Metadata\Models\VideoFrameMetadata.cs" />
     <Compile Include="Serialization\Converters\FractionConverter.cs" />
     <Compile Include="Serialization\Converters\RatioConverter.cs" />

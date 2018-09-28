@@ -4,6 +4,7 @@
     {
         Video, 
         Audio,
+        Subtitle,
         Data,
     }
 }

@@ -4,22 +4,19 @@ using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Resources
 {
-    [ContainsStream(Type = typeof(AudioStream))]
-    [ContainsStream(Type = typeof(VideoStream))]
     [ContainsStream(Type = typeof(SubtitleStream))]
-    [ContainsStream(Type = typeof(DataStream))]
-    public class Mkv : BaseContainer
+    public class Srt : BaseContainer
     {
-        private const string FileFormat = ".mkv";
+        private const string FileFormat = ".srt";
 
-        public Mkv()
+        public Srt()
             : base(FileFormat)
         {
         }
 
         protected override IContainer Clone()
         {
-            return new Mkv();
+            return new Srt();
         }
     }
 }

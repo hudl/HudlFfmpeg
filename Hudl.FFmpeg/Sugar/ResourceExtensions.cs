@@ -38,6 +38,13 @@ namespace Hudl.FFmpeg.Sugar
                     .Select(videoMetadata => VideoStream.Create(MetadataInfo.Create(videoMetadata))));
             }
 
+            if (mediaLoader.HasSubtitles)
+            {
+                resource.Streams.AddRange(mediaLoader.BaseData.Streams
+                    .OfType<SubtitleStreamMetadata>()
+                    .Select(subtitleMetadata => SubtitleStream.Create(MetadataInfo.Create(subtitleMetadata))));
+            }
+
             if (mediaLoader.HasData)
             {
                 resource.Streams.AddRange(mediaLoader.BaseData.Streams

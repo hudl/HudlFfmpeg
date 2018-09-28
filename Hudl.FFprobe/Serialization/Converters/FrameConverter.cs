@@ -28,6 +28,11 @@ namespace Hudl.FFprobe.Serialization.Converters
                 return new AudioFrameMetadata();
             }
 
+            if (string.Equals(codecType, CodecTypes.Subtitle.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            {
+                return new SubtitleFrameMetadata();
+            }
+
             return null; 
         }
 
