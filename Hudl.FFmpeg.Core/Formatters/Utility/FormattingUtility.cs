@@ -24,7 +24,7 @@ namespace Hudl.FFmpeg.Formatters.Utility
                                  timespan.Hours.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'),
                                  timespan.Minutes.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'),
                                  timespan.Seconds.ToString(CultureInfo.InvariantCulture).PadLeft(2, '0'), 
-                                 timespan.Milliseconds.ToString(CultureInfo.InvariantCulture));
+                                 timespan.Milliseconds.ToString(CultureInfo.InvariantCulture).PadLeft(3, '0'));
         }
 
         public static string Map(IStream stream, int index)
