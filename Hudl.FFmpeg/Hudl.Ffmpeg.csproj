@@ -58,9 +58,12 @@
     <Compile Include="Enums\FFmpegStreamTypes.cs" />
     <Compile Include="Enums\FpsRoundType.cs" />
     <Compile Include="Enums\AvoidNegativeTimestampsType.cs" />
+    <Compile Include="Enums\PresetType.cs" />
     <Compile Include="Filters\AEvalSrc.cs" />
     <Compile Include="Filters\Color.cs" />
     <Compile Include="Filters\APad.cs" />
+    <Compile Include="Filters\Palettegen.cs" />
+    <Compile Include="Filters\Paletteuse.cs" />
     <Compile Include="Filters\Rotate.cs" />
     <Compile Include="Filters\NullSrc.cs" />
     <Compile Include="Filters\ANullSrc.cs" />
@@ -100,9 +103,11 @@
     <Compile Include="Metadata\Models\MetadataInfoTreeGroup.cs" />
     <Compile Include="Metadata\Models\MetadataInfoTreeItem.cs" />
     <Compile Include="Metadata\Models\MetadataInfoTreeSource.cs" />
+    <Compile Include="Preset.cs" />
     <Compile Include="Resources\BaseTypes\DataStream.cs" />
     <Compile Include="Resources\BaseTypes\AudioStream.cs" />
     <Compile Include="Resources\BaseTypes\VideoStream.cs" />
+    <Compile Include="Resources\Gif.cs" />
     <Compile Include="Resources\Ismv.cs" />
     <Compile Include="Resources\Avi.cs" />
     <Compile Include="Resources\Bmp.cs" />
