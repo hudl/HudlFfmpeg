@@ -9,5 +9,7 @@
         /// indicates the input format is a concatenation file.
         /// </summary>
         Concat
+        rgba,
+        lavfi
     }
 }
