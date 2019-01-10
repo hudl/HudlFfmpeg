@@ -103,7 +103,6 @@
     <Compile Include="Metadata\Models\MetadataInfoTreeGroup.cs" />
     <Compile Include="Metadata\Models\MetadataInfoTreeItem.cs" />
     <Compile Include="Metadata\Models\MetadataInfoTreeSource.cs" />
-    <Compile Include="Preset.cs" />
     <Compile Include="Resources\BaseTypes\DataStream.cs" />
     <Compile Include="Resources\BaseTypes\AudioStream.cs" />
     <Compile Include="Resources\BaseTypes\VideoStream.cs" />
@@ -139,6 +138,7 @@
     <Compile Include="Settings\LoopInput.cs" />
     <Compile Include="Settings\CopyTimestamps.cs" />
     <Compile Include="Settings\AvoidNegativeTimestamps.cs" />
+    <Compile Include="Settings\Preset.cs" />
     <Compile Include="Settings\QualityScaleAudio.cs" />
     <Compile Include="Settings\QualityScaleVideo.cs" />
     <Compile Include="Settings\VideoFrames.cs" />
