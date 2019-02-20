@@ -118,7 +118,7 @@ namespace Hudl.FFmpeg.Tests.Resources
         {
             const string mkvPathName = "c:/source/apples.mkv";
 
-            Assert.DoesNotThrow(() => Resource.From(mkvPathName));
+            Resource.From(mkvPathName);
         }
 
 
@@ -127,7 +127,7 @@ namespace Hudl.FFmpeg.Tests.Resources
         {
             IContainer resourceInfo = null; 
             
-            Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.ts"));
+            resourceInfo = Resource.From(@"c:\source\apple.ts");
         }
         
         [Fact]
@@ -135,7 +135,7 @@ namespace Hudl.FFmpeg.Tests.Resources
         {
             IContainer resourceInfo = null;
 
-            Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.ismv"));
+            resourceInfo = Resource.From(@"c:\source\apple.ismv");
         }
 
         [Fact]
@@ -143,7 +143,7 @@ namespace Hudl.FFmpeg.Tests.Resources
         {
             IContainer resourceInfo = null;
 
-            Assert.DoesNotThrow(() => resourceInfo = Resource.From(@"c:\source\apple.mov"));
+            resourceInfo = Resource.From(@"c:\source\apple.mov");
         }
 
 

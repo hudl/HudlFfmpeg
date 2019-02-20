@@ -113,7 +113,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<APad>();
             var filterValue = new StringBuilder(100);
-            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+            FilterSerializer.Serialize(filter);
 
             filter.PacketSize = 2;
             filterValue.Append("apad=packet_size=2");
@@ -134,7 +134,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<AFade>();
             var filterValue = new StringBuilder(100);
-            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+            FilterSerializer.Serialize(filter);
 
             filter.TransitionType = FadeTransitionType.Out;
             filterValue.Append("afade=t=out");
@@ -167,7 +167,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Fade>();
             var filterValue = new StringBuilder(100);
-            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+            FilterSerializer.Serialize(filter);
 
             filter.TransitionType = FadeTransitionType.Out;
             filterValue.Append("fade=t=out");
@@ -203,7 +203,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<BoxBlur>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Expression = "15:1"; 
             filterValue.Append("boxblur=15:1");
@@ -215,7 +215,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<AMix>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Inputs = 3;
             filterValue.Append("amix=inputs=3");
@@ -236,7 +236,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<AMovie>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Resource = Resource.From(Assets.Utilities.GetAudioFile());
             filterValue.AppendFormat("amovie=filename={0}", filter.Resource.FullName);
@@ -268,7 +268,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Movie>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Resource = Resource.From(Assets.Utilities.GetAudioFile());
             filterValue.AppendFormat("movie=filename={0}", filter.Resource.FullName);
@@ -300,7 +300,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<ASplit>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.NumberOfStreams = 3;
             filterValue.Append("asplit=3");
@@ -312,7 +312,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Split>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.NumberOfStreams = 3;
             filterValue.Append("split=3");
@@ -324,7 +324,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Blend>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Option = BlendVideoOptionType.all_expr;
             filter.Expression = "A*(if(gte(T,{0}),1,T/{0}))+B*(1-(if(gte(T,{0}),1,T/{0})))";
@@ -337,7 +337,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<ColorBalance>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.ShadowRed = .3m;
             filter.ShadowGreen = .3m;
@@ -363,7 +363,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Concat>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.NumberOfVideoOut = 2;
             filterValue.Append("concat=v=2");
@@ -383,7 +383,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Crop>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Width = 2; 
             filter.Height = 2; 
@@ -401,7 +401,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Fps>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.FrameRate = 29.97;
             filterValue.Append("fps=fps=29.97");
@@ -413,7 +413,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Overlay>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.X = "1";
             filterValue.Append("overlay=x=1");
@@ -441,7 +441,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Pad>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Width = 2; 
             filter.Height = 2; 
@@ -463,7 +463,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Scale>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Width = 2; 
             filter.Height = 2; 
@@ -504,7 +504,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<SetDar>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Ratio = new Ratio(1, 1);
             filterValue.Append("setdar=dar=1/1");
@@ -516,7 +516,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<SetSar>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Ratio = new Ratio(1, 1);
             filterValue.Append("setsar=sar=1/1");
@@ -528,7 +528,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<SetPts>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Expression = SetPts.ResetPtsExpression;
             filterValue.Append("setpts=expr=PTS-STARTPTS");
@@ -540,7 +540,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Trim>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Start = 2D; 
             filterValue.Append("trim=start=2");
@@ -576,7 +576,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Volume>();
             var filterValue = new StringBuilder(100);
-                        Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+                        FilterSerializer.Serialize(filter);
 
             filter.Expression = "0.5";
             filterValue.Append("volume=volume=0.5");
@@ -604,7 +604,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<AEvalSrc>();
             var filterValue = new StringBuilder(100);
-            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+            FilterSerializer.Serialize(filter);
 
             filter.Expression = "boom";
             filterValue.Append("aevalsrc=exprs=boom");
@@ -632,7 +632,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<ANullSrc>();
             var filterValue = new StringBuilder(100);
-            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+            FilterSerializer.Serialize(filter);
 
             filter.ChannelLayout = "FL+CL";
             filterValue.Append("anullsrc=cl=FL+CL");
@@ -652,7 +652,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<NullSrc>();
             var filterValue = new StringBuilder(100);
-            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+            FilterSerializer.Serialize(filter);
 
             filter.Size = new Size(200, 200);
             filterValue.Append("nullsrc=s=200x200");
@@ -677,7 +677,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         {
             var filter = FilterFactory.CreateEmpty<Hudl.FFmpeg.Filters.Color>();
             var filterValue = new StringBuilder(100);
-            Assert.DoesNotThrow(() => FilterSerializer.Serialize(filter));
+            FilterSerializer.Serialize(filter);
 
             filter.ColorName = "black";
             filterValue.Append("color=c=black");

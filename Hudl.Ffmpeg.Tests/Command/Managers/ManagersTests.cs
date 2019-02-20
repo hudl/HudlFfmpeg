@@ -34,9 +34,9 @@ namespace Hudl.FFmpeg.Tests.Command.Managers
 
             var streamIds = new List<StreamIdentifier>();
 
-            Assert.DoesNotThrow(() => streamIds = commandFilterchainManager.AddToEach(filterchain, command.StreamIdentifiers.ToArray())); 
+            streamIds = commandFilterchainManager.AddToEach(filterchain, command.StreamIdentifiers.ToArray()); 
             Assert.True(streamIds.Count == 2);
-            Assert.DoesNotThrow(() => streamIds = commandFilterchainManager.Add(filterchain2, streamIds.ToArray()));
+            streamIds = commandFilterchainManager.Add(filterchain2, streamIds.ToArray());
             Assert.True(streamIds.Count == 1);
         }
 
@@ -53,7 +53,7 @@ namespace Hudl.FFmpeg.Tests.Command.Managers
 
             var commandOutput = CommandOutput.Create(new Mp4()); 
 
-            Assert.DoesNotThrow(() => commandOutputManager.Add(commandOutput));
+            commandOutputManager.Add(commandOutput);
             Assert.Throws<ArgumentException>(() => commandOutputManager.Add(commandOutput));
             Assert.True(command.Command.Outputs.Count == 1);
         }
@@ -75,9 +75,9 @@ namespace Hudl.FFmpeg.Tests.Command.Managers
 
             var commandResourceManager = CommandInputManager.Create(command);
 
-            Assert.DoesNotThrow(() => commandResourceManager.Add(resourceOne));
-            Assert.DoesNotThrow(() => commandResourceManager.AddRange(resourceList));
-            Assert.DoesNotThrow(() => commandResourceManager.Insert(0, resourceTwo));
+            commandResourceManager.Add(resourceOne);
+            commandResourceManager.AddRange(resourceList);
+            commandResourceManager.Insert(0, resourceTwo);
             Assert.True(command.Inputs.Count == 4);
         }
     }

@@ -39,8 +39,8 @@ namespace Hudl.FFmpeg.Tests.Setting
         [Fact]
         public void SettingsCollection_ForAny()
         {
-            Assert.DoesNotThrow(() => SettingsCollection.ForOutput(new SampleRate(44100)));
-            Assert.DoesNotThrow(() => SettingsCollection.ForInput(new SampleRate(44100)));
+            SettingsCollection.ForOutput(new SampleRate(44100));
+            SettingsCollection.ForInput(new SampleRate(44100));
         }
 
         [Fact]
@@ -48,9 +48,9 @@ namespace Hudl.FFmpeg.Tests.Setting
         {
             var settingsCollectionO = SettingsCollection.ForOutput();
 
-            Assert.DoesNotThrow(() => settingsCollectionO.Add(new Map("test1")));
+            settingsCollectionO.Add(new Map("test1"));
 
-            Assert.DoesNotThrow(() => settingsCollectionO.Add(new Map("test2")));
+            settingsCollectionO.Add(new Map("test2"));
 
             Assert.True(settingsCollectionO.Count == 2);
         }
@@ -65,9 +65,9 @@ namespace Hudl.FFmpeg.Tests.Setting
 
             Assert.Throws<ArgumentException>(() => settingsCollectionO.Add(new SeekPositionInput(1))); 
 
-            Assert.DoesNotThrow(() => settingsCollectionI.Add(new SeekPositionInput(1)));
+            settingsCollectionI.Add(new SeekPositionInput(1));
 
-            Assert.DoesNotThrow(() => settingsCollectionO.Add(new OverwriteOutput()));
+            settingsCollectionO.Add(new OverwriteOutput());
 
             Assert.True(settingsCollectionI.Count == 1);
 
@@ -85,8 +85,8 @@ namespace Hudl.FFmpeg.Tests.Setting
             Assert.Throws<ArgumentNullException>(() => settingsCollectionI.AddRange(null)); 
             Assert.Throws<ArgumentNullException>(() => settingsCollectionO.AddRange(null)); 
 
-            Assert.DoesNotThrow(() => settingsCollectionI.AddRange(settingsCollectionAddI));
-            Assert.DoesNotThrow(() => settingsCollectionO.AddRange(settingsCollectionAddO));
+            settingsCollectionI.AddRange(settingsCollectionAddI);
+            settingsCollectionO.AddRange(settingsCollectionAddO);
 
             Assert.Throws<ArgumentException>(() => settingsCollectionI.AddRange(settingsCollectionAddO)); 
             Assert.Throws<ArgumentException>(() => settingsCollectionO.AddRange(settingsCollectionAddI)); 
@@ -106,12 +106,12 @@ namespace Hudl.FFmpeg.Tests.Setting
             var startAtDefault = new SeekPositionInput(2);
             var vcodecDefault = new CodecVideo(VideoCodecType.Copy);
 
-            Assert.DoesNotThrow(() => settingsCollectionI.Merge(startAtDefault, FFmpegMergeOptionType.OldWins));
+            settingsCollectionI.Merge(startAtDefault, FFmpegMergeOptionType.OldWins);
 
             var startAtSetting = settingsCollectionI.Items[0] as SeekPositionInput; 
             Assert.False(startAtSetting != null && startAtSetting.Length == startAtDefault.Length);
             
-            Assert.DoesNotThrow(() => settingsCollectionI.Merge(startAtDefault, FFmpegMergeOptionType.NewWins));
+            settingsCollectionI.Merge(startAtDefault, FFmpegMergeOptionType.NewWins);
 
             startAtSetting = settingsCollectionI.Items[0] as SeekPositionInput; 
             Assert.True(startAtSetting != null && startAtSetting.Length == startAtDefault.Length);
@@ -120,12 +120,12 @@ namespace Hudl.FFmpeg.Tests.Setting
             Assert.Throws<ArgumentException>(() => settingsCollectionI.Merge(vcodecDefault, FFmpegMergeOptionType.NewWins));
 
 
-            Assert.DoesNotThrow(() => settingsCollectionO.Merge(vcodecDefault, FFmpegMergeOptionType.OldWins));
+            settingsCollectionO.Merge(vcodecDefault, FFmpegMergeOptionType.OldWins);
 
             var vcodecSetting = settingsCollectionO.Items[0] as CodecVideo; 
             Assert.False(vcodecSetting != null && vcodecSetting.Codec == vcodecDefault.Codec);
             
-            Assert.DoesNotThrow(() => settingsCollectionO.Merge(vcodecDefault, FFmpegMergeOptionType.NewWins));
+            settingsCollectionO.Merge(vcodecDefault, FFmpegMergeOptionType.NewWins);
 
             vcodecSetting = settingsCollectionO.Items[0] as CodecVideo; 
             Assert.True(vcodecSetting != null && vcodecSetting.Codec == vcodecDefault.Codec);
@@ -150,16 +150,16 @@ namespace Hudl.FFmpeg.Tests.Setting
             Assert.Throws<ArgumentException>(() => settingsCollectionI.MergeRange(settingsCollectionMergeO, FFmpegMergeOptionType.NewWins));
             Assert.Throws<ArgumentException>(() => settingsCollectionO.MergeRange(settingsCollectionMergeI, FFmpegMergeOptionType.NewWins));
 
-            Assert.DoesNotThrow(() => settingsCollectionI.MergeRange(settingsCollectionMergeI, FFmpegMergeOptionType.OldWins));
-            Assert.DoesNotThrow(() => settingsCollectionO.MergeRange(settingsCollectionMergeO, FFmpegMergeOptionType.OldWins));
+            settingsCollectionI.MergeRange(settingsCollectionMergeI, FFmpegMergeOptionType.OldWins);
+            settingsCollectionO.MergeRange(settingsCollectionMergeO, FFmpegMergeOptionType.OldWins);
 
             var startAtSetting = settingsCollectionI.Items[0] as SeekPositionInput;
             var vcodecSetting = settingsCollectionO.Items[0] as CodecVideo;
             Assert.False(startAtSetting != null && startAtSetting.Length == startAtDefault.Length);
             Assert.False(vcodecSetting != null && vcodecSetting.Codec == vcodecDefault.Codec);
             
-            Assert.DoesNotThrow(() => settingsCollectionI.MergeRange(settingsCollectionMergeI, FFmpegMergeOptionType.NewWins));
-            Assert.DoesNotThrow(() => settingsCollectionO.MergeRange(settingsCollectionMergeO, FFmpegMergeOptionType.NewWins));
+            settingsCollectionI.MergeRange(settingsCollectionMergeI, FFmpegMergeOptionType.NewWins);
+            settingsCollectionO.MergeRange(settingsCollectionMergeO, FFmpegMergeOptionType.NewWins);
 
             startAtSetting = settingsCollectionI.Items[0] as SeekPositionInput;
             vcodecSetting = settingsCollectionO.Items[0] as CodecVideo;

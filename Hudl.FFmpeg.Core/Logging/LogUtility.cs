@@ -9,9 +9,9 @@ namespace Hudl.FFmpeg.Logging
     {
         private readonly ILog _log; 
  
-        private LogUtility(string loggerName)
+        private LogUtility(Type loggerType)
         {
-            _log = LogManager.GetLogger(loggerName);
+            _log = LogManager.GetLogger(loggerType);
             LogAttributes = new Dictionary<string, string>(); 
                
         }
@@ -79,14 +79,9 @@ namespace Hudl.FFmpeg.Logging
                 };
         }
 
-        public static LogUtility GetLogger(string loggerName)
-        {
-            return new LogUtility(loggerName);
-        }
-
         public static LogUtility GetLogger(Type loggerType)
         {
-            return new LogUtility(loggerType.Name);
+            return new LogUtility(loggerType);
         }
 
         private static string JoinDictionary(Dictionary<string, string> dict)

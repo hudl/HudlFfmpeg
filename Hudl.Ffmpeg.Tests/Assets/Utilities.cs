@@ -7,7 +7,7 @@ namespace Hudl.FFmpeg.Tests.Assets
     {
         public static string GetAssetsDirectory()
         {
-            return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\samples\assets"));
+            return Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\samples\assets"));
         }
         public static string GetAudioFile()
         {
@@ -26,7 +26,7 @@ namespace Hudl.FFmpeg.Tests.Assets
         {
             const string outputPath = "c:/source/ffmpeg/bin/temp";
             const string ffmpegPath = "c:/source/ffmpeg/bin/ffmpeg.exe";
-            const string ffprobePath = "c:/source/ffmpeg/bin/FFprobe.exe";
+            const string ffprobePath = "c:/source/ffmpeg/bin/ffprobe.exe";
 
             ResourceManagement.CommandConfiguration = CommandConfiguration.Create(outputPath, ffmpegPath, ffprobePath);
         }

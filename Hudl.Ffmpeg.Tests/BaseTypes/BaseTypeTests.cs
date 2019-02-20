@@ -17,8 +17,8 @@ namespace Hudl.FFmpeg.Tests.BaseTypes
         {
             var appliesToCollection = new ForStreamCollection<IFilter>(typeof (VideoStream)); 
 
-            Assert.DoesNotThrow(() => appliesToCollection.Add(new Trim()));
-            Assert.DoesNotThrow(() => appliesToCollection.Add(new SetDar()));
+            appliesToCollection.Add(new Trim());
+            appliesToCollection.Add(new SetDar());
 
             Assert.Throws<ForStreamInvalidException>(() => appliesToCollection.Add(new AMix()));
 
