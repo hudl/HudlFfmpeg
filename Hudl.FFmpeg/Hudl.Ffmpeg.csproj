@@ -1,256 +1,33 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A28FA3FF-8D08-4129-987B-F58AAE613A72}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hudl.FFmpeg</RootNamespace>
-    <AssemblyName>Hudl.FFmpeg</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <VersionPrefix>7.0.0</VersionPrefix>
+    <FileVersion>7.0.0</FileVersion>
+    <!-- The AssemblyVersion should only be updated on a Major version bump -->
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <AssemblyName>Hudl.FFmpeg</AssemblyName>
+    <PackageId>Hudl.FFmpeg</PackageId>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Command\Utility\CommandHelperUtility.cs" />
-    <Compile Include="Enums\FFmpegStreamTypes.cs" />
-    <Compile Include="Enums\FpsRoundType.cs" />
-    <Compile Include="Enums\AvoidNegativeTimestampsType.cs" />
-    <Compile Include="Filters\AEvalSrc.cs" />
-    <Compile Include="Filters\Color.cs" />
-    <Compile Include="Filters\APad.cs" />
-    <Compile Include="Filters\Rotate.cs" />
-    <Compile Include="Filters\NullSrc.cs" />
-    <Compile Include="Filters\ANullSrc.cs" />
-    <Compile Include="Filters\Bindings\NumberOfStreamsInBinding.cs" />
-    <Compile Include="Filters\Bindings\NumberOfStreamsOutBinding.cs" />
-    <Compile Include="Filters\BoxBlur.cs" />
-    <Compile Include="Filters\ATrim.cs" />
-    <Compile Include="Filters\ASetPts.cs" />
-    <Compile Include="Metadata\Interfaces\IMetadataManipulation.cs" />
-    <Compile Include="Metadata\MetadataHelpers.cs" />
-    <Compile Include="Metadata\MetadataInfoStreamCalculator.cs" />
-    <Compile Include="Command\FFmpegCommandProcessor.cs" />
-    <Compile Include="Command\FFmpegCommandBuilder.cs" />
-    <Compile Include="Command\CommandFactory.cs" />
-    <Compile Include="Command\CommandObjects.cs" />
-    <Compile Include="Command\CommandStage.cs" />
-    <Compile Include="Command\FFmpegCommand.cs" />
-    <Compile Include="Command\CommandInput.cs" />
-    <Compile Include="Command\StreamIdentifier.cs" />
-    <Compile Include="Command\CommandOutput.cs" />
-    <Compile Include="Enums\FadeCurveType.cs" />
-    <Compile Include="Enums\FormatType.cs" />
-    <Compile Include="Enums\OverlayEofActionType.cs" />
-    <Compile Include="Enums\SetPtsExpressionType.cs" />
-    <Compile Include="Enums\VideoScalingAspectRatioType.cs" />
-    <Compile Include="Enums\VideoScalingColorMatrixType.cs" />
-    <Compile Include="Enums\VideoScalingRangeType.cs" />
-    <Compile Include="Enums\VolumeExpressionEvalType.cs" />
-    <Compile Include="Enums\VolumePrecisionType.cs" />
-    <Compile Include="Enums\VolumeReplayGainType.cs" />
-    <Compile Include="Filters\BaseTypes\BaseMovie.cs" />
-    <Compile Include="Filters\Fps.cs" />
-    <Compile Include="Filters\Crop.cs" />
-    <Compile Include="Filters\Templates\TrimVideo.cs" />
-    <Compile Include="Metadata\Models\MetadataInfo.cs" />
-    <Compile Include="Metadata\Models\MetadataInfoTreeContainer.cs" />
-    <Compile Include="Metadata\Models\MetadataInfoTreeGroup.cs" />
-    <Compile Include="Metadata\Models\MetadataInfoTreeItem.cs" />
-    <Compile Include="Metadata\Models\MetadataInfoTreeSource.cs" />
-    <Compile Include="Resources\BaseTypes\DataStream.cs" />
-    <Compile Include="Resources\BaseTypes\AudioStream.cs" />
-    <Compile Include="Resources\BaseTypes\VideoStream.cs" />
-    <Compile Include="Resources\Ismv.cs" />
-    <Compile Include="Resources\Avi.cs" />
-    <Compile Include="Resources\Bmp.cs" />
-    <Compile Include="Resources\Nut.cs" />
-    <Compile Include="Resources\Ogg.cs" />
-    <Compile Include="Resources\Mkv.cs" />
-    <Compile Include="Resources\Vob.cs" />
-    <Compile Include="Resources\Mts.cs" />
-    <Compile Include="Resources\Mov.cs" />
-    <Compile Include="Resources\Ts.cs" />
-    <Compile Include="Resources\Txt.cs" />
-    <Compile Include="Settings\AutoConvert.cs" />
-    <Compile Include="Settings\BaseTypes\BaseBitStreamFilter.cs" />
-    <Compile Include="Settings\BaseTypes\BaseFrameRate.cs" />
-    <Compile Include="Settings\BaseTypes\BaseSeekPosition.cs" />
-    <Compile Include="Settings\BaseTypes\BaseDuration.cs" />
-    <Compile Include="Settings\BaseTypes\BaseChannel.cs" />
-    <Compile Include="Settings\BaseTypes\BaseQualityScale.cs" />
-    <Compile Include="Settings\BaseTypes\BaseFormat.cs" />
-    <Compile Include="Settings\BitStreamFilterAudio.cs" />
-    <Compile Include="Settings\BitStreamFilterVideo.cs" />
-    <Compile Include="Settings\ChannelInput.cs" />
-    <Compile Include="Settings\DurationOutput.cs" />
-    <Compile Include="Settings\FrameDropThreshold.cs" />
-    <Compile Include="Settings\FrameRateInput.cs" />
-    <Compile Include="Settings\MapChapters.cs" />
-    <Compile Include="Settings\MapMetadata.cs" />
-    <Compile Include="Settings\LogLevel.cs" />
-    <Compile Include="Settings\LoopInput.cs" />
-    <Compile Include="Settings\CopyTimestamps.cs" />
-    <Compile Include="Settings\AvoidNegativeTimestamps.cs" />
-    <Compile Include="Settings\QualityScaleAudio.cs" />
-    <Compile Include="Settings\QualityScaleVideo.cs" />
-    <Compile Include="Settings\VideoFrames.cs" />
-    <Compile Include="Settings\SampleRate.cs" />
-    <Compile Include="Settings\MovFlags.cs" />
-    <Compile Include="Settings\FormatInput.cs" />
-    <Compile Include="Settings\FormatOutput.cs" />
-    <Compile Include="Settings\ChannelOutput.cs" />
-    <Compile Include="Settings\ConstantRateFactor.cs" />
-    <Compile Include="Settings\RemoveSubtitles.cs" />
-    <Compile Include="Settings\RemoveVideo.cs" />
-    <Compile Include="Enums\CommandReceiptType.cs" />
-    <Compile Include="Filters\BaseTypes\FiltergraphManager.cs" />
-    <Compile Include="Command\CommandOutputManager.cs" />
-    <Compile Include="Command\CommandInputManager.cs" />
-    <Compile Include="Enums\AudioCodecType.cs" />
-    <Compile Include="Enums\BlendVideoOptionType.cs" />
-    <Compile Include="Enums\BlendVideoModeType.cs" />
-    <Compile Include="Enums\AudioBitRateType.cs" />
-    <Compile Include="Enums\VideoProfileType.cs" />
-    <Compile Include="Common\Helpers.cs" />
-    <Compile Include="Enums\OverlayVideoEvalType.cs" />
-    <Compile Include="Enums\OverlayVideoFormatType.cs" />
-    <Compile Include="Enums\DurationType.cs" />
-    <Compile Include="Enums\AudioUnitType.cs" />
-    <Compile Include="Enums\VideoUnitType.cs" />
-    <Compile Include="Enums\FadeTransitionType.cs" />
-    <Compile Include="Enums\ScalePresetType.cs" />
-    <Compile Include="Enums\PixelFormatType.cs" />
-    <Compile Include="Common\Validate.cs" />
-    <Compile Include="Enums\VideoCodecType.cs" />
-    <Compile Include="Filters\AFade.cs" />
-    <Compile Include="Filters\AMix.cs" />
-    <Compile Include="Filters\BaseTypes\BaseSplit.cs" />
-    <Compile Include="Filters\BaseTypes\FilterchainOutput.cs" />
-    <Compile Include="Filters\BaseTypes\Filterchain.cs" />
-    <Compile Include="Filters\BaseTypes\Filtergraph.cs" />
-    <Compile Include="Filters\Blend.cs" />
-    <Compile Include="Filters\ColorBalance.cs" />
-    <Compile Include="Filters\Concat.cs" />
-    <Compile Include="Filters\AMovie.cs" />
-    <Compile Include="Filters\ASplit.cs" />
-    <Compile Include="Filters\Pad.cs" />
-    <Compile Include="Filters\Split.cs" />
-    <Compile Include="Filters\Trim.cs" />
-    <Compile Include="Filters\SetPts.cs" />
-    <Compile Include="Filters\Utilities.cs" />
-    <Compile Include="Obsolete\Obsolete.cs" />
-    <Compile Include="Filters\Volume.cs" />
-    <Compile Include="Filters\SetSar.cs" />
-    <Compile Include="Filters\SetDar.cs" />
-    <Compile Include="Filters\Fade.cs" />
-    <Compile Include="Filters\Movie.cs" />
-    <Compile Include="Filters\Overlay.cs" />
-    <Compile Include="Filters\Scale.cs" />
-    <Compile Include="Resources\Wmv.cs" />
-    <Compile Include="Resources\Jpg.cs" />
-    <Compile Include="Resources\Png.cs" />
-    <Compile Include="Resources\Resource.cs" />
-    <Compile Include="Resources\Wav.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\BaseTypes\BaseContainer.cs" />
-    <Compile Include="Resources\Mp3.cs" />
-    <Compile Include="Resources\M4A.cs" />
-    <Compile Include="Resources\Mp4.cs" />
-    <Compile Include="Settings\BaseTypes\BaseProfile.cs" />
-    <Compile Include="Settings\BaseTypes\SettingsCollection.cs" />
-    <Compile Include="Settings\BaseTypes\BaseBitRate.cs" />
-    <Compile Include="Settings\BitRateVideo.cs" />
-    <Compile Include="Settings\BaseTypes\BaseCodec.cs" />
-    <Compile Include="Settings\BitRateAudio.cs" />
-    <Compile Include="Settings\AspectRatio.cs" />
-    <Compile Include="Settings\BitRateTolerance.cs" />
-    <Compile Include="Settings\CodecAudio.cs" />
-    <Compile Include="Settings\Map.cs" />
-    <Compile Include="Settings\Level.cs" />
-    <Compile Include="Settings\ProfileVideo.cs" />
-    <Compile Include="Settings\TrimShortest.cs" />
-    <Compile Include="Settings\SeekPositionInput.cs" />
-    <Compile Include="Settings\SeekPositionOutput.cs" />
-    <Compile Include="Settings\RemoveAudio.cs" />
-    <Compile Include="Settings\PixelFormat.cs" />
-    <Compile Include="Settings\OverwriteOutput.cs" />
-    <Compile Include="Settings\DurationInput.cs" />
-    <Compile Include="Settings\CodecVideo.cs" />
-    <Compile Include="Settings\Size.cs" />
-    <Compile Include="Settings\FrameRate.cs" />
-    <Compile Include="Filters\BaseTypes\FilterchainTemplate.cs" />
-    <Compile Include="Filters\Templates\Dissolve.cs" />
-    <Compile Include="Sugar\CommandConfigurationExtensions.cs" />
-    <Compile Include="Sugar\CommandFactoryExtensions.cs" />
-    <Compile Include="Sugar\CommandStageExtensions.cs" />
-    <Compile Include="Sugar\FfmpegCommandExtensions.cs" />
-    <Compile Include="Sugar\FiltergraphExtensions.cs" />
-    <Compile Include="Sugar\ResourceExtensions.cs" />
+    <ProjectReference Include="..\Hudl.FFmpeg.Core\Hudl.FFmpeg.Core.csproj" />
+    <ProjectReference Include="..\Hudl.FFprobe\Hudl.FFprobe.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Hudl.FFmpeg.Core\Hudl.FFmpeg.Core.csproj">
-      <Project>{fa5d683b-0eea-4086-b71d-88a8360ae8f0}</Project>
-      <Name>Hudl.FFmpeg.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Hudl.FFprobe\Hudl.FFprobe.csproj">
-      <Project>{711728b7-0f13-4ed8-a6cd-7a05657c0a0d}</Project>
-      <Name>Hudl.FFprobe</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

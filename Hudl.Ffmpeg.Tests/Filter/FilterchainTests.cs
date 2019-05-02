@@ -13,7 +13,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         public void FilterchainIVideo_Add_Restriction()
         {
             var filterchain = Filterchain.FilterTo<VideoStream>();
-            Assert.DoesNotThrow(() => filterchain.Filters.Add(new Concat()));
+            filterchain.Filters.Add(new Concat());
             Assert.Throws<ForStreamInvalidException>(() => filterchain.Filters.Add(new AMix()));
         }
 
@@ -21,7 +21,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         public void FilterchainIAudio_Add_Restriction()
         {
             var filterchain = Filterchain.FilterTo<AudioStream>();
-            Assert.DoesNotThrow(() => filterchain.Filters.Add(new Concat()));
+            filterchain.Filters.Add(new Concat());
             Assert.Throws<ForStreamInvalidException>(() => filterchain.Filters.Add(new Fade()));
         }
 
@@ -29,7 +29,7 @@ namespace Hudl.FFmpeg.Tests.Filter
         public void Filterchain_Add_Duplicate()
         {
             var filterchain = Filterchain.FilterTo<VideoStream>();
-            Assert.DoesNotThrow(() => filterchain.Filters.Add(new Overlay()));
+            filterchain.Filters.Add(new Overlay());
             Assert.Throws<InvalidOperationException>(() => filterchain.Filters.Add(new Overlay()));
         }
 

@@ -4,10 +4,6 @@ using Hudl.FFprobe;
 using Hudl.FFprobe.Command;
 using Hudl.FFprobe.Settings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Hudl.FFmpeg.Tests.Command
@@ -49,7 +45,7 @@ namespace Hudl.FFmpeg.Tests.Command
             var command = GetCommand();
 
             Assert.Throws<ArgumentNullException>(() => command.AddSetting(null));
-            Assert.DoesNotThrow(() => command.AddSetting(new PrintFormat("json")));
+            command.AddSetting(new PrintFormat("json"));
         }
 
         [Fact]
@@ -59,13 +55,13 @@ namespace Hudl.FFmpeg.Tests.Command
             var audioContainer = GetAudioContainer();
             var loader = GetMediaLoader();
 
-            Assert.DoesNotThrow(() => loader.ReadInfo(videoContainer, MediaLoader.LoaderFlags.ShowFormat));
-            Assert.DoesNotThrow(() => loader.ReadInfo(videoContainer, MediaLoader.LoaderFlags.ShowStreams));
-            Assert.DoesNotThrow(() => loader.ReadInfo(videoContainer, MediaLoader.LoaderFlags.ShowFrames));
+            loader.ReadInfo(videoContainer, MediaLoader.LoaderFlags.ShowFormat);
+            loader.ReadInfo(videoContainer, MediaLoader.LoaderFlags.ShowStreams);
+            loader.ReadInfo(videoContainer, MediaLoader.LoaderFlags.ShowFrames);
 
-            Assert.DoesNotThrow(() => loader.ReadInfo(audioContainer, MediaLoader.LoaderFlags.ShowFormat));
-            Assert.DoesNotThrow(() => loader.ReadInfo(audioContainer, MediaLoader.LoaderFlags.ShowStreams));
-            Assert.DoesNotThrow(() => loader.ReadInfo(audioContainer, MediaLoader.LoaderFlags.ShowFrames));
+            loader.ReadInfo(audioContainer, MediaLoader.LoaderFlags.ShowFormat);
+            loader.ReadInfo(audioContainer, MediaLoader.LoaderFlags.ShowStreams);
+            loader.ReadInfo(audioContainer, MediaLoader.LoaderFlags.ShowFrames);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Hudl.FFmpeg.Common
     /// <summary>
     /// helper class that helps with validation of objects in a ffmpeg project
     /// </summary>
-    internal class Validate
+    public class Validate
     {
         /// <summary>
         /// returns a boolean indicating if <cref name="objectType"/> is applicable to <cref name="restrictedType"/> 
