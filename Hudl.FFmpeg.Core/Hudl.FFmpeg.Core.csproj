@@ -1,155 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FA5D683B-0EEA-4086-B71D-88A8360AE8F0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hudl.FFmpeg</RootNamespace>
-    <AssemblyName>Hudl.FFmpeg.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <VersionPrefix>7.0.0</VersionPrefix>
+    <FileVersion>7.0.0</FileVersion>
+    <!-- The AssemblyVersion should only be updated on a Major version bump -->
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <AssemblyName>Hudl.FFmpeg.Core</AssemblyName>
+    <PackageId>Hudl.FFmpeg.Core</PackageId>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="log4net" Version="2.0.8" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Attributes\AttributeRetrieval.cs" />
-    <Compile Include="Attributes\AttributeValidation.cs" />
-    <Compile Include="Attributes\ContainsStreamAttribute.cs" />
-    <Compile Include="Attributes\SerializedAsAttribute.cs" />
-    <Compile Include="Attributes\Utility\ValidationUtility.cs" />
-    <Compile Include="Attributes\ValidateAttribute.cs" />
-    <Compile Include="Attributes\ForStreamAttribute.cs" />
-    <Compile Include="Collections\ForStreamCollection.cs" />
-    <Compile Include="Command\StreamReaders\BaseStandardStreamReader.cs" />
-    <Compile Include="Command\StreamReaders\StandardOutputAsyncStreamReader.cs" />
-    <Compile Include="Command\StreamReaders\StandardErrorAsyncStreamReader.cs" />
-    <Compile Include="Enums\FfmpegMergeOptionType.cs" />
-    <Compile Include="Enums\SettingsCollectionResourceType.cs" />
-    <Compile Include="Exceptions\FfmpegTimeoutException.cs" />
-    <Compile Include="Exceptions\FfmpegProcessingException.cs" />
-    <Compile Include="Exceptions\FfmpegRenderingException.cs" />
-    <Compile Include="Exceptions\ForStreamInvalidException.cs" />
-    <Compile Include="Exceptions\StreamNotFoundException.cs" />
-    <Compile Include="Command\BaseTypes\CommandConfigurationFlagTypes.cs" />
-    <Compile Include="Command\BaseTypes\ICommandBuilder.cs" />
-    <Compile Include="Command\CommandConfiguration.cs" />
-    <Compile Include="Command\CommandProcessorStatus.cs" />
-    <Compile Include="Command\Models\FFCommandBase.cs" />
-    <Compile Include="Command\BaseTypes\ICommandFactory.cs" />
-    <Compile Include="Command\BaseTypes\ICommand.cs" />
-    <Compile Include="Command\BaseTypes\ICommandProcessor.cs" />
-    <Compile Include="Command\Models\FFCommandBuilderBase.cs" />
-    <Compile Include="Command\Models\FFmpegCommandBuilder.cs" />
-    <Compile Include="DataTypes\DecimalScale.cs" />
-    <Compile Include="DataTypes\DecimalScaleRgb.cs" />
-    <Compile Include="DataTypes\Fraction.cs" />
-    <Compile Include="DataTypes\Ratio.cs" />
-    <Compile Include="DataTypes\TwoPartNumericalBase.cs" />
-    <Compile Include="Enums\LogicalOperators.cs" />
-    <Compile Include="Extensions\ArrayExtensions.cs" />
-    <Compile Include="Extensions\ObjectExtensions.cs" />
-    <Compile Include="Extensions\ProcessExtensions.cs" />
-    <Compile Include="Extensions\TimeSpanExtensions.cs" />
-    <Compile Include="Filters\Attributes\FilterAttribute.cs" />
-    <Compile Include="Filters\Attributes\FilterParameterAttribute.cs" />
-    <Compile Include="Filters\Contexts\FilterBindingContext.cs" />
-    <Compile Include="Filters\Contexts\FilterMultiOutputContext.cs" />
-    <Compile Include="Filters\Contexts\FilterProcessorContext.cs" />
-    <Compile Include="Filters\Contexts\FilterValidatorContext.cs" />
-    <Compile Include="Filters\Interfaces\IFilterchain.cs" />
-    <Compile Include="Filters\Interfaces\IFilter.cs" />
-    <Compile Include="Filters\Interfaces\IFilterMultiOutput.cs" />
-    <Compile Include="Filters\Interfaces\IFilterParameterBinding.cs" />
-    <Compile Include="Filters\Interfaces\IFilterProcessor.cs" />
-    <Compile Include="Filters\Interfaces\IFilterValidator.cs" />
-    <Compile Include="Filters\Serialization\FilterSerializerWriter.cs" />
-    <Compile Include="Filters\Serialization\FilterSerializer.cs" />
-    <Compile Include="Filters\Serialization\FilterSerializerAttributeParser.cs" />
-    <Compile Include="Filters\Serialization\FilterSerializerDataParameter.cs" />
-    <Compile Include="Filters\Serialization\FilterSerializerData.cs" />
-    <Compile Include="Formatters\BoolToInt32Formatter.cs" />
-    <Compile Include="Formatters\EnumParameterFormatter.cs" />
-    <Compile Include="Formatters\EnumParameterSlashFormatter.cs" />
-    <Compile Include="Formatters\Int32ToKbs.cs" />
-    <Compile Include="Formatters\MapSettingsFormatter.cs" />
-    <Compile Include="Formatters\RatioFractionalStringFormatter.cs" />
-    <Compile Include="Formatters\RatioStringFormatter.cs" />
-    <Compile Include="Formatters\SingleQuoteFormatter.cs" />
-    <Compile Include="Formatters\SizeFormatter.cs" />
-    <Compile Include="Formatters\SizeHeightFormatter.cs" />
-    <Compile Include="Formatters\SizeWidthFormatter.cs" />
-    <Compile Include="Formatters\TimeSpanFormatter.cs" />
-    <Compile Include="Formatters\Utility\FormattingUtility.cs" />
-    <Compile Include="Interfaces\IValidator.cs" />
-    <Compile Include="Interfaces\IFormatter.cs" />
-    <Compile Include="Logging\LogUtility.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceManagement.cs" />
-    <Compile Include="Resources\Interfaces\IContainer.cs" />
-    <Compile Include="Resources\Interfaces\IStream.cs" />
-    <Compile Include="Settings\Attributes\SettingParameterAttribute.cs" />
-    <Compile Include="Settings\Attributes\SettingAttribute.cs" />
-    <Compile Include="Formatters\LocalUriFormatterNoWrap.cs" />
-    <Compile Include="Formatters\LocalUriFormatter.cs" />
-    <Compile Include="Settings\Interfaces\ISetting.cs" />
-    <Compile Include="Settings\Input.cs" />
-    <Compile Include="Settings\Serialization\SettingSerializerDataValue.cs" />
-    <Compile Include="Settings\Serialization\SettingSerializer.cs" />
-    <Compile Include="Settings\Serialization\SettingSerializerAttributeParser.cs" />
-    <Compile Include="Settings\Serialization\SettingSerializerData.cs" />
-    <Compile Include="Settings\Serialization\SettingSerializerWriter.cs" />
-    <Compile Include="Settings\Extensions\SettingsExtensions.cs" />
-    <Compile Include="Validators\TimeSpanGreterThanZeroValidator.cs" />
-    <Compile Include="Validators\NullOrWhitespaceValidator.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

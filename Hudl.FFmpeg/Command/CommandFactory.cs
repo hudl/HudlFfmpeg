@@ -13,7 +13,7 @@ namespace Hudl.FFmpeg.Command
     /// </summary>
     public class CommandFactory : ICommandFactory
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CommandFactory).Name);
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CommandFactory));
 
         private CommandFactory()
         {
