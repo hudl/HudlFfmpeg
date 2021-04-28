@@ -16,7 +16,11 @@
         /// <summary>
         /// forces an RGB pixel output format
         /// </summary>
-        Rgb = 2
+        Rgb = 2,
+        /// <summary>
+        /// forces a YUV420P pixel output format
+        /// </summary>
+        Yuv420P = 3
     }
 
 }

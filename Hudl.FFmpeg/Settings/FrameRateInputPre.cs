@@ -1,4 +1,5 @@
-﻿using Hudl.FFmpeg.Attributes;
+﻿using System;
+using Hudl.FFmpeg.Attributes;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.BaseTypes;
 using Hudl.FFmpeg.Settings.Attributes;
@@ -8,10 +9,9 @@ namespace Hudl.FFmpeg.Settings
 {
     /// <summary>
     /// Set frame rate (Hz value, fraction or abbreviation).
-    /// This is not the same as the -framerate option used for some input formats like image2 or v4l2 (it used to be the same in older versions of FFmpeg).
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
-    [Setting(Name = "r", ResourceType = SettingsCollectionResourceType.Input)]
+    [Setting(Name = "framerate", IsPreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
     public class FrameRateInput : BaseFrameRate
     {
         public FrameRateInput()
@@ -22,5 +22,9 @@ namespace Hudl.FFmpeg.Settings
             : base(rate)
         {
         }
+
+        [SettingParameter]
+        [Validate(LogicalOperators.GreaterThan, 0)]
+        public double Rate { get; set; }
     }
 }
