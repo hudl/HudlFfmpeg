@@ -8,6 +8,8 @@
         /// <summary>
         /// indicates the input format is a concatenation file.
         /// </summary>
-        Concat
+        Concat,
+        rgba,
+        lavfi
     }
 }
