@@ -12,13 +12,13 @@ namespace Hudl.FFmpeg.Settings
     /// </summary>
     [ForStream(Type = typeof(VideoStream))]
     [Setting(Name = "framerate", IsPreDeclaration = true, ResourceType = SettingsCollectionResourceType.Input)]
-    public class FrameRateInput : BaseFrameRate
+    public class FrameRateInputPre : BaseFrameRate
     {
-        public FrameRateInput()
+        public FrameRateInputPre()
             : base()
         {
         }
-        public FrameRateInput(double rate)
+        public FrameRateInputPre(double rate)
             : base(rate)
         {
         }
