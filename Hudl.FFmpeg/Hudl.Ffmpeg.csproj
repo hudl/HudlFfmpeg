@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <VersionPrefix>7.0.0</VersionPrefix>
-    <FileVersion>7.0.0</FileVersion>
+    <VersionPrefix>7.1.0</VersionPrefix>
+    <FileVersion>7.1.0</FileVersion>
     <!-- The AssemblyVersion should only be updated on a Major version bump -->
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
