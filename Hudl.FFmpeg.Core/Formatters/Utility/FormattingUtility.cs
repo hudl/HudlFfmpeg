@@ -82,5 +82,15 @@ namespace Hudl.FFmpeg.Formatters.Utility
         {
             return string.Format("'{0}'", value);
         }
+
+        public static string ConcatenateIfNecessary(string segmentPath, string initMp4Path = null)
+        {
+            if (string.IsNullOrWhiteSpace(initMp4Path))
+            {
+                return segmentPath;
+            }
+
+            return $"concat:{initMp4Path}|{segmentPath}";
+        }
     }
 }

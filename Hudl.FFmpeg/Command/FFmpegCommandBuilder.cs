@@ -64,6 +64,7 @@ namespace Hudl.FFmpeg.Command
                 BuilderBase.Append(SettingSerializer.Serialize(setting));
             });
         }
+
         private void WriteResourcePostSettings(CommandInput resource)
         {
             if (resource == null)
@@ -177,6 +178,7 @@ namespace Hudl.FFmpeg.Command
 
             BuilderBase.AppendFormat(" {0}", Helpers.EscapePath(output.Resource));
         }
+
         private void WriteOutputSettings(CommandOutput output)
         {
             if (output == null)
@@ -195,6 +197,7 @@ namespace Hudl.FFmpeg.Command
         {
             BuilderBase.AppendLine();
         }
+
         private void WriteFilter(IFilter filter, FilterBindingContext context)
         {
             if (filter == null)

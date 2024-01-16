@@ -68,17 +68,19 @@ namespace Hudl.FFmpeg.Resources
         /// <summary>
         /// Creates a new resource with the full path name provided.
         /// </summary>
-        public static IContainer From(string fullPath)
+        public static IContainer From(string fullPath, string initFullPath = null)
         {
             var fileName = Helpers.GetNameFromFullName(fullPath);
             var filePath = Helpers.GetPathFromFullName(fullPath);
-            return From(filePath, fileName); 
+            var initFileName = string.IsNullOrWhiteSpace(initFullPath) ? null : Helpers.GetNameFromFullName(fullPath);
+            var initFilePath = string.IsNullOrWhiteSpace(initFullPath) ? null : Helpers.GetPathFromFullName(fullPath);
+            return From(filePath, fileName, initFileName, initFilePath); 
         }
         
         /// <summary>
         /// Creates a new resource with the full path name provided.
         /// </summary>
-        private static IContainer From(string filePath, string fileName)
+        private static IContainer From(string filePath, string fileName, string initFilePath = null, string initFileName = null)
         {
             var fileExtension = Helpers.GetExtensionFromFullName(fileName);
 			lock (AllTypesLock)
@@ -98,6 +100,9 @@ namespace Hudl.FFmpeg.Resources
             var newInstance = (IContainer)Activator.CreateInstance(correctContainer);
             newInstance.Path = filePath;
             newInstance.Name = fileName;
+            newInstance.InitPath = initFilePath;
+            newInstance.InitName = initFileName;
+
             return newInstance;
         }
 
