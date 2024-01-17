@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Hudl.FFmpeg.Common;
-using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Resources.BaseTypes
@@ -48,12 +47,22 @@ namespace Hudl.FFmpeg.Resources.BaseTypes
             }
         }
         private string _name;
-        
+
+        /// <summary>
+        /// the init file name of the resource that is used
+        /// </summary>
+        public string InitName { get; set; }
+
         /// <summary>
         /// the file domain\directory for the resource
         /// </summary>
         public string Path { get; set; }
-        
+
+        /// <summary>
+        /// the init file domain\directory for the resource
+        /// </summary>
+        public string InitPath { get; set; }
+
         /// <summary>
         /// a readable path for ffmpeg to access 
         /// </summary>
@@ -62,6 +71,17 @@ namespace Hudl.FFmpeg.Resources.BaseTypes
             get
             {
                 return System.IO.Path.Combine(Path, Name);
+            }
+        }
+
+        /// <summary>
+        /// a readable path for ffmpeg to access to the init file
+        /// </summary>
+        public string InitFullName
+        {
+            get
+            {
+                return System.IO.Path.Combine(InitPath, InitName);
             }
         }
 
@@ -83,7 +103,9 @@ namespace Hudl.FFmpeg.Resources.BaseTypes
 
             newInstance.Id = Id;
             newInstance.Name = Name;
+            newInstance.InitName = InitName;
             newInstance.Path = Path;
+            newInstance.InitPath = InitName;
             newInstance.Streams = new List<IStream>(Streams);
             newInstance.Streams.ForEach(s => s.Map = Helpers.NewMap());
 

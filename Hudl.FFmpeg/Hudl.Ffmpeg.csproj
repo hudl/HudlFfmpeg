@@ -106,6 +106,7 @@
     <Compile Include="Resources\Ismv.cs" />
     <Compile Include="Resources\Avi.cs" />
     <Compile Include="Resources\Bmp.cs" />
+    <Compile Include="Resources\M4s.cs" />
     <Compile Include="Resources\Nut.cs" />
     <Compile Include="Resources\Ogg.cs" />
     <Compile Include="Resources\Mkv.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Settings\LoopInput.cs" />
     <Compile Include="Settings\CopyTimestamps.cs" />
     <Compile Include="Settings\AvoidNegativeTimestamps.cs" />
+    <Compile Include="Settings\MaxMuxingQueueSize.cs" />
     <Compile Include="Settings\QualityScaleAudio.cs" />
     <Compile Include="Settings\QualityScaleVideo.cs" />
     <Compile Include="Settings\VideoFrames.cs" />

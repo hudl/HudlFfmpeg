@@ -1,4 +1,5 @@
-﻿using Hudl.FFmpeg.Interfaces;
+﻿using Hudl.FFmpeg.Formatters.Utility;
+using Hudl.FFmpeg.Interfaces;
 using Hudl.FFmpeg.Resources.Interfaces;
 
 namespace Hudl.FFmpeg.Formatters
@@ -7,7 +8,7 @@ namespace Hudl.FFmpeg.Formatters
     {
         public string Format(object value)
         {
-            var escapedPath = ((IContainer)value).FullName.Replace('\\', '/');
+            var escapedPath = FormattingUtility.ConcatenateIfNecessary(((IContainer)value).FullName, ((IContainer)value).InitFullName).Replace('\\', '/');
             return string.Concat("\"", escapedPath, "\"");
         }
     }

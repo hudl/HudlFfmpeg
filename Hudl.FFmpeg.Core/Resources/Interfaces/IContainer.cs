@@ -18,15 +18,30 @@ namespace Hudl.FFmpeg.Resources.Interfaces
         string Name { get; set; }
 
         /// <summary>
+        /// the init file name of the resource that is used
+        /// </summary>
+        string InitName { get; set; }
+
+        /// <summary>
         /// the file domain\directory for the resource
         /// </summary>
         string Path { get; set; }
-        
+
+        /// <summary>
+        /// the init file domain\directory for the resource
+        /// </summary>
+        string InitPath { get; set; }
+
         /// <summary>
         /// a readable path for ffmpeg to access 
         /// </summary>
         string FullName { get; }
-        
+
+        /// <summary>
+        /// a readable path of the init fragment for ffmpeg to access 
+        /// </summary>
+        string InitFullName { get; }
+
         /// <summary>
         /// the extension of the file, 
         /// </summary>
