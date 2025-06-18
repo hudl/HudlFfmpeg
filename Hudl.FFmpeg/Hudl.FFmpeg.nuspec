@@ -10,11 +10,11 @@
     <iconUrl>https://raw.githubusercontent.com/hudl/HudlFfmpeg/master/hudl.png</iconUrl>
   </metadata>
   <files>
-    <file src="bin\Release\$id$.dll" target="lib\net45"/>        
-    <file src="bin\Release\$id$.pdb" target="lib\net45"/>
-    <file src="bin\Release\Hudl.FFmpeg.Core.dll" target="lib\net45"/>        
-    <file src="bin\Release\Hudl.FFmpeg.Core.pdb" target="lib\net45"/>
-    <file src="bin\Release\Hudl.FFprobe.dll" target="lib\net45"/>
-    <file src="bin\Release\Hudl.FFprobe.pdb" target="lib\net45"/>
+    <file src="bin\Release\$id$.dll" target="lib\netstandard2.0"/>        
+    <file src="bin\Release\$id$.pdb" target="lib\netstandard2.0"/>
+    <file src="bin\Release\Hudl.FFmpeg.Core.dll" target="lib\netstandard2.0"/>        
+    <file src="bin\Release\Hudl.FFmpeg.Core.pdb" target="lib\netstandard2.0"/>
+    <file src="bin\Release\Hudl.FFprobe.dll" target="lib\netstandard2.0"/>
+    <file src="bin\Release\Hudl.FFprobe.pdb" target="lib\netstandard2.0"/>
   </files>
 </package>

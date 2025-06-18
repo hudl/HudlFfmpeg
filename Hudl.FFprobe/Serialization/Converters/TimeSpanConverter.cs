@@ -1,39 +1,24 @@
 ﻿using System;
 using System.Globalization;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace Hudl.FFprobe.Serialization.Converters
+namespace Hudl.FFprobe.Serialization.Converters;
+
+internal class TimeSpanConverter : JsonConverter<TimeSpan>
 {
-    internal class TimeSpanConverter : JsonConverter
+    public override TimeSpan Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override bool CanConvert(Type objectType)
+        if (reader.TokenType != JsonTokenType.String)
         {
-            return objectType == typeof(string);
+            throw new Exception($"Unexpected token parsing Ratio, expected {JsonTokenType.String}, got {reader.TokenType}");
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType != JsonToken.String)
-            {
-                throw new Exception(string.Format("Unexpected token parsing Ratio, expected String, got {0}", reader.TokenType));
-            }
-
-            double timespan;
-
-            double.TryParse(reader.Value.ToString(), NumberStyles.Number, CultureInfo.InvariantCulture, out timespan);
+        _ = double.TryParse(reader.GetString(), NumberStyles.Number, CultureInfo.InvariantCulture, out var timespan);
             
-            return TimeSpan.FromSeconds(timespan);
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-
-            throw new NotImplementedException("Unnecessary because CanWrite is false. the type will skip when converted");
-        }
-
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
+        return TimeSpan.FromSeconds(timespan);
     }
+
+    public override void Write(Utf8JsonWriter writer, TimeSpan value, JsonSerializerOptions options) =>
+        throw new NotImplementedException("Unnecessary because CanWrite is false. the type will skip when converted");
 }

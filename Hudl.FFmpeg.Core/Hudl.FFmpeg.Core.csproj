@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>7.0.0</VersionPrefix>
-    <FileVersion>7.0.0</FileVersion>
+    <FileVersion>8.0.0</FileVersion>
     <!-- The AssemblyVersion should only be updated on a Major version bump -->
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -18,10 +18,12 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="log4net" Version="3.0.1" />
   </ItemGroup>
 
 </Project>

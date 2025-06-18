@@ -1,22 +1,19 @@
 ﻿using System.Collections.Generic;
-using Hudl.FFprobe.Serialization;
+using System.Text.Json.Serialization;
 using Hudl.FFprobe.Serialization.Converters;
-using Newtonsoft.Json;
 
-namespace Hudl.FFprobe.Metadata.Models
+namespace Hudl.FFprobe.Metadata.Models;
+
+public class ContainerMetadata
 {
-    [JsonObject]
-    public class ContainerMetadata
-    {
-        [JsonProperty(PropertyName = "format")]
-        public FormatMetadata Format { get; set; }
+    [JsonPropertyName("format")]
+    public FormatMetadata Format { get; set; }
 
-        [JsonProperty(PropertyName = "streams")]
-        [JsonConverter(typeof(StreamConverter))]
-        public List<BaseStreamMetadata> Streams { get; set; }
+    [JsonPropertyName("streams")]
+    [JsonConverter(typeof(StreamConverter))]
+    public List<BaseStreamMetadata> Streams { get; set; }
 
-        [JsonProperty(PropertyName = "frames")]
-        [JsonConverter(typeof(FrameConverter))]
-        public List<BaseFrameMetadata> Frames { get; set; }
-    }
+    [JsonPropertyName("frames")]
+    [JsonConverter(typeof(FrameConverter))]
+    public List<BaseFrameMetadata> Frames { get; set; }
 }

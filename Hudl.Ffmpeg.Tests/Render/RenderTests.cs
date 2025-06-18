@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using Hudl.FFmpeg.Enums;
 using Hudl.FFmpeg.Filters.Templates;
@@ -18,10 +19,9 @@ namespace Hudl.FFmpeg.Tests.Render
         public void RenderVideoWEffects()
         {
 #if DEBUG
-            ResourceManagement.CommandConfiguration  = CommandConfiguration.Create(
-                "c:/source/ffmpeg/bin/temp",
-                "c:/source/ffmpeg/bin/ffmpeg.exe",
-                "c:/source/ffmpeg/bin/FFprobe.exe");
+            Assets.Utilities.SetGlobalAssets();
+
+            var temporaryDirectory = Path.GetTempPath();
 
             var outputSettings = SettingsCollection.ForOutput(
                 new OverwriteOutput(),
@@ -36,7 +36,7 @@ namespace Hudl.FFmpeg.Tests.Render
                    .WithInput<VideoStream>(Assets.Utilities.GetVideoFile())
                    .WithInput<VideoStream>(Assets.Utilities.GetVideoFile())
                    .Filter(new Dissolve(1))
-                   .MapTo<Mp4>("c:/source/ffmpeg/bin/temp/output-test.mp4", outputSettings);
+                   .MapTo<Mp4>(Path.Combine(temporaryDirectory, "output-test.mp4"), outputSettings);
 
             factory.Render();
 #endif

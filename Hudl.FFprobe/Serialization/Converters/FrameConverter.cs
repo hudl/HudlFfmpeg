@@ -1,73 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using Hudl.FFmpeg.Metadata.FFprobe.BaseTypes;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Hudl.FFprobe.Metadata.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 
-namespace Hudl.FFprobe.Serialization.Converters
+namespace Hudl.FFprobe.Serialization.Converters;
+
+internal class FrameConverter : JsonConverter<List<BaseFrameMetadata>>
 {
-    internal class FrameConverter : CustomCreationConverter<List<BaseFrameMetadata>>
+    public override List<BaseFrameMetadata>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        public override List<BaseFrameMetadata> Create(Type objectType)
-        {
-            throw new NotImplementedException();
-        }
+        var jsonArray = JsonSerializer.Deserialize<JsonElement[]>(ref reader, options);
 
-        public BaseFrameMetadata Create(Type objectType, JObject jsonObject)
-        {
-            var codecType = (string)jsonObject.Property("media_type");
-            if (string.Equals(codecType, CodecTypes.Video.ToString(), StringComparison.InvariantCultureIgnoreCase))
-            {
-                return new VideoFrameMetadata();
-            }
-             
-            if (string.Equals(codecType, CodecTypes.Audio.ToString(), StringComparison.InvariantCultureIgnoreCase))
-            {
-                return new AudioFrameMetadata();
-            }
-
-            return null; 
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var jsonArray = JArray.Load(reader);
-
-            var returnList = new List<BaseFrameMetadata>();
-
-            foreach (var jsonToken in jsonArray)
-            {
-                if (jsonToken.Type != JTokenType.Object)
+        return (from jsonElement in jsonArray
+                let targetType = CodecTypesUtility.GetCodecTypeFromMediaType(jsonElement.GetProperty("media_type").GetString()) switch
                 {
-                    throw new Exception(string.Format("Expected a token type of Object, got {0} instead", jsonToken.Type));
+                    CodecTypes.Video => typeof(VideoFrameMetadata),
+                    CodecTypes.Audio => typeof(AudioFrameMetadata),
+                    _ => null,
                 }
-
-                var targetObject = jsonToken.Value<JObject>();
-                var targetType = Create(objectType, targetObject);
-                if (targetType == null)
-                {
-                    //unsupported type, dont wanna worry about it.
-                    continue;
-                }
-
-                serializer.Populate(targetObject.CreateReader(), targetType);
-
-                returnList.Add(targetType);
-            }
-
-            return returnList; 
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new NotImplementedException("Unnecessary because CanWrite is false. the type will skip when converted");
-        }
-
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
+                select new { Type = targetType, Element = jsonElement })
+            .Select(selected => JsonSerializer.Deserialize((string)selected.Element.GetRawText(), selected.Type, options))
+            .Cast<BaseFrameMetadata>()
+            .ToList(); 
     }
+
+    public override void Write(Utf8JsonWriter writer, List<BaseFrameMetadata> value, JsonSerializerOptions options) =>
+        throw new NotImplementedException("Unnecessary because CanWrite is false. the type will skip when converted");
 }

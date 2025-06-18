@@ -1,13 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿namespace Hudl.FFprobe.Metadata.Models;
 
-namespace Hudl.FFprobe.Metadata.Models
+public class DataStreamMetadata : BaseStreamMetadata
 {
-    [JsonObject]
-    public class DataStreamMetadata : BaseStreamMetadata
+    public DataStreamMetadata Copy()
     {
-        public DataStreamMetadata Copy()
-        {
-            return (DataStreamMetadata)MemberwiseClone();
-        }
+        return (DataStreamMetadata)MemberwiseClone();
     }
 }
