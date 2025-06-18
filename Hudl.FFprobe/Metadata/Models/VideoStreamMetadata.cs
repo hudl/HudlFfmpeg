@@ -1,53 +1,48 @@
 ﻿using Hudl.FFmpeg.DataTypes;
-using Hudl.FFprobe.Serialization;
 using Hudl.FFprobe.Serialization.Converters;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Hudl.FFprobe.Metadata.Models
 {
-    [JsonObject]
     public class VideoStreamMetadata : BaseStreamMetadata
     {
-        [JsonProperty(PropertyName = "width")]
+        [JsonPropertyName("width")]
         public int Width { get; set; }
 
-        [JsonProperty(PropertyName = "height")]
+        [JsonPropertyName("height")]
         public int Height { get; set; }
 
-        [JsonProperty(PropertyName = "coded_width")]
+        [JsonPropertyName("coded_width")]
         public int CodedWidth { get; set; }
 
-        [JsonProperty(PropertyName = "coded_height")]
+        [JsonPropertyName("coded_height")]
         public int CodedHeight { get; set; }
 
-        [JsonProperty(PropertyName = "has_b_frames")]
+        [JsonPropertyName("has_b_frames")]
         public int HasBFrames { get; set; }
 
-        [JsonProperty(PropertyName = "sample_aspect_ratio")]
+        [JsonPropertyName("sample_aspect_ratio")]
         [JsonConverter(typeof(RatioConverter))]
         public Ratio SampleAspectRatio { get; set; }
 
-        [JsonProperty(PropertyName = "display_aspect_ratio")]
+        [JsonPropertyName("display_aspect_ratio")]
         [JsonConverter(typeof(RatioConverter))]
         public Ratio DisplayAspectRatio { get; set; }
 
-        [JsonProperty(PropertyName = "pix_fmt")]
+        [JsonPropertyName("pix_fmt")]
         public string PixelFormat { get; set; }
 
-        [JsonProperty(PropertyName = "level")]
+        [JsonPropertyName("level")]
         public int Level { get; set; }
 
-        [JsonProperty(PropertyName = "r_frame_rate")]
+        [JsonPropertyName("r_frame_rate")]
         [JsonConverter(typeof(FractionConverter))]
         public Fraction RFrameRate { get; set; }
 
-        [JsonProperty(PropertyName = "avg_frame_rate")]
+        [JsonPropertyName("avg_frame_rate")]
         [JsonConverter(typeof(FractionConverter))]
         public Fraction AverageFrameRate { get; set; }
 
-        public VideoStreamMetadata Copy()
-        {
-            return (VideoStreamMetadata) MemberwiseClone(); 
-        }
+        public VideoStreamMetadata Copy() => (VideoStreamMetadata) MemberwiseClone(); 
     }
 }

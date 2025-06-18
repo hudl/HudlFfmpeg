@@ -1,7 +1,7 @@
 ﻿using Hudl.FFmpeg.Command;
 using Hudl.FFmpeg.Command.BaseTypes;
 using Hudl.FFprobe.Metadata.Models;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Hudl.FFprobe.Serialization
 {
@@ -16,7 +16,7 @@ namespace Hudl.FFprobe.Serialization
 
             var standardOutputString = processor.StdOut;
 
-            return JsonConvert.DeserializeObject<ContainerMetadata>(standardOutputString); 
+            return JsonSerializer.Deserialize<ContainerMetadata>(standardOutputString); 
         }
     }
 }

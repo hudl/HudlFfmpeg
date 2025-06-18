@@ -1,25 +1,21 @@
-﻿using Newtonsoft.Json;
+﻿
+using System.Text.Json.Serialization;
 
-namespace Hudl.FFprobe.Metadata.Models
+namespace Hudl.FFprobe.Metadata.Models;
+
+public class AudioFrameMetadata : BaseFrameMetadata
 {
-    [JsonObject]
-    public class AudioFrameMetadata : BaseFrameMetadata
-    {
-        [JsonProperty(PropertyName = "sample_fmt")]
-        public string SampleFormat { get; set; }
+    [JsonPropertyName("sample_fmt")]
+    public string SampleFormat { get; set; }
 
-        [JsonProperty(PropertyName = "channels")]
-        public int Channels { get; set; }
+    [JsonPropertyName("channels")]
+    public int Channels { get; set; }
 
-        [JsonProperty(PropertyName = "channel_layout")]
-        public string ChannelLayout { get; set; }
+    [JsonPropertyName("channel_layout")]
+    public string ChannelLayout { get; set; }
 
-        [JsonProperty(PropertyName = "nb_samples")]
-        public int NumberOfSamples { get; set; }
+    [JsonPropertyName("nb_samples")]
+    public int NumberOfSamples { get; set; }
 
-        public AudioFrameMetadata Copy()
-        {
-            return (AudioFrameMetadata)MemberwiseClone();
-        }
-    }
+    public AudioFrameMetadata Copy() => (AudioFrameMetadata)MemberwiseClone();
 }
